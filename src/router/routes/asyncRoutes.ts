@@ -22,8 +22,8 @@ export const asyncRoutes: AppRouteRecord[] = [
     component: RoutesAlias.Layout,
     meta: {
       title: 'menus.dashboard.title',
-      icon: '&#xe721;',
-      roles: ['R_SUPER', 'R_ADMIN'] // 角色权限，前端控制模式（只有拥有这些角色的用户才能访问）
+      icon: '&#xe721;'
+      // roles: ['R_SUPER', 'R_ADMIN'] // 角色权限，前端控制模式（只有拥有这些角色的用户才能访问）
     },
     children: [
       {

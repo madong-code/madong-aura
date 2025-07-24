@@ -193,14 +193,15 @@ async function getMenuData(router: Router): Promise<void> {
 async function processFrontendMenu(router: Router): Promise<void> {
   const menuList = asyncRoutes.map((route) => menuDataToRouter(route))
   const userStore = useUserStore()
-  const roles = userStore.info.roles
+  const roles = userStore.info.roleCodes
 
   if (!roles) {
     throw new Error('获取用户角色失败')
   }
-
-  const filteredMenuList = filterMenuByRoles(menuList, roles)
-
+  // 先使用角色权限过滤菜单
+  let filteredMenuList = filterMenuByRoles(menuList, roles)
+  // 再使用权限标识过滤菜单
+  filteredMenuList = filterMenuByPermCodes(filteredMenuList, [])
   // 添加延时以提升用户体验
   await new Promise((resolve) => setTimeout(resolve, LOADING_DELAY))
 
@@ -284,6 +285,25 @@ const filterMenuByRoles = (menu: AppRouteRecord[], roles: string[]): AppRouteRec
       const filteredItem = { ...item }
       if (filteredItem.children?.length) {
         filteredItem.children = filterMenuByRoles(filteredItem.children, roles)
+      }
+      acc.push(filteredItem)
+    }
+
+    return acc
+  }, [])
+}
+/**
+ * 根据权限码过滤菜单
+ */
+const filterMenuByPermCodes = (menu: AppRouteRecord[], permCodes: string[]): AppRouteRecord[] => {
+  return menu.reduce((acc: AppRouteRecord[], item) => {
+    const itemRoles = item.meta?.perms
+    const hasPermission = !itemRoles || itemRoles.some((role) => permCodes?.includes(role))
+
+    if (hasPermission) {
+      const filteredItem = { ...item }
+      if (filteredItem.children?.length) {
+        filteredItem.children = filterMenuByPermCodes(filteredItem.children, permCodes)
       }
       acc.push(filteredItem)
     }

@@ -43,7 +43,7 @@
             @keyup.enter="handleSubmit"
             style="margin-top: 25px"
           >
-            <ElFormItem prop="account">
+            <!--ElFormItem prop="account">
               <ElSelect v-model="formData.account" @change="setupAccount" class="account-select">
                 <ElOption
                   v-for="account in accounts"
@@ -54,7 +54,7 @@
                   <span>{{ account.label }}</span>
                 </ElOption>
               </ElSelect>
-            </ElFormItem>
+            </ElFormItem-->
             <ElFormItem prop="username">
               <ElInput :placeholder="$t('login.placeholder[0]')" v-model.trim="formData.username" />
             </ElFormItem>
@@ -86,12 +86,12 @@
               }}</p>
             </div>
 
-            <div class="forget-password">
+            <!--div class="forget-password">
               <ElCheckbox v-model="formData.rememberPassword">{{
                 $t('login.rememberPwd')
               }}</ElCheckbox>
               <RouterLink :to="RoutesAlias.ForgetPassword">{{ $t('login.forgetPwd') }}</RouterLink>
-            </div>
+            </div-->
 
             <div style="margin-top: 30px">
               <ElButton
@@ -149,7 +149,7 @@
     {
       key: 'super',
       label: t('login.roles.super'),
-      userName: 'Super',
+      userName: 'admin',
       password: '123456',
       roles: ['R_SUPER']
     },
@@ -242,6 +242,9 @@
       userStore.setToken(token, refreshToken)
       const userInfo = await UserService.getUserInfo()
       userStore.setUserInfo(userInfo)
+      // 获取权限码
+      const perms = await UserService.getPermCode()
+      userStore.setPermCodes(perms)
       userStore.setLoginStatus(true)
 
       // 登录成功处理

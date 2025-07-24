@@ -42,6 +42,9 @@
       try {
         const data = await UserService.getUserInfo()
         userStore.setUserInfo(data)
+        // 获取权限码
+        const perms = await UserService.getPermCode()
+        userStore.setPermCodes(perms)
       } catch (error) {
         console.error('获取用户信息失败', error)
       }
