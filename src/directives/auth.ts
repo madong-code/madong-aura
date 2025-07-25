@@ -59,7 +59,6 @@ function checkAuthPermission(el: HTMLElement, binding: AuthBinding): void {
 }
 
 function checkPermission(el: HTMLElement, binding: AuthBinding, permsCodes: string[]): void {
-  console.log('permsCodes', permsCodes)
   let hasPermission = false
   if (permsCodes.includes('admin') || permsCodes.includes('*')) {
     hasPermission = true
