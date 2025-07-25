@@ -31,4 +31,10 @@ Object.keys(dynamicRouteFiles)
     const moduleRoutes = routeModule?.default ?? []
     mergedRoutes.push(...moduleRoutes)
   })
-export const asyncRoutes: AppRouteRecord[] = [...mergedRoutes]
+// 添加排序逻辑
+const sortedRoutes = mergedRoutes.sort((a, b) => {
+  const orderA = a.meta?.order ?? 9999
+  const orderB = b.meta?.order ?? 9999
+  return orderA - orderB
+})
+export const asyncRoutes: AppRouteRecord[] = [...sortedRoutes]

@@ -43,6 +43,8 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
    * 需要特定的权限码标识才可以访问
    */
   perms?: string[]
+  // 排序，正序
+  order?: number
 }
 
 // 扩展路由记录
