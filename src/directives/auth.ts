@@ -14,7 +14,7 @@ function checkAuthPermission(el: HTMLElement, binding: AuthBinding): void {
   const hasPermission = authList.some((item) => item.authMark === binding.value)
 
   const userStore = useUserStore()
-  const permsCodes: string[] = userStore.getPermCodes || []
+  const permsCodes: string[] = userStore.info.buttons || []
 
   // 如果权限码为空，设置监听器等待数据加载
   if ((!hasPermission && permsCodes.length === 0) || permsCodes.length === 0) {
@@ -59,6 +59,7 @@ function checkAuthPermission(el: HTMLElement, binding: AuthBinding): void {
 }
 
 function checkPermission(el: HTMLElement, binding: AuthBinding, permsCodes: string[]): void {
+  console.log('permsCodes', permsCodes)
   let hasPermission = false
   if (permsCodes.includes('admin') || permsCodes.includes('*')) {
     hasPermission = true

@@ -108,6 +108,7 @@ export const useUserStore = defineStore(
     // 设置权限码
     const setPermCodes = (mPermCodes: string[]) => {
       permCodes.value = mPermCodes
+      info.value.buttons = mPermCodes
     }
 
     /**
