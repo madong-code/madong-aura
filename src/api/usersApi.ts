@@ -16,6 +16,12 @@ export class UserService {
       url: '/sys/user/info'
     })
   }
+  // 获取用户权限码
+  static getPermCode() {
+    return request.post<string[]>({
+      url: '/sys/user/permCode'
+    })
+  }
 
   // 获取用户列表
   static getUserList(params: Api.Common.PaginatingSearchParams) {

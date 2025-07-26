@@ -241,7 +241,14 @@
       // 存储token和用户信息
       userStore.setToken(token, refreshToken)
       const userInfo = await UserService.getUserInfo()
-      userStore.setUserInfo(userInfo)
+      let permCode = userInfo.buttons
+      if (!permCode) {
+        permCode = await UserService.getPermCode()
+      }
+      userStore.setUserInfo({
+        ...userInfo,
+        buttons: permCode
+      })
       userStore.setLoginStatus(true)
 
       // 登录成功处理
