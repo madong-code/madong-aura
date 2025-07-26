@@ -96,7 +96,7 @@ export const useUserStore = defineStore(
      * @param newRefreshToken 刷新令牌（可选）
      */
     const setToken = (newAccessToken: string, newRefreshToken?: string) => {
-      accessToken.value = newAccessToken
+      accessToken.value = `Bearer ${newAccessToken}`
       if (newRefreshToken) {
         refreshToken.value = newRefreshToken
       }
