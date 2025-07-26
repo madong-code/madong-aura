@@ -1,6 +1,7 @@
-import { RoutesAlias } from '../routesAlias'
 import { AppRouteRecord } from '@/types/router'
-
+import Sys from './modules/sys'
+import Base from './modules/base'
+import Examples from './modules/examples'
 /**
  * 菜单列表、异步路由
  *
@@ -14,83 +15,4 @@ import { AppRouteRecord } from '@/types/router'
  * RoutesAlias.Layout 指向的是布局组件，后端返回的菜单数据中，component 字段需要指向 /index/index
  * 路由元数据（meta）：异步路由在 asyncRoutes 中配置，静态路由在 staticRoutes 中配置
  */
-export const asyncRoutes: AppRouteRecord[] = [
-  {
-    name: 'Dashboard',
-    path: '/dashboard',
-    component: RoutesAlias.Layout,
-    meta: {
-      title: 'menus.dashboard.title',
-      icon: '&#xe721;',
-      roles: ['R_SUPER', 'R_ADMIN'] // 角色权限，前端控制模式（只有拥有这些角色的用户才能访问）
-    },
-    children: [
-      {
-        path: 'console',
-        name: 'Console',
-        component: RoutesAlias.Dashboard,
-        meta: {
-          title: 'menus.dashboard.console',
-          keepAlive: false,
-          fixedTab: true
-        }
-      },
-      {
-        path: 'analysis',
-        name: 'Analysis',
-        component: RoutesAlias.Analysis,
-        meta: {
-          title: 'menus.dashboard.analysis',
-          keepAlive: false
-        }
-      },
-      {
-        path: 'ecommerce',
-        name: 'Ecommerce',
-        component: RoutesAlias.Ecommerce,
-        meta: {
-          title: 'menus.dashboard.ecommerce',
-          keepAlive: false
-        }
-      }
-    ]
-  },
-  {
-    path: '/sys/manager',
-    name: 'sys:manager',
-    component: RoutesAlias.Layout,
-    meta: {
-      title: '系统设置',
-      icon: '&#xe7ae;'
-    },
-    children: [
-      {
-        path: '/sys/user/index',
-        name: 'sys:user',
-        component: '/sys/user/index',
-        meta: {
-          title: '用户管理',
-          keepAlive: true,
-          authList: [
-            {
-              title: '分页查询用户列表',
-              authMark: 'sys:user:page'
-            },
-            {
-              title: '新增用户',
-              authMark: 'sys:user:save'
-            },
-            {
-              title: '编辑用户',
-              authMark: 'sys:user:update'
-            },
-            {
-              title: '删除用户',
-              authMark: 'sys:user:remove'
-            }
-          ]
-        }
-      }
-    ]
-  }
-]
+export const asyncRoutes: AppRouteRecord[] = [...Sys, ...Base, ...Examples]

@@ -615,3 +615,4 @@ export const routes: AppRouteRecord[] = [
     }
   }
 ]
+export default routes
