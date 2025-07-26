@@ -39,6 +39,8 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
   activePath?: string
   /** 是否为全屏页面 */
   isFullPage?: boolean
+  /** 排序-正序 */
+  order?: number
 }
 
 // 扩展路由记录

@@ -1,7 +1,4 @@
 import { AppRouteRecord } from '@/types/router'
-import Sys from './modules/sys'
-import Base from './modules/base'
-import Examples from './modules/examples'
 /**
  * 菜单列表、异步路由
  *
@@ -15,4 +12,27 @@ import Examples from './modules/examples'
  * RoutesAlias.Layout 指向的是布局组件，后端返回的菜单数据中，component 字段需要指向 /index/index
  * 路由元数据（meta）：异步路由在 asyncRoutes 中配置，静态路由在 staticRoutes 中配置
  */
-export const asyncRoutes: AppRouteRecord[] = [...Sys, ...Base, ...Examples]
+type RouteModuleType = {
+  default: AppRouteRecord[]
+}
+const INGORE_MODULES = ['examples']
+const modules: any = import.meta.glob('./modules/**/**.ts', { eager: true })
+const moduleRuotes: AppRouteRecord[] = []
+Object.keys(modules)
+  .filter((key) => {
+    return !INGORE_MODULES.some((item) => {
+      return key.includes(item)
+    })
+  })
+  .forEach((key) => {
+    const mod = modules[key] as RouteModuleType
+    const modList = mod.default ?? []
+    moduleRuotes.push(...modList)
+  })
+// 按 meta.order 正序排序
+moduleRuotes.sort((a, b) => {
+  const orderA = a.meta?.order ?? 9999
+  const orderB = b.meta?.order ?? 9999
+  return orderA - orderB
+})
+export const asyncRoutes: AppRouteRecord[] = [...moduleRuotes]

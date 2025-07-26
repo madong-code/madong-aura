@@ -7,6 +7,7 @@ export const routes: AppRouteRecord[] = [
     name: 'sys:manager',
     component: RoutesAlias.Layout,
     meta: {
+      order: 10,
       title: '系统设置',
       icon: '&#xe7ae;'
     },
