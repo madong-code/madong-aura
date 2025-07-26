@@ -12,6 +12,7 @@
   import { UserService } from './api/usersApi'
   import { setThemeTransitionClass } from './utils/theme/animation'
   import { checkStorageCompatibility } from './utils/storage'
+  import { useCommon } from './composables/useCommon'
 
   const userStore = useUserStore()
   const { language } = storeToRefs(userStore)
@@ -42,7 +43,7 @@
       try {
         const data = await UserService.getUserInfo()
         let permCode = data.buttons
-        if (!permCode) {
+        if (useCommon().isFrontendMode.value && !permCode) {
           permCode = await UserService.getPermCode()
         }
         userStore.setUserInfo({

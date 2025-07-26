@@ -242,7 +242,7 @@
       userStore.setToken(token, refreshToken)
       const userInfo = await UserService.getUserInfo()
       let permCode = userInfo.buttons
-      if (!permCode) {
+      if (useCommon().isFrontendMode.value && !permCode) {
         permCode = await UserService.getPermCode()
       }
       userStore.setUserInfo({
@@ -299,6 +299,7 @@
   // 切换主题
   import { useTheme } from '@/composables/useTheme'
   import { UserService } from '@/api/usersApi'
+  import { useCommon } from '@/composables/useCommon'
 
   const toggleTheme = () => {
     let { LIGHT, DARK } = SystemThemeEnum

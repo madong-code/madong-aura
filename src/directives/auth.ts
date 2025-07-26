@@ -16,7 +16,9 @@ function checkAuthPermission(el: HTMLElement, binding: AuthBinding): void {
   const authList = (router.currentRoute.value.meta.authList as Array<{ authMark: string }>) || []
 
   // 检查是否有对应的权限标识
-  const hasPermission = authList.some((item) => item.authMark === binding.value)
+  const hasPermission = authList.some(
+    (item) => item.authMark === 'admin' || item.authMark === binding.value
+  )
 
   // 如果没有权限，移除元素
   if (!hasPermission) {
