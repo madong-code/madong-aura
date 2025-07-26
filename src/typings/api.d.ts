@@ -56,13 +56,13 @@ declare namespace Api {
   namespace User {
     /** 用户信息 */
     interface UserInfo {
-      userId: number
+      id: number
       userName: string
-      roles: string[]
+      roleCodes: string[]
       buttons: string[]
       avatar?: string
       email?: string
-      phone?: string
+      mobilePhone?: string
     }
 
     /** 用户列表数据 */

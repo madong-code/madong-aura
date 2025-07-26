@@ -193,7 +193,7 @@ async function getMenuData(router: Router): Promise<void> {
 async function processFrontendMenu(router: Router): Promise<void> {
   const menuList = asyncRoutes.map((route) => menuDataToRouter(route))
   const userStore = useUserStore()
-  const roles = userStore.info.roles
+  const roles = userStore.info.roleCodes
 
   if (!roles) {
     throw new Error('获取用户角色失败')
