@@ -43,11 +43,13 @@
     core: {
       apiFn: UserService.getUserList,
       apiParams: {
-        current: 1,
-        size: 20,
         name: '',
         phone: '',
         address: undefined
+      },
+      paginationKey: {
+        current: 'pageNum',
+        size: 'pageSize'
       },
       columnsFactory: () => [
         {
