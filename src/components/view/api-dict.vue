@@ -1,5 +1,6 @@
 <template>
-  <span>{{ cValue }}</span>
+  <el-tag v-if="cType" :type="cType">{{ cValue }}</el-tag>
+  <span v-else>{{ cValue }}</span>
 </template>
 <script lang="ts" setup>
   import { Option } from '@/types'
@@ -11,6 +12,11 @@
     },
     code: {
       type: String
+    },
+    typeMap: {
+      // 标签type映射关系
+      type: Object,
+      default: () => ({})
     }
   })
 
@@ -32,6 +38,10 @@
       const option = options.value.find((opt) => opt.value === props.value)
       return option ? option.label : props.value
     }
+  })
+  const cType = computed(() => {
+    const key = props.value?.toString() || '_'
+    return props.typeMap[key]
   })
 
   onBeforeMount(() => {

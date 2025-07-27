@@ -75,7 +75,12 @@
             // 用来格式化内容，可以返回文本，也可以返回组件
             return h(ApiDict, {
               value: row.sex,
-              code: 'sex'
+              code: 'sex',
+              typeMap: {
+                1: 'success',
+                2: 'danger',
+                3: 'info'
+              }
             })
           }
         },
