@@ -15,9 +15,10 @@ import { asyncRoutes } from '../routes/asyncRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/composables/useCommon'
 import { useWorktabStore } from '@/store/modules/worktab'
+import { UserService } from '@/api/usersApi'
 
 // 前端权限模式 loading 关闭延时，提升用户体验
-const LOADING_DELAY = 300
+const LOADING_DELAY = 100
 
 // 是否已注册动态路由
 const isRouteRegistered = ref(false)
@@ -152,6 +153,15 @@ async function handleDynamicRoutes(
     pendingLoading.value = true
     loadingService.showLoading()
 
+    // 获取用户信息
+    const userStore = useUserStore()
+    try {
+      const data = await UserService.getUserInfo()
+      userStore.setUserInfo(data)
+    } catch (error) {
+      console.error('获取用户信息失败', error)
+    }
+
     await getMenuData(router)
 
     // 处理根路径跳转
@@ -238,7 +248,9 @@ function filterEmptyMenus(menuList: AppRouteRecord[]): AppRouteRecord[] {
 
       // 过滤掉组件为空字符串且没有子菜单的项
       const isEmptyComponentMenu =
-        item.component === '' && (!item.children || item.children.length === 0)
+        item.component === '' &&
+        (!item.children || item.children.length === 0) &&
+        item.meta.isIframe !== true
 
       return !(isEmptyLayoutMenu || isEmptyComponentMenu)
     })
@@ -251,12 +263,9 @@ async function registerAndStoreMenu(router: Router, menuList: AppRouteRecord[]):
   if (!isValidMenuList(menuList)) {
     throw new Error('获取菜单列表失败，请重新登录')
   }
-
   const menuStore = useMenuStore()
-
   // 递归过滤掉为空的菜单项
   const list = filterEmptyMenus(menuList)
-
   menuStore.setMenuList(list)
   registerDynamicRoutes(router, list)
   isRouteRegistered.value = true

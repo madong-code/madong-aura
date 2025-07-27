@@ -9,10 +9,9 @@
   import zh from 'element-plus/es/locale/lang/zh-cn'
   import en from 'element-plus/es/locale/lang/en'
   import { systemUpgrade } from './utils/sys'
-  import { UserService } from './api/usersApi'
+
   import { setThemeTransitionClass } from './utils/theme/animation'
   import { checkStorageCompatibility } from './utils/storage'
-  import { useCommon } from './composables/useCommon'
   import { useDictStore } from './store/modules/dict'
 
   const userStore = useUserStore()
@@ -61,26 +60,5 @@
     setThemeTransitionClass(false)
     // 系统升级
     systemUpgrade()
-    // 获取用户信息
-    getUserInfo()
   })
-
-  // 获取用户信息
-  const getUserInfo = async () => {
-    if (userStore.isLogin) {
-      try {
-        const data = await UserService.getUserInfo()
-        let permCode = data.buttons
-        if (useCommon().isFrontendMode.value && !permCode) {
-          permCode = await UserService.getPermCode()
-        }
-        userStore.setUserInfo({
-          ...data,
-          buttons: permCode
-        })
-      } catch (error) {
-        console.error('获取用户信息失败', error)
-      }
-    }
-  }
 </script>
