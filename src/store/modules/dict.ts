@@ -3,6 +3,20 @@ import { defineStore } from 'pinia'
 import request from '@/utils/http'
 import { Option } from '@/types'
 
+// 定义字典项的接口
+interface DictItem {
+  name: string
+  dictItemValue: string | number
+  dictItemKey: string
+}
+
+// 定义字典的接口
+interface Dict {
+  name: string
+  dictKey: string
+  items: DictItem[]
+}
+
 interface DictState {
   dictMap: Map<string, Option[]>
   loadingMap: Map<string, boolean>
@@ -44,6 +58,29 @@ export const useDictStore = defineStore('dict', {
       } finally {
         // 加载完成后清除标记
         this.loadingMap.set(dictType, false)
+      }
+    },
+
+    // 初始化所有字典数据 - 适配新的数据结构
+    async initAllDicts(apiFun: () => Promise<Dict[]>): Promise<void> {
+      try {
+        // 调用传入的API函数获取所有字典数据
+        const allDicts = await apiFun()
+
+        // 将获取到的所有字典数据转换并存入缓存
+        allDicts.forEach((dict) => {
+          // 将 DictItem 转换为 Option 格式
+          const options: Option[] = dict.items.map((item) => ({
+            label: item.name,
+            value: item.dictItemValue
+          }))
+
+          // 以 dictKey 作为键存储
+          this.dictMap.set(dict.dictKey, options)
+        })
+      } catch (error) {
+        console.error('初始化所有字典数据失败:', error)
+        throw error
       }
     },
 
