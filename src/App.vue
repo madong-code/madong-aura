@@ -13,6 +13,7 @@
   import { setThemeTransitionClass } from './utils/theme/animation'
   import { checkStorageCompatibility } from './utils/storage'
   import { useDictStore } from './store/modules/dict'
+  import { DictService } from './api/dictApi'
 
   const userStore = useUserStore()
   const dictStore = useDictStore()
@@ -26,31 +27,9 @@
   onBeforeMount(() => {
     setThemeTransitionClass(true)
     // 这里可以一次性初始化所有字典
-    dictStore.initAllDicts(() => {
-      return Promise.resolve([
-        {
-          name: '性别',
-          dictKey: 'sex',
-          items: [
-            {
-              name: '男',
-              dictItemValue: 1,
-              dictItemKey: 'MAN'
-            },
-            {
-              name: '女',
-              dictItemValue: 2,
-              dictItemKey: 'WOMAN'
-            },
-            {
-              name: '未知',
-              dictItemValue: 3,
-              dictItemKey: 'UN_KNOW'
-            }
-          ]
-        }
-      ])
-    })
+    if (userStore.isLogin) {
+      dictStore.initAllDicts(DictService.getAllDict)
+    }
   })
 
   onMounted(() => {

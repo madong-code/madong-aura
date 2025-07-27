@@ -128,8 +128,8 @@
   import { LanguageEnum, SystemThemeEnum } from '@/enums/appEnum'
   import { useI18n } from 'vue-i18n'
   import { HttpError } from '@/utils/http/error'
-
   defineOptions({ name: 'Login' })
+  const dictStore = useDictStore()
 
   const { t } = useI18n()
   import { useSettingStore } from '@/store/modules/setting'
@@ -241,6 +241,8 @@
       // 存储token和用户信息
       userStore.setToken(token, refreshToken)
       userStore.setLoginStatus(true)
+      // 这里可以一次性初始化所有字典
+      dictStore.initAllDicts(DictService.getAllDict)
 
       // 登录成功处理
       showLoginSuccessNotice()
@@ -290,6 +292,8 @@
   // 切换主题
   import { useTheme } from '@/composables/useTheme'
   import { UserService } from '@/api/usersApi'
+  import { useDictStore } from '@/store/modules/dict'
+  import { DictService } from '@/api/dictApi'
 
   const toggleTheme = () => {
     let { LIGHT, DARK } = SystemThemeEnum
