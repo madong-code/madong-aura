@@ -97,7 +97,7 @@ async function handleRouteGuard(
 
   // 处理动态路由注册
   if (!isRouteRegistered.value && userStore.isLogin) {
-    await handleDynamicRoutes(to, router, next)
+    await handleDynamicRoutes(to, from, next, router)
     return
   }
 
@@ -116,7 +116,7 @@ async function handleRouteGuard(
 
   // 尝试刷新路由重新注册
   if (userStore.isLogin && !isRouteRegistered.value) {
-    await handleDynamicRoutes(to, router, next)
+    await handleDynamicRoutes(to, from, next, router)
     return
   }
 
@@ -145,8 +145,9 @@ async function handleLoginStatus(
  */
 async function handleDynamicRoutes(
   to: RouteLocationNormalized,
-  router: Router,
-  next: NavigationGuardNext
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+  router: Router
 ): Promise<void> {
   try {
     // 显示 loading 并标记 pending
