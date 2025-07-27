@@ -6,6 +6,7 @@
     "dev": "vite --open",
     "build": "vite build",
     "build:mock": "vite build --mode mock",
+    "build:test": "vite build --mode test",
     "serve": "vite preview",
     "lint": "eslint",
     "fix": "eslint --fix",

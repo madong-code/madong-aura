@@ -105,7 +105,7 @@ export function useTable<T = unknown, P extends BaseRequestParams = BaseRequestP
       apiParams = {} as Partial<P>,
       immediate = true,
       columnsFactory,
-      paginationKey = { current: 'current', size: 'size' }
+      paginationKey = { current: 'pageNum', size: 'pageSize' }
     },
     transform: { dataTransformer, responseAdapter = defaultResponseAdapter } = {},
     performance: {
@@ -119,8 +119,8 @@ export function useTable<T = unknown, P extends BaseRequestParams = BaseRequestP
   } = config
 
   // 🔧 分页字段名配置
-  const pageKey = paginationKey?.current || 'current'
-  const sizeKey = paginationKey?.size || 'size'
+  const pageKey = paginationKey?.current || 'pageNum'
+  const sizeKey = paginationKey?.size || 'pageSize'
 
   // 响应式触发器，用于手动更新缓存统计信息
   const cacheUpdateTrigger = ref(0)
