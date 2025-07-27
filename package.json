@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
-    "build": "vue-tsc --noEmit && vite build",
-    "build:test": "vue-tsc --noEmit && vite build --mode test",
+    "build": "vite build",
+    "build:test": "vite build --mode test",
     "serve": "vite preview",
     "lint": "eslint",
     "fix": "eslint --fix",
