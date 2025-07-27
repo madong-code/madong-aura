@@ -91,16 +91,16 @@ export const defaultResponseAdapter = <T>(response: unknown): ApiResponse<T> => 
   let pagination: Pick<ApiResponse<unknown>, 'current' | 'size'> | undefined
 
   // 处理标准格式或直接列表
-  const recordFields = ['records', 'data', 'list', 'items', 'result']
+  const recordFields = ['rows', 'records', 'data', 'list', 'items', 'result']
   records = extractRecords(res, recordFields)
-  total = extractTotal(res, records, ['total', 'count'])
+  total = extractTotal(res, records, ['recordCount', 'total', 'count'])
   pagination = extractPagination(res)
 
   // 如果没有找到，检查嵌套data
   if (records.length === 0 && 'data' in res && typeof res.data === 'object') {
     const data = res.data as Record<string, unknown>
-    records = extractRecords(data, ['list', 'records', 'items'])
-    total = extractTotal(data, records, ['total', 'count'])
+    records = extractRecords(data, ['rows', 'list', 'records', 'items'])
+    total = extractTotal(data, records, ['recordCount', 'total', 'count'])
     pagination = extractPagination(res, data)
 
     if (Array.isArray(res.data)) {
