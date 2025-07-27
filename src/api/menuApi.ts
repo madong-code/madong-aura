@@ -8,7 +8,7 @@ interface MenuResponse {
 // 菜单接口
 export const menuService = {
   async getMenuList(): Promise<MenuResponse> {
-    const menuList: AppRouteRecord[] = await request.get<AppRouteRecord[]>({
+    const menuList = await request.get<AppRouteRecord[]>({
       url: '/getArtDesignMenu'
     })
     return { menuList }

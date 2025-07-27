@@ -43,7 +43,7 @@
             @keyup.enter="handleSubmit"
             style="margin-top: 25px"
           >
-            <!--ElFormItem prop="account">
+            <ElFormItem prop="account">
               <ElSelect v-model="formData.account" @change="setupAccount" class="account-select">
                 <ElOption
                   v-for="account in accounts"
@@ -54,7 +54,7 @@
                   <span>{{ account.label }}</span>
                 </ElOption>
               </ElSelect>
-            </ElFormItem-->
+            </ElFormItem>
             <ElFormItem prop="username">
               <ElInput :placeholder="$t('login.placeholder[0]')" v-model.trim="formData.username" />
             </ElFormItem>
@@ -86,12 +86,12 @@
               }}</p>
             </div>
 
-            <!--div class="forget-password">
+            <div class="forget-password">
               <ElCheckbox v-model="formData.rememberPassword">{{
                 $t('login.rememberPwd')
               }}</ElCheckbox>
               <RouterLink :to="RoutesAlias.ForgetPassword">{{ $t('login.forgetPwd') }}</RouterLink>
-            </div-->
+            </div>
 
             <div style="margin-top: 30px">
               <ElButton
@@ -149,21 +149,21 @@
     {
       key: 'super',
       label: t('login.roles.super'),
-      userName: 'admin',
+      userName: 'superAdmin',
       password: '123456',
       roles: ['R_SUPER']
     },
     {
       key: 'admin',
       label: t('login.roles.admin'),
-      userName: 'Admin',
+      userName: 'admin',
       password: '123456',
       roles: ['R_ADMIN']
     },
     {
       key: 'user',
       label: t('login.roles.user'),
-      userName: 'User',
+      userName: 'test',
       password: '123456',
       roles: ['R_USER']
     }
@@ -241,10 +241,14 @@
       // 存储token和用户信息
       userStore.setToken(token, refreshToken)
       const userInfo = await UserService.getUserInfo()
-      userStore.setUserInfo(userInfo)
-      // 获取权限码
-      const perms = await UserService.getPermCode()
-      userStore.setPermCodes(perms)
+      let permCode = userInfo.buttons
+      if (useCommon().isFrontendMode.value && !permCode) {
+        permCode = await UserService.getPermCode()
+      }
+      userStore.setUserInfo({
+        ...userInfo,
+        buttons: permCode
+      })
       userStore.setLoginStatus(true)
 
       // 登录成功处理
@@ -295,6 +299,7 @@
   // 切换主题
   import { useTheme } from '@/composables/useTheme'
   import { UserService } from '@/api/usersApi'
+  import { useCommon } from '@/composables/useCommon'
 
   const toggleTheme = () => {
     let { LIGHT, DARK } = SystemThemeEnum

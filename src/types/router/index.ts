@@ -39,11 +39,7 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
   activePath?: string
   /** 是否为全屏页面 */
   isFullPage?: boolean
-  /**
-   * 需要特定的权限码标识才可以访问
-   */
-  perms?: string[]
-  // 排序，正序
+  /** 排序-正序 */
   order?: number
 }
 

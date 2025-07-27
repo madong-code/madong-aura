@@ -1,90 +1,20 @@
-<!-- 基础表格 -->
 <template>
   <div class="user-page art-full-height">
-    <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
-      <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" @refresh="refresh">
-        <template #left>
-          <ElButton v-ripple>新增用户</ElButton>
-        </template>
-      </ArtTableHeader>
-
-      <!-- 表格 -->
-      <ArtTable
-        rowKey="id"
-        :loading="loading"
-        :data="tableData"
-        :columns="columns"
-        :pagination="pagination"
-        @pagination:size-change="handleSizeChange"
-        @pagination:current-change="handleCurrentChange"
-      >
-      </ArtTable>
-    </ElCard>
+    <el-card header="自定义指令（后端控制模式）">
+      <el-button type="primary" v-auth="'sys:user:save'">添加</el-button>
+      <el-button type="primary" v-auth="'sys:user:update'">修改</el-button>
+      <el-button type="danger" v-auth="'sys:user:remove'">删除</el-button>
+    </el-card>
+    <el-card header="hasAuth方法">
+      <el-button type="primary" v-if="hasAuth('sys:user:save')">添加</el-button>
+      <el-button type="primary" v-if="hasAuth('sys:user:update')">修改</el-button>
+      <el-button type="danger" v-if="hasAuth('sys:user:remove')">删除</el-button>
+    </el-card>
   </div>
 </template>
-
 <script setup lang="ts">
-  import { useTable } from '@/composables/useTable'
-  import { UserService } from '@/api/usersApi'
-
   defineOptions({ name: 'sys:user' })
-
-  const {
-    tableData,
-    columns,
-    columnChecks,
-    isLoading: loading,
-    paginationState: pagination,
-    refreshAll: refresh,
-    onPageSizeChange: handleSizeChange,
-    onCurrentPageChange: handleCurrentChange
-  } = useTable<Api.User.UserListItem>({
-    core: {
-      apiFn: UserService.getUserList,
-      paginationKey: {
-        current: 'pageNum',
-        size: 'pageSize'
-      },
-      apiParams: {
-        // current: 1,
-        // size: 20,
-        name: '',
-        phone: '',
-        address: undefined
-      },
-      columnsFactory: () => [
-        {
-          prop: 'id',
-          label: 'ID'
-        },
-        {
-          prop: 'nickName',
-          label: '昵称'
-        },
-        {
-          prop: 'userGender',
-          label: '性别',
-          sortable: true,
-          formatter: (row) => row.userGender || '未知'
-        },
-        {
-          prop: 'userPhone',
-          label: '手机号'
-        },
-        {
-          prop: 'userEmail',
-          label: '邮箱'
-        }
-      ]
-    },
-    transform: {
-      responseAdapter: (response) => {
-        return {
-          records: response.rows,
-          total: response.recordCount
-        }
-      }
-    }
-  })
+  import { useAuth } from '@/composables/useAuth'
+  const { hasAuth } = useAuth()
 </script>
+<style lang="less" scoped></style>

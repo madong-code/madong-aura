@@ -33,8 +33,6 @@ export const useUserStore = defineStore(
     const accessToken = ref('')
     // 刷新令牌
     const refreshToken = ref('')
-    // 权限码
-    const permCodes = ref<string[]>([])
 
     // 计算属性：获取用户信息
     const getUserInfo = computed(() => info.value)
@@ -42,8 +40,6 @@ export const useUserStore = defineStore(
     const getSettingState = computed(() => useSettingStore().$state)
     // 计算属性：获取工作台状态
     const getWorktabState = computed(() => useWorktabStore().$state)
-    // 计算属性：获取权限码
-    const getPermCodes = computed(() => permCodes.value)
 
     /**
      * 设置用户信息
@@ -100,15 +96,10 @@ export const useUserStore = defineStore(
      * @param newRefreshToken 刷新令牌（可选）
      */
     const setToken = (newAccessToken: string, newRefreshToken?: string) => {
-      accessToken.value = newAccessToken
+      accessToken.value = `Bearer ${newAccessToken}`
       if (newRefreshToken) {
         refreshToken.value = newRefreshToken
       }
-    }
-    // 设置权限码
-    const setPermCodes = (mPermCodes: string[]) => {
-      permCodes.value = mPermCodes
-      info.value.buttons = mPermCodes
     }
 
     /**
@@ -128,8 +119,6 @@ export const useUserStore = defineStore(
       accessToken.value = ''
       // 清空刷新令牌
       refreshToken.value = ''
-      // 清空权限码
-      permCodes.value = []
       // 清空工作台已打开页面
       useWorktabStore().opened = []
       // 移除iframe路由缓存
@@ -154,7 +143,6 @@ export const useUserStore = defineStore(
       getUserInfo,
       getSettingState,
       getWorktabState,
-      getPermCodes,
       setUserInfo,
       setLoginStatus,
       setLanguage,
@@ -162,8 +150,7 @@ export const useUserStore = defineStore(
       setLockStatus,
       setLockPassword,
       setToken,
-      logOut,
-      setPermCodes
+      logOut
     }
   },
   {

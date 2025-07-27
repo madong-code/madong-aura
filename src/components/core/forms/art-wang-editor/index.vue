@@ -142,7 +142,7 @@
         allowedFileTypes: mergedUploadConfig.value.allowedFileTypes,
         server: uploadServer.value,
         headers: {
-          Authorization: `Bearer ${userStore.accessToken}`
+          Authorization: userStore.accessToken
         },
         onSuccess() {
           ElMessage.success(`图片上传成功 ${EmojiText[200]}`)

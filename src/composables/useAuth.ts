@@ -35,11 +35,12 @@ export const useAuth = () => {
   const hasAuth = (auth: string): boolean => {
     // 前端模式
     if (isFrontendMode.value) {
-      return frontendAuthList.includes(auth)
+      // 超级管理标识为admin==>所有权限
+      return frontendAuthList.includes('admin') || frontendAuthList.includes(auth)
     }
 
-    // 后端模式
-    return backendAuthList.some((item) => item?.authMark === auth)
+    // 后端模式 超级管理标识为admin==>所有权限
+    return backendAuthList.some((item) => item?.authMark === 'admin' || item?.authMark === auth)
   }
 
   return {

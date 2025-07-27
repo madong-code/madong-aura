@@ -12,6 +12,7 @@
   import { UserService } from './api/usersApi'
   import { setThemeTransitionClass } from './utils/theme/animation'
   import { checkStorageCompatibility } from './utils/storage'
+  import { useCommon } from './composables/useCommon'
 
   const userStore = useUserStore()
   const { language } = storeToRefs(userStore)
@@ -41,10 +42,14 @@
     if (userStore.isLogin) {
       try {
         const data = await UserService.getUserInfo()
-        userStore.setUserInfo(data)
-        // 获取权限码
-        const perms = await UserService.getPermCode()
-        userStore.setPermCodes(perms)
+        let permCode = data.buttons
+        if (useCommon().isFrontendMode.value && !permCode) {
+          permCode = await UserService.getPermCode()
+        }
+        userStore.setUserInfo({
+          ...data,
+          buttons: permCode
+        })
       } catch (error) {
         console.error('获取用户信息失败', error)
       }
