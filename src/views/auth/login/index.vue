@@ -240,15 +240,6 @@
 
       // 存储token和用户信息
       userStore.setToken(token, refreshToken)
-      const userInfo = await UserService.getUserInfo()
-      let permCode = userInfo.buttons
-      if (useCommon().isFrontendMode.value && !permCode) {
-        permCode = await UserService.getPermCode()
-      }
-      userStore.setUserInfo({
-        ...userInfo,
-        buttons: permCode
-      })
       userStore.setLoginStatus(true)
 
       // 登录成功处理
@@ -299,7 +290,6 @@
   // 切换主题
   import { useTheme } from '@/composables/useTheme'
   import { UserService } from '@/api/usersApi'
-  import { useCommon } from '@/composables/useCommon'
 
   const toggleTheme = () => {
     let { LIGHT, DARK } = SystemThemeEnum

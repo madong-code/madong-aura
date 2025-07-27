@@ -157,7 +157,14 @@ async function handleDynamicRoutes(
     const userStore = useUserStore()
     try {
       const data = await UserService.getUserInfo()
-      userStore.setUserInfo(data)
+      let permCode = data.buttons
+      if (useCommon().isFrontendMode.value && !permCode) {
+        permCode = await UserService.getPermCode()
+      }
+      userStore.setUserInfo({
+        ...data,
+        buttons: permCode
+      })
     } catch (error) {
       console.error('获取用户信息失败', error)
     }
