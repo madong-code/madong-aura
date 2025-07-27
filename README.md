@@ -1,83 +1,79 @@
-English | [简体中文](./README.zh-CN.md)
+## 简介
 
-## About Art Design Pro
+mldong-ant-design基于art-design-pro的快速开发框架前端工程
 
-As a developer, I needed to build admin management systems for multiple projects but found that traditional systems couldn't fully meet the requirements for user experience and visual design. Therefore, I created Art Design Pro, an open-source admin management solution focused on user experience and rapid development. Based on the ElementPlus design specifications, it has been visually optimized to provide a more beautiful and practical front-end interface, helping you easily build high-quality admin systems.
+## 特性
 
-## Official Website
+- **最新技术栈**：使用 Vue3/vite 等前端前沿技术开发
+- **TypeScript**：应用程序级 JavaScript 的语言
+- **主题**：提供多套主题色彩，可配置自定义主题
+- **国际化**：内置完善的国际化方案
+- **权限**：内置完善的动态路由权限生成方案
 
-[Visit the official documentation](https://www.lingchen.kim/art-design-pro/docs/en/)
+## 演示地址(apifox云mock版)
 
-## Demo Images
+- [演示地址-mock版](https://www.mldong.com/?nav=onlinedemo-8)
 
-### Light Theme
+测试账号: admin/123456
 
-![Light Theme](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover1.png)
 
-![Light Theme](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover2.png)
+## 安装使用
 
-### Dark Theme
-
-![Dark Theme](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover3.png)
-
-![Dark Theme](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover4.png)
-
-## Features
-
-- Uses the latest technology stack
-- Built-in common business component templates
-- Provides multiple theme modes and customizable themes
-- Beautiful UI design, excellent user experience, and attention to detail
-- System fully supports customization, meeting your personalized needs
-
-## Functionality
-
-- Rich theme switching
-- Global search
-- Lock screen
-- Multi-tabs
-- Global breadcrumbs
-- Multi-language support
-- Icon library
-- Rich text editor
-- Echarts charts
-- Utils toolkit
-- Network exception handling
-- Route-level authentication
-- Sidebar menu authentication
-- Authentication directives
-- Mobile adaptation
-- Excellent persistent storage solution
-- Local data storage validation
-- Code commit validation and formatting
-- Code commit standardization
-
-## Compatibility
-
-- Supports modern mainstream browsers such as Chrome, Safari, Firefox, etc.
-
-## Installation and Running
+1. 获取项目代码
 
 ```bash
-# Install dependencies
+git clone https://gitee.com/mldong/mldong-art-design.git
+```
+
+2. 安装依赖
+
+```bash
+cd mldong-art-design
+
+
 pnpm install
+```
 
-# If pnpm install fails, try using the following command to install dependencies
-pnpm install --ignore-scripts
+- 修改代理地址vite.config.mts
 
-# Start local development environment
+```ts
+return defineConfig({
+    define: {
+      __APP_VERSION__: JSON.stringify(VITE_VERSION)
+    },
+    base: VITE_BASE_URL,
+    server: {
+      port: parseInt(VITE_PORT),
+      proxy: {
+        '/api': {
+          target: 'https://apifox-plus.mldong.com/m1/3323228-2823297-default',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      },
+      host: true
+    },
+```
+
+- 运行
+
+```bash
 pnpm dev
+```
 
-# Build for production
+4. 打包
+
+```bash
 pnpm build
 ```
 
-## Technical Support
+## 相关项目
 
-QQ Group: <a href="https://qm.qq.com/cgi-bin/qm/qr?k=Gg6yzZLFaNgmRhK0T5Qcjf7-XcAFWWXm&jump_from=webapi&authKey=YpRKVJQyFKYbGTiKw0GJ/YQXnNF+GdXNZC5beQQqnGZTvuLlXoMO7nw5fNXvmVhA">821834289</a> (Click the link to join the group chat)
+- [配套后端-java版](https://gitee.com/mldong/mldong)
+- [配套后端-python版](https://gitee.com/mldong666/mldong-python)
+- [配套后端-nodejs版](https://gitee.com/mldong/mldong-koa)
+- [配套后端-GoLang版](https://gitee.com/mldong/mldong-goframe)
+- [vben5文档](https://doc.mldong.com/mldong/front-pro/pro-explain.html/)
 
-## Donation
+## 学习视频
 
-If my project has been helpful to you, donations are welcome! Your support will be used to purchase tools like ChatGPT, Cursor, etc., to improve development efficiency and make the project even better. Thank you for your encouragement and support!
-
-![Donation QR Code](https://www.qiniu.lingchen.kim/%E7%BB%84%202%402x%202.png)

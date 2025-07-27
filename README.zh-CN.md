@@ -1,88 +1,79 @@
-简体中文 | [English](./README.md)
+## 简介
 
-## 关于 Art Design Pro
+mldong-ant-design基于art-design-pro的快速开发框架前端工程
 
-作为一名开发者，我在多个项目中需要搭建后台管理系统，但发现传统系统在用户体验和视觉设计上不能完全满足需求。因此，我创建了 Art Design Pro，一款专注于用户体验和快速开发的开源后台管理解决方案。基于 ElementPlus 设计规范，进行了视觉上的精心优化，提供更美观、更实用的前端界面，帮助你轻松构建高质量的后台系统。
+## 特性
 
-## 官方网站
+- **最新技术栈**：使用 Vue3/vite 等前端前沿技术开发
+- **TypeScript**：应用程序级 JavaScript 的语言
+- **主题**：提供多套主题色彩，可配置自定义主题
+- **国际化**：内置完善的国际化方案
+- **权限**：内置完善的动态路由权限生成方案
 
-[访问官方文档](https://www.lingchen.kim/art-design-pro/docs/)
+## 演示地址(apifox云mock版)
 
-## 演示图
+- [演示地址-mock版](https://www.mldong.com/?nav=onlinedemo-8)
 
-### 浅色主题
+测试账号: admin/123456
 
-![浅色主题](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover1.png)
 
-![浅色主题](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover2.png)
+## 安装使用
 
-### 暗黑主题
-
-![暗黑主题](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover3.png)
-
-![暗黑主题](https://www.qiniu.lingchen.kim/art_design_pro_readme_cover4.png)
-
-## 特点
-
-- 使用最新技术栈
-- 内置常用业务组件模版
-- 提供多种主题模式，可以自定义主题
-- 漂亮的 UI设计、极致的用户体验和细节处理
-- 系统全面支持自定义设置，满足您的个性化需求
-
-## 技术栈
-
-- 开发框架：Vue3、TypeScript、Vite、Element-Plus
-- 代码规范：Eslint、Prettier、Stylelint、Husky、Lint-staged、cz-git
-
-## 功能
-
-- 丰富主题切换
-- 全局搜索
-- 锁屏
-- 多标签页
-- 全局面包屑
-- 多语言
-- 图标库
-- 富文本编辑器
-- Echarts 图表
-- Utils工具包
-- 网络异常处理
-- 路由级别鉴权
-- 侧边栏菜单鉴权
-- 鉴权指令
-- 移动端适配
-- 优秀的持久化存储方案
-- 本地数据存储校验
-- 代码提交校验与格式化
-- 代码提交规范化
-
-## 兼容性
-
-- 支持 Chrome、Safari、Firefox 等现代主流浏览器。
-
-## 安装运行
+1. 获取项目代码
 
 ```bash
-# 安装依赖
+git clone https://gitee.com/mldong/mldong-art-design.git
+```
+
+2. 安装依赖
+
+```bash
+cd mldong-art-design
+
+
 pnpm install
+```
 
-# 如果 pnpm install 安装失败，尝试使用下面的命令安装依赖
-pnpm install --ignore-scripts
+- 修改代理地址vite.config.mts
 
-# 本地开发环境启动
+```ts
+return defineConfig({
+    define: {
+      __APP_VERSION__: JSON.stringify(VITE_VERSION)
+    },
+    base: VITE_BASE_URL,
+    server: {
+      port: parseInt(VITE_PORT),
+      proxy: {
+        '/api': {
+          target: 'https://apifox-plus.mldong.com/m1/3323228-2823297-default',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      },
+      host: true
+    },
+```
+
+- 运行
+
+```bash
 pnpm dev
+```
 
-# 生产环境打包
+4. 打包
+
+```bash
 pnpm build
 ```
 
-## 技术支持
+## 相关项目
 
-QQ群：<a href="https://qm.qq.com/cgi-bin/qm/qr?k=Gg6yzZLFaNgmRhK0T5Qcjf7-XcAFWWXm&jump_from=webapi&authKey=YpRKVJQyFKYbGTiKw0GJ/YQXnNF+GdXNZC5beQQqnGZTvuLlXoMO7nw5fNXvmVhA">821834289</a>（点击链接加入群聊）
+- [配套后端-java版](https://gitee.com/mldong/mldong)
+- [配套后端-python版](https://gitee.com/mldong666/mldong-python)
+- [配套后端-nodejs版](https://gitee.com/mldong/mldong-koa)
+- [配套后端-GoLang版](https://gitee.com/mldong/mldong-goframe)
+- [vben5文档](https://doc.mldong.com/mldong/front-pro/pro-explain.html/)
 
-## 捐赠
+## 学习视频
 
-如果我的项目对你有所帮助，欢迎捐赠支持！你的支持将用于购买 ChatGPT、Cursor 等工具，以提升开发效率，让项目变得更好。感谢你的鼓励与支持！
-
-![捐赠二维码](https://www.qiniu.lingchen.kim/%E7%BB%84%202%402x%202.png)

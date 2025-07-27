@@ -29,7 +29,7 @@ export default ({ mode }: { mode: string }) => {
       port: parseInt(VITE_PORT),
       proxy: {
         '/api': {
-          target: 'https://m1.apifoxmock.com/m1/3323228-2823297-default',
+          target: 'https://apifox-plus.mldong.com/m1/3323228-2823297-default',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }
