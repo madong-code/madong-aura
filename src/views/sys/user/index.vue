@@ -10,6 +10,7 @@
       <el-button type="primary" v-if="hasAuth('sys:user:update')">修改</el-button>
       <el-button type="danger" v-if="hasAuth('sys:user:remove')">删除</el-button>
     </el-card>
+    <el-button type="danger" v-roles="'R_SUPER'">拥有R_SUPER角色</el-button>
   </div>
 </template>
 <script setup lang="ts">

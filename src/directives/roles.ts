@@ -15,7 +15,7 @@ interface RolesBinding extends DirectiveBinding {
 
 function checkRolePermission(el: HTMLElement, binding: RolesBinding): void {
   const userStore = useUserStore()
-  const userRoles = userStore.getUserInfo.roles
+  const userRoles = userStore.getUserInfo.roleCodes
 
   // 如果用户角色为空或未定义，移除元素
   if (!userRoles?.length) {
