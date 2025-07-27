@@ -1,5 +1,13 @@
 <template>
-  <span>{{ cValue }}</span>
+  <template v-if="isTag">
+    <el-space v-if="cNewOptions.length">
+      <template v-for="item in cNewOptions" :key="item.value">
+        <el-tag size="small" v-if="item.type" :type="item.type">{{ item.label }}</el-tag>
+        <span v-else>{{ item.label }}</span>
+      </template>
+    </el-space>
+  </template>
+  <span v-else>{{ cValue }}</span>
 </template>
 <script lang="ts" setup>
   import { Option } from '@/types'
@@ -11,12 +19,18 @@
     },
     code: {
       type: String
+    },
+    typeMap: {
+      // 标签type映射关系
+      type: Object,
+      default: () => ({})
     }
   })
 
   const dictStore = useDictStore()
   const options = ref<Option[]>([])
-
+  const isTag = computed(() => Object.keys(props.typeMap).length > 0)
+  type NewOptionType = Option & { type?: any }
   const cValue = computed(() => {
     // 查找匹配的选项并返回标签
     if (Array.isArray(props.value)) {
@@ -31,6 +45,26 @@
       // 处理单个值的情况
       const option = options.value.find((opt) => opt.value === props.value)
       return option ? option.label : props.value
+    }
+  })
+  const cNewOptions = computed<NewOptionType[]>(() => {
+    const createOption = (label: string | number, value: string | number): NewOptionType => ({
+      label: String(label),
+      value
+    })
+
+    if (Array.isArray(props.value)) {
+      return props.value.map((val: any) => {
+        const option = options.value.find((opt) => opt.value === val)
+        return option ? { ...option, type: props.typeMap[val] } : createOption(val, val)
+      })
+    } else {
+      const option = options.value.find((opt) => opt.value === props.value)
+      return option
+        ? [{ ...option, type: props.typeMap[option.value] }]
+        : props.value !== null && props.value !== undefined
+          ? [createOption(props.value, props.value)]
+          : []
     }
   })
 

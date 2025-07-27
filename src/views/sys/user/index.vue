@@ -19,11 +19,6 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
-        <template #sexText="{ row }">
-          <ElTag v-if="row.sex === 1" type="success">男</ElTag>
-          <ElTag v-else-if="row.sex === 2" type="danger">女</ElTag>
-          <ElTag v-else type="info">未知</ElTag>
-        </template>
       </ArtTable>
     </ElCard>
   </div>
@@ -32,7 +27,6 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
-  import { ElTag } from 'element-plus'
   import ApiDict from '@/components/view/api-dict.vue'
 
   defineOptions({ name: 'UserMixedUsageExample' })
@@ -75,7 +69,12 @@
             // 用来格式化内容，可以返回文本，也可以返回组件
             return h(ApiDict, {
               value: row.sex,
-              code: 'sex'
+              code: 'sex',
+              typeMap: {
+                1: 'success',
+                2: 'danger',
+                3: 'info'
+              }
             })
           }
         },
@@ -84,10 +83,20 @@
           label: '手机号'
         },
         {
-          prop: 'sexText',
+          prop: 'sexList',
           label: '性别',
-          useSlot: true
-          // slotName: 'test'
+          formatter: (row) => {
+            // 用来格式化内容，可以返回文本，也可以返回组件
+            return h(ApiDict, {
+              value: row.sexList,
+              code: 'sex',
+              typeMap: {
+                1: 'success',
+                2: 'danger',
+                3: 'info'
+              }
+            })
+          }
         }
       ]
     },
@@ -106,11 +115,11 @@
         // data==>上面的records
         data?.forEach((item: any) => {
           if (item.sex == 1) {
-            item.sexText = '男'
+            item.sexList = [1]
           } else if (item.sex == 2) {
-            item.sexText = '女'
+            item.sexList = [2]
           } else {
-            item.sexText = '未知'
+            item.sexList = [1, 2, 3]
           }
         })
         return data
