@@ -33,6 +33,7 @@
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { ElTag } from 'element-plus'
+  import ApiDict from '@/components/view/api-dict.vue'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -72,26 +73,10 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            let sexText = '未知'
-            let type = 'info'
-            if (row.sex == 1) {
-              sexText = '男'
-              type = 'success'
-            } else if (row.sex == 2) {
-              sexText = '女'
-              type = 'danger'
-            }
-            return h(
-              ElTag,
-              {
-                type: type as any
-              },
-              {
-                default() {
-                  return sexText
-                }
-              }
-            )
+            return h(ApiDict, {
+              value: row.sex,
+              code: 'sex'
+            })
           }
         },
         {
