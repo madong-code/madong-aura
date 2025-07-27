@@ -27,6 +27,7 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
+  import { ElTag } from 'element-plus'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -64,7 +65,29 @@
           prop: 'sex',
           label: '性别',
           sortable: true,
-          formatter: (row) => row.sex || '未知'
+          formatter: (row) => {
+            // 用来格式化内容，可以返回文本，也可以返回组件
+            let sexText = '未知'
+            let type = 'info'
+            if (row.sex == 1) {
+              sexText = '男'
+              type = 'success'
+            } else if (row.sex == 2) {
+              sexText = '女'
+              type = 'danger'
+            }
+            return h(
+              ElTag,
+              {
+                type: type as any
+              },
+              {
+                default() {
+                  return sexText
+                }
+              }
+            )
+          }
         },
         {
           prop: 'userPhone',
