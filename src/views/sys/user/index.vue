@@ -47,10 +47,10 @@
         phone: '',
         address: undefined
       },
-      paginationKey: {
-        current: 'pageNum',
-        size: 'pageSize'
-      },
+      // paginationKey: {
+      //   current: 'pageNum',
+      //   size: 'pageSize'
+      // },
       columnsFactory: () => [
         {
           prop: 'id',
@@ -75,6 +75,18 @@
           label: '邮箱'
         }
       ]
+    },
+    transform: {
+      // responseAdapter(response) {
+      //   // 响应数据适配器
+      //   // console.log(response)
+      //   return {
+      //     records: response.rows,
+      //     total: response.recordCount,
+      //     current: response.pageNum,
+      //     size: response.pageSize
+      //   }
+      // }
     }
   })
 </script>
