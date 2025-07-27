@@ -2,8 +2,9 @@
   <span>{{ cValue }}</span>
 </template>
 <script lang="ts" setup>
-  import request from '@/utils/http'
   import { Option } from '@/types'
+  import { useDictStore } from '@/store/modules/dict'
+
   const props = defineProps({
     value: {
       type: [String, Number, Array]
@@ -12,7 +13,10 @@
       type: String
     }
   })
+
+  const dictStore = useDictStore()
   const options = ref<Option[]>([])
+
   const cValue = computed(() => {
     // 查找匹配的选项并返回标签
     if (Array.isArray(props.value)) {
@@ -29,20 +33,21 @@
       return option ? option.label : props.value
     }
   })
+
   onBeforeMount(() => {
     requestData()
   })
-  const requestData = () => {
-    request
-      .post<Option[]>({
-        url: '/sys/dict/getByDictType',
-        params: {
-          dictType: props.code
-        }
-      })
-      .then((res) => {
-        // 保存获取到的选项数据
-        options.value = res || []
-      })
+
+  const requestData = async () => {
+    if (!props.code) return
+
+    try {
+      // 从 store 获取字典数据（会自动缓存）
+      const data = await dictStore.getDictByType(props.code)
+      options.value = data
+    } catch (error) {
+      console.error('获取字典数据失败:', error)
+      options.value = []
+    }
   }
 </script>
