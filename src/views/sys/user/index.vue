@@ -19,6 +19,11 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
+        <template #sexText="{ row }">
+          <ElTag v-if="row.sex === 1" type="success">男</ElTag>
+          <ElTag v-else-if="row.sex === 2" type="danger">女</ElTag>
+          <ElTag v-else type="info">未知</ElTag>
+        </template>
       </ArtTable>
     </ElCard>
   </div>
@@ -95,7 +100,9 @@
         },
         {
           prop: 'sexText',
-          label: '性别'
+          label: '性别',
+          useSlot: true
+          // slotName: 'test'
         }
       ]
     },
