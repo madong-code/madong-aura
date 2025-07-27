@@ -39,7 +39,7 @@
     refreshAll: refresh,
     onPageSizeChange: handleSizeChange,
     onCurrentPageChange: handleCurrentChange
-  } = useTable<Api.User.UserListItem>({
+  } = useTable<any>({
     core: {
       apiFn: UserService.getUserList,
       apiParams: {
@@ -61,18 +61,18 @@
           label: '昵称'
         },
         {
-          prop: 'userGender',
+          prop: 'sex',
           label: '性别',
           sortable: true,
-          formatter: (row) => row.userGender || '未知'
+          formatter: (row) => row.sex || '未知'
         },
         {
           prop: 'userPhone',
           label: '手机号'
         },
         {
-          prop: 'userEmail',
-          label: '邮箱'
+          prop: 'sexText',
+          label: '性别'
         }
       ]
     },
@@ -87,6 +87,19 @@
       //     size: response.pageSize
       //   }
       // }
+      dataTransformer(data: any) {
+        // data==>上面的records
+        data?.forEach((item: any) => {
+          if (item.sex == 1) {
+            item.sexText = '男'
+          } else if (item.sex == 2) {
+            item.sexText = '女'
+          } else {
+            item.sexText = '未知'
+          }
+        })
+        return data
+      }
     }
   })
 </script>
