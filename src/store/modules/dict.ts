@@ -2,12 +2,17 @@
 import { defineStore } from 'pinia'
 import request from '@/utils/http'
 import { Option } from '@/types'
-
+type NewOption = Option & { 
+  bgColor?: string
+  textColor?: string }
 // 定义字典项的接口
 interface DictItem {
   name: string
   dictItemValue: string | number
   dictItemKey: string
+  bgColor?: string
+  textColor?: string
+  disabled?: boolean
 }
 
 // 定义字典的接口
@@ -18,18 +23,18 @@ interface Dict {
 }
 
 interface DictState {
-  dictMap: Map<string, Option[]>
+  dictMap: Map<string, NewOption[]>
   loadingMap: Map<string, boolean>
 }
 
 export const useDictStore = defineStore('dict', {
   state: (): DictState => ({
-    dictMap: new Map<string, Option[]>(),
+    dictMap: new Map<string, NewOption[]>(),
     loadingMap: new Map<string, boolean>()
   }),
 
   actions: {
-    async getDictByType(dictType: string): Promise<Option[]> {
+    async getDictByType(dictType: string): Promise<NewOption[]> {
       // 如果已经存在缓存，直接返回
       if (this.dictMap.has(dictType)) {
         return this.dictMap.get(dictType) || []
@@ -46,7 +51,7 @@ export const useDictStore = defineStore('dict', {
       this.loadingMap.set(dictType, true)
 
       try {
-        const res = await request.post<Option[]>({
+        const res = await request.post<NewOption[]>({
           url: '/sys/dict/getByDictType',
           params: { dictType }
         })
@@ -70,9 +75,12 @@ export const useDictStore = defineStore('dict', {
         // 将获取到的所有字典数据转换并存入缓存
         allDicts.forEach((dict) => {
           // 将 DictItem 转换为 Option 格式
-          const options: Option[] = dict.items.map((item) => ({
+          const options: NewOption[] = dict.items.map((item) => ({
             label: item.name,
-            value: item.dictItemValue
+            value: item.dictItemValue,
+            disabled: item.disabled ? true: false,
+            bgColor: item.bgColor,
+            textColor: item.textColor,
           }))
 
           // 以 dictKey 作为键存储

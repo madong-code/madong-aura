@@ -21,6 +21,10 @@
   import { useDictStore } from '@/store/modules/dict'
   import { useChart } from '@/composables/useChart'
   import { PropType } from 'vue'
+  type NewOption = Option & {
+    bgColor?: string
+    textColor?: string
+  }
   // 使用基础的 useChart hook
   const { isDark } = useChart()
   type ColorType = {
@@ -97,7 +101,7 @@
   })
 
   const dictStore = useDictStore()
-  const options = ref<Option[]>([])
+  const options = ref<NewOption[]>([])
   const effect = computed<'dark' | 'light' | 'plain'>(() => {
     return isDark.value ? 'dark' : 'light'
   })
@@ -107,7 +111,7 @@
       Object.keys(props.colorMap).length > 0 ||
       props.useColorList
   )
-  type NewOptionType = Option & { tagProps?: any }
+  type NewOptionType = NewOption & { tagProps?: any }
   const cValue = computed(() => {
     // 查找匹配的选项并返回标签
     if (Array.isArray(props.value)) {
@@ -129,7 +133,7 @@
     value
   })
   const createTagOption = (
-    option: Option | null,
+    option: NewOption | null,
     value: string | number,
     index: number
   ): NewOptionType => {
@@ -147,14 +151,15 @@
 
     // 优先使用 colorMap 配置，其次使用 colorList 配置
     const colorConfig = colorMapConfig || colorListConfig
-
+    const bgColor = option.bgColor || colorConfig?.bgColor
+    const textColor = option.textColor || colorConfig?.textColor
     return {
       ...option,
       tagProps: {
         type: props.typeMap[option.value],
-        color: colorConfig?.bgColor,
+        color: bgColor,
         style: {
-          color: colorConfig?.textColor
+          color: textColor
         }
       }
     }
