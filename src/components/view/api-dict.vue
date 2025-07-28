@@ -52,6 +52,20 @@
       // 标签color映射关系
       type: Object as PropType<Record<string | number, ColorType>>,
       default: () => ({})
+    },
+    colorList: {
+      // 预设的颜色列表
+      type: Array as PropType<ColorType[]>,
+      default: () => [
+        { textColor: '#13deb9', bgColor: '#E7FCF8' },
+        { textColor: '#ff4d4f', bgColor: '#FFEDED' },
+        { textColor: '#909399', bgColor: '#F4F4F5' }
+      ]
+    },
+    useColorList: {
+      // 是否使用预设的颜色列表
+      type: Boolean,
+      default: true
     }
   })
 
@@ -61,7 +75,10 @@
     return isDark.value ? 'dark' : 'light'
   })
   const isTag = computed(
-    () => Object.keys(props.typeMap).length > 0 || Object.keys(props.colorMap).length > 0
+    () =>
+      Object.keys(props.typeMap).length > 0 ||
+      Object.keys(props.colorMap).length > 0 ||
+      props.useColorList
   )
   type NewOptionType = Option & { tagProps?: any }
   const cValue = computed(() => {
@@ -84,17 +101,31 @@
     label: String(label),
     value
   })
-  const createTagOption = (option: Option | null, value: string | number): NewOptionType => {
+  const createTagOption = (
+    option: Option | null,
+    value: string | number,
+    index: number
+  ): NewOptionType => {
     if (!option) {
       return createOption(value, value)
     }
+
+    // 从 colorMap 获取颜色配置
+    const colorMapConfig = props.colorMap[option.value]
+    // 从 colorList 获取颜色配置（处理索引越界）
+    const colorListConfig =
+      props.colorList.length > 0 ? props.colorList[index % props.colorList.length] : undefined
+
+    // 优先使用 colorMap 配置，其次使用 colorList 配置
+    const colorConfig = colorMapConfig || colorListConfig
+
     return {
       ...option,
       tagProps: {
         type: props.typeMap[option.value],
-        color: props.colorMap[option.value]?.bgColor,
+        color: colorConfig?.bgColor,
         style: {
-          color: props.colorMap[option.value]?.textColor
+          color: colorConfig?.textColor
         }
       }
     }
@@ -103,15 +134,19 @@
     if (Array.isArray(props.value)) {
       return props.value.map((val: any) => {
         const option = options.value.find((opt) => opt.value === val) ?? null
-        return createTagOption(option, val)
+        // 修复：根据选项在 options 数组中的实际索引来获取 colorList 颜色
+        const optionIndex = option ? options.value.indexOf(option) : 0
+        return createTagOption(option, val, optionIndex)
       })
     } else {
       if (props.value === undefined || props.value === null) {
         return []
       }
       const option = options.value.find((opt) => opt.value === props.value)
+      // 修复：根据选项在 options 数组中的实际索引来获取 colorList 颜色
+      const optionIndex = option ? options.value.indexOf(option) : 0
       return option
-        ? [createTagOption(option, props.value)]
+        ? [createTagOption(option, props.value, optionIndex)]
         : props.value !== null && props.value !== undefined
           ? [createOption(props.value, props.value)]
           : []
