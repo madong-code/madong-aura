@@ -62,6 +62,18 @@
           label: '昵称'
         },
         {
+          prop: 'adminType',
+          label: '管理员类型',
+          sortable: true,
+          formatter: (row) => {
+            // 用来格式化内容，可以返回文本，也可以返回组件
+            return h(ApiDict, {
+              value: row.adminType,
+              code: 'sys_user_admin_type'
+            })
+          }
+        },
+        {
           prop: 'sex',
           label: '性别',
           sortable: true,
@@ -69,12 +81,17 @@
             // 用来格式化内容，可以返回文本，也可以返回组件
             return h(ApiDict, {
               value: row.sex,
-              code: 'sex',
-              typeMap: {
-                1: 'success',
-                2: 'danger',
-                3: 'info'
-              }
+              code: 'sex'
+              // typeMap: {
+              //   1: 'success',
+              //   2: 'danger',
+              //   3: 'info'
+              // }
+              // colorMap: {
+              //   1: { textColor: '#13deb9', bgColor: '#E7FCF8' },
+              //   2: { textColor: '#ff4d4f', bgColor: '#FFEDED' },
+              //   3: { textColor: '#909399', bgColor: '#F4F4F5' }
+              // }
             })
           }
         },
@@ -94,7 +111,8 @@
                 1: 'success',
                 2: 'danger',
                 3: 'info'
-              }
+              },
+              useColorList: false
             })
           }
         }
