@@ -80,43 +80,38 @@
       return option ? option.label : props.value
     }
   })
+  const createOption = (label: string | number, value: string | number): NewOptionType => ({
+    label: String(label),
+    value
+  })
+  const createTagOption = (option: Option | null, value: string | number): NewOptionType => {
+    if (!option) {
+      return createOption(value, value)
+    }
+    return {
+      ...option,
+      tagProps: {
+        type: props.typeMap[option.value],
+        color: props.colorMap[option.value]?.bgColor,
+        style: {
+          color: props.colorMap[option.value]?.textColor
+        }
+      }
+    }
+  }
   const cNewOptions = computed<NewOptionType[]>(() => {
-    const createOption = (label: string | number, value: string | number): NewOptionType => ({
-      label: String(label),
-      value
-    })
-
     if (Array.isArray(props.value)) {
       return props.value.map((val: any) => {
-        const option = options.value.find((opt) => opt.value === val)
-        return option
-          ? {
-              ...option,
-              tagProps: {
-                type: props.typeMap[val],
-                color: props.colorMap[val]?.bgColor,
-                style: {
-                  color: props.colorMap[option.value]?.textColor
-                }
-              }
-            }
-          : createOption(val, val)
+        const option = options.value.find((opt) => opt.value === val) ?? null
+        return createTagOption(option, val)
       })
     } else {
+      if (props.value === undefined || props.value === null) {
+        return []
+      }
       const option = options.value.find((opt) => opt.value === props.value)
       return option
-        ? [
-            {
-              ...option,
-              tagProps: {
-                type: props.typeMap[option.value],
-                color: props.colorMap[option.value]?.bgColor,
-                style: {
-                  color: props.colorMap[option.value]?.textColor
-                }
-              }
-            }
-          ]
+        ? [createTagOption(option, props.value)]
         : props.value !== null && props.value !== undefined
           ? [createOption(props.value, props.value)]
           : []
