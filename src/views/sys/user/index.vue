@@ -62,6 +62,18 @@
           label: '昵称'
         },
         {
+          prop: 'adminType',
+          label: '管理员类型',
+          sortable: true,
+          formatter: (row) => {
+            // 用来格式化内容，可以返回文本，也可以返回组件
+            return h(ApiDict, {
+              value: row.adminType,
+              code: 'sys_user_admin_type'
+            })
+          }
+        },
+        {
           prop: 'sex',
           label: '性别',
           sortable: true,

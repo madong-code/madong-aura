@@ -57,9 +57,36 @@
       // 预设的颜色列表
       type: Array as PropType<ColorType[]>,
       default: () => [
-        { textColor: '#13deb9', bgColor: '#E7FCF8' },
-        { textColor: '#ff4d4f', bgColor: '#FFEDED' },
-        { textColor: '#909399', bgColor: '#F4F4F5' }
+        { textColor: '#13deb9', bgColor: '#E7FCF8' }, // 青绿色系
+        { textColor: '#1890ff', bgColor: '#E6F7FF' }, // 蓝色系
+        { textColor: '#52c41a', bgColor: '#F6FFED' }, // 绿色系
+        { textColor: '#faad14', bgColor: '#FFFBE6' }, // 橙色系
+        { textColor: '#722ed1', bgColor: '#F9F0FF' }, // 紫色系
+        { textColor: '#f5222d', bgColor: '#FFF1F0' }, // 深红系
+        { textColor: '#fa8c16', bgColor: '#FFF7E6' }, // 深橙系
+        { textColor: '#a0d911', bgColor: '#FCFFE6' }, // 黄绿系
+        { textColor: '#eb2f96', bgColor: '#FFF0F6' }, // 粉色系
+        { textColor: '#13c2c2', bgColor: '#E6FFFB' }, // 青色系
+        { textColor: '#531dab', bgColor: '#F3EAFD' }, // 深紫系
+        { textColor: '#003a8c', bgColor: '#E6F4FF' }, // 深蓝系
+        { textColor: '#237804', bgColor: '#F2FFF0' }, // 深绿系
+        { textColor: '#d4b106', bgColor: '#FEFFE6' }, // 金黄系
+        { textColor: '#d4380d', bgColor: '#FFF2E8' }, // 棕橙系
+        { textColor: '#0050b3', bgColor: '#E8F4FF' }, // 宝蓝系
+        { textColor: '#389e0d', bgColor: '#F2FFF2' }, // 草绿系
+        { textColor: '#b37feb', bgColor: '#F9F0FF' }, // 浅紫系
+        { textColor: '#ff7a45', bgColor: '#FFF2E8' }, // 浅橙系
+        { textColor: '#36cfc9', bgColor: '#E6FFFB' }, // 浅青系
+        { textColor: '#ffec3d', bgColor: '#FEFFE6' }, // 明黄系
+        { textColor: '#9254de', bgColor: '#F3EAFD' }, // 薰衣系
+        { textColor: '#ffc53d', bgColor: '#FFFBE6' }, // 金橙系
+        { textColor: '#ff4d4f', bgColor: '#FFEDED' }, // 玫红系
+        { textColor: '#40a9ff', bgColor: '#E6F7FF' }, // 天蓝系
+        { textColor: '#73d13d', bgColor: '#F6FFED' }, // 嫩绿系
+        { textColor: '#ff85c0', bgColor: '#FFF0F6' }, // 桃粉系
+        { textColor: '#ffc069', bgColor: '#FFF7E6' }, // 杏橙系
+        { textColor: '#ff4d4f', bgColor: '#FFEDED' }, // 红色系
+        { textColor: '#909399', bgColor: '#F4F4F5' } // 灰色系
       ]
     },
     useColorList: {
