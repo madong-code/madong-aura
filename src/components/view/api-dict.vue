@@ -2,9 +2,14 @@
   <template v-if="isTag">
     <el-space v-if="cNewOptions.length">
       <template v-for="item in cNewOptions" :key="item.value">
-        <el-tag :size="size" :hit="hit" :effect="effect" v-if="item.type" :type="item.type">{{
-          item.label
-        }}</el-tag>
+        <el-tag
+          :size="size"
+          :hit="hit"
+          :effect="effect"
+          v-if="item.tagProps"
+          v-bind="item.tagProps"
+          >{{ item.label }}</el-tag
+        >
         <span v-else>{{ item.label }}</span>
       </template>
     </el-space>
@@ -39,6 +44,11 @@
       // 标签type映射关系
       type: Object,
       default: () => ({})
+    },
+    colorMap: {
+      // 标签color映射关系
+      type: Object,
+      default: () => ({})
     }
   })
 
@@ -47,8 +57,10 @@
   const effect = computed<'dark' | 'light' | 'plain'>(() => {
     return isDark.value ? 'dark' : 'light'
   })
-  const isTag = computed(() => Object.keys(props.typeMap).length > 0)
-  type NewOptionType = Option & { type?: any }
+  const isTag = computed(
+    () => Object.keys(props.typeMap).length > 0 || Object.keys(props.colorMap).length > 0
+  )
+  type NewOptionType = Option & { tagProps?: any }
   const cValue = computed(() => {
     // 查找匹配的选项并返回标签
     if (Array.isArray(props.value)) {
@@ -74,12 +86,28 @@
     if (Array.isArray(props.value)) {
       return props.value.map((val: any) => {
         const option = options.value.find((opt) => opt.value === val)
-        return option ? { ...option, type: props.typeMap[val] } : createOption(val, val)
+        return option
+          ? {
+              ...option,
+              tagProps: {
+                type: props.typeMap[val],
+                color: props.colorMap[val]
+              }
+            }
+          : createOption(val, val)
       })
     } else {
       const option = options.value.find((opt) => opt.value === props.value)
       return option
-        ? [{ ...option, type: props.typeMap[option.value] }]
+        ? [
+            {
+              ...option,
+              tagProps: {
+                type: props.typeMap[option.value],
+                color: props.colorMap[option.value]
+              }
+            }
+          ]
         : props.value !== null && props.value !== undefined
           ? [createOption(props.value, props.value)]
           : []

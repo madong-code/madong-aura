@@ -70,10 +70,15 @@
             return h(ApiDict, {
               value: row.sex,
               code: 'sex',
-              typeMap: {
-                1: 'success',
-                2: 'danger',
-                3: 'info'
+              // typeMap: {
+              //   1: 'success',
+              //   2: 'danger',
+              //   3: 'info'
+              // }
+              colorMap: {
+                1: '#13deb9',
+                2: '#FFEDED',
+                3: '#F4F4F5'
               }
             })
           }
