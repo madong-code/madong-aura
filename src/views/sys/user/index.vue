@@ -76,9 +76,9 @@
               //   3: 'info'
               // }
               colorMap: {
-                1: '#13deb9',
-                2: '#FFEDED',
-                3: '#F4F4F5'
+                1: { textColor: '#13deb9', bgColor: '#E7FCF8' },
+                2: { textColor: '#ff4d4f', bgColor: '#FFEDED' },
+                3: { textColor: '#909399', bgColor: '#F4F4F5' }
               }
             })
           }

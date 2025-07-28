@@ -23,7 +23,10 @@
   import { PropType } from 'vue'
   // 使用基础的 useChart hook
   const { isDark } = useChart()
-
+  type ColorType = {
+    bgColor: string
+    textColor: string
+  }
   const props = defineProps({
     value: {
       type: [String, Number, Array]
@@ -47,7 +50,7 @@
     },
     colorMap: {
       // 标签color映射关系
-      type: Object,
+      type: Object as PropType<Record<string | number, ColorType>>,
       default: () => ({})
     }
   })
@@ -91,7 +94,10 @@
               ...option,
               tagProps: {
                 type: props.typeMap[val],
-                color: props.colorMap[val]
+                color: props.colorMap[val]?.bgColor,
+                style: {
+                  color: props.colorMap[option.value]?.textColor
+                }
               }
             }
           : createOption(val, val)
@@ -104,7 +110,10 @@
               ...option,
               tagProps: {
                 type: props.typeMap[option.value],
-                color: props.colorMap[option.value]
+                color: props.colorMap[option.value]?.bgColor,
+                style: {
+                  color: props.colorMap[option.value]?.textColor
+                }
               }
             }
           ]
