@@ -141,7 +141,9 @@
     const colorMapConfig = props.colorMap[option.value]
     // 从 colorList 获取颜色配置（处理索引越界）
     const colorListConfig =
-      props.colorList.length > 0 ? props.colorList[index % props.colorList.length] : undefined
+      props.useColorList && props.colorList.length > 0
+        ? props.colorList[index % props.colorList.length]
+        : undefined
 
     // 优先使用 colorMap 配置，其次使用 colorList 配置
     const colorConfig = colorMapConfig || colorListConfig

@@ -111,7 +111,8 @@
                 1: 'success',
                 2: 'danger',
                 3: 'info'
-              }
+              },
+              useColorList: false
             })
           }
         }
