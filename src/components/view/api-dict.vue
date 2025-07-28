@@ -2,7 +2,9 @@
   <template v-if="isTag">
     <el-space v-if="cNewOptions.length">
       <template v-for="item in cNewOptions" :key="item.value">
-        <el-tag size="small" v-if="item.type" :type="item.type">{{ item.label }}</el-tag>
+        <el-tag :size="size" :hit="hit" :effect="effect" v-if="item.type" :type="item.type">{{
+          item.label
+        }}</el-tag>
         <span v-else>{{ item.label }}</span>
       </template>
     </el-space>
@@ -12,6 +14,10 @@
 <script lang="ts" setup>
   import { Option } from '@/types'
   import { useDictStore } from '@/store/modules/dict'
+  import { useChart } from '@/composables/useChart'
+  import { PropType } from 'vue'
+  // 使用基础的 useChart hook
+  const { isDark } = useChart()
 
   const props = defineProps({
     value: {
@@ -19,6 +25,15 @@
     },
     code: {
       type: String
+    },
+    hit: {
+      type: Boolean,
+      default: false
+    },
+
+    size: {
+      type: [String] as PropType<'' | 'small' | 'default' | 'large'>,
+      default: 'small'
     },
     typeMap: {
       // 标签type映射关系
@@ -29,6 +44,9 @@
 
   const dictStore = useDictStore()
   const options = ref<Option[]>([])
+  const effect = computed<'dark' | 'light' | 'plain'>(() => {
+    return isDark.value ? 'dark' : 'light'
+  })
   const isTag = computed(() => Object.keys(props.typeMap).length > 0)
   type NewOptionType = Option & { type?: any }
   const cValue = computed(() => {
