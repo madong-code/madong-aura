@@ -27,8 +27,7 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
-  import ApiDict from '@/components/view/api-dict.vue'
-  import ViewSelect from '@/components/view/select.vue'
+  import { componentMap } from '@/components/view/component-map'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -68,7 +67,7 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(ViewSelect, {
+            return h(componentMap.get('Select') as any, {
               value: row.adminType,
               options: [
                 {
@@ -89,7 +88,7 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(ApiDict, {
+            return h(componentMap.get('ApiDict') as any, {
               value: row.sex,
               code: 'sex'
               // typeMap: {
@@ -114,7 +113,7 @@
           label: '性别',
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(ApiDict, {
+            return h(componentMap.get('ApiDict') as any, {
               value: row.sexList,
               code: 'sex',
               typeMap: {
