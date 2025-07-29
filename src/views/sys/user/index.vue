@@ -28,6 +28,7 @@
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import ApiDict from '@/components/view/api-dict.vue'
+  import ViewSelect from '@/components/view/select.vue'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -67,9 +68,18 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(ApiDict, {
+            return h(ViewSelect, {
               value: row.adminType,
-              code: 'sys_user_admin_type'
+              options: [
+                {
+                  label: '超级管理员',
+                  value: 1
+                },
+                {
+                  label: '普通管理员',
+                  value: 2
+                }
+              ]
             })
           }
         },
