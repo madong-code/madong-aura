@@ -27,7 +27,7 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
-  import { componentMap } from '@/components/view/component-map'
+  import { getComponent } from '@/components/view/component-map'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -67,7 +67,7 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(componentMap.get('Select') as any, {
+            return h(getComponent('Select'), {
               value: row.adminType,
               options: [
                 {
@@ -88,7 +88,7 @@
           sortable: true,
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(componentMap.get('ApiDict') as any, {
+            return h(getComponent('ApiDict'), {
               value: row.sex,
               code: 'sex'
               // typeMap: {
@@ -113,7 +113,7 @@
           label: '性别',
           formatter: (row) => {
             // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(componentMap.get('ApiDict') as any, {
+            return h(getComponent('ApiDict'), {
               value: row.sexList,
               code: 'sex',
               typeMap: {
