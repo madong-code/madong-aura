@@ -27,7 +27,6 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
-  import { getComponent } from '@/components/view/component-map'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 
@@ -65,43 +64,22 @@
           prop: 'adminType',
           label: '管理员类型',
           sortable: true,
-          formatter: (row) => {
-            // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(getComponent('Select'), {
-              value: row.adminType,
-              options: [
-                {
-                  label: '超级管理员',
-                  value: 1
-                },
-                {
-                  label: '普通管理员',
-                  value: 2
-                }
-              ]
-            })
+          component: 'Select',
+          componentProps: {
+            options: [
+              { label: '超级管理员', value: 1 },
+              { label: '管理员', value: 2 },
+              { label: '普通用户', value: 3 }
+            ]
           }
         },
         {
           prop: 'sex',
           label: '性别',
           sortable: true,
-          formatter: (row) => {
-            // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(getComponent('ApiDict'), {
-              value: row.sex,
-              code: 'sex'
-              // typeMap: {
-              //   1: 'success',
-              //   2: 'danger',
-              //   3: 'info'
-              // }
-              // colorMap: {
-              //   1: { textColor: '#13deb9', bgColor: '#E7FCF8' },
-              //   2: { textColor: '#ff4d4f', bgColor: '#FFEDED' },
-              //   3: { textColor: '#909399', bgColor: '#F4F4F5' }
-              // }
-            })
+          component: 'ApiDict',
+          componentProps: {
+            code: 'sex'
           }
         },
         {
@@ -111,18 +89,15 @@
         {
           prop: 'sexList',
           label: '性别',
-          formatter: (row) => {
-            // 用来格式化内容，可以返回文本，也可以返回组件
-            return h(getComponent('ApiDict'), {
-              value: row.sexList,
-              code: 'sex',
-              typeMap: {
-                1: 'success',
-                2: 'danger',
-                3: 'info'
-              },
-              useColorList: false
-            })
+          component: 'ApiDict',
+          componentProps: {
+            code: 'sex',
+            typeMap: {
+              1: 'success',
+              2: 'danger',
+              3: 'info'
+            },
+            useColorList: false
           }
         }
       ]

@@ -27,6 +27,10 @@
     value: {
       type: [String, Number, Array]
     },
+    record: {
+      // 当前行数据
+      type: Object
+    },
     code: {
       type: String
     },

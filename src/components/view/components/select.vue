@@ -11,6 +11,10 @@
     value: {
       type: [String, Number, Array]
     },
+    record: {
+      // 当前行数据
+      type: Object
+    },
     options: {
       type: Array as PropType<NewOption[]>,
       default: () => []
