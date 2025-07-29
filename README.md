@@ -77,6 +77,7 @@ pnpm build
 
 ## 学习视频
 
+
 * 第一章·基础篇
    - [环境准备](https://www.bilibili.com/cheese/play/ep1893365)
    - [体验一下](https://www.bilibili.com/cheese/play/ep1893366)
@@ -129,6 +130,13 @@ pnpm build
    - [自定义列ApiDict回显组件·AI生成预设颜色列表](https://www.bilibili.com/cheese/play/ep1897286)
    - [自定义列ApiDict回显组件·修复useColorList无效](https://www.bilibili.com/cheese/play/ep1897287)
    - [自定义列ApiDict回显组件·使用接口中的颜色配置](https://www.bilibili.com/cheese/play/ep1897289)
+   - [自定义列ApiDict回显组件·重构类型定义](https://www.bilibili.com/cheese/play/ep1899739)
+   - [自定义列回显组件优化·初探](https://www.bilibili.com/cheese/play/ep1899741)
+   - [自定义列回显组件优化·引入componentMap机制](https://www.bilibili.com/cheese/play/ep1899742)
+   - [自定义列回显组件优化·新增管理componentMap方法](https://www.bilibili.com/cheese/play/ep1899743)
+   - [自定义列回显组件优化·自动注册](https://www.bilibili.com/cheese/play/ep1899744)
+   - [自定义列新增component和componentProps配置](https://www.bilibili.com/cheese/play/ep1899745)
+   - [自定义列回显组件·终](https://www.bilibili.com/cheese/play/ep1899746)
 
 
    持续更新中……
