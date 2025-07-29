@@ -1,11 +1,29 @@
 // const modules: any = import.meta.glob('./components/**/**.vue', { eager: true })
 import { Component } from 'vue'
-import ApiDict from './components/api-dict.vue'
-import Select from './components/select.vue'
 const componentMap = new Map<string, Component>()
+const componentObj = import.meta.glob('./components/**/**.vue', { eager: true })
+// 将key转换为大驼峰命名
+function toPascalCase(str: string): string {
+  // 从完整路径中提取文件名，例如：./components/api-dict.vue => api-dict
+  const match = str.match(/\/([^/]+)\.vue$/)
+  if (!match) return ''
+  const fileName = match[1]
+  // 按照减号分割并转换为大驼峰
+  return fileName
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('') // 合并为大驼峰
+}
+Object.keys(componentObj).forEach((key) => {
+  const componentName = toPascalCase(key)
+  // 假设组件在 componentObj[key] 中，注册逻辑可以在这里添加
+  // console.log(componentName) // 输出处理后的组件名，如 ApiDict, Select 等
+  const comm: any = componentObj[key]
+  if (comm) {
+    addComponent(componentName, comm.default as Component)
+  }
+})
 
-addComponent('ApiDict', ApiDict)
-addComponent('Select', Select)
 const EmptyComponent = defineComponent({
   name: 'EmptyComponent',
   setup() {
