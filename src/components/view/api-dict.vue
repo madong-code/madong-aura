@@ -17,20 +17,12 @@
   <span v-else>{{ cValue }}</span>
 </template>
 <script lang="ts" setup>
-  import { Option } from '@/types'
   import { useDictStore } from '@/store/modules/dict'
   import { useChart } from '@/composables/useChart'
   import { PropType } from 'vue'
-  type NewOption = Option & {
-    bgColor?: string
-    textColor?: string
-  }
+  import { ColorType, NewOption } from '@/types/component/dict'
   // 使用基础的 useChart hook
   const { isDark } = useChart()
-  type ColorType = {
-    bgColor: string
-    textColor: string
-  }
   const props = defineProps({
     value: {
       type: [String, Number, Array]
