@@ -1,4 +1,5 @@
 // const modules: any = import.meta.glob('./components/**/**.vue', { eager: true })
+import { ColumnOption } from '@/types'
 import { Component } from 'vue'
 const componentMap = new Map<string, Component>()
 const componentObj = import.meta.glob('./components/**/**.vue', { eager: true })
@@ -51,4 +52,20 @@ export function hasComponent(name: string) {
 // 获取所有组件
 export function getAllComponents() {
   return componentMap
+}
+/**
+ * 列格式化
+ * @param column 列配置
+ */
+export function viewColumnFormatter(column: ColumnOption<any>) {
+  if (column.component && hasComponent(column.component as string)) {
+    column.formatter = (row: any) => {
+      const component = getComponent(column.component as string)
+      return h(component, {
+        ...column.componentProps,
+        record: row,
+        value: row[column.prop as string]
+      })
+    }
+  }
 }

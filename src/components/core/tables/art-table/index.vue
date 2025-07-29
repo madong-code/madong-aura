@@ -235,6 +235,9 @@
     delete columnProps.headerSlotName
     delete columnProps.useSlot
     delete columnProps.slotName
+    // 删除回显组件属性
+    delete columnProps.component
+    delete columnProps.componentProps
     return columnProps
   }
 
