@@ -93,6 +93,10 @@ export interface ColumnOption<T = any> {
   headerSlotName?: string
   // 其他属性
   [key: string]: any
+  // 列回显组件
+  component?: string
+  // 列回显组件属性
+  componentProps?: Record<string, any>
 }
 
 // 分页配置

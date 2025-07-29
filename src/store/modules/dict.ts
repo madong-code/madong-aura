@@ -1,26 +1,7 @@
 // src/store/modules/dict.ts
 import { defineStore } from 'pinia'
 import request from '@/utils/http'
-import { Option } from '@/types'
-type NewOption = Option & { 
-  bgColor?: string
-  textColor?: string }
-// 定义字典项的接口
-interface DictItem {
-  name: string
-  dictItemValue: string | number
-  dictItemKey: string
-  bgColor?: string
-  textColor?: string
-  disabled?: boolean
-}
-
-// 定义字典的接口
-interface Dict {
-  name: string
-  dictKey: string
-  items: DictItem[]
-}
+import { Dict, NewOption } from '@/types/component/dict'
 
 interface DictState {
   dictMap: Map<string, NewOption[]>
@@ -78,9 +59,9 @@ export const useDictStore = defineStore('dict', {
           const options: NewOption[] = dict.items.map((item) => ({
             label: item.name,
             value: item.dictItemValue,
-            disabled: item.disabled ? true: false,
+            disabled: item.disabled ? true : false,
             bgColor: item.bgColor,
-            textColor: item.textColor,
+            textColor: item.textColor
           }))
 
           // 以 dictKey 作为键存储

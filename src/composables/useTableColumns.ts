@@ -3,6 +3,7 @@
 import { ref, computed } from 'vue'
 import { $t } from '@/locales'
 import type { ColumnOption } from '@/types/component'
+import { viewColumnFormatter } from '@/components/view/component-map'
 
 // 工具函数：根据列配置生成列选择状态
 const getColumnChecks = <T>(columns: ColumnOption<T>[]): ColumnOption<T>[] => {
@@ -64,6 +65,8 @@ export function useTableColumns<T = any>(columnsFactory: () => ColumnOption<T>[]
       } else {
         columnMap.set(column.prop as string, column)
       }
+      // 追加自定义列回显组件的逻辑
+      viewColumnFormatter(column)
     })
 
     return columnChecks.value
