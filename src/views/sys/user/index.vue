@@ -49,6 +49,16 @@
       elColSpan: 6
     },
     {
+      label: '字典',
+      prop: 'sex',
+      type: 'dict',
+      config: {
+        clearable: true,
+        code: 'sex'
+      },
+      elColSpan: 4
+    },
+    {
       label: '是否锁定',
       prop: 'isLocked',
       type: 'radio',
@@ -66,7 +76,7 @@
         clearable: true,
         multiple: true
       },
-      elColSpan: 6
+      elColSpan: 3
     },
     {
       label: '性别',
@@ -90,7 +100,7 @@
         clearable: true,
         multiple: true
       },
-      elColSpan: 6
+      elColSpan: 3
     },
     {
       label: '注册时间',

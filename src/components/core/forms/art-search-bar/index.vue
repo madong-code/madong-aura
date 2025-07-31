@@ -62,6 +62,7 @@
   import ArtSearchSelect from './widget/art-search-select/index.vue'
   import ArtSearchRadio from './widget/art-search-radio/index.vue'
   import ArtSearchDate from './widget/art-search-date/index.vue'
+  import ArtSearchDict from './widget/art-search-dict/index.vue'
   import type { SearchComponentType, SearchFormItem } from '@/types'
   import type { Component } from 'vue'
 
@@ -136,7 +137,8 @@
     yearrange: ArtSearchDate,
     week: ArtSearchDate,
     time: ArtSearchDate,
-    timerange: ArtSearchDate
+    timerange: ArtSearchDate,
+    dict: ArtSearchDict
   } as const satisfies Record<SearchComponentType, Component>)
 
   /**
