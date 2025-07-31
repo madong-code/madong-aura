@@ -53,8 +53,7 @@
       prop: 'createTime',
       type: 'daterange',
       config: {
-        clearable: true,
-        type: 'daterange'
+        clearable: true
       },
       elColSpan: 6
     }
