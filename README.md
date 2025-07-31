@@ -77,7 +77,6 @@ pnpm build
 
 ## 学习视频
 
-
 * 第一章·基础篇
    - [环境准备](https://www.bilibili.com/cheese/play/ep1893365)
    - [体验一下](https://www.bilibili.com/cheese/play/ep1893366)
@@ -137,6 +136,10 @@ pnpm build
    - [自定义列回显组件优化·自动注册](https://www.bilibili.com/cheese/play/ep1899744)
    - [自定义列新增component和componentProps配置](https://www.bilibili.com/cheese/play/ep1899745)
    - [自定义列回显组件·终](https://www.bilibili.com/cheese/play/ep1899746)
-
+   - [搜索表单·初探](https://www.bilibili.com/cheese/play/ep1905465)
+   - [搜索表单·常用控件](https://www.bilibili.com/cheese/play/ep1905466)
+   - [搜索表单·修复日期控制bug](https://www.bilibili.com/cheese/play/ep1905467)
+   - [搜索表单·select和radio](https://www.bilibili.com/cheese/play/ep1905478)
+   - [搜索表单·自定义字典组件·初探](https://www.bilibili.com/cheese/play/ep1905479)
 
    持续更新中……

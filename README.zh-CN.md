@@ -129,6 +129,17 @@ pnpm build
    - [自定义列ApiDict回显组件·AI生成预设颜色列表](https://www.bilibili.com/cheese/play/ep1897286)
    - [自定义列ApiDict回显组件·修复useColorList无效](https://www.bilibili.com/cheese/play/ep1897287)
    - [自定义列ApiDict回显组件·使用接口中的颜色配置](https://www.bilibili.com/cheese/play/ep1897289)
-
+   - [自定义列ApiDict回显组件·重构类型定义](https://www.bilibili.com/cheese/play/ep1899739)
+   - [自定义列回显组件优化·初探](https://www.bilibili.com/cheese/play/ep1899741)
+   - [自定义列回显组件优化·引入componentMap机制](https://www.bilibili.com/cheese/play/ep1899742)
+   - [自定义列回显组件优化·新增管理componentMap方法](https://www.bilibili.com/cheese/play/ep1899743)
+   - [自定义列回显组件优化·自动注册](https://www.bilibili.com/cheese/play/ep1899744)
+   - [自定义列新增component和componentProps配置](https://www.bilibili.com/cheese/play/ep1899745)
+   - [自定义列回显组件·终](https://www.bilibili.com/cheese/play/ep1899746)
+   - [搜索表单·初探](https://www.bilibili.com/cheese/play/ep1905465)
+   - [搜索表单·常用控件](https://www.bilibili.com/cheese/play/ep1905466)
+   - [搜索表单·修复日期控制bug](https://www.bilibili.com/cheese/play/ep1905467)
+   - [搜索表单·select和radio](https://www.bilibili.com/cheese/play/ep1905478)
+   - [搜索表单·自定义字典组件·初探](https://www.bilibili.com/cheese/play/ep1905479)
 
    持续更新中……
