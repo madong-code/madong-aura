@@ -45,7 +45,18 @@
       type: 'input',
       config: {
         clearable: true
-      }
+      },
+      elColSpan: 6
+    },
+    {
+      label: '注册时间',
+      prop: 'createTime',
+      type: 'daterange',
+      config: {
+        clearable: true,
+        type: 'daterange'
+      },
+      elColSpan: 6
     }
   ]
   const handleReset = () => {
