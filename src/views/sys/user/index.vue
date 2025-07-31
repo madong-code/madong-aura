@@ -49,6 +49,50 @@
       elColSpan: 6
     },
     {
+      label: '是否锁定',
+      prop: 'isLocked',
+      type: 'radio',
+      options: [
+        {
+          label: '是',
+          value: 1
+        },
+        {
+          label: '否',
+          value: 0
+        }
+      ],
+      config: {
+        clearable: true,
+        multiple: true
+      },
+      elColSpan: 6
+    },
+    {
+      label: '性别',
+      prop: 'sex',
+      type: 'select',
+      options: [
+        {
+          label: '男',
+          value: 1
+        },
+        {
+          label: '女',
+          value: 2
+        },
+        {
+          label: '未知',
+          value: 3
+        }
+      ],
+      config: {
+        clearable: true,
+        multiple: true
+      },
+      elColSpan: 6
+    },
+    {
       label: '注册时间',
       prop: 'createTime',
       type: 'daterange',
