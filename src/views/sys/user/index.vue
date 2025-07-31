@@ -1,7 +1,13 @@
 <!-- 基础表格 -->
 <template>
   <div class="user-page art-full-height">
-    <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
+    <ArtSearchBar
+      v-model:filter="searchFormState"
+      :items="formItems"
+      @reset="handleReset"
+      @search="handleSearch"
+    />
+    <ElCard class="art-table-card" shadow="never">
       <!-- 表格头部 -->
       <ArtTableHeader v-model:columns="columnChecks" @refresh="refresh">
         <template #left>
@@ -27,9 +33,92 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
+  import { SearchFormItem } from '@/types'
 
   defineOptions({ name: 'UserMixedUsageExample' })
-
+  const searchFormState = ref({})
+  // --- 表单配置项 ---
+  const formItems: SearchFormItem[] = [
+    {
+      label: '用户名',
+      prop: 'name',
+      type: 'input',
+      config: {
+        clearable: true
+      },
+      elColSpan: 6
+    },
+    {
+      label: '字典',
+      prop: 'sex',
+      type: 'dict',
+      config: {
+        clearable: true,
+        code: 'sex'
+      },
+      elColSpan: 4
+    },
+    {
+      label: '是否锁定',
+      prop: 'isLocked',
+      type: 'radio',
+      options: [
+        {
+          label: '是',
+          value: 1
+        },
+        {
+          label: '否',
+          value: 0
+        }
+      ],
+      config: {
+        clearable: true,
+        multiple: true
+      },
+      elColSpan: 3
+    },
+    {
+      label: '性别',
+      prop: 'sex',
+      type: 'select',
+      options: [
+        {
+          label: '男',
+          value: 1
+        },
+        {
+          label: '女',
+          value: 2
+        },
+        {
+          label: '未知',
+          value: 3
+        }
+      ],
+      config: {
+        clearable: true,
+        multiple: true
+      },
+      elColSpan: 3
+    },
+    {
+      label: '注册时间',
+      prop: 'createTime',
+      type: 'daterange',
+      config: {
+        clearable: true
+      },
+      elColSpan: 6
+    }
+  ]
+  const handleReset = () => {
+    searchFormState.value = {}
+    searchData()
+  }
+  const handleSearch = () => {
+    searchData(searchFormState.value)
+  }
   const {
     tableData,
     columns,
@@ -37,15 +126,14 @@
     isLoading: loading,
     paginationState: pagination,
     refreshAll: refresh,
+    searchData,
     onPageSizeChange: handleSizeChange,
     onCurrentPageChange: handleCurrentChange
   } = useTable<any>({
     core: {
       apiFn: UserService.getUserList,
       apiParams: {
-        name: '',
-        phone: '',
-        address: undefined
+        // ...searchFormState.value
       },
       // paginationKey: {
       //   current: 'pageNum',

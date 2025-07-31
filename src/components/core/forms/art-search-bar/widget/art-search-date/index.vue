@@ -243,7 +243,7 @@
 
   // 合并默认配置和自定义配置
   const config = computed(() => {
-    const dateType = (props.item.config?.type || 'date') as DatePickerType
+    const dateType = (props.item.type || 'date') as DatePickerType
     const defaultConfig = getDefaultConfig(dateType)
     const userConfig = props.item.config || {}
 

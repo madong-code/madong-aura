@@ -21,7 +21,7 @@ Object.keys(componentObj).forEach((key) => {
   // console.log(componentName) // 输出处理后的组件名，如 ApiDict, Select 等
   const comm: any = componentObj[key]
   if (comm) {
-    addComponent(componentName, comm.default as Component)
+    addComponent(componentName, markRaw(comm.default as Component))
   }
 })
 

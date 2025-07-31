@@ -21,6 +21,7 @@ export type SearchComponentType =
   | 'week'
   | 'time'
   | 'timerange'
+  | 'dict'
 
 // 搜索框值变化参数
 export interface SearchChangeParams {
