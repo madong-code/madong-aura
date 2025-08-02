@@ -25,6 +25,10 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
+        <template #__ACTION__="{ row }">
+          <ArtButtonTable type="edit" @click="showDialog('edit', row)" />
+          <ArtButtonTable type="delete" @click="deleteUser(row)" />
+        </template>
       </ArtTable>
     </ElCard>
   </div>
@@ -144,21 +148,11 @@
           label: '手机号码'
         },
         {
-          prop: 'operation',
+          prop: '__ACTION__',
           label: '操作',
           width: 120,
           fixed: 'right', // 固定列
-          formatter: (row) =>
-            h('div', [
-              h(ArtButtonTable, {
-                type: 'edit',
-                onClick: () => showDialog('edit', row)
-              }),
-              h(ArtButtonTable, {
-                type: 'delete',
-                onClick: () => deleteUser(row)
-              })
-            ])
+          useSlot: true
         }
       ]
     }
