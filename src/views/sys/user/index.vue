@@ -31,9 +31,12 @@
 </template>
 
 <script setup lang="ts">
+  import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
+
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { SearchFormItem } from '@/types'
+  import { ElMessage } from 'element-plus'
 
   defineOptions({ name: 'UserMixedUsageExample' })
   const searchFormState = ref({})
@@ -123,69 +126,56 @@
         {
           prop: 'adminType',
           label: '管理员类型',
-          sortable: true,
-          component: 'Select',
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: '超级管理员', value: 1 },
-              { label: '管理员', value: 2 },
-              { label: '普通用户', value: 3 }
-            ]
+            code: 'sys_user_admin_type'
           }
         },
         {
           prop: 'sex',
           label: '性别',
-          sortable: true,
           component: 'ApiDict',
           componentProps: {
             code: 'sex'
           }
         },
         {
-          prop: 'userPhone',
-          label: '手机号'
+          prop: 'mobilePhone',
+          label: '手机号码'
         },
         {
-          prop: 'sexList',
-          label: '性别',
-          component: 'ApiDict',
-          componentProps: {
-            code: 'sex',
-            typeMap: {
-              1: 'success',
-              2: 'danger',
-              3: 'info'
-            },
-            useColorList: false
-          }
+          prop: 'operation',
+          label: '操作',
+          width: 120,
+          fixed: 'right', // 固定列
+          formatter: (row) =>
+            h('div', [
+              h(ArtButtonTable, {
+                type: 'edit',
+                onClick: () => showDialog('edit', row)
+              }),
+              h(ArtButtonTable, {
+                type: 'delete',
+                onClick: () => deleteUser(row)
+              })
+            ])
         }
       ]
-    },
-    transform: {
-      // responseAdapter(response) {
-      //   // 响应数据适配器
-      //   // console.log(response)
-      //   return {
-      //     records: response.rows,
-      //     total: response.recordCount,
-      //     current: response.pageNum,
-      //     size: response.pageSize
-      //   }
-      // }
-      dataTransformer(data: any) {
-        // data==>上面的records
-        data?.forEach((item: any) => {
-          if (item.sex == 1) {
-            item.sexList = [1]
-          } else if (item.sex == 2) {
-            item.sexList = [2]
-          } else {
-            item.sexList = [1, 2, 3]
-          }
-        })
-        return data
-      }
     }
   })
+  /**
+   * 显示用户弹窗
+   */
+  const showDialog = (type: Form.DialogType, row?: any): void => {
+    console.log('打开弹窗:', { type, row })
+    ElMessage.info('功能开发中...')
+  }
+
+  /**
+   * 删除用户
+   */
+  const deleteUser = (row: any): void => {
+    console.log('删除用户:', row)
+    ElMessage.info('功能开发中...')
+  }
 </script>
