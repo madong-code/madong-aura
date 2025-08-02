@@ -69,7 +69,7 @@
         clearable: true,
         multiple: true,
         code: 'yes_no',
-        renderType: 'RadioGroup',
+        renderType: 'CheckboxGroup',
         isBtn: true
       },
       elColSpan: 4

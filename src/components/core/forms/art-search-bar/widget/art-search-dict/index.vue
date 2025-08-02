@@ -6,14 +6,49 @@
     @change="(val) => changeValue(val)"
   >
     <template v-if="isBtn">
-      <ElRadioButton v-for="v in options" :key="v.value" :value="v.value">{{
-        v.label
-      }}</ElRadioButton>
+      <ElRadioButton
+        v-for="v in options"
+        :key="v.value"
+        :value="v.value"
+        :disabled="v.disabled || false"
+        >{{ v.label }}</ElRadioButton
+      >
     </template>
     <template v-else>
-      <ElRadio v-for="v in options" :key="v.value" :value="v.value">{{ v.label }}</ElRadio>
+      <ElRadio
+        v-for="v in options"
+        :key="v.value"
+        :value="v.value"
+        :disabled="v.disabled || false"
+        >{{ v.label }}</ElRadio
+      >
     </template>
   </ElRadioGroup>
+  <ElCheckboxGroup
+    v-else-if="renderType === 'CheckboxGroup'"
+    v-model="value"
+    v-bind="config"
+    @change="(val) => changeValue(val)"
+  >
+    <template v-if="isBtn">
+      <ElCheckboxButton
+        v-for="v in options"
+        :key="v.value"
+        :value="v.value"
+        :disabled="v.disabled || false"
+        >{{ v.label }}</ElCheckboxButton
+      >
+    </template>
+    <template v-else>
+      <ElCheckbox
+        v-for="v in options"
+        :key="v.value"
+        :value="v.value"
+        :disabled="v.disabled || false"
+        >{{ v.label }}</ElCheckbox
+      >
+    </template>
+  </ElCheckboxGroup>
   <ElSelect v-else v-model="value" v-bind="config" @change="(val) => changeValue(val)">
     <ElOption
       v-for="v in options"
