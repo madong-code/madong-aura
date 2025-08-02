@@ -141,5 +141,9 @@ pnpm build
    - [搜索表单·修复日期控制bug](https://www.bilibili.com/cheese/play/ep1905467)
    - [搜索表单·select和radio](https://www.bilibili.com/cheese/play/ep1905478)
    - [搜索表单·自定义字典组件·初探](https://www.bilibili.com/cheese/play/ep1905479)
+   - [搜索表单·自定义字典组件·实现Select逻辑](https://www.bilibili.com/cheese/play/ep1908981)
+   - [搜索表单·自定义字典组件·实现RadioGroup逻辑](https://www.bilibili.com/cheese/play/ep1908982)
+   - [搜索表单·自定义字典组件·实现RadioGroup按钮组逻辑](https://www.bilibili.com/cheese/play/ep1908983)
+   - [搜索表单·自定义字典组件·实现CheckboxGroup](https://www.bilibili.com/cheese/play/ep1908984)
 
    持续更新中……
