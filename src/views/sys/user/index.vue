@@ -52,6 +52,7 @@
       label: '性别',
       prop: 'sex',
       type: 'dict',
+
       config: {
         clearable: true,
         code: 'sex',
@@ -68,7 +69,8 @@
         clearable: true,
         multiple: true,
         code: 'yes_no',
-        renderType: 'RadioGroup'
+        renderType: 'RadioGroup',
+        isBtn: true
       },
       elColSpan: 4
     },

@@ -5,7 +5,14 @@
     v-bind="config"
     @change="(val) => changeValue(val)"
   >
-    <ElRadio v-for="v in options" :key="v.value" :value="v.value">{{ v.label }}</ElRadio>
+    <template v-if="isBtn">
+      <ElRadioButton v-for="v in options" :key="v.value" :value="v.value">{{
+        v.label
+      }}</ElRadioButton>
+    </template>
+    <template v-else>
+      <ElRadio v-for="v in options" :key="v.value" :value="v.value">{{ v.label }}</ElRadio>
+    </template>
   </ElRadioGroup>
   <ElSelect v-else v-model="value" v-bind="config" @change="(val) => changeValue(val)">
     <ElOption
@@ -55,11 +62,16 @@
     } as any
     delete defaultConfig.code
     delete defaultConfig.renderType
+    delete defaultConfig.isBtn
     return defaultConfig
   })
   // 渲染类型
   const renderType = computed<'RadioGropu' | 'Select' | 'CheckboxGroup' | unknown>(() => {
     return prop.item.config?.renderType
+  })
+  // 是否按钮
+  const isBtn = computed<boolean | unknown>(() => {
+    return prop.item.config?.isBtn
   })
 
   // 选择框值变化处理函数
