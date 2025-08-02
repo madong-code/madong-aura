@@ -22,7 +22,7 @@ export interface ActionItem {
   disabled?: boolean
   divider?: boolean
   // 权限编码控制是否显示
-  auth?: string[]
+  auth?: string
   // 业务控制是否显示
   ifShow?: ((action: ActionItem) => boolean) | boolean
   tooltip?: string | TooltipProps

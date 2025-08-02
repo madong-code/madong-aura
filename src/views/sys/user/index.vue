@@ -25,8 +25,19 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
-        <template #__ACTION__>
-          <TableAction />
+        <template #__ACTION__="{ row }">
+          <TableAction
+            :actions="[
+              {
+                label: '编辑',
+                type: 'primary',
+                link: true,
+                size: 'small',
+                auth: 'sys:user:update',
+                onClick: handleEdit.bind(null, row)
+              }
+            ]"
+          />
         </template>
       </ArtTable>
     </ElCard>
@@ -39,6 +50,7 @@
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { SearchFormItem } from '@/types'
+  import { ElMessage } from 'element-plus'
 
   defineOptions({ name: 'UserMixedUsageExample' })
   const searchFormState = ref({})
@@ -155,4 +167,8 @@
       ]
     }
   })
+  const handleEdit = (row: any) => {
+    console.log(row)
+    ElMessage.info(`编辑用户 ${row.userName}`)
+  }
 </script>
