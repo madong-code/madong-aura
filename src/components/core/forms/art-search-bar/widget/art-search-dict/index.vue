@@ -1,5 +1,13 @@
 <template>
-  <ElSelect v-model="value" v-bind="config" @change="(val) => changeValue(val)">
+  <ElRadioGroup
+    v-if="renderType == 'RadioGroup'"
+    v-model="value"
+    v-bind="config"
+    @change="(val) => changeValue(val)"
+  >
+    <ElRadio v-for="v in options" :key="v.value" :value="v.value">{{ v.label }}</ElRadio>
+  </ElRadioGroup>
+  <ElSelect v-else v-model="value" v-bind="config" @change="(val) => changeValue(val)">
     <ElOption
       v-for="v in options"
       :key="v.value"
@@ -46,7 +54,12 @@
       ...(prop.item.config || {})
     } as any
     delete defaultConfig.code
+    delete defaultConfig.renderType
     return defaultConfig
+  })
+  // 渲染类型
+  const renderType = computed<'RadioGropu' | 'Select' | 'CheckboxGroup' | unknown>(() => {
+    return prop.item.config?.renderType
   })
 
   // 选择框值变化处理函数

@@ -49,58 +49,28 @@
       elColSpan: 6
     },
     {
-      label: '字典',
+      label: '性别',
       prop: 'sex',
       type: 'dict',
       config: {
         clearable: true,
-        code: 'sex'
+        code: 'sex',
+        // 多选
+        multiple: true
       },
       elColSpan: 4
     },
     {
       label: '是否锁定',
       prop: 'isLocked',
-      type: 'radio',
-      options: [
-        {
-          label: '是',
-          value: 1
-        },
-        {
-          label: '否',
-          value: 0
-        }
-      ],
+      type: 'dict',
       config: {
         clearable: true,
-        multiple: true
+        multiple: true,
+        code: 'yes_no',
+        renderType: 'RadioGroup'
       },
-      elColSpan: 3
-    },
-    {
-      label: '性别',
-      prop: 'sex',
-      type: 'select',
-      options: [
-        {
-          label: '男',
-          value: 1
-        },
-        {
-          label: '女',
-          value: 2
-        },
-        {
-          label: '未知',
-          value: 3
-        }
-      ],
-      config: {
-        clearable: true,
-        multiple: true
-      },
-      elColSpan: 3
+      elColSpan: 4
     },
     {
       label: '注册时间',
