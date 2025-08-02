@@ -25,9 +25,8 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
-        <template #__ACTION__="{ row }">
-          <ArtButtonTable type="edit" @click="showDialog('edit', row)" />
-          <ArtButtonTable type="delete" @click="deleteUser(row)" />
+        <template #__ACTION__>
+          <TableAction />
         </template>
       </ArtTable>
     </ElCard>
@@ -35,12 +34,11 @@
 </template>
 
 <script setup lang="ts">
-  import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
+  import { TableAction } from '@/components/table-action/index'
 
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { SearchFormItem } from '@/types'
-  import { ElMessage } from 'element-plus'
 
   defineOptions({ name: 'UserMixedUsageExample' })
   const searchFormState = ref({})
@@ -157,19 +155,4 @@
       ]
     }
   })
-  /**
-   * 显示用户弹窗
-   */
-  const showDialog = (type: Form.DialogType, row?: any): void => {
-    console.log('打开弹窗:', { type, row })
-    ElMessage.info('功能开发中...')
-  }
-
-  /**
-   * 删除用户
-   */
-  const deleteUser = (row: any): void => {
-    console.log('删除用户:', row)
-    ElMessage.info('功能开发中...')
-  }
 </script>
