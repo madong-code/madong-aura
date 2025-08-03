@@ -1,4 +1,4 @@
-import { TableAction } from '@/components/table-action'
+import { ActionItem, TableAction } from '@/components/table-action'
 import { ColumnOption, SearchFormItem } from '@/types'
 type OpMethodType = {
   edit?: (row: unknown) => void
@@ -92,32 +92,31 @@ export const columnsFactory = (opObj: OpMethodType): ColumnOption[] => {
       width: 120,
       fixed: 'right', // 固定列
       formatter: (row: unknown) => {
-        return h(TableAction, {
-          actions: [
-            {
-              label: '编辑',
-              type: 'primary',
-              link: true,
-              size: 'small',
-              auth: 'sys:user:update',
-              onClick: opObj.edit?.bind(null, row)
+        const actions: ActionItem[] = [
+          {
+            label: '编辑',
+            type: 'primary',
+            link: true,
+            size: 'small',
+            auth: 'sys:user:update',
+            onClick: opObj.edit?.bind(null, row)
+          }
+        ]
+        const dropDownActions: ActionItem[] = [
+          {
+            label: '删除',
+            type: 'danger',
+            icon: '&#xe783;',
+            size: 'small',
+            auth: 'sys:user:remove',
+            confirm: {
+              title: '提示',
+              content: '确定删除吗？',
+              ok: opObj.delete?.bind(null, row)
             }
-          ],
-          dropDownActions: [
-            {
-              label: '删除',
-              type: 'danger',
-              icon: '&#xe783;',
-              size: 'small',
-              auth: 'sys:user:remove',
-              confirm: {
-                title: '提示',
-                content: '确定删除吗？',
-                ok: opObj.delete?.bind(null, row)
-              }
-            }
-          ]
-        })
+          }
+        ]
+        return <TableAction actions={actions} dropDownActions={dropDownActions} />
       }
     }
   ]
