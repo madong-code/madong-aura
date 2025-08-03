@@ -145,5 +145,23 @@ pnpm build
    - [搜索表单·自定义字典组件·实现RadioGroup逻辑](https://www.bilibili.com/cheese/play/ep1908982)
    - [搜索表单·自定义字典组件·实现RadioGroup按钮组逻辑](https://www.bilibili.com/cheese/play/ep1908983)
    - [搜索表单·自定义字典组件·实现CheckboxGroup](https://www.bilibili.com/cheese/play/ep1908984)
+   - [操作列·初探](https://www.bilibili.com/cheese/play/ep1909549)
+   - [操作列·插槽方式](https://www.bilibili.com/cheese/play/ep1909551)
+   - [操作列·自定义TableAction组件·初探](https://www.bilibili.com/cheese/play/ep1909552)
+   - [操作列·自定义TableAction组件·移植逻辑](https://www.bilibili.com/cheese/play/ep1909553)
+   - [操作列·自定义TableAction组件·图标](https://www.bilibili.com/cheese/play/ep1909554)
+   - [操作列·自定义TableAction组件·更多](https://www.bilibili.com/cheese/play/ep1909555)
+   - [操作列·自定义TableAction组件·权限码](https://www.bilibili.com/cheese/play/ep1909556)
+   - [操作列·自定义TableAction组件·气泡确认框](https://www.bilibili.com/cheese/play/ep1909557)
+   - [操作列·自定义TableAction组件·确认消息框](https://www.bilibili.com/cheese/play/ep1909559)
+   - [表格组件·多选行与本章小结](https://www.bilibili.com/cheese/play/ep1909560)
+* 第五章·增删改查样例
+   - [增删改查样例·用户列表调整](https://www.bilibili.com/cheese/play/ep1910156)
+   - [修复页面修改TableAction不渲染bug](https://www.bilibili.com/cheese/play/ep1910157)
+   - [增删改查样例·抽离schemas表单配置项](https://www.bilibili.com/cheese/play/ep1910158)
+   - [增删改查样例·抽离schemas表格列配置](https://www.bilibili.com/cheese/play/ep1910159)
+   - [让框架支持jsx语法(上)](https://www.bilibili.com/cheese/play/ep1910160)
+   - [让框架支持jsx语法(下)](https://www.bilibili.com/cheese/play/ep1910161)
+   - [让.vue文件支持jsx语法](https://www.bilibili.com/cheese/play/ep1910162)
 
    持续更新中……
