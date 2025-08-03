@@ -25,10 +25,14 @@
       </div>
     </template>
 
-    <pre>
-      <code>{{ JSON.stringify(record, null, 2) }}</code>
-    </pre>
-
+    <ElForm ref="form" :model="formModel" label-width="80px">
+      <ElFormItem prop="userName" label="用户名">
+        <ElInput v-model="formModel.userName" placeholder="请输入用户名" />
+      </ElFormItem>
+      <ElFormItem prop="realName" label="姓名">
+        <ElInput v-model="formModel.userName" placeholder="请输入姓名" />
+      </ElFormItem>
+    </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">取消</ElButton>
       <ElButton type="primary" @click="dialogVisible = false">确定</ElButton>
@@ -42,6 +46,7 @@
   const record = ref({})
   const updateFlag = ref(false)
   const fullscreen = ref(false)
+  const formModel = reactive<any>({})
 
   const show = ({ data, isUpdate }: { data: any; isUpdate: boolean }) => {
     updateFlag.value = isUpdate === true
