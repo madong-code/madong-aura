@@ -9,7 +9,7 @@ interface MenuResponse {
 export const menuService = {
   async getMenuList(): Promise<MenuResponse> {
     const menuList = await request.get<AppRouteRecord[]>({
-      url: '/getArtDesignMenu2'
+      url: '/getArtDesignMenu'
     })
     return { menuList }
   }

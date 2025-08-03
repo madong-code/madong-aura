@@ -11,7 +11,16 @@
       <!-- 表格头部 -->
       <ArtTableHeader v-model:columns="columnChecks" @refresh="refresh">
         <template #left>
-          <ElButton v-ripple>新增用户</ElButton>
+          <TableAction
+            :actions="[
+              {
+                label: '新增',
+                type: 'primary',
+                icon: '&#xe83e;',
+                auth: 'sys:user:save'
+              }
+            ]"
+          />
         </template>
       </ArtTableHeader>
 
