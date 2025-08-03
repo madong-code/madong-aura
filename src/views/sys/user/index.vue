@@ -52,7 +52,11 @@
                 type: 'danger',
                 icon: '&#xe783;',
                 size: 'small',
-                auth: 'sys:user:remove'
+                auth: 'sys:user:remove',
+                popConfirm: {
+                  title: '确定删除吗？',
+                  confirm: handleDelete.bind(null, row)
+                }
               }
             ]"
           />
@@ -187,6 +191,9 @@
   })
   const handleEdit = (row: any) => {
     console.log(row)
-    ElMessage.info(`编辑用户 ${row.userName}`)
+    ElMessage.info(`编辑用户 ${row.nickName} 成功}`)
+  }
+  const handleDelete = (row: any) => {
+    ElMessage.info(`删除用户 ${row.nickName}`)
   }
 </script>
