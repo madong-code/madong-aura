@@ -33,6 +33,7 @@
         :pagination="pagination"
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
+        @selection-change="handleSelectionChange"
       >
         <template #__ACTION__="{ row }">
           <TableAction
@@ -153,8 +154,7 @@
       // },
       columnsFactory: () => [
         {
-          prop: 'id',
-          label: 'ID'
+          type: 'selection'
         },
         {
           prop: 'nickName',
@@ -196,5 +196,9 @@
   }
   const handleDelete = (row: any) => {
     ElMessage.info(`删除用户 ${row.nickName}`)
+  }
+  const multipleSelection = ref([])
+  const handleSelectionChange = (val: any) => {
+    multipleSelection.value = val
   }
 </script>
