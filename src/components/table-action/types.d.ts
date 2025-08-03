@@ -26,4 +26,6 @@ export interface ActionItem {
   // 业务控制是否显示
   ifShow?: ((action: ActionItem) => boolean) | boolean
   tooltip?: string | TooltipProps
+  // MessageBox.confirm
+  confirm?: any
 }

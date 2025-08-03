@@ -53,9 +53,10 @@
                 icon: '&#xe783;',
                 size: 'small',
                 auth: 'sys:user:remove',
-                popConfirm: {
-                  title: '确定删除吗？',
-                  confirm: handleDelete.bind(null, row)
+                confirm: {
+                  title: '提示',
+                  content: '确定删除吗？',
+                  ok: handleDelete.bind(null, row)
                 }
               }
             ]"

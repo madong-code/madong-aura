@@ -64,13 +64,42 @@
     }
     return isIfShow
   }
-
+  const wrapConfirm = (action: ActionItem) => {
+    if (action.confirm) {
+      // 重写点击事件
+      action.onClick = () => {
+        const title = action.confirm.title || '提示'
+        const content = action.confirm.content || '确定要执行此操作吗？'
+        const options = action.confirm
+        if (!options.type) {
+          options.type = 'warning'
+        }
+        const ok = options.ok
+        const cancel = options.cancel
+        delete options.title
+        delete options.content
+        ElMessageBox.confirm(content, title, options)
+          .then(() => {
+            if (ok && typeof ok === 'function') {
+              ok()
+            }
+          })
+          .catch(() => {
+            if (cancel && typeof cancel === 'function') {
+              cancel()
+            }
+          })
+      }
+    }
+    return action
+  }
   const getActions = computed(() => {
     return (toRaw(props.actions) || [])
       .filter((action) => {
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
       .map((action) => {
+        action = wrapConfirm(action)
         const { popConfirm } = action
         const icon = action.icon ? renderIcon(action.icon) : undefined
         return {
@@ -90,6 +119,7 @@
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
       .map((action, index) => {
+        action = wrapConfirm(action)
         const { label, popConfirm } = action
         return {
           ...action,
