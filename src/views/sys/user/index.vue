@@ -17,7 +17,8 @@
                 label: '新增',
                 type: 'primary',
                 icon: '&#xe83e;',
-                auth: 'sys:user:save'
+                auth: 'sys:user:save',
+                onClick: handleAdd.bind(null)
               }
             ]"
           />
@@ -37,6 +38,7 @@
       >
       </ArtTable>
     </ElCard>
+    <UserForm ref="userFormRef" />
   </div>
 </template>
 
@@ -47,8 +49,10 @@
   import { UserService } from '@/api/usersApi'
   import { ElMessage } from 'element-plus'
   import { searchSchemas, tableSchemas } from './schemas'
+  import UserForm from './form.vue'
   defineOptions({ name: 'sys:user' })
   const searchFormState = ref({})
+  const userFormRef = ref()
 
   const handleReset = () => {
     searchFormState.value = {}
@@ -111,9 +115,16 @@
       ]
     }
   })
+  const handleAdd = () => {
+    userFormRef.value.show({
+      isUpdate: false
+    })
+  }
   const handleEdit = (row: any) => {
-    console.log(row)
-    ElMessage.info(`编辑用户 ${row.nickName} 成功}`)
+    userFormRef.value.show({
+      data: row,
+      isUpdate: true
+    })
   }
   const handleDelete = (row: any) => {
     ElMessage.info(`删除用户 ${row.nickName}`)
