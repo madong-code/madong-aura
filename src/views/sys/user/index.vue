@@ -75,14 +75,13 @@
   import { UserService } from '@/api/usersApi'
   import { SearchFormItem } from '@/types'
   import { ElMessage } from 'element-plus'
-
   defineOptions({ name: 'UserMixedUsageExample' })
   const searchFormState = ref({})
   // --- 表单配置项 ---
   const formItems: SearchFormItem[] = [
     {
       label: '用户名',
-      prop: 'name',
+      prop: 'm_LIKE_userName',
       type: 'input',
       config: {
         clearable: true
@@ -90,17 +89,22 @@
       elColSpan: 6
     },
     {
-      label: '性别',
-      prop: 'sex',
-      type: 'dict',
-
+      label: '姓名',
+      prop: 'm_LIKE_realName',
+      type: 'input',
       config: {
-        clearable: true,
-        code: 'sex',
-        // 多选
-        multiple: true
+        clearable: true
       },
-      elColSpan: 4
+      elColSpan: 6
+    },
+    {
+      label: '手机号码',
+      prop: 'm_LIKE_mobilePhone',
+      type: 'input',
+      config: {
+        clearable: true
+      },
+      elColSpan: 6
     },
     {
       label: '是否锁定',
@@ -109,14 +113,12 @@
       config: {
         clearable: true,
         multiple: true,
-        code: 'yes_no',
-        renderType: 'CheckboxGroup',
-        isBtn: true
+        code: 'yes_no'
       },
       elColSpan: 4
     },
     {
-      label: '注册时间',
+      label: '创建时间',
       prop: 'createTime',
       type: 'daterange',
       config: {
@@ -157,23 +159,24 @@
           type: 'selection'
         },
         {
-          prop: 'nickName',
-          label: '昵称'
+          prop: 'userName',
+          label: '用户名'
         },
         {
-          prop: 'adminType',
-          label: '管理员类型',
-          component: 'ApiDict',
-          componentProps: {
-            code: 'sys_user_admin_type'
-          }
+          prop: 'realName',
+          label: '姓名'
         },
         {
-          prop: 'sex',
-          label: '性别',
+          prop: 'isLocked',
+          label: '是否锁定',
           component: 'ApiDict',
           componentProps: {
-            code: 'sex'
+            code: 'yes_no',
+            typeMap: {
+              1: 'success',
+              0: 'danger'
+            },
+            useColorList: false
           }
         },
         {
