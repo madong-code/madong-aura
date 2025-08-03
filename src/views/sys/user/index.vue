@@ -40,13 +40,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-  import { TableAction } from '@/components/table-action/index'
+<script setup lang="tsx">
+  import { ActionItem, TableAction } from '@/components/table-action/index'
 
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { ElMessage } from 'element-plus'
-  import { searchSchemas, columnsFactory } from './schemas'
+  import { searchSchemas, tableSchemas } from './schemas'
   defineOptions({ name: 'sys:user' })
   const searchFormState = ref({})
 
@@ -73,15 +73,42 @@
       apiParams: {
         // 其他搜索参数
       },
-      columnsFactory: () =>
-        columnsFactory({
-          edit: (row) => {
-            handleEdit(row)
-          },
-          delete: (row) => {
-            handleDelete(row)
+      columnsFactory: () => [
+        ...tableSchemas,
+        {
+          prop: '__ACTION__',
+          label: '操作',
+          width: 120,
+          fixed: 'right', // 固定列
+          formatter: (row: unknown) => {
+            const actions: ActionItem[] = [
+              {
+                label: '编辑',
+                type: 'primary',
+                link: true,
+                size: 'small',
+                auth: 'sys:user:update',
+                onClick: handleEdit.bind(null, row)
+              }
+            ]
+            const dropDownActions: ActionItem[] = [
+              {
+                label: '删除',
+                type: 'danger',
+                icon: '&#xe783;',
+                size: 'small',
+                auth: 'sys:user:remove',
+                confirm: {
+                  title: '提示',
+                  content: '确定删除吗？',
+                  ok: handleDelete.bind(null, row)
+                }
+              }
+            ]
+            return <TableAction actions={actions} dropDownActions={dropDownActions} />
           }
-        })
+        }
+      ]
     }
   })
   const handleEdit = (row: any) => {
