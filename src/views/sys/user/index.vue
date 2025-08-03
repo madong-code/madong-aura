@@ -11,7 +11,16 @@
       <!-- 表格头部 -->
       <ArtTableHeader v-model:columns="columnChecks" @refresh="refresh">
         <template #left>
-          <ElButton v-ripple>新增用户</ElButton>
+          <TableAction
+            :actions="[
+              {
+                label: '新增',
+                type: 'primary',
+                icon: '&#xe83e;',
+                auth: 'sys:user:save'
+              }
+            ]"
+          />
         </template>
       </ArtTableHeader>
 
@@ -24,16 +33,48 @@
         :pagination="pagination"
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
+        @selection-change="handleSelectionChange"
       >
+        <template #__ACTION__="{ row }">
+          <TableAction
+            :actions="[
+              {
+                label: '编辑',
+                type: 'primary',
+                link: true,
+                size: 'small',
+                auth: 'sys:user:update',
+                onClick: handleEdit.bind(null, row)
+              }
+            ]"
+            :drop-down-actions="[
+              {
+                label: '删除',
+                type: 'danger',
+                icon: '&#xe783;',
+                size: 'small',
+                auth: 'sys:user:remove',
+                confirm: {
+                  title: '提示',
+                  content: '确定删除吗？',
+                  ok: handleDelete.bind(null, row)
+                }
+              }
+            ]"
+          />
+        </template>
       </ArtTable>
     </ElCard>
   </div>
 </template>
 
 <script setup lang="ts">
+  import { TableAction } from '@/components/table-action/index'
+
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
   import { SearchFormItem } from '@/types'
+  import { ElMessage } from 'element-plus'
 
   defineOptions({ name: 'UserMixedUsageExample' })
   const searchFormState = ref({})
@@ -113,8 +154,7 @@
       // },
       columnsFactory: () => [
         {
-          prop: 'id',
-          label: 'ID'
+          type: 'selection'
         },
         {
           prop: 'nickName',
@@ -123,69 +163,42 @@
         {
           prop: 'adminType',
           label: '管理员类型',
-          sortable: true,
-          component: 'Select',
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: '超级管理员', value: 1 },
-              { label: '管理员', value: 2 },
-              { label: '普通用户', value: 3 }
-            ]
+            code: 'sys_user_admin_type'
           }
         },
         {
           prop: 'sex',
           label: '性别',
-          sortable: true,
           component: 'ApiDict',
           componentProps: {
             code: 'sex'
           }
         },
         {
-          prop: 'userPhone',
-          label: '手机号'
+          prop: 'mobilePhone',
+          label: '手机号码'
         },
         {
-          prop: 'sexList',
-          label: '性别',
-          component: 'ApiDict',
-          componentProps: {
-            code: 'sex',
-            typeMap: {
-              1: 'success',
-              2: 'danger',
-              3: 'info'
-            },
-            useColorList: false
-          }
+          prop: '__ACTION__',
+          label: '操作',
+          width: 120,
+          fixed: 'right', // 固定列
+          useSlot: true
         }
       ]
-    },
-    transform: {
-      // responseAdapter(response) {
-      //   // 响应数据适配器
-      //   // console.log(response)
-      //   return {
-      //     records: response.rows,
-      //     total: response.recordCount,
-      //     current: response.pageNum,
-      //     size: response.pageSize
-      //   }
-      // }
-      dataTransformer(data: any) {
-        // data==>上面的records
-        data?.forEach((item: any) => {
-          if (item.sex == 1) {
-            item.sexList = [1]
-          } else if (item.sex == 2) {
-            item.sexList = [2]
-          } else {
-            item.sexList = [1, 2, 3]
-          }
-        })
-        return data
-      }
     }
   })
+  const handleEdit = (row: any) => {
+    console.log(row)
+    ElMessage.info(`编辑用户 ${row.nickName} 成功}`)
+  }
+  const handleDelete = (row: any) => {
+    ElMessage.info(`删除用户 ${row.nickName}`)
+  }
+  const multipleSelection = ref([])
+  const handleSelectionChange = (val: any) => {
+    multipleSelection.value = val
+  }
 </script>
