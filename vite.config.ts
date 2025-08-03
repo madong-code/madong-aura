@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import path from 'path'
 import viteCompression from 'vite-plugin-compression'
 import Components from 'unplugin-vue-components/vite'
@@ -75,6 +76,7 @@ export default ({ mode }: { mode: string }) => {
     },
     plugins: [
       vue(),
+      vueJsx(),
       // 自动导入 components 下面的组件，无需 import 引入
       Components({
         deep: true,
