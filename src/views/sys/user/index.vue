@@ -32,6 +32,7 @@
                 label: '编辑',
                 type: 'primary',
                 link: true,
+                icon: '&#xe642;',
                 size: 'small',
                 auth: 'sys:user:update',
                 onClick: handleEdit.bind(null, row)

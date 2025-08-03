@@ -2,15 +2,14 @@
   import type { ActionItem, PopConfirm } from './types'
 
   import { computed, h, type PropType, reactive, toRaw, type VNode } from 'vue'
-
+  import { Icon } from '../icon'
   import {
     ElButton,
     ElDropdown,
     ElDropdownItem,
     ElDropdownMenu,
     ElPopconfirm,
-    ElSpace,
-    ElIcon as Icon
+    ElSpace
   } from 'element-plus'
   import { useAuth } from '@/composables/useAuth'
 
