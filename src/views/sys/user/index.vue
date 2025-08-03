@@ -32,10 +32,18 @@
                 label: '编辑',
                 type: 'primary',
                 link: true,
-                icon: '&#xe642;',
                 size: 'small',
                 auth: 'sys:user:update',
                 onClick: handleEdit.bind(null, row)
+              }
+            ]"
+            :drop-down-actions="[
+              {
+                label: '删除',
+                type: 'danger',
+                icon: '&#xe783;',
+                size: 'small',
+                auth: 'sys:user:remove'
               }
             ]"
           />

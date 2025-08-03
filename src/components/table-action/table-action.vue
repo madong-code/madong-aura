@@ -157,7 +157,9 @@
         <div>
           <slot name="more">
             <ElButton link size="small" style="margin-left: 6px" type="primary">
-              <Icon class="icon-more" icon="ep:more" />
+              <template #icon>
+                <Icon class="icon-more" icon="&#xe6dd;" />
+              </template>
             </ElButton>
           </slot>
           <template v-for="(action, index) in getDropdownList" :key="index">
