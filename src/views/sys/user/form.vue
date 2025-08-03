@@ -1,0 +1,93 @@
+<template>
+  <ElDialog
+    custom-class="m-dialog"
+    :destroy-on-close="true"
+    :close-on-click-modal="false"
+    v-model="dialogVisible"
+    width="60%"
+    :title="updateFlag ? '编辑用户' : '新增用户'"
+    :fullscreen="fullscreen"
+    :show-close="false"
+  >
+    <template #header="{ close, titleId, titleClass }">
+      <div class="el-dialog__header-inner">
+        <span :id="titleId" :class="titleClass">{{ updateFlag ? '编辑用户' : '新增用户' }}</span>
+        <div class="dialog-header-actions">
+          <ElButton class="dialog-header-btn" @click="toggleFullscreen" link>
+            <template #icon>
+              <Icon :icon="fullscreen ? '&#xe62d;' : '&#xe8ce;'" />
+            </template>
+          </ElButton>
+          <ElButton class="dialog-header-btn" @click="close" link>
+            <Icon icon="&#xe7dc;" />
+          </ElButton>
+        </div>
+      </div>
+    </template>
+
+    <ElForm ref="form" :model="formModel" label-width="80px">
+      <ElFormItem prop="userName" label="用户名">
+        <ElInput v-model="formModel.userName" placeholder="请输入用户名" />
+      </ElFormItem>
+      <ElFormItem prop="realName" label="姓名">
+        <ElInput v-model="formModel.userName" placeholder="请输入姓名" />
+      </ElFormItem>
+    </ElForm>
+    <template #footer>
+      <ElButton @click="dialogVisible = false">取消</ElButton>
+      <ElButton type="primary" @click="dialogVisible = false">确定</ElButton>
+    </template>
+  </ElDialog>
+</template>
+
+<script setup lang="ts">
+  import { Icon } from '@/components/icon'
+  const dialogVisible = ref(false)
+  const record = ref({})
+  const updateFlag = ref(false)
+  const fullscreen = ref(false)
+  const formModel = reactive<any>({})
+
+  const show = ({ data, isUpdate }: { data: any; isUpdate: boolean }) => {
+    updateFlag.value = isUpdate === true
+    record.value = data || {}
+    dialogVisible.value = true
+    fullscreen.value = false // 重置全屏状态
+  }
+
+  const toggleFullscreen = () => {
+    fullscreen.value = !fullscreen.value
+  }
+
+  defineExpose({
+    show
+  })
+</script>
+
+<style lang="scss" scoped>
+  .el-dialog__header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dialog-header-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .dialog-header-btn {
+    margin-left: 10px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+
+    :deep(.el-icon) {
+      font-size: 16px;
+    }
+  }
+
+  :deep(.el-dialog__header) {
+    display: block !important;
+  }
+</style>
