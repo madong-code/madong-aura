@@ -35,34 +35,6 @@
         @pagination:current-change="handleCurrentChange"
         @selection-change="handleSelectionChange"
       >
-        <template #__ACTION__="{ row }">
-          <TableAction
-            :actions="[
-              {
-                label: '编辑',
-                type: 'primary',
-                link: true,
-                size: 'small',
-                auth: 'sys:user:update',
-                onClick: handleEdit.bind(null, row)
-              }
-            ]"
-            :drop-down-actions="[
-              {
-                label: '删除',
-                type: 'danger',
-                icon: '&#xe783;',
-                size: 'small',
-                auth: 'sys:user:remove',
-                confirm: {
-                  title: '提示',
-                  content: '确定删除吗？',
-                  ok: handleDelete.bind(null, row)
-                }
-              }
-            ]"
-          />
-        </template>
       </ArtTable>
     </ElCard>
   </div>
@@ -188,7 +160,34 @@
           label: '操作',
           width: 120,
           fixed: 'right', // 固定列
-          useSlot: true
+          formatter: (row: any) => {
+            return h(TableAction, {
+              actions: [
+                {
+                  label: '编辑',
+                  type: 'primary',
+                  link: true,
+                  size: 'small',
+                  auth: 'sys:user:update',
+                  onClick: handleEdit.bind(null, row)
+                }
+              ],
+              dropDownActions: [
+                {
+                  label: '删除',
+                  type: 'danger',
+                  icon: '&#xe783;',
+                  size: 'small',
+                  auth: 'sys:user:remove',
+                  confirm: {
+                    title: '提示',
+                    content: '确定删除吗？',
+                    ok: handleDelete.bind(null, row)
+                  }
+                }
+              ]
+            })
+          }
         }
       ]
     }
