@@ -3,7 +3,7 @@
   <div class="user-page art-full-height">
     <ArtSearchBar
       v-model:filter="searchFormState"
-      :items="formItems"
+      :items="searchSchemas"
       @reset="handleReset"
       @search="handleSearch"
     />
@@ -45,60 +45,11 @@
 
   import { useTable } from '@/composables/useTable'
   import { UserService } from '@/api/usersApi'
-  import { SearchFormItem } from '@/types'
   import { ElMessage } from 'element-plus'
-  defineOptions({ name: 'UserMixedUsageExample' })
+  import { searchSchemas } from './schemas'
+  defineOptions({ name: 'sys:user' })
   const searchFormState = ref({})
-  // --- 表单配置项 ---
-  const formItems: SearchFormItem[] = [
-    {
-      label: '用户名',
-      prop: 'm_LIKE_userName',
-      type: 'input',
-      config: {
-        clearable: true
-      },
-      elColSpan: 6
-    },
-    {
-      label: '姓名',
-      prop: 'm_LIKE_realName',
-      type: 'input',
-      config: {
-        clearable: true
-      },
-      elColSpan: 6
-    },
-    {
-      label: '手机号码',
-      prop: 'm_LIKE_mobilePhone',
-      type: 'input',
-      config: {
-        clearable: true
-      },
-      elColSpan: 6
-    },
-    {
-      label: '是否锁定',
-      prop: 'isLocked',
-      type: 'dict',
-      config: {
-        clearable: true,
-        multiple: true,
-        code: 'yes_no'
-      },
-      elColSpan: 4
-    },
-    {
-      label: '创建时间',
-      prop: 'createTime',
-      type: 'daterange',
-      config: {
-        clearable: true
-      },
-      elColSpan: 6
-    }
-  ]
+
   const handleReset = () => {
     searchFormState.value = {}
     searchData()
@@ -120,12 +71,8 @@
     core: {
       apiFn: UserService.getUserList,
       apiParams: {
-        // ...searchFormState.value
+        // 其他搜索参数
       },
-      // paginationKey: {
-      //   current: 'pageNum',
-      //   size: 'pageSize'
-      // },
       columnsFactory: () => [
         {
           type: 'selection'
