@@ -163,5 +163,10 @@ pnpm build
    - [让框架支持jsx语法(上)](https://www.bilibili.com/cheese/play/ep1910160)
    - [让框架支持jsx语法(下)](https://www.bilibili.com/cheese/play/ep1910161)
    - [让.vue文件支持jsx语法](https://www.bilibili.com/cheese/play/ep1910162)
-
+   - [增删改查样例·弹窗表单·初探](https://www.bilibili.com/cheese/play/ep1910864)
+   - [增删改查样例·弹窗表单·常用属性](https://www.bilibili.com/cheese/play/ep1910865)
+   - [增删改查样例·弹窗表单·全屏逻辑处理](https://www.bilibili.com/cheese/play/ep1910866)
+   - [弹窗表单·关于设置全屏后footer显示错位问题issues](https://www.bilibili.com/cheese/play/ep1910867)
+   - [增删改查样例·弹窗表单·表单初探](https://www.bilibili.com/cheese/play/ep1910868)
+   
    持续更新中……
