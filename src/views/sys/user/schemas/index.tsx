@@ -1,4 +1,5 @@
 import { ColumnOption, SearchFormItem } from '@/types'
+import { FormSchema } from '@/types/component/form'
 
 // 搜索表单配置
 export const searchSchemas: SearchFormItem[] = [
@@ -81,3 +82,22 @@ export const tableSchemas: ColumnOption[] = [
     label: '手机号码'
   }
 ]
+export const formSchema: FormSchema = {
+  schema: [
+    {
+      label: '用户名',
+      prop: 'userName',
+      component: 'Input'
+    },
+    {
+      label: '姓名',
+      prop: 'realName',
+      component: 'Input'
+    },
+    {
+      label: '手机号码',
+      prop: 'mobilePhone',
+      component: 'Input'
+    }
+  ]
+}

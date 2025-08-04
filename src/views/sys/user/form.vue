@@ -25,12 +25,14 @@
       </div>
     </template>
 
-    <ElForm ref="form" :model="formModel" label-width="80px">
-      <ElFormItem prop="userName" label="用户名">
-        <ElInput v-model="formModel.userName" placeholder="请输入用户名" />
-      </ElFormItem>
-      <ElFormItem prop="realName" label="姓名">
-        <ElInput v-model="formModel.userName" placeholder="请输入姓名" />
+    <ElForm ref="form" :model="formModel" :label-width="formSchema.labelWidth || '80px'">
+      <ElFormItem
+        v-for="item in formSchema.schema"
+        :prop="item.prop"
+        :label="item.label"
+        :key="item.prop"
+      >
+        <ElInput v-model="formModel[item.prop]" :placeholder="'请输入' + item.label" />
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -42,6 +44,7 @@
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
+  import { formSchema } from './schemas'
   const dialogVisible = ref(false)
   const record = ref({})
   const updateFlag = ref(false)
