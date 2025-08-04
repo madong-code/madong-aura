@@ -6,26 +6,36 @@
       :label="item.label"
       :key="item.prop"
     >
-      <component
-        v-model:value="formModel[item.prop]"
-        :is="getComponent(item.component)"
-        v-bind="{
-          ...item.componentProps,
-          placeholder: item.componentProps?.placeholder || `请输入${item.label}`
-        }"
-      >
-        <!-- 渲染组件内容(slot) -->
-        <template
-          :key="slotName"
-          v-for="slotName in Object.keys(renderComponentContent(item) || {})"
-          #[slotName]
+      <!-- 字段插槽优先级最高 -->
+      <slot
+        v-if="$slots[item.prop]"
+        :name="item.prop"
+        :form-model="formModel"
+        :model="formModel"
+        :field="item"
+      />
+      <template v-else>
+        <component
+          v-model:value="formModel[item.prop]"
+          :is="getComponent(item.component)"
+          v-bind="{
+            ...item.componentProps,
+            placeholder: item.componentProps?.placeholder || `请输入${item.label}`
+          }"
         >
-          <RenderSlot
-            :render-func="renderComponentContent(item)[slotName]"
-            :form-model="formModel"
-          />
-        </template>
-      </component>
+          <!-- 渲染组件内容(slot) -->
+          <template
+            :key="slotName"
+            v-for="slotName in Object.keys(renderComponentContent(item) || {})"
+            #[slotName]
+          >
+            <RenderSlot
+              :render-func="renderComponentContent(item)[slotName]"
+              :form-model="formModel"
+            />
+          </template>
+        </component>
+      </template>
     </ElFormItem>
   </ElForm>
 </template>

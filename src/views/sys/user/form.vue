@@ -24,7 +24,11 @@
         </div>
       </div>
     </template>
-    <BasicForm :form-schema="formSchema" :model="formModel" />
+    <BasicForm :form-schema="formSchema" :model="formModel">
+      <template #realName="{ model }">
+        <ElInput v-model="model.realName" placeholder="请输入姓名==" />
+      </template>
+    </BasicForm>
   </ElDialog>
 </template>
 
