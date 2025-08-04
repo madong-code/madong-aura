@@ -88,12 +88,14 @@ export const formSchema: FormSchema = {
     {
       label: '用户名',
       prop: 'userName',
-      component: 'Input'
+      component: 'Input',
+      colSpan: 12
     },
     {
       label: '姓名',
       prop: 'realName',
-      component: 'Input'
+      component: 'Input',
+      colSpan: 12
     },
     {
       label: '手机号码',
