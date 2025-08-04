@@ -1,5 +1,5 @@
+import { FormSchema } from '@/components/form'
 import { ColumnOption, SearchFormItem } from '@/types'
-import { FormSchema } from '@/types/component/form'
 
 // 搜索表单配置
 export const searchSchemas: SearchFormItem[] = [
