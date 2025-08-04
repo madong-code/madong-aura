@@ -155,7 +155,7 @@ pnpm build
    - [操作列·自定义TableAction组件·气泡确认框](https://www.bilibili.com/cheese/play/ep1909557)
    - [操作列·自定义TableAction组件·确认消息框](https://www.bilibili.com/cheese/play/ep1909559)
    - [表格组件·多选行与本章小结](https://www.bilibili.com/cheese/play/ep1909560)
-* 第五章·增删改查样例
+* 第五章·增删改查样例(上)
    - [增删改查样例·用户列表调整](https://www.bilibili.com/cheese/play/ep1910156)
    - [修复页面修改TableAction不渲染bug](https://www.bilibili.com/cheese/play/ep1910157)
    - [增删改查样例·抽离schemas表单配置项](https://www.bilibili.com/cheese/play/ep1910158)
@@ -168,5 +168,12 @@ pnpm build
    - [增删改查样例·弹窗表单·全屏逻辑处理](https://www.bilibili.com/cheese/play/ep1910866)
    - [弹窗表单·关于设置全屏后footer显示错位问题issues](https://www.bilibili.com/cheese/play/ep1910867)
    - [增删改查样例·弹窗表单·表单初探](https://www.bilibili.com/cheese/play/ep1910868)
-   
+* 第六章·自定义表单组件
+   - [表单元数据](https://www.bilibili.com/cheese/play/ep1913468)
+   - [自定义表单组件](https://www.bilibili.com/cheese/play/ep1913469)
+   - [自定义表单组件·slot处理(一)](https://www.bilibili.com/cheese/play/ep1913470)
+   - [自定义表单组件·slot处理(二)](https://www.bilibili.com/cheese/play/ep1913476)
+   - [自定义表单组件·slot处理(三)](https://www.bilibili.com/cheese/play/ep1913477)
+   - [自定义表单组件·24栅格](https://www.bilibili.com/cheese/play/ep1913478)
+
    持续更新中……
