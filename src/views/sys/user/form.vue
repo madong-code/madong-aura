@@ -24,24 +24,18 @@
         </div>
       </div>
     </template>
-
-    <ElForm ref="form" :model="formModel" label-width="80px">
-      <ElFormItem prop="userName" label="用户名">
-        <ElInput v-model="formModel.userName" placeholder="请输入用户名" />
-      </ElFormItem>
-      <ElFormItem prop="realName" label="姓名">
-        <ElInput v-model="formModel.userName" placeholder="请输入姓名" />
-      </ElFormItem>
-    </ElForm>
-    <template #footer>
-      <ElButton @click="dialogVisible = false">取消</ElButton>
-      <ElButton type="primary" @click="dialogVisible = false">确定</ElButton>
-    </template>
+    <BasicForm :form-schema="formSchema" :model="formModel">
+      <template #realName="{ model }">
+        <ElInput v-model="model.realName" placeholder="请输入姓名==" />
+      </template>
+    </BasicForm>
   </ElDialog>
 </template>
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
+  import { BasicForm } from '@/components/form'
+  import { formSchema } from './schemas'
   const dialogVisible = ref(false)
   const record = ref({})
   const updateFlag = ref(false)
