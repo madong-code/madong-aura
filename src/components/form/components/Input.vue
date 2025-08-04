@@ -10,11 +10,11 @@
   import { useSlots, computed } from 'vue'
 
   const props = defineProps<{
-    value: string
+    value: string | undefined
   }>()
 
   const emit = defineEmits<{
-    (e: 'update:value', value: string): void
+    (e: 'update:value', value: string | undefined): void
   }>()
 
   const value = computed({

@@ -14,4 +14,6 @@ export interface FormItemSchema {
   componentProps?: Record<string, any>
   // 每列的宽度（基于 24 格布局）
   elColSpan?: number
+  // 表单组件的插槽
+  renderComponentContent?: Record<string, function> | (() => Record<string, function>)
 }

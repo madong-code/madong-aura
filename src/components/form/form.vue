@@ -68,6 +68,9 @@
 
   // 与 vben5 一致的函数名
   const renderComponentContent = (item: any) => {
+    if (typeof item.renderComponentContent === 'function') {
+      return item.renderComponentContent() || {}
+    }
     return item.renderComponentContent || {}
   }
 </script>

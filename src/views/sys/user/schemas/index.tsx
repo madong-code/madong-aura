@@ -1,4 +1,5 @@
 import { FormSchema } from '@/components/form'
+import { Icon } from '@/components/icon'
 import { ColumnOption, SearchFormItem } from '@/types'
 
 // 搜索表单配置
@@ -97,7 +98,12 @@ export const formSchema: FormSchema = {
     {
       label: '手机号码',
       prop: 'mobilePhone',
-      component: 'Input'
+      component: 'Input',
+      renderComponentContent() {
+        return {
+          prefix: () => <Icon icon="&#xe7a1;" />
+        }
+      }
     }
   ]
 }
