@@ -28,3 +28,25 @@ export interface FormItemSchema {
   // 校验规则
   rules?: Array<Record<string, any>>
 }
+// 定义表单实例方法类型
+export interface FormInstance {
+  // Element Plus 表单的原生方法
+  validate: (callback?: (valid: boolean, fields?: any) => void) => Promise<boolean>
+  validateField: (
+    props?: string | string[],
+    callback?: (valid: boolean, fields?: any) => void
+  ) => Promise<void>
+  resetFields: (props?: string | string[]) => void
+  clearValidate: (props?: string | string[]) => void
+  scrollToField: (prop: string) => void
+
+  // 自定义方法
+  getValues: () => Promise<Record<string, any>>
+  getFormRef: () => any
+}
+
+// 表单事件类型
+export interface FormEmits {
+  (e: 'submit', values: any): void
+  (e: 'reset'): void
+}

@@ -58,13 +58,10 @@
   }
   const formRef = ref()
   const handleSubmit = () => {
-    formRef.value
-      .getFormRef()
-      .validate()
-      .then(async () => {
-        const values = await formRef.value.getValues()
-        console.log('表单对象:', values)
-      })
+    formRef.value.validate().then(async () => {
+      const values = await formRef.value.getValues()
+      console.log(values)
+    })
   }
 
   defineExpose({

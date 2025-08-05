@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
   import { getComponent } from './component-map'
-  import { FormSchema } from './types'
+  import { FormInstance, FormSchema } from './types'
   import { h, reactive } from 'vue'
 
   // slot 渲染组件
@@ -124,14 +124,39 @@
     formRef.value.resetFields()
     emit('reset')
   }
-  defineExpose({
-    getFormRef() {
-      // 获取表单实例
-      return formRef.value
+  // 暴露所有 Element Plus 表单实例方法和自定义方法
+  defineExpose<FormInstance>({
+    // Element Plus 表单的原生方法
+    validate(callback?: (valid: boolean, fields?: any) => void) {
+      return formRef.value?.validate(callback)
     },
+
+    validateField(props?: string | string[], callback?: (valid: boolean, fields?: any) => void) {
+      if (formRef.value?.validateField) {
+        return formRef.value.validateField(props, callback)
+      }
+      return Promise.resolve()
+    },
+
+    resetFields(props?: string | string[]) {
+      formRef.value?.resetFields(props)
+    },
+
+    clearValidate(props?: string | string[]) {
+      formRef.value?.clearValidate(props)
+    },
+
+    scrollToField(prop: string) {
+      formRef.value?.scrollToField(prop)
+    },
+
+    // 自定义方法
     getValues() {
-      // 获取表单数据
-      return Promise.resolve(formModel)
+      return Promise.resolve({ ...formModel })
+    },
+
+    getFormRef() {
+      return formRef.value
     }
   })
 </script>
