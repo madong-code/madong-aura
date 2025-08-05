@@ -1,12 +1,18 @@
 <template>
   <div>
-    <ElForm ref="formRef" :model="formModel" :label-width="formSchema.labelWidth || '80px'">
+    <ElForm
+      ref="formRef"
+      :rules="formSchema.rules"
+      :model="formModel"
+      :label-width="formSchema.labelWidth || '80px'"
+    >
       <ElRow :gutter="formSchema.gutter || 0">
         <ElCol v-for="item in formSchema.schema" :key="item.prop" :span="item.colSpan || 24">
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
             :label-width="item.labelWidth || formSchema.labelWidth || '80px'"
+            :rules="item.rules"
           >
             <!-- 字段插槽优先级最高 -->
             <slot
@@ -47,8 +53,10 @@
     <ElRow v-if="formSchema.showDefaultActions !== false">
       <ElCol>
         <div class="form-actions">
-          <ElButton type="primary" @click="handleSubmit">确定</ElButton>
-          <ElButton @click="handleReset">重置</ElButton>
+          <ElButton type="primary" @click="handleSubmit">{{
+            formSchema.submitButtonText || '提交'
+          }}</ElButton>
+          <ElButton @click="handleReset">{{ formSchema.resetButtonText || '重置' }}</ElButton>
         </div>
       </ElCol>
     </ElRow>
@@ -103,18 +111,17 @@
     }
     return item.renderComponentContent || {}
   }
-
+  const formRef = ref()
   // 提交表单
   const handleSubmit = () => {
-    emit('submit', formModel)
+    formRef.value.validate().then(() => {
+      emit('submit', formModel)
+    })
   }
 
   // 重置表单
   const handleReset = () => {
-    // 清空表单数据
-    Object.keys(formModel).forEach((key) => {
-      delete formModel[key]
-    })
+    formRef.value.resetFields()
     emit('reset')
   }
 </script>

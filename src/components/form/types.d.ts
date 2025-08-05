@@ -4,6 +4,12 @@ export interface FormSchema {
   schema: FormItemSchema[]
   // 显示默认操作按钮
   showDefaultActions?: boolean
+  // 提交按钮文本
+  submitButtonText?: string
+  // 重置按钮文本
+  resetButtonText?: string
+  // 表单验证规则
+  rules?: Record<string, any>
 }
 export interface FormItemSchema {
   labelWidth?: string | number
@@ -19,4 +25,6 @@ export interface FormItemSchema {
   colSpan?: number
   // 表单组件的插槽
   renderComponentContent?: Record<string, function> | (() => Record<string, function>)
+  // 校验规则
+  rules?: Array<Record<string, any>>
 }

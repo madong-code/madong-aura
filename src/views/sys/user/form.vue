@@ -24,7 +24,7 @@
         </div>
       </div>
     </template>
-    <BasicForm :form-schema="formSchema" :model="formModel">
+    <BasicForm :form-schema="formSchema" :model="formModel" @submit="handleSubmit">
       <template #realName="{ model }">
         <ElInput v-model="model.realName" placeholder="请输入姓名==" />
       </template>
@@ -51,6 +51,9 @@
 
   const toggleFullscreen = () => {
     fullscreen.value = !fullscreen.value
+  }
+  const handleSubmit = (values: any) => {
+    console.log('表单对象:', values)
   }
 
   defineExpose({
