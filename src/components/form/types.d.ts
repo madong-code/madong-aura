@@ -2,6 +2,8 @@ export interface FormSchema {
   gutter?: number // 栅格间隔
   labelWidth?: string
   schema: FormItemSchema[]
+  // 显示默认操作按钮
+  showDefaultActions?: boolean
 }
 export interface FormItemSchema {
   labelWidth?: string | number

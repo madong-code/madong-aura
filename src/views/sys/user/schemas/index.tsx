@@ -84,6 +84,7 @@ export const tableSchemas: ColumnOption[] = [
   }
 ]
 export const formSchema: FormSchema = {
+  // showDefaultActions: false,
   schema: [
     {
       label: '用户名',
