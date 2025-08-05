@@ -24,24 +24,28 @@
         </div>
       </div>
     </template>
-    <BasicForm :form-schema="formSchema" :model="formModel">
+    <BasicForm :model="formModel">
       <template #realName="{ model }">
         <ElInput v-model="model.realName" placeholder="请输入姓名==" />
       </template>
     </BasicForm>
+    <template #footer>
+      <ElButton @click="dialogVisible = false">取消</ElButton>
+      <ElButton type="primary" @click="handleSubmit">确定</ElButton>
+    </template>
   </ElDialog>
 </template>
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
-  import { BasicForm } from '@/components/form'
+  import { useForm } from '@/components/form'
   import { formSchema } from './schemas'
   const dialogVisible = ref(false)
   const record = ref({})
   const updateFlag = ref(false)
   const fullscreen = ref(false)
   const formModel = reactive<any>({})
-
+  const [BasicForm, formApi] = useForm(formSchema)
   const show = ({ data, isUpdate }: { data: any; isUpdate: boolean }) => {
     updateFlag.value = isUpdate === true
     record.value = data || {}
@@ -51,6 +55,12 @@
 
   const toggleFullscreen = () => {
     fullscreen.value = !fullscreen.value
+  }
+  const handleSubmit = () => {
+    formApi.validate().then(async () => {
+      const values = await formApi.getValues()
+      console.log(values)
+    })
   }
 
   defineExpose({

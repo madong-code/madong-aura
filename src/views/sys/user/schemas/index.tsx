@@ -84,18 +84,31 @@ export const tableSchemas: ColumnOption[] = [
   }
 ]
 export const formSchema: FormSchema = {
+  showDefaultActions: true,
   schema: [
     {
       label: '用户名',
       prop: 'userName',
       component: 'Input',
-      colSpan: 12
+      colSpan: 12,
+      rules: [
+        {
+          required: true,
+          message: '请输入用户名'
+        }
+      ]
     },
     {
       label: '姓名',
       prop: 'realName',
       component: 'Input',
-      colSpan: 12
+      colSpan: 12,
+      rules: [
+        {
+          required: true,
+          message: '请输入姓名'
+        }
+      ]
     },
     {
       label: '手机号码',
@@ -105,7 +118,13 @@ export const formSchema: FormSchema = {
         return {
           prefix: () => <Icon icon="&#xe7a1;" />
         }
-      }
+      },
+      rules: [
+        {
+          required: true,
+          message: '请输入手机号码'
+        }
+      ]
     }
   ]
 }
