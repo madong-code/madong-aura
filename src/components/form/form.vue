@@ -124,6 +124,16 @@
     formRef.value.resetFields()
     emit('reset')
   }
+  defineExpose({
+    getFormRef() {
+      // 获取表单实例
+      return formRef.value
+    },
+    getValues() {
+      // 获取表单数据
+      return Promise.resolve(formModel)
+    }
+  })
 </script>
 
 <style lang="scss" scoped>

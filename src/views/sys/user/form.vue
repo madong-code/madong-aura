@@ -24,11 +24,15 @@
         </div>
       </div>
     </template>
-    <BasicForm :form-schema="formSchema" :model="formModel" @submit="handleSubmit">
+    <BasicForm ref="formRef" :form-schema="formSchema" :model="formModel">
       <template #realName="{ model }">
         <ElInput v-model="model.realName" placeholder="请输入姓名==" />
       </template>
     </BasicForm>
+    <template #footer>
+      <ElButton @click="dialogVisible = false">取消</ElButton>
+      <ElButton type="primary" @click="handleSubmit">确定</ElButton>
+    </template>
   </ElDialog>
 </template>
 
@@ -52,8 +56,15 @@
   const toggleFullscreen = () => {
     fullscreen.value = !fullscreen.value
   }
-  const handleSubmit = (values: any) => {
-    console.log('表单对象:', values)
+  const formRef = ref()
+  const handleSubmit = () => {
+    formRef.value
+      .getFormRef()
+      .validate()
+      .then(async () => {
+        const values = await formRef.value.getValues()
+        console.log('表单对象:', values)
+      })
   }
 
   defineExpose({
