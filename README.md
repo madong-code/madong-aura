@@ -175,5 +175,11 @@ pnpm build
    - [自定义表单组件·slot处理(二)](https://www.bilibili.com/cheese/play/ep1913476)
    - [自定义表单组件·slot处理(三)](https://www.bilibili.com/cheese/play/ep1913477)
    - [自定义表单组件·24栅格](https://www.bilibili.com/cheese/play/ep1913478)
-
+   - [自定义表单组件·提交和重置按钮](https://www.bilibili.com/cheese/play/ep1916170)
+   - [自定义表单组件·提交和重置逻辑](https://www.bilibili.com/cheese/play/ep1916171)
+   - [自定义表单组件·expose方法](https://www.bilibili.com/cheese/play/ep1916172)
+   - [自定义表单组件·expose表单原有的方法](https://www.bilibili.com/cheese/play/ep1916173)
+   - [自定义表单组件·仿vben5的方式定义和使用表单组件](https://www.bilibili.com/cheese/play/ep1916174)
+   - [自定义表单组件·仿vben5·简单说明](https://www.bilibili.com/cheese/play/ep1916175)
+   
    持续更新中……
