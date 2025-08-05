@@ -85,13 +85,17 @@ export function useForm(formSchema: FormSchema) {
 
   // 创建表单组件的配置
   const FormComponent = defineComponent({
-    setup(_, { attrs }) {
+    setup(_, { attrs, slots }) {
       return () =>
-        h(BasicForm, {
-          ...attrs,
-          formSchema: formSchema,
-          register: register
-        })
+        h(
+          BasicForm,
+          {
+            ...attrs,
+            formSchema: formSchema,
+            register: register
+          },
+          slots
+        )
     }
   })
 

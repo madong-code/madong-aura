@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
-  import { useForm } from '@/components/form/useForm'
+  import { useForm } from '@/components/form'
   import { formSchema } from './schemas'
   const dialogVisible = ref(false)
   const record = ref({})
