@@ -66,7 +66,7 @@
 <script setup lang="ts">
   import { getComponent } from './component-map'
   import { FormInstance, FormSchema } from './types'
-  import { h, reactive } from 'vue'
+  import { h, reactive, onMounted } from 'vue'
 
   // slot 渲染组件
   const RenderSlot = defineComponent({
@@ -84,9 +84,10 @@
     }
   })
 
-  withDefaults(
+  const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
+      register?: (formInstance: FormInstance) => void
     }>(),
     {
       formSchema: () => {
@@ -111,7 +112,9 @@
     }
     return item.renderComponentContent || {}
   }
+
   const formRef = ref()
+
   // 提交表单
   const handleSubmit = () => {
     formRef.value.validate().then(() => {
@@ -124,6 +127,50 @@
     formRef.value.resetFields()
     emit('reset')
   }
+
+  // 注册表单实例
+  onMounted(() => {
+    if (props.register) {
+      props.register({
+        // Element Plus 表单的原生方法
+        validate(callback?: (valid: boolean, fields?: any) => void) {
+          return formRef.value?.validate(callback)
+        },
+
+        validateField(
+          props?: string | string[],
+          callback?: (valid: boolean, fields?: any) => void
+        ) {
+          if (formRef.value?.validateField) {
+            return formRef.value.validateField(props, callback)
+          }
+          return Promise.resolve()
+        },
+
+        resetFields(props?: string | string[]) {
+          formRef.value?.resetFields(props)
+        },
+
+        clearValidate(props?: string | string[]) {
+          formRef.value?.clearValidate(props)
+        },
+
+        scrollToField(prop: string) {
+          formRef.value?.scrollToField(prop)
+        },
+
+        // 自定义方法
+        getValues() {
+          return Promise.resolve({ ...formModel })
+        },
+
+        getFormRef() {
+          return formRef.value
+        }
+      } as FormInstance)
+    }
+  })
+
   // 暴露所有 Element Plus 表单实例方法和自定义方法
   defineExpose<FormInstance>({
     // Element Plus 表单的原生方法

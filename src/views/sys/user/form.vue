@@ -24,7 +24,7 @@
         </div>
       </div>
     </template>
-    <BasicForm ref="formRef" :form-schema="formSchema" :model="formModel">
+    <BasicForm :model="formModel">
       <template #realName="{ model }">
         <ElInput v-model="model.realName" placeholder="请输入姓名==" />
       </template>
@@ -38,14 +38,14 @@
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
-  import { BasicForm } from '@/components/form'
+  import { useForm } from '@/components/form/useForm'
   import { formSchema } from './schemas'
   const dialogVisible = ref(false)
   const record = ref({})
   const updateFlag = ref(false)
   const fullscreen = ref(false)
   const formModel = reactive<any>({})
-
+  const [BasicForm, formApi] = useForm(formSchema)
   const show = ({ data, isUpdate }: { data: any; isUpdate: boolean }) => {
     updateFlag.value = isUpdate === true
     record.value = data || {}
@@ -56,10 +56,9 @@
   const toggleFullscreen = () => {
     fullscreen.value = !fullscreen.value
   }
-  const formRef = ref()
   const handleSubmit = () => {
-    formRef.value.validate().then(async () => {
-      const values = await formRef.value.getValues()
+    formApi.validate().then(async () => {
+      const values = await formApi.getValues()
       console.log(values)
     })
   }
