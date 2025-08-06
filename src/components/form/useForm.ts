@@ -10,9 +10,9 @@ export function useForm(formSchema: FormSchema) {
     formRef.value = formInstance
   }
 
-  const formMethods = {
+  const formMethods: FormInstance = {
     // 获取表单实例
-    getForm() {
+    getFormRef() {
       return formRef.value
     },
 
@@ -74,13 +74,11 @@ export function useForm(formSchema: FormSchema) {
         return {}
       }
       return await form.getValues()
-    }
+    },
 
-    // 设置表单值
-    // setValues(values: Record<string, any>) {
-    //   // 这里需要通过其他方式实现设置值
-    //   console.warn('setValues 方法需要在表单组件中实现')
-    // }
+    async setValues(fields, filterFields, shouldValidate) {
+      return await formRef.value?.setValues(fields, filterFields, shouldValidate)
+    }
   }
 
   // 创建表单组件的配置

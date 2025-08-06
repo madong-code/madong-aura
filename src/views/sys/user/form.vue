@@ -51,6 +51,9 @@
     record.value = data || {}
     dialogVisible.value = true
     fullscreen.value = false // 重置全屏状态
+    nextTick(() => {
+      formApi.setValues(record.value)
+    })
   }
 
   const toggleFullscreen = () => {

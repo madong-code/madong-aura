@@ -161,6 +161,10 @@
 
     getFormRef() {
       return formRef.value
+    },
+    setValues(fields, filterFields, shouldValidate) {
+      console.log(fields, filterFields, shouldValidate)
+      return Promise.resolve()
     }
   }
   // 注册表单实例
