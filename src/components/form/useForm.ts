@@ -9,8 +9,9 @@ export function useForm(formSchema: FormSchema) {
   const register = (formInstance: FormInstance) => {
     formRef.value = formInstance
   }
-
-  const formMethods: FormInstance = {
+  // 这里对外的所有方法不一定是暴露出去（defineExpose），可以只暴露需要的方法
+  // 这里的方法实现，可以调用表单实例的方法，也可以通过useForm(...)这里的参数一起实现逻辑
+  const formMethods = {
     // 获取表单实例
     getFormRef() {
       return formRef.value
@@ -76,8 +77,17 @@ export function useForm(formSchema: FormSchema) {
       return await form.getValues()
     },
 
-    async setValues(fields, filterFields, shouldValidate) {
+    async setValues(fields: Record<string, any>, filterFields?: boolean, shouldValidate?: boolean) {
       return await formRef.value?.setValues(fields, filterFields, shouldValidate)
+    },
+    // 可以增加非formInstance的方法
+    // 获取表单配置元数据
+    getFormSchema() {
+      return formSchema
+    },
+    // 获取表单字段配置
+    getFormItemSchema(field: string) {
+      return formSchema.schema.find((item) => item.prop === field)
     }
   }
 
