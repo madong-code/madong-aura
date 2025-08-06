@@ -43,6 +43,12 @@ export interface FormInstance {
   // 自定义方法
   getValues: () => Promise<Record<string, any>>
   getFormRef: () => any
+  // 设置表单值, 默认会过滤不在schema中定义的field, 可通过filterFields形参关闭过滤
+  setValues: (
+    fields: Record<string, any>,
+    filterFields?: boolean,
+    shouldValidate?: boolean
+  ) => Promise<void>
 }
 
 // 表单事件类型
