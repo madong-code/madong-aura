@@ -181,5 +181,10 @@ pnpm build
    - [自定义表单组件·expose表单原有的方法](https://www.bilibili.com/cheese/play/ep1916173)
    - [自定义表单组件·仿vben5的方式定义和使用表单组件](https://www.bilibili.com/cheese/play/ep1916174)
    - [自定义表单组件·仿vben5·简单说明](https://www.bilibili.com/cheese/play/ep1916175)
+   - [仿vben5·优化实例注册逻辑](https://www.bilibili.com/cheese/play/ep1921824)
+   - [仿vben5·新增setValues方法](https://www.bilibili.com/cheese/play/ep1921825)
+   - [仿vben5·新实现setValues逻](https://www.bilibili.com/cheese/play/ep1921826)
+   - [仿vben5·useForm暴露方法说明](https://www.bilibili.com/cheese/play/ep1921827)
+
    
    持续更新中……
