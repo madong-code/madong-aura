@@ -92,7 +92,7 @@ export function useForm(formSchema: FormSchema) {
           {
             ...attrs,
             formSchema: formSchema,
-            register: register
+            onRegister: register
           },
           slots
         )

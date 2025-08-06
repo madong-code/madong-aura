@@ -84,7 +84,7 @@
     }
   })
 
-  const props = withDefaults(
+  withDefaults(
     defineProps<{
       formSchema: FormSchema
       register?: (formInstance: FormInstance) => void
@@ -103,6 +103,7 @@
   const emit = defineEmits<{
     (e: 'submit', values: any): void
     (e: 'reset'): void
+    (e: 'register', formInstance: FormInstance): void
   }>()
 
   // 与 vben5 一致的函数名
@@ -127,52 +128,8 @@
     formRef.value.resetFields()
     emit('reset')
   }
-
-  // 注册表单实例
-  onMounted(() => {
-    if (props.register) {
-      props.register({
-        // Element Plus 表单的原生方法
-        validate(callback?: (valid: boolean, fields?: any) => void) {
-          return formRef.value?.validate(callback)
-        },
-
-        validateField(
-          props?: string | string[],
-          callback?: (valid: boolean, fields?: any) => void
-        ) {
-          if (formRef.value?.validateField) {
-            return formRef.value.validateField(props, callback)
-          }
-          return Promise.resolve()
-        },
-
-        resetFields(props?: string | string[]) {
-          formRef.value?.resetFields(props)
-        },
-
-        clearValidate(props?: string | string[]) {
-          formRef.value?.clearValidate(props)
-        },
-
-        scrollToField(prop: string) {
-          formRef.value?.scrollToField(prop)
-        },
-
-        // 自定义方法
-        getValues() {
-          return Promise.resolve({ ...formModel })
-        },
-
-        getFormRef() {
-          return formRef.value
-        }
-      } as FormInstance)
-    }
-  })
-
-  // 暴露所有 Element Plus 表单实例方法和自定义方法
-  defineExpose<FormInstance>({
+  // 提取公共的表单实例方法到一个常量对象
+  const formInstanceMethods: FormInstance = {
     // Element Plus 表单的原生方法
     validate(callback?: (valid: boolean, fields?: any) => void) {
       return formRef.value?.validate(callback)
@@ -205,7 +162,14 @@
     getFormRef() {
       return formRef.value
     }
+  }
+  // 注册表单实例
+  onMounted(() => {
+    emit('register', formInstanceMethods)
   })
+
+  // 暴露所有 Element Plus 表单实例方法和自定义方法
+  defineExpose<FormInstance>(formInstanceMethods)
 </script>
 
 <style lang="scss" scoped>
