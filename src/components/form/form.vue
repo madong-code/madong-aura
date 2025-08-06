@@ -84,7 +84,7 @@
     }
   })
 
-  withDefaults(
+  const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
       register?: (formInstance: FormInstance) => void
@@ -163,8 +163,32 @@
       return formRef.value
     },
     setValues(fields, filterFields, shouldValidate) {
-      console.log(fields, filterFields, shouldValidate)
-      return Promise.resolve()
+      return new Promise<void>((resolve) => {
+        // 获取 schema 中定义的所有字段名
+        const schemaProps = props.formSchema.schema.map((item) => item.prop)
+
+        // 处理字段值设置
+        Object.keys(fields).forEach((key) => {
+          // 如果启用过滤，则只设置在 schema 中定义的字段
+          if (!filterFields || schemaProps.includes(key)) {
+            formModel[key] = fields[key]
+          }
+        })
+
+        // 如果需要触发验证
+        if (shouldValidate) {
+          formRef.value
+            ?.validate()
+            .then(() => {
+              resolve()
+            })
+            .catch(() => {
+              resolve()
+            })
+        } else {
+          resolve()
+        }
+      })
     }
   }
   // 注册表单实例
