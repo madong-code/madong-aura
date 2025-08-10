@@ -185,6 +185,10 @@ pnpm build
    - [仿vben5·新增setValues方法](https://www.bilibili.com/cheese/play/ep1921825)
    - [仿vben5·新实现setValues逻](https://www.bilibili.com/cheese/play/ep1921826)
    - [仿vben5·useForm暴露方法说明](https://www.bilibili.com/cheese/play/ep1921827)
+   - [仿vben5·获取指定字段的组件实例方法](https://www.bilibili.com/cheese/play/ep1930583)
+   - [仿vben5·设置组件状态方法实现](https://www.bilibili.com/cheese/play/ep1930584)
+   - [仿vben5·设置组件状态方法优化](https://www.bilibili.com/cheese/play/ep1930585)
+   - [仿vben5·实现updateSchema方法](https://www.bilibili.com/cheese/play/ep1930586)
 
    
    持续更新中……
