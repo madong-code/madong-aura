@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
   import { getComponent } from './component-map'
-  import { FormInstance, FormSchema } from './types'
+  import { FormInstance, FormItemSchema, FormSchema } from './types'
   import { h, reactive, onMounted } from 'vue'
 
   // slot 渲染组件
@@ -217,6 +217,38 @@
     getState(): Promise<FormSchema> {
       return new Promise((resolve) => {
         resolve(formSchemaRef.value)
+      })
+    },
+    updateSchema(data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) {
+      return new Promise<void>((resolve) => {
+        // 确保 data 是数组格式
+        const updateData = Array.isArray(data) ? data : [data]
+
+        // 创建一个 prop 到 schema 项的映射，方便查找
+        const schemaMap = new Map<string, FormItemSchema>()
+        formSchemaRef.value.schema?.forEach((item) => {
+          schemaMap.set(item.prop, item)
+        })
+
+        // 更新对应的 schema 项
+        updateData.forEach((item) => {
+          if (item.prop && schemaMap.has(item.prop)) {
+            const index = formSchemaRef.value.schema!.findIndex(
+              (schemaItem) => schemaItem.prop === item.prop
+            )
+            if (index !== -1) {
+              // 合并原有的配置和新的配置
+              formSchemaRef.value.schema![index] = {
+                ...formSchemaRef.value.schema![index],
+                ...item
+              }
+            }
+          }
+        })
+
+        nextTick(() => {
+          resolve()
+        })
       })
     }
   }

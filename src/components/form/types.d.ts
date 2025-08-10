@@ -55,6 +55,8 @@ export interface FormInstance {
   setState: (state: FormSchema) => Promise<void>
   // 获取组件状态（props）
   getState: () => Promise<FormSchema>
+  // 更新schema
+  updateSchema: (data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) => Promise<void>
 }
 
 // 表单事件类型

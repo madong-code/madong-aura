@@ -1,6 +1,6 @@
 // src/components/form/useForm.ts
 import { ref, unref } from 'vue'
-import type { FormInstance, FormSchema } from './types'
+import type { FormInstance, FormItemSchema, FormSchema } from './types'
 import BasicForm from './form.vue'
 
 export function useForm(formSchema: FormSchema) {
@@ -100,6 +100,10 @@ export function useForm(formSchema: FormSchema) {
     // 获取组件状态
     getState() {
       return formRef.value?.getState()
+    },
+    // 更新schema
+    updateSchema(data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) {
+      return formRef.value?.updateSchema(data)
     }
   }
 

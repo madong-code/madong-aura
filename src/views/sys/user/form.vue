@@ -25,9 +25,9 @@
       </div>
     </template>
     <BasicForm :model="formModel">
-      <template #realName="{ model }">
+      <!-- <template #realName="{ model }">
         <ElInput v-model="model.realName" placeholder="请输入姓名==" />
-      </template>
+      </template> -->
     </BasicForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">取消</ElButton>
@@ -60,17 +60,38 @@
     fullscreen.value = !fullscreen.value
   }
   const handleSubmit = () => {
-    console.log('表单对象:', formApi.getFieldComponentRef('userName').getValue())
-    formApi.setState({
-      showDefaultActions: true,
-      submitButtonText: '提交中...'
+    // console.log('表单对象:', formApi.getFieldComponentRef('userName').getValue())
+    // formApi.setState({
+    //   showDefaultActions: true,
+    //   submitButtonText: '提交中...'
+    // })
+    // setTimeout(() => {
+    //   formApi.setState({
+    //     showDefaultActions: false,
+    //     submitButtonText: '提交成功'
+    //   })
+    // }, 2000)
+    formApi.updateSchema({
+      prop: 'userName',
+      componentProps: {
+        disabled: true
+      }
     })
-    setTimeout(() => {
-      formApi.setState({
-        showDefaultActions: false,
-        submitButtonText: '提交成功'
-      })
-    }, 2000)
+    formApi.updateSchema([
+      {
+        prop: 'mobilePhone',
+        label: '手机号',
+        componentProps: {
+          disabled: true
+        }
+      },
+      {
+        prop: 'realName',
+        componentProps: {
+          disabled: true
+        }
+      }
+    ])
     formApi.validate().then(async () => {
       const values = await formApi.getValues()
       console.log(values)
