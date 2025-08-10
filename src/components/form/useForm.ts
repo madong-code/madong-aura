@@ -88,6 +88,10 @@ export function useForm(formSchema: FormSchema) {
     // 获取表单字段配置
     getFormItemSchema(field: string) {
       return formSchema.schema.find((item) => item.prop === field)
+    },
+    // 获取指定字段的组件实例
+    getFieldComponentRef(field: string) {
+      return formRef.value?.getFieldComponentRef(field)
     }
   }
 

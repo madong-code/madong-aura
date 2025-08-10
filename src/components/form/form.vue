@@ -24,6 +24,7 @@
             />
             <template v-else>
               <component
+                :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
                 :is="getComponent(item.component)"
                 v-bind="{
@@ -105,7 +106,10 @@
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
   }>()
-
+  const componentRef = reactive<Record<string, any>>({})
+  const setComponentRef = (field: string, ref: any) => {
+    componentRef[field] = ref
+  }
   // 与 vben5 一致的函数名
   const renderComponentContent = (item: any) => {
     if (typeof item.renderComponentContent === 'function') {
@@ -189,6 +193,10 @@
           resolve()
         }
       })
+    },
+    // 获取字段组件实例
+    getFieldComponentRef(field: string) {
+      return componentRef[field]
     }
   }
   // 注册表单实例

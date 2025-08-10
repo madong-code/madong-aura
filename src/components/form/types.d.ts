@@ -49,6 +49,8 @@ export interface FormInstance {
     filterFields?: boolean,
     shouldValidate?: boolean
   ) => Promise<void>
+  // 获取字段组件实例
+  getFieldComponentRef: (prop: string) => any
 }
 
 // 表单事件类型
