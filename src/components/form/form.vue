@@ -2,16 +2,16 @@
   <div>
     <ElForm
       ref="formRef"
-      :rules="formSchema.rules"
+      :rules="formSchemaRef.rules"
       :model="formModel"
-      :label-width="formSchema.labelWidth || '80px'"
+      :label-width="formSchemaRef.labelWidth || '80px'"
     >
-      <ElRow :gutter="formSchema.gutter || 0">
-        <ElCol v-for="item in formSchema.schema" :key="item.prop" :span="item.colSpan || 24">
+      <ElRow :gutter="formSchemaRef.gutter || 0">
+        <ElCol v-for="item in formSchemaRef.schema" :key="item.prop" :span="item.colSpan || 24">
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
-            :label-width="item.labelWidth || formSchema.labelWidth || '80px'"
+            :label-width="item.labelWidth || formSchemaRef.labelWidth || '80px'"
             :rules="item.rules"
           >
             <!-- 字段插槽优先级最高 -->
@@ -51,13 +51,13 @@
     </ElForm>
 
     <!-- 默认操作按钮 -->
-    <ElRow v-if="formSchema.showDefaultActions !== false">
+    <ElRow v-if="formSchemaRef.showDefaultActions !== false">
       <ElCol>
         <div class="form-actions">
           <ElButton type="primary" @click="handleSubmit">{{
-            formSchema.submitButtonText || '提交'
+            formSchemaRef.submitButtonText || '提交'
           }}</ElButton>
-          <ElButton @click="handleReset">{{ formSchema.resetButtonText || '重置' }}</ElButton>
+          <ElButton @click="handleReset">{{ formSchemaRef.resetButtonText || '重置' }}</ElButton>
         </div>
       </ElCol>
     </ElRow>
@@ -88,7 +88,6 @@
   const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
-      register?: (formInstance: FormInstance) => void
     }>(),
     {
       formSchema: () => {
@@ -100,6 +99,7 @@
   )
 
   const formModel = reactive<any>({})
+  const formSchemaRef = ref<FormSchema>(props.formSchema)
 
   const emit = defineEmits<{
     (e: 'submit', values: any): void
@@ -197,6 +197,17 @@
     // 获取字段组件实例
     getFieldComponentRef(field: string) {
       return componentRef[field]
+    },
+    // 设置组件状态（props）
+    setState(state: FormSchema) {
+      if (state.schema.length === 0) {
+        state.schema = formSchemaRef.value.schema
+      }
+      formSchemaRef.value = {
+        ...formSchemaRef.value,
+        ...state
+      }
+      console.log(formSchemaRef.value)
     }
   }
   // 注册表单实例

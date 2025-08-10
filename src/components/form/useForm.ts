@@ -92,6 +92,10 @@ export function useForm(formSchema: FormSchema) {
     // 获取指定字段的组件实例
     getFieldComponentRef(field: string) {
       return formRef.value?.getFieldComponentRef(field)
+    },
+    // 设置组件状态（props）
+    setState(state: FormSchema) {
+      formRef.value?.setState(state)
     }
   }
 

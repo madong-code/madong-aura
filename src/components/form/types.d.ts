@@ -51,6 +51,8 @@ export interface FormInstance {
   ) => Promise<void>
   // 获取字段组件实例
   getFieldComponentRef: (prop: string) => any
+  // 设置组件状态（props）
+  setState: (state: FormSchema) => void
 }
 
 // 表单事件类型
