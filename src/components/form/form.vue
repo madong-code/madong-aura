@@ -7,7 +7,11 @@
       :label-width="formSchemaRef.labelWidth || '80px'"
     >
       <ElRow :gutter="formSchemaRef.gutter || 0">
-        <ElCol v-for="item in formSchemaRef.schema" :key="item.prop" :span="item.colSpan || 24">
+        <ElCol
+          v-for="item in formSchemaRef.schema || []"
+          :key="item.prop"
+          :span="item.colSpan || 24"
+        >
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
@@ -169,7 +173,7 @@
     setValues(fields, filterFields, shouldValidate) {
       return new Promise<void>((resolve) => {
         // 获取 schema 中定义的所有字段名
-        const schemaProps = props.formSchema.schema.map((item) => item.prop)
+        const schemaProps = (props.formSchema.schema || []).map((item) => item.prop)
 
         // 处理字段值设置
         Object.keys(fields).forEach((key) => {
@@ -200,14 +204,20 @@
     },
     // 设置组件状态（props）
     setState(state: FormSchema) {
-      if (state.schema.length === 0) {
-        state.schema = formSchemaRef.value.schema
-      }
-      formSchemaRef.value = {
-        ...formSchemaRef.value,
-        ...state
-      }
-      console.log(formSchemaRef.value)
+      return new Promise((resolve) => {
+        formSchemaRef.value = {
+          ...formSchemaRef.value,
+          ...state
+        }
+        nextTick(() => {
+          resolve()
+        })
+      })
+    },
+    getState(): Promise<FormSchema> {
+      return new Promise((resolve) => {
+        resolve(formSchemaRef.value)
+      })
     }
   }
   // 注册表单实例

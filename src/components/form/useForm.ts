@@ -87,7 +87,7 @@ export function useForm(formSchema: FormSchema) {
     },
     // 获取表单字段配置
     getFormItemSchema(field: string) {
-      return formSchema.schema.find((item) => item.prop === field)
+      return (formSchema.schema || []).find((item) => item.prop === field)
     },
     // 获取指定字段的组件实例
     getFieldComponentRef(field: string) {
@@ -95,7 +95,11 @@ export function useForm(formSchema: FormSchema) {
     },
     // 设置组件状态（props）
     setState(state: FormSchema) {
-      formRef.value?.setState(state)
+      return formRef.value?.setState(state)
+    },
+    // 获取组件状态
+    getState() {
+      return formRef.value?.getState()
     }
   }
 

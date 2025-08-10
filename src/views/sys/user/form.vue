@@ -62,9 +62,15 @@
   const handleSubmit = () => {
     console.log('表单对象:', formApi.getFieldComponentRef('userName').getValue())
     formApi.setState({
-      submitButtonText: '提交中...',
-      schema: []
+      showDefaultActions: true,
+      submitButtonText: '提交中...'
     })
+    setTimeout(() => {
+      formApi.setState({
+        showDefaultActions: false,
+        submitButtonText: '提交成功'
+      })
+    }, 2000)
     formApi.validate().then(async () => {
       const values = await formApi.getValues()
       console.log(values)
