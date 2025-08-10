@@ -2,16 +2,20 @@
   <div>
     <ElForm
       ref="formRef"
-      :rules="formSchema.rules"
+      :rules="formSchemaRef.rules"
       :model="formModel"
-      :label-width="formSchema.labelWidth || '80px'"
+      :label-width="formSchemaRef.labelWidth || '80px'"
     >
-      <ElRow :gutter="formSchema.gutter || 0">
-        <ElCol v-for="item in formSchema.schema" :key="item.prop" :span="item.colSpan || 24">
+      <ElRow :gutter="formSchemaRef.gutter || 0">
+        <ElCol
+          v-for="item in formSchemaRef.schema || []"
+          :key="item.prop"
+          :span="item.colSpan || 24"
+        >
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
-            :label-width="item.labelWidth || formSchema.labelWidth || '80px'"
+            :label-width="item.labelWidth || formSchemaRef.labelWidth || '80px'"
             :rules="item.rules"
           >
             <!-- 字段插槽优先级最高 -->
@@ -24,6 +28,7 @@
             />
             <template v-else>
               <component
+                :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
                 :is="getComponent(item.component)"
                 v-bind="{
@@ -50,13 +55,13 @@
     </ElForm>
 
     <!-- 默认操作按钮 -->
-    <ElRow v-if="formSchema.showDefaultActions !== false">
+    <ElRow v-if="formSchemaRef.showDefaultActions !== false">
       <ElCol>
         <div class="form-actions">
           <ElButton type="primary" @click="handleSubmit">{{
-            formSchema.submitButtonText || '提交'
+            formSchemaRef.submitButtonText || '提交'
           }}</ElButton>
-          <ElButton @click="handleReset">{{ formSchema.resetButtonText || '重置' }}</ElButton>
+          <ElButton @click="handleReset">{{ formSchemaRef.resetButtonText || '重置' }}</ElButton>
         </div>
       </ElCol>
     </ElRow>
@@ -65,7 +70,7 @@
 
 <script setup lang="ts">
   import { getComponent } from './component-map'
-  import { FormInstance, FormSchema } from './types'
+  import { FormInstance, FormItemSchema, FormSchema } from './types'
   import { h, reactive, onMounted } from 'vue'
 
   // slot 渲染组件
@@ -87,7 +92,6 @@
   const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
-      register?: (formInstance: FormInstance) => void
     }>(),
     {
       formSchema: () => {
@@ -99,13 +103,17 @@
   )
 
   const formModel = reactive<any>({})
+  const formSchemaRef = ref<FormSchema>(props.formSchema)
 
   const emit = defineEmits<{
     (e: 'submit', values: any): void
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
   }>()
-
+  const componentRef = reactive<Record<string, any>>({})
+  const setComponentRef = (field: string, ref: any) => {
+    componentRef[field] = ref
+  }
   // 与 vben5 一致的函数名
   const renderComponentContent = (item: any) => {
     if (typeof item.renderComponentContent === 'function') {
@@ -165,7 +173,7 @@
     setValues(fields, filterFields, shouldValidate) {
       return new Promise<void>((resolve) => {
         // 获取 schema 中定义的所有字段名
-        const schemaProps = props.formSchema.schema.map((item) => item.prop)
+        const schemaProps = (props.formSchema.schema || []).map((item) => item.prop)
 
         // 处理字段值设置
         Object.keys(fields).forEach((key) => {
@@ -188,6 +196,59 @@
         } else {
           resolve()
         }
+      })
+    },
+    // 获取字段组件实例
+    getFieldComponentRef(field: string) {
+      return componentRef[field]
+    },
+    // 设置组件状态（props）
+    setState(state: FormSchema) {
+      return new Promise((resolve) => {
+        formSchemaRef.value = {
+          ...formSchemaRef.value,
+          ...state
+        }
+        nextTick(() => {
+          resolve()
+        })
+      })
+    },
+    getState(): Promise<FormSchema> {
+      return new Promise((resolve) => {
+        resolve(formSchemaRef.value)
+      })
+    },
+    updateSchema(data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) {
+      return new Promise<void>((resolve) => {
+        // 确保 data 是数组格式
+        const updateData = Array.isArray(data) ? data : [data]
+
+        // 创建一个 prop 到 schema 项的映射，方便查找
+        const schemaMap = new Map<string, FormItemSchema>()
+        formSchemaRef.value.schema?.forEach((item) => {
+          schemaMap.set(item.prop, item)
+        })
+
+        // 更新对应的 schema 项
+        updateData.forEach((item) => {
+          if (item.prop && schemaMap.has(item.prop)) {
+            const index = formSchemaRef.value.schema!.findIndex(
+              (schemaItem) => schemaItem.prop === item.prop
+            )
+            if (index !== -1) {
+              // 合并原有的配置和新的配置
+              formSchemaRef.value.schema![index] = {
+                ...formSchemaRef.value.schema![index],
+                ...item
+              }
+            }
+          }
+        })
+
+        nextTick(() => {
+          resolve()
+        })
       })
     }
   }

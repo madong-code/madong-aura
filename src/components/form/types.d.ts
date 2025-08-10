@@ -1,7 +1,7 @@
 export interface FormSchema {
   gutter?: number // 栅格间隔
   labelWidth?: string
-  schema: FormItemSchema[]
+  schema?: FormItemSchema[]
   // 显示默认操作按钮
   showDefaultActions?: boolean
   // 提交按钮文本
@@ -49,6 +49,14 @@ export interface FormInstance {
     filterFields?: boolean,
     shouldValidate?: boolean
   ) => Promise<void>
+  // 获取字段组件实例
+  getFieldComponentRef: (prop: string) => any
+  // 设置组件状态（props）
+  setState: (state: FormSchema) => Promise<void>
+  // 获取组件状态（props）
+  getState: () => Promise<FormSchema>
+  // 更新schema
+  updateSchema: (data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) => Promise<void>
 }
 
 // 表单事件类型

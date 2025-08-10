@@ -28,5 +28,10 @@
 
   // 使用 useSlots 获取所有插槽
   const slots = useSlots()
+  defineExpose({
+    getValue() {
+      return value.value
+    }
+  })
 </script>
 <style lang="scss" scoped></style>

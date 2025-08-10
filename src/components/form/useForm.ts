@@ -1,6 +1,6 @@
 // src/components/form/useForm.ts
 import { ref, unref } from 'vue'
-import type { FormInstance, FormSchema } from './types'
+import type { FormInstance, FormItemSchema, FormSchema } from './types'
 import BasicForm from './form.vue'
 
 export function useForm(formSchema: FormSchema) {
@@ -87,7 +87,23 @@ export function useForm(formSchema: FormSchema) {
     },
     // 获取表单字段配置
     getFormItemSchema(field: string) {
-      return formSchema.schema.find((item) => item.prop === field)
+      return (formSchema.schema || []).find((item) => item.prop === field)
+    },
+    // 获取指定字段的组件实例
+    getFieldComponentRef(field: string) {
+      return formRef.value?.getFieldComponentRef(field)
+    },
+    // 设置组件状态（props）
+    setState(state: FormSchema) {
+      return formRef.value?.setState(state)
+    },
+    // 获取组件状态
+    getState() {
+      return formRef.value?.getState()
+    },
+    // 更新schema
+    updateSchema(data: Partial<FormItemSchema> | Partial<FormItemSchema>[]) {
+      return formRef.value?.updateSchema(data)
     }
   }
 
