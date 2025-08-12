@@ -27,8 +27,10 @@ export interface FormItemSchema {
   renderComponentContent?: Record<string, function> | (() => Record<string, function>)
   // 校验规则
   rules?: Array<Record<string, any>>
-  // 判断是否显示
+  // 动态判断当前组件是否显示，js 控制，会删除 dom
   ifShow?: ((values: any, formApi: any) => boolean) | boolean
+  // 动态判断当前组件是否显示，css 控制，不会删除 dom
+  show?: ((values: any, formApi: any) => boolean) | boolean
 }
 // 定义表单实例方法类型
 export interface FormInstance {

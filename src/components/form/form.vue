@@ -7,7 +7,12 @@
       :label-width="formSchemaRef.labelWidth || '80px'"
     >
       <ElRow :gutter="formSchemaRef.gutter || 0">
-        <ElCol v-for="item in schemaList" :key="item.prop" :span="item.colSpan || 24">
+        <ElCol
+          v-for="item in schemaList"
+          :key="item.prop"
+          :span="item.colSpan || 24"
+          :style="{ display: shouldShow(item) ? 'block' : 'none' }"
+        >
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
@@ -120,6 +125,17 @@
       return true
     })
   })
+  // 判断是否显示，用css控制
+  const shouldShow = (item: FormItemSchema) => {
+    if (item.show !== undefined) {
+      if (typeof item.show === 'function') {
+        return item.show(formModel, props.formMethods)
+      } else {
+        return item.show
+      }
+    }
+    return true
+  }
   const componentRef = reactive<Record<string, any>>({})
   const setComponentRef = (field: string, ref: any) => {
     componentRef[field] = ref
@@ -174,19 +190,20 @@
 
     // 自定义方法
     getValues() {
-      // 通过schema来遍历key获取表单值
+      // 通过schema来遍历key获取表单值（包含show隐藏但仍存在于DOM中的字段）
       const values: Record<string, any> = {}
       const schema = props.formSchema.schema || []
 
       schema.forEach((item) => {
-        // 只处理在schema中定义且满足显示条件的字段
-        const shouldShow =
+        // 处理ifShow字段（js控制是否渲染）
+        const shouldRender =
           item.ifShow === undefined ||
           (typeof item.ifShow === 'function'
             ? item.ifShow(formModel, props.formMethods)
             : item.ifShow)
 
-        if (shouldShow) {
+        // 只有在DOM中渲染的字段才获取值（无论是否CSS隐藏）
+        if (shouldRender) {
           values[item.prop] = formModel[item.prop]
         }
       })

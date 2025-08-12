@@ -87,6 +87,14 @@ export const formSchema: FormSchema = {
   showDefaultActions: false,
   schema: [
     {
+      label: '用户ID',
+      prop: 'id',
+      component: 'Input',
+      colSpan: 12,
+      // 相当于input的type=hidden属性
+      show: false
+    },
+    {
       label: '用户名',
       prop: 'userName',
       component: 'Input',
