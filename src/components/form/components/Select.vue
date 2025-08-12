@@ -8,9 +8,10 @@
 <script setup lang="ts">
   import { useSlots, computed } from 'vue'
   import { ElSelectV2 } from 'element-plus'
+  import { NewOption } from '@/types/component/dict'
   const props = defineProps<{
-    value: string | undefined | number | null | Array<string | number>
-    options: Array<{ label: string; value: string }>
+    value?: string | undefined | number | null | Array<string | number>
+    options: Array<NewOption>
   }>()
 
   const emit = defineEmits<{

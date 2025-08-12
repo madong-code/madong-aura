@@ -17,16 +17,17 @@
   </ElRadioGroup>
 </template>
 <script setup lang="ts">
+  import { NewOption } from '@/types/component/dict'
   import { computed } from 'vue'
   const props = defineProps<{
-    value: string | number | boolean
-    options: Array<{ label: string; value: string | number | boolean }>
+    value?: string | number | boolean | undefined
+    options: Array<NewOption>
     isBtn?: boolean
     size?: 'default' | 'small' | 'large' | undefined
   }>()
 
   const emit = defineEmits<{
-    (e: 'update:value', value: string | number | boolean): void
+    (e: 'update:value', value: string | number | boolean | undefined): void
   }>()
 
   const value = computed({

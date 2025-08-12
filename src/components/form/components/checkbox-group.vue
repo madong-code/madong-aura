@@ -17,17 +17,18 @@
   </ElCheckboxGroup>
 </template>
 <script setup lang="ts">
+  import { NewOption } from '@/types/component/dict'
   import { ElCheckboxButton } from 'element-plus'
   import { computed } from 'vue'
   const props = defineProps<{
-    value: Array<string | number>
-    options: Array<{ label: string; value: string | number }>
+    value?: Array<string | number> | undefined
+    options: Array<NewOption>
     isBtn?: boolean
     size?: 'default' | 'small' | 'large' | undefined
   }>()
 
   const emit = defineEmits<{
-    (e: 'update:value', value: Array<string | number>): void
+    (e: 'update:value', value: Array<string | number> | undefined): void
   }>()
 
   const value = computed({

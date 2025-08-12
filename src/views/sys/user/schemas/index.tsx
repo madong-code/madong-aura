@@ -85,6 +85,7 @@ export const tableSchemas: ColumnOption[] = [
 ]
 export const formSchema: FormSchema = {
   showDefaultActions: true,
+  labelWidth: '100px',
   schema: [
     {
       label: '用户ID',
@@ -253,6 +254,18 @@ export const formSchema: FormSchema = {
             value: 3
           }
         ]
+      }
+    },
+    {
+      prop: 'adminType',
+      label: '管理员类型',
+      component: 'ApiDict',
+      componentProps: {
+        isBtn: true,
+        renderType: 'CheckboxGroup',
+        code: 'sys_user_admin_type'
+        // // 多选
+        // multiple: true
       }
     }
   ]
