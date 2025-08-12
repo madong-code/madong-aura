@@ -153,6 +153,23 @@ export const formSchema: FormSchema = {
           message: '请输入密码'
         }
       ]
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'Select',
+      componentProps: {
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
     }
   ]
 }
