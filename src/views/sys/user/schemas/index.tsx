@@ -178,6 +178,24 @@ export const formSchema: FormSchema = {
       component: 'RadioGroup',
       defaultValue: 0,
       componentProps: {
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'RadioGroup',
+      defaultValue: 0,
+      componentProps: {
         isBtn: true,
         options: [
           {
@@ -187,6 +205,52 @@ export const formSchema: FormSchema = {
           {
             label: '否',
             value: 0
+          }
+        ]
+      }
+    },
+    {
+      prop: 'userType',
+      label: '用户类型',
+      component: 'CheckboxGroup',
+      defaultValue: [1, 2],
+      componentProps: {
+        isBtn: false,
+        options: [
+          {
+            label: '普通用户',
+            value: 1
+          },
+          {
+            label: '专家',
+            value: 2
+          },
+          {
+            label: '业务员',
+            value: 3
+          }
+        ]
+      }
+    },
+    {
+      prop: 'userType',
+      label: '用户类型',
+      component: 'CheckboxGroup',
+      defaultValue: [1],
+      componentProps: {
+        isBtn: true,
+        options: [
+          {
+            label: '普通用户',
+            value: 1
+          },
+          {
+            label: '专家',
+            value: 2
+          },
+          {
+            label: '业务员',
+            value: 3
           }
         ]
       }

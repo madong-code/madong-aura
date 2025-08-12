@@ -21,8 +21,8 @@
   const props = defineProps<{
     value: string | number | boolean
     options: Array<{ label: string; value: string | number | boolean }>
-    isBtn: boolean
-    size: 'default' | 'small' | 'large' | undefined
+    isBtn?: boolean
+    size?: 'default' | 'small' | 'large' | undefined
   }>()
 
   const emit = defineEmits<{
