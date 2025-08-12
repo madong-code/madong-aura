@@ -32,10 +32,7 @@
                 :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
                 :is="getComponent(item.component)"
-                v-bind="{
-                  ...item.componentProps,
-                  placeholder: item.componentProps?.placeholder || `请输入${item.label}`
-                }"
+                v-bind="getComponentProps(item)"
               >
                 <!-- 渲染组件内容(slot) -->
                 <template
@@ -135,6 +132,20 @@
       }
     }
     return true
+  }
+  // 获取组件属性，处理componentProps为函数的情况
+  const getComponentProps = (item: FormItemSchema) => {
+    // 处理componentProps可能为函数的情况
+    const componentProps =
+      typeof item.componentProps === 'function'
+        ? item.componentProps(formModel, props.formMethods)
+        : item.componentProps || {}
+
+    // 合并属性，如果未提供placeholder则自动生成
+    return {
+      ...componentProps,
+      placeholder: componentProps.placeholder || `请输入${item.label}`
+    }
   }
   const componentRef = reactive<Record<string, any>>({})
   const setComponentRef = (field: string, ref: any) => {

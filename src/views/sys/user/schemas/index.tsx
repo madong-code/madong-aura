@@ -104,7 +104,10 @@ export const formSchema: FormSchema = {
           required: true,
           message: '请输入用户名'
         }
-      ]
+      ],
+      componentProps(values) {
+        return values.realName === '张三' ? { disabled: true } : {}
+      }
     },
     {
       label: '姓名',
