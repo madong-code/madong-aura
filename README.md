@@ -189,6 +189,16 @@ pnpm build
    - [仿vben5·设置组件状态方法实现](https://www.bilibili.com/cheese/play/ep1930584)
    - [仿vben5·设置组件状态方法优化](https://www.bilibili.com/cheese/play/ep1930585)
    - [仿vben5·实现updateSchema方法](https://www.bilibili.com/cheese/play/ep1930586)
+   - [仿vben5·实现ifShow配置·初探](https://www.bilibili.com/cheese/play/ep1936612)
+   - [仿vben5·实现ifShow配置·formApi引用处理](https://www.bilibili.com/cheese/play/ep1936613)
+   - [仿vben5·getValues方法优化](https://www.bilibili.com/cheese/play/ep1936614)
+   - [仿vben5·实现show属性](https://www.bilibili.com/cheese/play/ep1936615)
+   - [仿vben5·componentProps支持函数](https://www.bilibili.com/cheese/play/ep1936616)
+   - [增加Select控件](https://www.bilibili.com/cheese/play/ep1936617)
+   - [自定义表单组件·默认值处理](https://www.bilibili.com/cheese/play/ep1936628)
+   - [增加RadioGroup控件](https://www.bilibili.com/cheese/play/ep1936629)
+   - [增加CheckboxGroup控件](https://www.bilibili.com/cheese/play/ep1936630)
+   - [增加ApiDict控件](https://www.bilibili.com/cheese/play/ep1936632)
 
    
    持续更新中……
