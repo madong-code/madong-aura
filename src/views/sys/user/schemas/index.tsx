@@ -171,6 +171,25 @@ export const formSchema: FormSchema = {
           }
         ]
       }
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'RadioGroup',
+      defaultValue: 0,
+      componentProps: {
+        isBtn: true,
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
     }
   ]
 }
