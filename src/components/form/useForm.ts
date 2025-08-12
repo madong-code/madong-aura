@@ -116,6 +116,7 @@ export function useForm(formSchema: FormSchema) {
           {
             ...attrs,
             formSchema: formSchema,
+            formMethods: formMethods,
             onRegister: register
           },
           slots

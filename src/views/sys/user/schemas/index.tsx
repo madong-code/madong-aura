@@ -84,8 +84,17 @@ export const tableSchemas: ColumnOption[] = [
   }
 ]
 export const formSchema: FormSchema = {
-  showDefaultActions: false,
+  showDefaultActions: true,
+  labelWidth: '100px',
   schema: [
+    {
+      label: '用户ID',
+      prop: 'id',
+      component: 'Input',
+      colSpan: 12,
+      // 相当于input的type=hidden属性
+      show: false
+    },
     {
       label: '用户名',
       prop: 'userName',
@@ -96,7 +105,10 @@ export const formSchema: FormSchema = {
           required: true,
           message: '请输入用户名'
         }
-      ]
+      ],
+      componentProps(values) {
+        return values.realName === '张三' ? { disabled: true } : {}
+      }
     },
     {
       label: '姓名',
@@ -125,6 +137,136 @@ export const formSchema: FormSchema = {
           message: '请输入手机号码'
         }
       ]
+    },
+    {
+      label: '密码',
+      prop: 'password',
+      component: 'Input',
+      colSpan: 12,
+      ifShow(values, formApi) {
+        console.log(formApi)
+        // 不存在id，则为更新，不显示密码
+        return !values.id
+      },
+      rules: [
+        {
+          required: true,
+          message: '请输入密码'
+        }
+      ]
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'Select',
+      defaultValue: 0,
+      componentProps: {
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'RadioGroup',
+      defaultValue: 0,
+      componentProps: {
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
+    },
+    {
+      prop: 'isLocked',
+      label: '是否锁定',
+      component: 'RadioGroup',
+      defaultValue: 0,
+      componentProps: {
+        isBtn: true,
+        options: [
+          {
+            label: '是',
+            value: 1
+          },
+          {
+            label: '否',
+            value: 0
+          }
+        ]
+      }
+    },
+    {
+      prop: 'userType',
+      label: '用户类型',
+      component: 'CheckboxGroup',
+      defaultValue: [1, 2],
+      componentProps: {
+        isBtn: false,
+        options: [
+          {
+            label: '普通用户',
+            value: 1
+          },
+          {
+            label: '专家',
+            value: 2
+          },
+          {
+            label: '业务员',
+            value: 3
+          }
+        ]
+      }
+    },
+    {
+      prop: 'userType',
+      label: '用户类型',
+      component: 'CheckboxGroup',
+      defaultValue: [1],
+      componentProps: {
+        isBtn: true,
+        options: [
+          {
+            label: '普通用户',
+            value: 1
+          },
+          {
+            label: '专家',
+            value: 2
+          },
+          {
+            label: '业务员',
+            value: 3
+          }
+        ]
+      }
+    },
+    {
+      prop: 'adminType',
+      label: '管理员类型',
+      component: 'ApiDict',
+      componentProps: {
+        isBtn: true,
+        renderType: 'CheckboxGroup',
+        code: 'sys_user_admin_type'
+        // // 多选
+        // multiple: true
+      }
     }
   ]
 }

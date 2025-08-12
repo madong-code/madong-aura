@@ -17,16 +17,22 @@ export interface FormItemSchema {
   label: string
   // 表单项属性名
   prop: string
+  // 表单项默认值
+  defaultValue?: any
   // 表单项类型
   component: string
   // 表单组件属性
-  componentProps?: Record<string, any>
+  componentProps?: Record<string, any> | ((values: any, formApi: any) => Record<string, any>)
   // 每列的宽度（基于 24 格布局）
   colSpan?: number
   // 表单组件的插槽
   renderComponentContent?: Record<string, function> | (() => Record<string, function>)
   // 校验规则
   rules?: Array<Record<string, any>>
+  // 动态判断当前组件是否显示，js 控制，会删除 dom
+  ifShow?: ((values: any, formApi: any) => boolean) | boolean
+  // 动态判断当前组件是否显示，css 控制，不会删除 dom
+  show?: ((values: any, formApi: any) => boolean) | boolean
 }
 // 定义表单实例方法类型
 export interface FormInstance {

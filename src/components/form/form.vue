@@ -8,9 +8,10 @@
     >
       <ElRow :gutter="formSchemaRef.gutter || 0">
         <ElCol
-          v-for="item in formSchemaRef.schema || []"
+          v-for="item in schemaList"
           :key="item.prop"
           :span="item.colSpan || 24"
+          :style="{ display: shouldShow(item) ? 'block' : 'none' }"
         >
           <ElFormItem
             :prop="item.prop"
@@ -31,10 +32,7 @@
                 :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
                 :is="getComponent(item.component)"
-                v-bind="{
-                  ...item.componentProps,
-                  placeholder: item.componentProps?.placeholder || `请输入${item.label}`
-                }"
+                v-bind="getComponentProps(item)"
               >
                 <!-- 渲染组件内容(slot) -->
                 <template
@@ -71,7 +69,7 @@
 <script setup lang="ts">
   import { getComponent } from './component-map'
   import { FormInstance, FormItemSchema, FormSchema } from './types'
-  import { h, reactive, onMounted } from 'vue'
+  import { h, reactive, onMounted, watch } from 'vue'
 
   // slot 渲染组件
   const RenderSlot = defineComponent({
@@ -92,6 +90,7 @@
   const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
+      formMethods?: any
     }>(),
     {
       formSchema: () => {
@@ -110,10 +109,64 @@
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
   }>()
+
+  // 初始化表单默认值
+  const initFormModel = () => {
+    const schema = props.formSchema.schema || []
+    schema.forEach((item) => {
+      // 只有当formModel中没有该属性时才设置默认值
+      if (!(item.prop in formModel)) {
+        formModel[item.prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+      }
+    })
+  }
+
+  const schemaList = computed<FormItemSchema[]>(() => {
+    return (props.formSchema.schema || []).filter((item) => {
+      if (item.ifShow !== undefined) {
+        if (typeof item.ifShow === 'function') {
+          // formApi
+          return item.ifShow(formModel, props.formMethods)
+        } else if (typeof item.ifShow === 'boolean') {
+          return item.ifShow
+        }
+      }
+      return true
+    })
+  })
+
+  // 判断是否显示，用css控制
+  const shouldShow = (item: FormItemSchema) => {
+    if (item.show !== undefined) {
+      if (typeof item.show === 'function') {
+        return item.show(formModel, props.formMethods)
+      } else {
+        return item.show
+      }
+    }
+    return true
+  }
+
+  // 获取组件属性，处理componentProps为函数的情况
+  const getComponentProps = (item: FormItemSchema) => {
+    // 处理componentProps可能为函数的情况
+    const componentProps =
+      typeof item.componentProps === 'function'
+        ? item.componentProps(formModel, props.formMethods)
+        : item.componentProps || {}
+
+    // 合并属性，如果未提供placeholder则自动生成
+    return {
+      ...componentProps,
+      placeholder: componentProps.placeholder || `请输入${item.label}`
+    }
+  }
+
   const componentRef = reactive<Record<string, any>>({})
   const setComponentRef = (field: string, ref: any) => {
     componentRef[field] = ref
   }
+
   // 与 vben5 一致的函数名
   const renderComponentContent = (item: any) => {
     if (typeof item.renderComponentContent === 'function') {
@@ -134,8 +187,21 @@
   // 重置表单
   const handleReset = () => {
     formRef.value.resetFields()
+    // 重置后重新设置默认值
+    initFormModel()
     emit('reset')
   }
+
+  // 监听表单结构变化，重新初始化默认值
+  watch(
+    () => props.formSchema,
+    () => {
+      formSchemaRef.value = props.formSchema
+      initFormModel()
+    },
+    { deep: true, immediate: true }
+  )
+
   // 提取公共的表单实例方法到一个常量对象
   const formInstanceMethods: FormInstance = {
     // Element Plus 表单的原生方法
@@ -152,6 +218,17 @@
 
     resetFields(props?: string | string[]) {
       formRef.value?.resetFields(props)
+      // 重置特定字段后，为这些字段重新设置默认值（如果它们没有被设置）
+      if (props) {
+        const propList = Array.isArray(props) ? props : [props]
+        const schema = formSchemaRef.value.schema || []
+        propList.forEach((prop) => {
+          const item = schema.find((s) => s.prop === prop)
+          if (item && formModel[prop] === undefined) {
+            formModel[prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+          }
+        })
+      }
     },
 
     clearValidate(props?: string | string[]) {
@@ -164,7 +241,25 @@
 
     // 自定义方法
     getValues() {
-      return Promise.resolve({ ...formModel })
+      // 通过schema来遍历key获取表单值（包含show隐藏但仍存在于DOM中的字段）
+      const values: Record<string, any> = {}
+      const schema = props.formSchema.schema || []
+
+      schema.forEach((item) => {
+        // 处理ifShow字段（js控制是否渲染）
+        const shouldRender =
+          item.ifShow === undefined ||
+          (typeof item.ifShow === 'function'
+            ? item.ifShow(formModel, props.formMethods)
+            : item.ifShow)
+
+        // 只有在DOM中渲染的字段才获取值（无论是否CSS隐藏）
+        if (shouldRender) {
+          values[item.prop] = formModel[item.prop]
+        }
+      })
+
+      return Promise.resolve(values)
     },
 
     getFormRef() {
@@ -242,6 +337,14 @@
                 ...formSchemaRef.value.schema![index],
                 ...item
               }
+
+              // 如果更新了defaultValue且当前字段值为undefined，则设置默认值
+              if (
+                Object.prototype.hasOwnProperty.call(item, 'defaultValue') &&
+                formModel[item.prop] === undefined
+              ) {
+                formModel[item.prop] = item.defaultValue
+              }
             }
           }
         })
@@ -252,6 +355,7 @@
       })
     }
   }
+
   // 注册表单实例
   onMounted(() => {
     emit('register', formInstanceMethods)
