@@ -88,6 +88,7 @@
   const props = withDefaults(
     defineProps<{
       formSchema: FormSchema
+      formMethods?: any
     }>(),
     {
       formSchema: () => {
@@ -109,9 +110,11 @@
   const schemaList = computed<FormItemSchema[]>(() => {
     return (props.formSchema.schema || []).filter((item) => {
       if (item.ifShow !== undefined) {
-        if (item.ifShow instanceof Function) {
+        if (typeof item.ifShow === 'function') {
           // formApi
-          return item.ifShow(formModel, formInstanceMethods)
+          return item.ifShow(formModel, props.formMethods)
+        } else if (typeof item.ifShow === 'boolean') {
+          return item.ifShow
         }
       }
       return true
