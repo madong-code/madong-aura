@@ -174,7 +174,24 @@
 
     // 自定义方法
     getValues() {
-      return Promise.resolve({ ...formModel })
+      // 通过schema来遍历key获取表单值
+      const values: Record<string, any> = {}
+      const schema = props.formSchema.schema || []
+
+      schema.forEach((item) => {
+        // 只处理在schema中定义且满足显示条件的字段
+        const shouldShow =
+          item.ifShow === undefined ||
+          (typeof item.ifShow === 'function'
+            ? item.ifShow(formModel, props.formMethods)
+            : item.ifShow)
+
+        if (shouldShow) {
+          values[item.prop] = formModel[item.prop]
+        }
+      })
+
+      return Promise.resolve(values)
     },
 
     getFormRef() {
