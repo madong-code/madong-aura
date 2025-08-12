@@ -125,6 +125,23 @@ export const formSchema: FormSchema = {
           message: '请输入手机号码'
         }
       ]
+    },
+    {
+      label: '密码',
+      prop: 'password',
+      component: 'Input',
+      colSpan: 12,
+      ifShow(values, formApi) {
+        console.log(formApi)
+        // 不存在id，则为更新，不显示密码
+        return !values.id
+      },
+      rules: [
+        {
+          required: true,
+          message: '请输入密码'
+        }
+      ]
     }
   ]
 }

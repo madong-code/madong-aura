@@ -7,11 +7,7 @@
       :label-width="formSchemaRef.labelWidth || '80px'"
     >
       <ElRow :gutter="formSchemaRef.gutter || 0">
-        <ElCol
-          v-for="item in formSchemaRef.schema || []"
-          :key="item.prop"
-          :span="item.colSpan || 24"
-        >
+        <ElCol v-for="item in schemaList" :key="item.prop" :span="item.colSpan || 24">
           <ElFormItem
             :prop="item.prop"
             :label="item.label"
@@ -110,6 +106,17 @@
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
   }>()
+  const schemaList = computed<FormItemSchema[]>(() => {
+    return (props.formSchema.schema || []).filter((item) => {
+      if (item.ifShow !== undefined) {
+        if (item.ifShow instanceof Function) {
+          // formApi
+          return item.ifShow(formModel, formInstanceMethods)
+        }
+      }
+      return true
+    })
+  })
   const componentRef = reactive<Record<string, any>>({})
   const setComponentRef = (field: string, ref: any) => {
     componentRef[field] = ref

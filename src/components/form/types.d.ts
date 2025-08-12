@@ -27,6 +27,8 @@ export interface FormItemSchema {
   renderComponentContent?: Record<string, function> | (() => Record<string, function>)
   // 校验规则
   rules?: Array<Record<string, any>>
+  // 判断是否显示
+  ifShow?: (values: any, formApi: any) => boolean
 }
 // 定义表单实例方法类型
 export interface FormInstance {
