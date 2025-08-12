@@ -69,7 +69,7 @@
 <script setup lang="ts">
   import { getComponent } from './component-map'
   import { FormInstance, FormItemSchema, FormSchema } from './types'
-  import { h, reactive, onMounted } from 'vue'
+  import { h, reactive, onMounted, watch } from 'vue'
 
   // slot 渲染组件
   const RenderSlot = defineComponent({
@@ -109,6 +109,18 @@
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
   }>()
+
+  // 初始化表单默认值
+  const initFormModel = () => {
+    const schema = props.formSchema.schema || []
+    schema.forEach((item) => {
+      // 只有当formModel中没有该属性时才设置默认值
+      if (!(item.prop in formModel)) {
+        formModel[item.prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+      }
+    })
+  }
+
   const schemaList = computed<FormItemSchema[]>(() => {
     return (props.formSchema.schema || []).filter((item) => {
       if (item.ifShow !== undefined) {
@@ -122,6 +134,7 @@
       return true
     })
   })
+
   // 判断是否显示，用css控制
   const shouldShow = (item: FormItemSchema) => {
     if (item.show !== undefined) {
@@ -133,6 +146,7 @@
     }
     return true
   }
+
   // 获取组件属性，处理componentProps为函数的情况
   const getComponentProps = (item: FormItemSchema) => {
     // 处理componentProps可能为函数的情况
@@ -147,10 +161,12 @@
       placeholder: componentProps.placeholder || `请输入${item.label}`
     }
   }
+
   const componentRef = reactive<Record<string, any>>({})
   const setComponentRef = (field: string, ref: any) => {
     componentRef[field] = ref
   }
+
   // 与 vben5 一致的函数名
   const renderComponentContent = (item: any) => {
     if (typeof item.renderComponentContent === 'function') {
@@ -171,8 +187,21 @@
   // 重置表单
   const handleReset = () => {
     formRef.value.resetFields()
+    // 重置后重新设置默认值
+    initFormModel()
     emit('reset')
   }
+
+  // 监听表单结构变化，重新初始化默认值
+  watch(
+    () => props.formSchema,
+    () => {
+      formSchemaRef.value = props.formSchema
+      initFormModel()
+    },
+    { deep: true, immediate: true }
+  )
+
   // 提取公共的表单实例方法到一个常量对象
   const formInstanceMethods: FormInstance = {
     // Element Plus 表单的原生方法
@@ -189,6 +218,17 @@
 
     resetFields(props?: string | string[]) {
       formRef.value?.resetFields(props)
+      // 重置特定字段后，为这些字段重新设置默认值（如果它们没有被设置）
+      if (props) {
+        const propList = Array.isArray(props) ? props : [props]
+        const schema = formSchemaRef.value.schema || []
+        propList.forEach((prop) => {
+          const item = schema.find((s) => s.prop === prop)
+          if (item && formModel[prop] === undefined) {
+            formModel[prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+          }
+        })
+      }
     },
 
     clearValidate(props?: string | string[]) {
@@ -297,6 +337,14 @@
                 ...formSchemaRef.value.schema![index],
                 ...item
               }
+
+              // 如果更新了defaultValue且当前字段值为undefined，则设置默认值
+              if (
+                Object.prototype.hasOwnProperty.call(item, 'defaultValue') &&
+                formModel[item.prop] === undefined
+              ) {
+                formModel[item.prop] = item.defaultValue
+              }
             }
           }
         })
@@ -307,6 +355,7 @@
       })
     }
   }
+
   // 注册表单实例
   onMounted(() => {
     emit('register', formInstanceMethods)

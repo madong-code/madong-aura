@@ -17,6 +17,8 @@ export interface FormItemSchema {
   label: string
   // 表单项属性名
   prop: string
+  // 表单项默认值
+  defaultValue?: any
   // 表单项类型
   component: string
   // 表单组件属性

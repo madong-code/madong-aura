@@ -84,7 +84,7 @@ export const tableSchemas: ColumnOption[] = [
   }
 ]
 export const formSchema: FormSchema = {
-  showDefaultActions: false,
+  showDefaultActions: true,
   schema: [
     {
       label: '用户ID',
@@ -158,6 +158,7 @@ export const formSchema: FormSchema = {
       prop: 'isLocked',
       label: '是否锁定',
       component: 'Select',
+      defaultValue: 0,
       componentProps: {
         options: [
           {
