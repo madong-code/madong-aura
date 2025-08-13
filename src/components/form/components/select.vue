@@ -1,5 +1,5 @@
 <template>
-  <ElSelectV2 v-model="value" :options="options">
+  <ElSelectV2 v-model="value" :options="options || []">
     <template v-for="(_, slotName) in slots" #[slotName]>
       <slot :name="slotName"></slot>
     </template>
@@ -11,7 +11,7 @@
   import { NewOption } from '@/types/component/dict'
   const props = defineProps<{
     value?: string | undefined | number | null | Array<string | number>
-    options: Array<NewOption>
+    options?: Array<NewOption>
   }>()
 
   const emit = defineEmits<{

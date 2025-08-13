@@ -3,16 +3,20 @@
     <template v-if="isBtn">
       <ElRadioButton
         :size="size"
-        v-for="item in options"
+        v-for="item in options || []"
         :key="item.value + ''"
         :value="item.value"
         >{{ item.label }}</ElRadioButton
       >
     </template>
     <template v-else>
-      <ElRadio :size="size" v-for="item in options" :key="item.value + ''" :value="item.value">{{
-        item.label
-      }}</ElRadio>
+      <ElRadio
+        :size="size"
+        v-for="item in options || []"
+        :key="item.value + ''"
+        :value="item.value"
+        >{{ item.label }}</ElRadio
+      >
     </template>
   </ElRadioGroup>
 </template>
@@ -21,7 +25,7 @@
   import { computed } from 'vue'
   const props = defineProps<{
     value?: string | number | boolean | undefined
-    options: Array<NewOption>
+    options?: Array<NewOption>
     isBtn?: boolean
     size?: 'default' | 'small' | 'large' | undefined
   }>()

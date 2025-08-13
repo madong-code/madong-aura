@@ -14,6 +14,7 @@
 <script setup lang="ts">
   import { useForm } from '@/components/form'
   import { UserService } from '@/api/sys/userApi'
+  import { DeptService } from '@/api/sys/deptApi'
   const labelPosition = ref<'left' | 'right' | 'top'>('right')
   const options = ref([
     { label: '选项一', value: '1' },
@@ -34,7 +35,7 @@
   )
   const [BasicForm, formApi] = useForm({
     labelPosition: labelPosition.value,
-    labelWidth: '120px',
+    labelWidth: '150px',
     schema: [
       {
         prop: 'Input',
@@ -55,6 +56,13 @@
         component: 'InputNumber',
         colSpan: 8,
         componentProps: { style: { width: '100%' } }
+      },
+      {
+        prop: 'Textarea',
+        label: '多行文本',
+        component: 'Input',
+        colSpan: 24,
+        componentProps: { type: 'textarea', rows: 4 }
       },
       {
         prop: 'Select',
@@ -116,6 +124,53 @@
         componentProps: {
           api: UserService.select,
           multiple: true
+        }
+      },
+      {
+        prop: 'ApiRadioGroup',
+        label: '远程单选框',
+        component: 'ApiRadioGroup',
+        colSpan: 12,
+        componentProps: {
+          api: UserService.select
+        }
+      },
+      {
+        prop: 'ApiCheckboxGroup',
+        label: '远程多选框',
+        component: 'ApiCheckboxGroup',
+        colSpan: 12,
+        componentProps: {
+          api: UserService.select
+        }
+      },
+      {
+        prop: 'ApiTreeSelect',
+        label: '远程树选择框(单选)',
+        component: 'ApiTreeSelect',
+        colSpan: 12,
+        componentProps: {
+          api: DeptService.tree
+        }
+      },
+      {
+        prop: 'ApiTreeSelect-multiple',
+        label: '远程树选择框(多选)',
+        component: 'ApiTreeSelect',
+        colSpan: 12,
+        componentProps: {
+          api: DeptService.tree,
+          showCheckbox: true,
+          multiple: true
+        }
+      },
+      {
+        prop: 'ApiCascader',
+        label: '远程级联选择',
+        component: 'ApiCascader',
+        colSpan: 12,
+        componentProps: {
+          api: DeptService.tree
         }
       }
     ]

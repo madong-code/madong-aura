@@ -1,9 +1,9 @@
 <template>
-  <ApiComponent v-model="value" :component="ElSelectV2" />
+  <ApiComponent v-model="value" model-prop-name="value" :component="Select" />
 </template>
 <script setup lang="ts">
   import ApiComponent from '../api-component.vue'
-  import { ElSelectV2 } from 'element-plus'
+  import Select from './select.vue'
   const props = defineProps<{
     value?: string | undefined | number | null | Array<string | number>
   }>()

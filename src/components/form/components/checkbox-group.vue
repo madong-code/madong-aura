@@ -3,7 +3,7 @@
     <template v-if="isBtn">
       <ElCheckboxButton
         :size="size"
-        v-for="item in options"
+        v-for="item in options || []"
         :key="item.value + ''"
         :value="item.value"
         >{{ item.label }}</ElCheckboxButton
@@ -22,7 +22,7 @@
   import { computed } from 'vue'
   const props = defineProps<{
     value?: Array<string | number> | undefined
-    options: Array<NewOption>
+    options?: Array<NewOption>
     isBtn?: boolean
     size?: 'default' | 'small' | 'large' | undefined
   }>()
