@@ -21,6 +21,19 @@
             :label-width="item.labelWidth || formSchemaRef.labelWidth || '80px'"
             :rules="item.rules"
           >
+            <template v-if="item.label" #label>
+              <span
+                >{{ item.label
+                }}<ElTooltip
+                  v-if="item.helpMessage"
+                  :content="
+                    Array.isArray(item.helpMessage) ? item.helpMessage.join('\n') : item.helpMessage
+                  "
+                  placement="top"
+                >
+                  <Icon class="help-icon" icon="&#xe636;" /> </ElTooltip
+              ></span>
+            </template>
             <!-- 字段插槽优先级最高 -->
             <slot
               v-if="$slots[item.prop]"
@@ -382,5 +395,9 @@
     .el-button {
       margin: 0 10px;
     }
+  }
+  .help-icon {
+    margin-left: 4px;
+    cursor: pointer;
   }
 </style>

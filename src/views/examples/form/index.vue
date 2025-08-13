@@ -215,7 +215,8 @@
       },
       {
         prop: 'DatePicker-date',
-        label: '单日期(date)',
+        label: '单日期',
+        helpMessage: ['type="date"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -224,7 +225,8 @@
       },
       {
         prop: 'DatePicker-datetime',
-        label: '日期时间(datetime)',
+        label: '日期时间',
+        helpMessage: ['type="datetime"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -233,7 +235,8 @@
       },
       {
         prop: 'DatePicker-daterange',
-        label: '日期范围(daterange)',
+        label: '日期范围',
+        helpMessage: ['type="daterange"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -242,7 +245,8 @@
       },
       {
         prop: 'DatePicker-datetimerange',
-        label: '日期时间范围(datetimerange)',
+        label: '日期时间范围',
+        helpMessage: ['type="datetimerange"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -251,7 +255,8 @@
       },
       {
         prop: 'DatePicker-month',
-        label: '月份(month)',
+        label: '月份',
+        helpMessage: ['type="month"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -260,7 +265,8 @@
       },
       {
         prop: 'DatePicker-monthrange',
-        label: '月份范围(monthrange)',
+        label: '月份范围',
+        helpMessage: ['type="monthrange"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -269,8 +275,9 @@
       },
       {
         prop: 'DatePicker-year',
-        label: '年份(year)',
+        label: '年份',
         component: 'DatePicker',
+        helpMessage: ['type="year"'],
         colSpan: 8,
         componentProps: {
           type: 'year'
@@ -278,7 +285,8 @@
       },
       {
         prop: 'DatePicker-yearrange',
-        label: '年份范围(yearrange)',
+        label: '年份范围',
+        helpMessage: ['type="yearrange"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {
@@ -287,7 +295,8 @@
       },
       {
         prop: 'DatePicker-week',
-        label: '周(week)',
+        label: '周',
+        helpMessage: ['type="week"'],
         component: 'DatePicker',
         colSpan: 8,
         componentProps: {

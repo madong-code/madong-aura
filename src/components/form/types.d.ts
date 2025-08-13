@@ -36,6 +36,8 @@ export interface FormItemSchema {
   ifShow?: ((values: any, formApi: any) => boolean) | boolean
   // 动态判断当前组件是否显示，css 控制，不会删除 dom
   show?: ((values: any, formApi: any) => boolean) | boolean
+  // 提示信息
+  helpMessage?: Array<string> | string
 }
 // 定义表单实例方法类型
 export interface FormInstance {
