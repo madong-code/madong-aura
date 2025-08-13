@@ -13,6 +13,7 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@/components/form'
+  import { UserService } from '@/api/sys/userApi'
   const labelPosition = ref<'left' | 'right' | 'top'>('right')
   const options = ref([
     { label: '选项一', value: '1' },
@@ -96,6 +97,25 @@
         defaultValue: ['1'],
         componentProps: {
           options: options.value
+        }
+      },
+      {
+        prop: 'ApiSelect',
+        label: '远程下拉框(单选)',
+        component: 'ApiSelect',
+        colSpan: 12,
+        componentProps: {
+          api: UserService.select
+        }
+      },
+      {
+        prop: 'ApiSelect-multiple',
+        label: '远程下拉框(多选)',
+        component: 'ApiSelect',
+        colSpan: 12,
+        componentProps: {
+          api: UserService.select,
+          multiple: true
         }
       }
     ]

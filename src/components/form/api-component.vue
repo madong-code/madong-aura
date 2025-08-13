@@ -5,6 +5,7 @@
   import { computed, nextTick, ref, unref, useAttrs, watch } from 'vue'
 
   import { objectOmit } from '@vueuse/core'
+  import { Icon } from '../icon'
   /**
    * 检查给定值是否为函数类型
    * @param fn 待检查的值
@@ -411,7 +412,7 @@
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
     <template v-if="loadingSlot && loading" #[loadingSlot]>
-      <LoaderCircle class="animate-spin" />
+      <Icon class="animate-spin" icon="iconsys-shuaxin9" />
     </template>
   </component>
 </template>
