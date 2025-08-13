@@ -14,7 +14,7 @@ export const routes: AppRouteRecord[] = [
     children: [
       {
         path: '/examples/form/index',
-        name: 'sys:role',
+        name: 'examples:form',
         component: '/examples/form/index',
         meta: {
           title: '表单示例'
