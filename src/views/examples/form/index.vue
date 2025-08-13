@@ -204,6 +204,84 @@
         }
       },
       {
+        prop: 'divider-dict',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '字典组件'
+        }
+      },
+      {
+        prop: 'ApiDict-sex-Select',
+        label: '字典组件',
+        helpMessage: 'renderType="Select"',
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex'
+        }
+      },
+      {
+        prop: 'ApiDict-sex-Select-multiple',
+        label: '字典组件',
+        helpMessage: ['renderType="Select"', 'multiple=true'],
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex',
+          // 多选
+          multiple: true
+        }
+      },
+      {
+        prop: 'ApiDict-sex-RadioGroup',
+        label: '字典组件',
+        helpMessage: 'renderType="RadioGroup"',
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex',
+          renderType: 'RadioGroup'
+        }
+      },
+      {
+        prop: 'ApiDict-sex-RadioGroup-btn',
+        label: '字典组件',
+        helpMessage: ['renderType="RadioGroup"', 'isBtn=true'],
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex',
+          renderType: 'RadioGroup',
+          isBtn: true
+        }
+      },
+      {
+        prop: 'ApiDict-sex-CheckboxGroup',
+        label: '字典组件',
+        helpMessage: 'renderType="CheckboxGroup"',
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex',
+          renderType: 'CheckboxGroup'
+        }
+      },
+      {
+        prop: 'ApiDict-sex-CheckboxGroup-btn',
+        label: '字典组件',
+        helpMessage: ['renderType="CheckboxGroup"', 'isBtn=true'],
+        component: 'ApiDict',
+        colSpan: 12,
+        componentProps: {
+          code: 'sex',
+          renderType: 'CheckboxGroup',
+          isBtn: true
+        }
+      },
+      {
         prop: 'divider-date',
         label: '',
         labelWidth: '0px',
@@ -301,6 +379,100 @@
         colSpan: 8,
         componentProps: {
           type: 'week'
+        }
+      },
+      {
+        prop: 'divider-liandong',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '联动'
+        }
+      },
+      {
+        prop: 'ApiDict-sex',
+        label: '性别',
+        component: 'ApiDict',
+        colSpan: 6,
+        defaultValue: 1,
+        componentProps: {
+          code: 'sex',
+          renderType: 'RadioGroup',
+          isBtn: true
+        }
+      },
+      {
+        prop: 'ApiDict-sex-1',
+        labelWidth: '160px',
+        label: '选【男】时显示此字段)',
+        component: 'Input',
+        colSpan: 18,
+        componentProps: {},
+        // show: (values) => {
+        // 这个是css来控制的，不删除dom
+        //   return values['ApiDict-sex'] == 1
+        // },
+        ifShow: (values) => {
+          // 这个函数是js来控制的，直接删除dom
+          return values['ApiDict-sex'] == 1
+        }
+      },
+      {
+        prop: 'ApiDict-sex-2',
+        labelWidth: '160px',
+        label: '选【女】时显示此字段)',
+        component: 'Input',
+        colSpan: 18,
+        componentProps: {},
+        ifShow: (values) => {
+          return values['ApiDict-sex'] == 2
+        }
+      },
+      {
+        prop: 'ApiDict-sex-3',
+        labelWidth: '160px',
+        label: '选【未知】时显示此字段)',
+        component: 'Input',
+        colSpan: 18,
+        componentProps: {},
+        ifShow: (values) => {
+          return values['ApiDict-sex'] == 3
+        }
+      },
+      {
+        prop: 'divider-disabled',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '动态disabled'
+        }
+      },
+      {
+        prop: 'ApiDict-sex-11',
+        label: '性别',
+        component: 'ApiDict',
+        colSpan: 6,
+        defaultValue: 1,
+        componentProps: {
+          code: 'sex',
+          renderType: 'RadioGroup',
+          isBtn: true
+        }
+      },
+      {
+        prop: 'ApiDict-sex-13',
+        labelWidth: '160px',
+        label: '未知时可编辑',
+        component: 'Input',
+        colSpan: 18,
+        componentProps: (values) => {
+          return {
+            disabled: values['ApiDict-sex-11'] != 3
+          }
         }
       }
     ]
