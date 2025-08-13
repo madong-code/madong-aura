@@ -1,4 +1,5 @@
 export interface FormSchema {
+  labelPosition?: 'left' | 'right' | 'top'
   gutter?: number // 栅格间隔
   labelWidth?: string
   schema?: FormItemSchema[]
@@ -10,6 +11,8 @@ export interface FormSchema {
   resetButtonText?: string
   // 表单验证规则
   rules?: Record<string, any>
+  // 行内表单模式
+  inline?: boolean
 }
 export interface FormItemSchema {
   labelWidth?: string | number

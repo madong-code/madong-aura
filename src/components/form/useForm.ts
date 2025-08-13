@@ -5,7 +5,6 @@ import BasicForm from './form.vue'
 
 export function useForm(formSchema: FormSchema) {
   const formRef = ref<FormInstance | null>(null)
-
   const register = (formInstance: FormInstance) => {
     formRef.value = formInstance
   }

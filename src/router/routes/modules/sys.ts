@@ -13,6 +13,14 @@ export const routes: AppRouteRecord[] = [
     },
     children: [
       {
+        path: '/examples/form/index',
+        name: 'sys:role',
+        component: '/examples/form/index',
+        meta: {
+          title: '表单示例'
+        }
+      },
+      {
         path: '/sys/user/index',
         name: 'sys:user',
         component: '/sys/user/index',

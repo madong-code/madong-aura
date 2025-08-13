@@ -8,6 +8,7 @@
     ElDropdown,
     ElDropdownItem,
     ElDropdownMenu,
+    ElMessageBox,
     ElPopconfirm,
     ElSpace
   } from 'element-plus'

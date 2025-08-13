@@ -2,8 +2,10 @@
   <div>
     <ElForm
       ref="formRef"
+      :label-position="formSchemaRef.labelPosition"
       :rules="formSchemaRef.rules"
       :model="formModel"
+      :inline="formSchemaRef.inline || false"
       :label-width="formSchemaRef.labelWidth || '80px'"
     >
       <ElRow :gutter="formSchemaRef.gutter || 0">
@@ -108,6 +110,7 @@
     (e: 'submit', values: any): void
     (e: 'reset'): void
     (e: 'register', formInstance: FormInstance): void
+    (e: 'change', values: any): void
   }>()
 
   // 初始化表单默认值
@@ -120,9 +123,8 @@
       }
     })
   }
-
   const schemaList = computed<FormItemSchema[]>(() => {
-    return (props.formSchema.schema || []).filter((item) => {
+    return (formSchemaRef.value.schema || []).filter((item) => {
       if (item.ifShow !== undefined) {
         if (typeof item.ifShow === 'function') {
           // formApi
@@ -156,9 +158,10 @@
         : item.componentProps || {}
 
     // 合并属性，如果未提供placeholder则自动生成
+    const text = item.component.toLowerCase().includes('select') ? '请选择' : '请输入'
     return {
       ...componentProps,
-      placeholder: componentProps.placeholder || `请输入${item.label}`
+      placeholder: componentProps.placeholder || `${text}${item.label}`
     }
   }
 
@@ -201,7 +204,13 @@
     },
     { deep: true, immediate: true }
   )
-
+  watch(
+    () => formModel,
+    () => {
+      emit('change', formModel)
+    },
+    { deep: true, immediate: true }
+  )
   // 提取公共的表单实例方法到一个常量对象
   const formInstanceMethods: FormInstance = {
     // Element Plus 表单的原生方法
@@ -337,7 +346,6 @@
                 ...formSchemaRef.value.schema![index],
                 ...item
               }
-
               // 如果更新了defaultValue且当前字段值为undefined，则设置默认值
               if (
                 Object.prototype.hasOwnProperty.call(item, 'defaultValue') &&

@@ -1,4 +1,6 @@
 {
   "volar.inlayHints.eventArgumentInInlineHandlers": true,
-  "i18n-ally.localesPaths": ["src/locales", "src/locales/langs"]
+  "i18n-ally.localesPaths": ["src/locales", "src/locales/langs"],
+  "editor.formatOnSave": true, // 启用保存时自动格式化
+  "editor.defaultFormatter": "esbenp.prettier-vscode" // 设置默认格式化工具为 Prettier
 }
