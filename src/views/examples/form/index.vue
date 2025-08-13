@@ -38,6 +38,16 @@
     labelWidth: '150px',
     schema: [
       {
+        prop: 'divider-input',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '文本输入框'
+        }
+      },
+      {
         prop: 'Input',
         label: '单行文本',
         component: 'Input',
@@ -63,6 +73,16 @@
         component: 'Input',
         colSpan: 24,
         componentProps: { type: 'textarea', rows: 4 }
+      },
+      {
+        prop: 'divider-select',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '下拉、单选框、多选框'
+        }
       },
       {
         prop: 'Select',
@@ -105,6 +125,16 @@
         defaultValue: ['1'],
         componentProps: {
           options: options.value
+        }
+      },
+      {
+        prop: 'divider-api',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '远程下拉、单选框、多选框'
         }
       },
       {
@@ -171,6 +201,97 @@
         colSpan: 12,
         componentProps: {
           api: DeptService.tree
+        }
+      },
+      {
+        prop: 'divider-date',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '日期选择'
+        }
+      },
+      {
+        prop: 'DatePicker-date',
+        label: '单日期(date)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'date'
+        }
+      },
+      {
+        prop: 'DatePicker-datetime',
+        label: '日期时间(datetime)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'datetime'
+        }
+      },
+      {
+        prop: 'DatePicker-daterange',
+        label: '日期范围(daterange)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'daterange'
+        }
+      },
+      {
+        prop: 'DatePicker-datetimerange',
+        label: '日期时间范围(datetimerange)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'datetimerange'
+        }
+      },
+      {
+        prop: 'DatePicker-month',
+        label: '月份(month)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'month'
+        }
+      },
+      {
+        prop: 'DatePicker-monthrange',
+        label: '月份范围(monthrange)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'monthrange'
+        }
+      },
+      {
+        prop: 'DatePicker-year',
+        label: '年份(year)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'year'
+        }
+      },
+      {
+        prop: 'DatePicker-yearrange',
+        label: '年份范围(yearrange)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'yearrange'
+        }
+      },
+      {
+        prop: 'DatePicker-week',
+        label: '周(week)',
+        component: 'DatePicker',
+        colSpan: 8,
+        componentProps: {
+          type: 'week'
         }
       }
     ]
