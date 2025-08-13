@@ -405,8 +405,8 @@
       },
       {
         prop: 'ApiDict-sex-1',
-        labelWidth: '160px',
-        label: '选【男】时显示此字段)',
+        labelWidth: '180px',
+        label: '选【男】时显示此字段',
         component: 'Input',
         colSpan: 18,
         componentProps: {},
@@ -421,8 +421,8 @@
       },
       {
         prop: 'ApiDict-sex-2',
-        labelWidth: '160px',
-        label: '选【女】时显示此字段)',
+        labelWidth: '180px',
+        label: '选【女】时显示此字段',
         component: 'Input',
         colSpan: 18,
         componentProps: {},
@@ -432,8 +432,8 @@
       },
       {
         prop: 'ApiDict-sex-3',
-        labelWidth: '160px',
-        label: '选【未知】时显示此字段)',
+        labelWidth: '180px',
+        label: '选【未知】时显示此字段',
         component: 'Input',
         colSpan: 18,
         componentProps: {},
