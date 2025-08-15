@@ -474,6 +474,95 @@
             disabled: values['ApiDict-sex-11'] != 3
           }
         }
+      },
+      {
+        prop: 'divider-upload',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '上传文件'
+        }
+      },
+      {
+        prop: 'Upload-1',
+        label: '文件上传',
+        helpMessage: 'listType="text"',
+        component: 'Upload',
+        colSpan: 24,
+        componentProps: {
+          // text/picture/picture-card
+          listType: 'text'
+        }
+      },
+      {
+        prop: 'Upload-2',
+        label: '文件上传',
+        helpMessage: 'listType="picture"',
+        component: 'Upload',
+        colSpan: 24,
+        componentProps: {
+          // text/picture/picture-card
+          listType: 'picture'
+        }
+      },
+      {
+        prop: 'Upload-3',
+        label: '文件上传',
+        helpMessage: 'listType="picture-card"',
+        component: 'Upload',
+        colSpan: 24,
+        componentProps: {
+          // text/picture/picture-card
+          listType: 'picture-card'
+        }
+      },
+      {
+        prop: 'Upload-4',
+        label: '分片上传',
+        component: 'Upload',
+        colSpan: 24,
+        componentProps: {
+          multipart: true
+        }
+      },
+      {
+        prop: 'divider-other',
+        label: '',
+        labelWidth: '0px',
+        component: 'Divider',
+        colSpan: 24,
+        componentProps: {
+          title: '其他组件'
+        }
+      },
+      {
+        prop: 'IconPicker-unicode',
+        label: '图标选择器',
+        helpMessage: 'iconType="unicode"',
+        component: 'IconPicker',
+        colSpan: 12,
+        componentProps: {
+          iconType: 'unicode'
+        }
+      },
+      {
+        prop: 'IconPicker-className',
+        label: '图标选择器',
+        helpMessage: 'iconType="className"',
+        component: 'IconPicker',
+        colSpan: 12,
+        componentProps: {
+          iconType: 'className'
+        }
+      },
+      {
+        prop: 'Editor',
+        label: '富文本',
+        component: 'Editor',
+        colSpan: 24,
+        componentProps: {}
       }
     ]
   })

@@ -147,6 +147,38 @@ const api = {
   },
   request<T>(config: ExtendedAxiosRequestConfig): Promise<T> {
     return retryRequest<T>({ ...config })
+  },
+  upload<T = any>(
+    url: string,
+    data: Record<string, any> & { file: Blob | File },
+    config?: ExtendedAxiosRequestConfig
+  ): Promise<T> {
+    const formData = new FormData()
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          formData.append(`${key}[${index}]`, item)
+        })
+      } else {
+        formData.append(key, value)
+      }
+    })
+
+    const finalConfig: ExtendedAxiosRequestConfig = {
+      ...config,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...config?.headers
+      }
+    }
+
+    return retryRequest({
+      url: url,
+      data: formData,
+      method: 'POST',
+      ...finalConfig
+    })
   }
 }
 

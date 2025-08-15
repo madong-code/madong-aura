@@ -5,9 +5,13 @@
 </template>
 
 <script setup lang="ts">
+  // import { useChart } from '@/composables/useChart'
+
   defineProps<{
     title: string
   }>()
+  // 使用基础的 useChart hook
+  // const { isDark } = useChart()
 </script>
 
 <style lang="scss" scoped>
@@ -16,15 +20,15 @@
     align-items: center;
     width: 100%;
     height: 40px;
-    background-color: #3c567a;
-    color: white;
+    background-color: var(--el-color-primary-light-9);
+    color: var(--el-text-color-primary);
     font-size: 14px;
     padding: 0 16px;
     box-sizing: border-box;
     .title {
-      color: #fff;
+      color: var(--el-text-color-regular);
       font-size: 15px;
-      font-weight: 400;
+      font-weight: 500;
     }
   }
 </style>
