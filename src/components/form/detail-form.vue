@@ -13,6 +13,7 @@
             :prop="item.prop"
             :label="item.label"
             :label-width="item.labelWidth || formSchemaRef.labelWidth || '80px'"
+            :class="{ 'divider-form-item': item.component === 'Divider' }"
           >
             <template v-if="item.label" #label>
               <span
@@ -27,7 +28,6 @@
                   <Icon class="help-icon" icon="&#xe636;" /> </ElTooltip
               ></span>
             </template>
-            <span style="width: 8px"></span>
             <!-- 字段插槽优先级最高 -->
             <slot
               v-if="$slots[item.prop]"
@@ -162,8 +162,8 @@
     // 添加类似表格布局的边框样式
     &.bordered {
       :deep(.el-form) {
-        border: 1px solid #ebeef5;
-        border-radius: 4px;
+        // border: 1px solid #ebeef5;
+        // border-radius: 4px;
         overflow: hidden;
         background-color: #ffffff;
       }
@@ -180,12 +180,15 @@
         &:nth-child(2n) {
           border-right: none;
         }
+        &:last-child {
+          margin-bottom: 18px;
+        }
       }
 
       :deep(.el-form-item__label) {
         font-weight: 500;
         color: #606266;
-        height: 100%;
+        height: auto;
         display: flex;
         align-items: center;
         padding: 8px 0;
@@ -198,6 +201,14 @@
       :deep(.el-form-item__content) {
         padding: 0;
         border: 1px solid #ebeef5;
+        padding-left: 8px;
+      }
+      // 分割线特殊样式处理
+      :deep(.divider-form-item) {
+        .el-form-item__content {
+          border: none;
+          padding-left: 0;
+        }
       }
 
       :deep(.el-form-item__content):last-child {
@@ -230,8 +241,15 @@
 
       :deep(.el-form-item__content) {
         border: 1px solid #333;
+        padding-left: 8px;
       }
-
+      // 分割线特殊样式处理
+      :deep(.divider-form-item) {
+        .el-form-item__content {
+          border: none;
+          padding-left: 0px;
+        }
+      }
       :deep(.el-form-item__content):last-child {
         border-bottom: none;
       }

@@ -181,7 +181,7 @@
     }
 
     .el-dialog__footer {
-      background-color: var(--el-color-primary-light-6);
+      // background-color: var(--el-color-primary-light-6);
       border-top: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
     }
@@ -204,7 +204,7 @@
     }
 
     .el-drawer__footer {
-      background-color: var(--el-color-primary-light-6);
+      // background-color: var(--el-color-primary-light-6);
       border-top: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
     }
