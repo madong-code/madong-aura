@@ -2,6 +2,7 @@
   <div>
     <ElForm
       ref="formRef"
+      class="form-container"
       :label-position="formSchemaRef.labelPosition"
       :rules="formSchemaRef.rules"
       :model="formModel"

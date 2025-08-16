@@ -88,6 +88,16 @@ export const formSchema: FormSchema = {
   labelWidth: '100px',
   schema: [
     {
+      prop: 'divider-base',
+      label: '',
+      labelWidth: '0px',
+      component: 'Divider',
+      colSpan: 24,
+      componentProps: {
+        title: '基本信息'
+      }
+    },
+    {
       label: '用户ID',
       prop: 'id',
       component: 'Input',
@@ -208,6 +218,16 @@ export const formSchema: FormSchema = {
             value: 0
           }
         ]
+      }
+    },
+    {
+      prop: 'divider-other',
+      label: '',
+      labelWidth: '0px',
+      component: 'Divider',
+      colSpan: 24,
+      componentProps: {
+        title: '其他信息'
       }
     },
     {

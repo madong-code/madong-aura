@@ -118,7 +118,7 @@ html.dark .el-card {
 }
 
 .el-dialog__body {
-  padding: 25px 0 !important;
+  padding: 25px 0;
   position: relative; // 为了兼容 el-pagination 样式，需要设置 relative，不然会影响 el-pagination 的样式，比如 el-pagination__jump--small 会被影响，导致 el-pagination__jump--small 按钮无法点击，详见 URL_ADDRESS.com/element-plus/element-plus/issues/5684#issuecomment-1176299275;
 }
 

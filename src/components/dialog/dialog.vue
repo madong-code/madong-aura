@@ -155,7 +155,6 @@
       font-size: 16px;
     }
   }
-
   :deep(.el-dialog__header) {
     display: block !important;
   }
@@ -171,26 +170,29 @@
     padding: 0;
 
     .el-dialog__header {
-      background-color: var(--el-color-primary-light-9);
+      background-color: var(--el-color-primary-light-6);
       border-bottom: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
     }
 
     .m-dialog-body {
       background-color: var(--el-bg-color);
-      padding: 20px;
+      padding: 0;
     }
 
     .el-dialog__footer {
-      background-color: var(--el-color-primary-light-9);
+      background-color: var(--el-color-primary-light-6);
       border-top: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
+    }
+    .el-dialog__body {
+      padding: 0 !important;
     }
   }
 
   .m-drawer {
     .el-drawer__header {
-      background-color: var(--el-bg-color-page);
+      background-color: var(--el-color-primary-light-6);
       border-bottom: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
       margin-bottom: 0 !important;
@@ -198,13 +200,16 @@
 
     .m-dialog-body {
       background-color: var(--el-bg-color);
-      padding: 20px;
+      padding: 0;
     }
 
     .el-drawer__footer {
-      background-color: var(--el-bg-color-page);
+      background-color: var(--el-color-primary-light-6);
       border-top: 1px solid var(--el-border-color);
       padding: 15px 20px !important;
+    }
+    .el-drawer__body {
+      padding: 0 !important;
     }
   }
 </style>
