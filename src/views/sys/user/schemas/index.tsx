@@ -84,7 +84,7 @@ export const tableSchemas: ColumnOption[] = [
   }
 ]
 export const formSchema: FormSchema = {
-  showDefaultActions: true,
+  showDefaultActions: false,
   labelWidth: '100px',
   schema: [
     {

@@ -1,0 +1,135 @@
+<template>
+  <ElDialog
+    :custom-class="dialogPropsRef.customClass ?? 'm-dialog'"
+    :destroy-on-close="dialogPropsRef.destroyOnClose ?? true"
+    :close-on-click-modal="dialogPropsRef.closeOnClickModal ?? false"
+    v-model="dialogVisible"
+    :width="dialogPropsRef.width ?? '60%'"
+    :title="dialogPropsRef.title ?? '操作'"
+    :fullscreen="fullscreen"
+    :show-close="dialogPropsRef.showClose ?? true"
+  >
+    <template #header="{ close, titleId, titleClass }">
+      <div class="el-dialog__header-inner">
+        <span :id="titleId" :class="titleClass">{{ dialogPropsRef.title ?? '操作' }}</span>
+        <div class="dialog-header-actions">
+          <ElButton class="dialog-header-btn" @click="toggleFullscreen" link>
+            <template #icon>
+              <Icon :icon="fullscreen ? '&#xe62d;' : '&#xe8ce;'" />
+            </template>
+          </ElButton>
+          <ElButton class="dialog-header-btn" @click="close" link>
+            <Icon icon="&#xe7dc;" />
+          </ElButton>
+        </div>
+      </div>
+    </template>
+    <div class="m-dialog-body" v-loading="dialogPropsRef.loading ?? false">
+      <slot></slot>
+    </div>
+    <template #footer v-if="dialogPropsRef.footer">
+      <slot name="footer">
+        <slot name="prepend-footer"></slot>
+        <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel">取消</ElButton>
+        <slot name="center-footer"></slot>
+        <ElButton
+          v-if="dialogPropsRef.showConfirmButton"
+          type="primary"
+          @click="handleSubmit"
+          v-loading="dialogPropsRef.confirmLoading ?? false"
+          >确定</ElButton
+        >
+        <slot name="append-footer"></slot>
+      </slot>
+    </template>
+  </ElDialog>
+</template>
+
+<script setup lang="ts">
+  import { Icon } from '@/components/icon'
+  import { DialogEmits, MyDialogInstance, MyDialogProps } from './types'
+  const props = withDefaults(defineProps<MyDialogProps>(), {
+    loading: false,
+    confirmLoading: false,
+    showConfirmButton: true,
+    showCancelButton: true,
+    footer: true
+  })
+  const emit = defineEmits<DialogEmits>()
+  const dialogVisible = ref(false)
+  const fullscreen = ref(false)
+  const dialogPropsRef = ref<MyDialogProps>(props)
+  const toggleFullscreen = () => {
+    fullscreen.value = !fullscreen.value
+  }
+  const handleCancel = () => {
+    dialogVisible.value = false
+    emit('cancel')
+    if (props.onCancel) {
+      props.onCancel()
+    }
+  }
+  const handleSubmit = () => {
+    emit('confirm')
+    if (props.onConfirm) {
+      props.onConfirm()
+    }
+  }
+  const methods: MyDialogInstance = {
+    open() {
+      dialogVisible.value = true
+    },
+    close() {
+      dialogVisible.value = false
+    },
+    // 设置组件状态（props）
+    setState(state: MyDialogProps) {
+      return new Promise((resolve) => {
+        dialogPropsRef.value = {
+          ...dialogPropsRef.value,
+          ...state
+        }
+        nextTick(() => {
+          resolve()
+        })
+      })
+    },
+    getState(): Promise<MyDialogProps> {
+      return new Promise((resolve) => {
+        resolve(dialogPropsRef.value)
+      })
+    }
+  }
+  onMounted(() => {
+    emit('register', methods)
+  })
+  defineExpose(methods)
+</script>
+
+<style lang="scss" scoped>
+  .el-dialog__header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dialog-header-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .dialog-header-btn {
+    margin-left: 10px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+
+    :deep(.el-icon) {
+      font-size: 16px;
+    }
+  }
+
+  :deep(.el-dialog__header) {
+    display: block !important;
+  }
+</style>
