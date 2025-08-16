@@ -53,30 +53,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .el-dialog__header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .dialog-header-actions {
-    display: flex;
-    align-items: center;
-  }
-
-  .dialog-header-btn {
-    margin-left: 10px;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-
-    :deep(.el-icon) {
-      font-size: 16px;
-    }
-  }
-
-  :deep(.el-dialog__header) {
-    display: block !important;
-  }
-</style>
+<style lang="scss" scoped></style>

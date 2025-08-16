@@ -39,6 +39,7 @@
       </ArtTable>
     </ElCard>
     <UserForm ref="userFormRef" />
+    <UserDetail ref="userDetailRef" />
   </div>
 </template>
 
@@ -50,9 +51,11 @@
   import { ElMessage } from 'element-plus'
   import { searchSchemas, tableSchemas } from './schemas'
   import UserForm from './form.vue'
+  import UserDetail from './detail.vue'
   defineOptions({ name: 'sys:user' })
   const searchFormState = ref({})
   const userFormRef = ref()
+  const userDetailRef = ref()
 
   const handleReset = () => {
     searchFormState.value = {}
@@ -86,6 +89,14 @@
           fixed: 'right', // 固定列
           formatter: (row: unknown) => {
             const actions: ActionItem[] = [
+              {
+                label: '详情',
+                type: 'primary',
+                link: true,
+                size: 'small',
+                auth: 'sys:user:detail',
+                onClick: handleDetail.bind(null, row)
+              },
               {
                 label: '编辑',
                 type: 'primary',
@@ -124,6 +135,11 @@
     userFormRef.value.show({
       data: row,
       isUpdate: true
+    })
+  }
+  const handleDetail = (row: any) => {
+    userDetailRef.value.show({
+      data: row
     })
   }
   const handleDelete = (row: any) => {

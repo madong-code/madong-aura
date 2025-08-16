@@ -90,7 +90,8 @@ export const formSchema: FormSchema = {
       prop: 'id',
       component: 'Input',
       colSpan: 12,
-      show: false
+      show: false,
+      ifDetail: false
     },
 
     // 基础信息分隔符
@@ -151,6 +152,7 @@ export const formSchema: FormSchema = {
         // 不存在id，则为新增，显示密码
         return !values.id
       },
+      ifDetail: false,
       rules: [
         {
           required: true,
@@ -174,6 +176,7 @@ export const formSchema: FormSchema = {
         // 不存在id，则为新增，显示确认密码
         return !values.id
       },
+      ifDetail: false,
       rules: [
         {
           required: true,
