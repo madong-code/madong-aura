@@ -18,6 +18,7 @@
   const [BasicForm, formApi] = useForm(formSchema)
   const [Dialog, dialogApi] = useDialog({
     title: '用户管理',
+    // dialogType: 'drawer',
     onConfirm: () => {
       handleSubmit()
     }

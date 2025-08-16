@@ -3,6 +3,7 @@ export type MyDialogProps = {
   customClass?: string
   destroyOnClose?: boolean
   closeOnClickModal?: boolean
+  closeOnPressEscape?: boolean
   width?: string | number
   fullscreen?: boolean
   showClose?: boolean
@@ -18,6 +19,15 @@ export type MyDialogProps = {
   footer?: boolean
   onConfirm?: () => void
   onCancel?: () => void
+  // 弹窗类型
+  dialogType?: 'dialog' | 'drawer'
+  // 抽屉相关属性
+  direction?: 'ltr' | 'rtl' | 'ttb' | 'btt'
+  modal?: boolean
+  // 插槽相关
+  prependFooter?: () => void
+  centerFooter?: () => void
+  appendFooter?: () => void
 }
 export interface MyDialogInstance {
   // 打开

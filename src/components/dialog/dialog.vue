@@ -1,19 +1,30 @@
 <template>
-  <ElDialog
-    :custom-class="dialogPropsRef.customClass ?? 'm-dialog'"
+  <component
+    :is="dialogComponent"
+    :class="customClass"
     :destroy-on-close="dialogPropsRef.destroyOnClose ?? true"
     :close-on-click-modal="dialogPropsRef.closeOnClickModal ?? false"
+    :close-on-press-escape="dialogPropsRef.closeOnPressEscape ?? true"
     v-model="dialogVisible"
     :width="dialogPropsRef.width ?? '60%'"
     :title="dialogPropsRef.title ?? '操作'"
     :fullscreen="fullscreen"
     :show-close="dialogPropsRef.showClose ?? true"
+    :direction="dialogPropsRef.direction ?? 'rtl'"
+    :size="dialogPropsRef.width ?? '40%'"
+    :modal="dialogPropsRef.modal ?? true"
+    :append-to-body="true"
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="el-dialog__header-inner">
         <span :id="titleId" :class="titleClass">{{ dialogPropsRef.title ?? '操作' }}</span>
         <div class="dialog-header-actions">
-          <ElButton class="dialog-header-btn" @click="toggleFullscreen" link>
+          <ElButton
+            v-if="dialogPropsRef.dialogType === 'dialog'"
+            class="dialog-header-btn"
+            @click="toggleFullscreen"
+            link
+          >
             <template #icon>
               <Icon :icon="fullscreen ? '&#xe62d;' : '&#xe8ce;'" />
             </template>
@@ -42,22 +53,38 @@
         <slot name="append-footer"></slot>
       </slot>
     </template>
-  </ElDialog>
+  </component>
 </template>
 
 <script setup lang="ts">
   import { Icon } from '@/components/icon'
   import { DialogEmits, MyDialogInstance, MyDialogProps } from './types'
+  import { ElDialog, ElDrawer } from 'element-plus'
+
   const props = withDefaults(defineProps<MyDialogProps>(), {
     loading: false,
     confirmLoading: false,
     showConfirmButton: true,
     showCancelButton: true,
-    footer: true
+    footer: true,
+    dialogType: 'dialog'
   })
+
   const emit = defineEmits<DialogEmits>()
   const dialogVisible = ref(false)
   const fullscreen = ref(false)
+
+  // 根据 dialogType 决定使用哪个组件
+  const dialogComponent = computed(() => {
+    return props.dialogType === 'drawer' ? ElDrawer : ElDialog
+  })
+
+  // 根据 dialogType 设置不同的 customClass
+  const customClass = computed(() => {
+    const baseClass = dialogPropsRef.value.customClass ?? 'm-dialog'
+    return props.dialogType === 'drawer' ? `${baseClass} m-drawer` : `${baseClass} m-dialog-box`
+  })
+
   const dialogPropsRef = ref<MyDialogProps>(props)
   const toggleFullscreen = () => {
     fullscreen.value = !fullscreen.value
@@ -131,5 +158,53 @@
 
   :deep(.el-dialog__header) {
     display: block !important;
+  }
+
+  :deep(.el-drawer__header) {
+    margin-bottom: 0;
+  }
+</style>
+
+<style lang="scss">
+  // 全局样式，用于区分 dialog 和 drawer 的外观
+  .m-dialog-box {
+    padding: 0;
+
+    .el-dialog__header {
+      background-color: var(--el-color-primary-light-9);
+      border-bottom: 1px solid var(--el-border-color);
+      padding: 15px 20px !important;
+    }
+
+    .m-dialog-body {
+      background-color: var(--el-bg-color);
+      padding: 20px;
+    }
+
+    .el-dialog__footer {
+      background-color: var(--el-color-primary-light-9);
+      border-top: 1px solid var(--el-border-color);
+      padding: 15px 20px !important;
+    }
+  }
+
+  .m-drawer {
+    .el-drawer__header {
+      background-color: var(--el-bg-color-page);
+      border-bottom: 1px solid var(--el-border-color);
+      padding: 15px 20px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .m-dialog-body {
+      background-color: var(--el-bg-color);
+      padding: 20px;
+    }
+
+    .el-drawer__footer {
+      background-color: var(--el-bg-color-page);
+      border-top: 1px solid var(--el-border-color);
+      padding: 15px 20px !important;
+    }
   }
 </style>
