@@ -38,6 +38,8 @@ export interface FormItemSchema {
   show?: ((values: any, formApi: any) => boolean) | boolean
   // 提示信息
   helpMessage?: Array<string> | string
+  // 是否详情显示
+  ifDetail?: ((values: any, formApi: any) => boolean) | boolean
 }
 // 定义表单实例方法类型
 export interface FormInstance {

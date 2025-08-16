@@ -9,9 +9,14 @@
 <script setup lang="ts">
   import { useSlots, computed } from 'vue'
 
-  const props = defineProps<{
-    value: string
-  }>()
+  const props = withDefaults(
+    defineProps<{
+      value: string
+    }>(),
+    {
+      value: ''
+    }
+  )
 
   const emit = defineEmits<{
     (e: 'update:value', value: string): void

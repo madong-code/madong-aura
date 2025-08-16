@@ -6,7 +6,9 @@
   import { computed } from 'vue'
   import { NewOption } from '@/types/component/dict'
   import { PropType } from 'vue'
-
+  defineOptions({
+    inheritAttrs: false
+  })
   const props = defineProps({
     value: {
       type: [String, Number, Array]

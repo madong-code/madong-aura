@@ -23,6 +23,10 @@
   import { ColorType, NewOption } from '@/types/component/dict'
   // 使用基础的 useChart hook
   const { isDark } = useChart()
+  defineOptions({
+    name: 'ApiDictView',
+    inheritAttrs: false
+  })
   const props = defineProps({
     value: {
       type: [String, Number, Array]

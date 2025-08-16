@@ -7,9 +7,14 @@
 <script setup lang="ts">
   // import { useChart } from '@/composables/useChart'
 
-  defineProps<{
-    title: string
-  }>()
+  withDefaults(
+    defineProps<{
+      title?: string
+    }>(),
+    {
+      title: ''
+    }
+  )
   // 使用基础的 useChart hook
   // const { isDark } = useChart()
 </script>
@@ -28,7 +33,7 @@
     .title {
       color: var(--el-text-color-regular);
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
     }
   }
 </style>
