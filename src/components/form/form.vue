@@ -45,6 +45,7 @@
             />
             <template v-else>
               <component
+                style="padding-right: 8px"
                 :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
                 :is="getComponent(item.component)"

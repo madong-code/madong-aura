@@ -38,6 +38,7 @@
             />
             <template v-else>
               <component
+                style="padding-right: 8px"
                 v-if="hasComponent(item.component)"
                 :is="getComponent(item.component)"
                 :value="formModel[item.prop]"
