@@ -194,13 +194,13 @@
         padding: 8px 0;
         padding-right: 8px;
         background-color: #f5f7fa;
+        border-right: 1px solid #ebeef5;
         border-bottom: 1px solid #ebeef5;
-        border: 1px solid #ebeef5;
       }
 
       :deep(.el-form-item__content) {
         padding: 0;
-        border: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
         padding-left: 8px;
       }
       // 分割线特殊样式处理
@@ -209,10 +209,6 @@
           border: none;
           padding-left: 0;
         }
-      }
-
-      :deep(.el-form-item__content):last-child {
-        border-bottom: none;
       }
     }
 
@@ -235,12 +231,12 @@
       :deep(.el-form-item__label) {
         color: #b0b0b0;
         background-color: #2a2a2a;
+        border-right: 1px solid #333;
         border-bottom: 1px solid #333;
-        border: 1px solid #333;
       }
 
       :deep(.el-form-item__content) {
-        border: 1px solid #333;
+        border-bottom: 1px solid #333;
         padding-left: 8px;
       }
       // 分割线特殊样式处理
@@ -249,9 +245,6 @@
           border: none;
           padding-left: 0px;
         }
-      }
-      :deep(.el-form-item__content):last-child {
-        border-bottom: none;
       }
 
       .help-icon {
