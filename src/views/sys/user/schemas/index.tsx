@@ -9,7 +9,8 @@ export const searchSchemas: SearchFormItem[] = [
     prop: 'm_LIKE_userName',
     type: 'input',
     config: {
-      clearable: true
+      clearable: true,
+      placeholder: '请输入用户名'
     },
     elColSpan: 6
   },
@@ -18,7 +19,8 @@ export const searchSchemas: SearchFormItem[] = [
     prop: 'm_LIKE_realName',
     type: 'input',
     config: {
-      clearable: true
+      clearable: true,
+      placeholder: '请输入姓名'
     },
     elColSpan: 6
   },
@@ -27,31 +29,24 @@ export const searchSchemas: SearchFormItem[] = [
     prop: 'm_LIKE_mobilePhone',
     type: 'input',
     config: {
-      clearable: true
+      clearable: true,
+      placeholder: '请输入手机号码'
     },
     elColSpan: 6
   },
   {
     label: '是否锁定',
-    prop: 'isLocked',
+    prop: 'm_EQ_isLocked',
     type: 'dict',
     config: {
       clearable: true,
-      multiple: true,
-      code: 'yes_no'
-    },
-    elColSpan: 4
-  },
-  {
-    label: '创建时间',
-    prop: 'createTime',
-    type: 'daterange',
-    config: {
-      clearable: true
+      code: 'yes_no',
+      placeholder: '请选择是否锁定'
     },
     elColSpan: 6
   }
 ]
+
 // 表格列配置
 export const tableSchemas: ColumnOption[] = [
   {
@@ -83,28 +78,34 @@ export const tableSchemas: ColumnOption[] = [
     label: '手机号码'
   }
 ]
+
+// 表单配置
 export const formSchema: FormSchema = {
   showDefaultActions: false,
   labelWidth: '100px',
   schema: [
-    {
-      prop: 'divider-base',
-      label: '',
-      labelWidth: '0px',
-      component: 'Divider',
-      colSpan: 24,
-      componentProps: {
-        title: '基本信息'
-      }
-    },
+    // 用户ID（隐藏字段）
     {
       label: '用户ID',
       prop: 'id',
       component: 'Input',
       colSpan: 12,
-      // 相当于input的type=hidden属性
       show: false
     },
+
+    // 基础信息分隔符
+    {
+      prop: 'baseinfo',
+      label: '',
+      labelWidth: '0px',
+      component: 'Divider',
+      colSpan: 24,
+      componentProps: {
+        title: '基础信息'
+      }
+    },
+
+    // 用户名
     {
       label: '用户名',
       prop: 'userName',
@@ -116,10 +117,13 @@ export const formSchema: FormSchema = {
           message: '请输入用户名'
         }
       ],
-      componentProps(values) {
-        return values.realName === '张三' ? { disabled: true } : {}
+      componentProps: {
+        placeholder: '请输入用户名',
+        clearable: true
       }
     },
+
+    // 姓名
     {
       label: '姓名',
       prop: 'realName',
@@ -130,32 +134,21 @@ export const formSchema: FormSchema = {
           required: true,
           message: '请输入姓名'
         }
-      ]
+      ],
+      componentProps: {
+        placeholder: '请输入姓名',
+        clearable: true
+      }
     },
-    {
-      label: '手机号码',
-      prop: 'mobilePhone',
-      component: 'Input',
-      renderComponentContent() {
-        return {
-          prefix: () => <Icon icon="&#xe7a1;" />
-        }
-      },
-      rules: [
-        {
-          required: true,
-          message: '请输入手机号码'
-        }
-      ]
-    },
+
+    // 密码
     {
       label: '密码',
       prop: 'password',
       component: 'Input',
       colSpan: 12,
-      ifShow(values, formApi) {
-        console.log(formApi)
-        // 不存在id，则为更新，不显示密码
+      ifShow(values) {
+        // 不存在id，则为新增，显示密码
         return !values.id
       },
       rules: [
@@ -163,65 +156,102 @@ export const formSchema: FormSchema = {
           required: true,
           message: '请输入密码'
         }
-      ]
-    },
-    {
-      prop: 'isLocked',
-      label: '是否锁定',
-      component: 'Select',
-      defaultValue: 0,
+      ],
       componentProps: {
-        options: [
-          {
-            label: '是',
-            value: 1
-          },
-          {
-            label: '否',
-            value: 0
-          }
-        ]
+        placeholder: '请输入密码',
+        clearable: true,
+        type: 'password'
       }
     },
+
+    // 确认密码
     {
-      prop: 'isLocked',
-      label: '是否锁定',
-      component: 'RadioGroup',
-      defaultValue: 0,
+      label: '确认密码',
+      prop: 'confirmPassword',
+      component: 'Input',
+      colSpan: 12,
+      ifShow(values) {
+        // 不存在id，则为新增，显示确认密码
+        return !values.id
+      },
+      rules: [
+        {
+          required: true,
+          message: '请输入确认密码'
+        }
+      ],
       componentProps: {
-        options: [
-          {
-            label: '是',
-            value: 1
-          },
-          {
-            label: '否',
-            value: 0
-          }
-        ]
+        placeholder: '请输入确认密码',
+        clearable: true,
+        type: 'password'
       }
     },
+
+    // 昵称
     {
-      prop: 'isLocked',
-      label: '是否锁定',
-      component: 'RadioGroup',
-      defaultValue: 0,
+      label: '昵称',
+      prop: 'nickName',
+      component: 'Input',
+      colSpan: 12,
       componentProps: {
-        isBtn: true,
-        options: [
-          {
-            label: '是',
-            value: 1
-          },
-          {
-            label: '否',
-            value: 0
-          }
-        ]
+        placeholder: '请输入昵称',
+        clearable: true
       }
     },
+
+    // 性别
     {
-      prop: 'divider-other',
+      label: '性别',
+      prop: 'sex',
+      component: 'ApiDict',
+      defaultValue: 3,
+      colSpan: 12,
+      componentProps: {
+        placeholder: '请选择性别',
+        code: 'sex',
+        renderType: 'RadioGroup',
+        isBtn: true
+      }
+    },
+
+    // 邮箱
+    {
+      label: '邮箱',
+      prop: 'email',
+      component: 'Input',
+      colSpan: 12,
+      componentProps: {
+        placeholder: '请输入邮箱',
+        clearable: true
+      }
+    },
+
+    // 手机号码
+    {
+      label: '手机号码',
+      prop: 'mobilePhone',
+      component: 'Input',
+      colSpan: 12,
+      rules: [
+        {
+          required: true,
+          message: '请输入手机号码'
+        }
+      ],
+      renderComponentContent() {
+        return {
+          prefix: () => <Icon icon="&#xe7a1;" />
+        }
+      },
+      componentProps: {
+        placeholder: '请输入手机号码',
+        clearable: true
+      }
+    },
+
+    // 其他信息分隔符
+    {
+      prop: 'otherinfo',
       label: '',
       labelWidth: '0px',
       component: 'Divider',
@@ -230,62 +260,98 @@ export const formSchema: FormSchema = {
         title: '其他信息'
       }
     },
+
+    // 所属部门
     {
-      prop: 'userType',
-      label: '用户类型',
-      component: 'CheckboxGroup',
-      defaultValue: [1, 2],
+      label: '所属部门',
+      prop: 'deptId',
+      component: 'ApiTreeSelect',
+      colSpan: 12,
+      rules: [
+        {
+          required: true,
+          message: '请选择所属部门'
+        }
+      ],
       componentProps: {
-        isBtn: false,
-        options: [
-          {
-            label: '普通用户',
-            value: 1
-          },
-          {
-            label: '专家',
-            value: 2
-          },
-          {
-            label: '业务员',
-            value: 3
-          }
-        ]
+        placeholder: '请选择所属部门',
+        clearable: true,
+        api: '/sys/dept/tree',
+        labelField: 'name',
+        valueField: 'id'
       }
     },
+
+    // 所属岗位
     {
-      prop: 'userType',
-      label: '用户类型',
-      component: 'CheckboxGroup',
-      defaultValue: [1],
+      label: '所属岗位',
+      prop: 'postId',
+      component: 'ApiSelect',
+      colSpan: 12,
+      rules: [
+        {
+          required: true,
+          message: '请选择所属岗位'
+        }
+      ],
       componentProps: {
-        isBtn: true,
-        options: [
-          {
-            label: '普通用户',
-            value: 1
-          },
-          {
-            label: '专家',
-            value: 2
-          },
-          {
-            label: '业务员',
-            value: 3
-          }
-        ]
+        placeholder: '请选择所属岗位',
+        clearable: true,
+        api: '/sys/post/select'
       }
     },
+
+    // 所属角色
     {
-      prop: 'adminType',
-      label: '管理员类型',
-      component: 'ApiDict',
+      label: '所属角色',
+      prop: 'roleIds',
+      component: 'ApiSelect',
+      colSpan: 24,
+      rules: [
+        {
+          required: true,
+          message: '请选择所属角色'
+        }
+      ],
       componentProps: {
-        isBtn: true,
-        renderType: 'CheckboxGroup',
-        code: 'sys_user_admin_type'
-        // // 多选
-        // multiple: true
+        placeholder: '请选择所属角色',
+        clearable: true,
+        api: '/sys/role/select',
+        multiple: true
+      }
+    },
+
+    // 联系电话
+    {
+      label: '联系电话',
+      prop: 'tel',
+      component: 'Input',
+      colSpan: 24,
+      componentProps: {
+        placeholder: '请输入联系电话',
+        clearable: true
+      }
+    },
+
+    // 头像
+    {
+      label: '头像',
+      prop: 'avatar',
+      component: 'Avatar',
+      colSpan: 24,
+      componentProps: {}
+    },
+
+    // 备注
+    {
+      label: '备注',
+      prop: 'remark',
+      component: 'Input',
+      colSpan: 24,
+      componentProps: {
+        type: 'textarea',
+        rows: 4,
+        placeholder: '请输入备注'
       }
     }
   ]

@@ -48,6 +48,7 @@
                 style="padding-right: 8px"
                 :ref="(obj: any) => setComponentRef(item.prop, obj)"
                 v-model:value="formModel[item.prop]"
+                v-if="hasComponent(item.component)"
                 :is="getComponent(item.component)"
                 v-bind="getComponentProps(item)"
               >
@@ -84,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-  import { getComponent } from './component-map'
+  import { getComponent, hasComponent } from './component-map'
   import { FormInstance, FormItemSchema, FormSchema } from './types'
   import { h, reactive, onMounted, watch } from 'vue'
 

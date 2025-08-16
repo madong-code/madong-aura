@@ -83,6 +83,11 @@
       // 对象类型
       type: String,
       default: 'default'
+    },
+    limit: {
+      // 最大上传数量
+      type: Number,
+      default: 10
     }
   })
   const emits = defineEmits(['update:value'])
@@ -347,7 +352,7 @@
       <ElButton v-else :loading="isUploading">
         {{ isUploading ? '上传中...' : '上传文件' }}
         <template #icon>
-          <Icon icon="&#xe89e;" />
+          <Icon icon="&#xe6c6;" />
         </template>
       </ElButton>
     </template>

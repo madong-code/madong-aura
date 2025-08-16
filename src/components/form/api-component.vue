@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   // https://github.com/vbenjs/vue-vben-admin/blob/main/packages/effects/common-ui/src/components/api-component/api-component.vue
   import type { Component } from 'vue'
+  import request from '@/utils/http'
 
   import { computed, nextTick, ref, unref, useAttrs, watch } from 'vue'
 
@@ -164,7 +165,9 @@
     /** 是否将value从数字转为string */
     numberToString?: boolean
     /** 获取options数据的函数 */
-    api?: (arg?: any) => Promise<OptionsItem[] | Record<string, any>>
+    api?: ((arg?: any) => Promise<OptionsItem[] | Record<string, any>>) | string
+    // 请求方式
+    requestMethod?: 'get' | 'post'
     /** 传递给api的参数 */
     params?: Record<string, any>
     /** 从api返回的结果中提取options数组的字段名 */
@@ -223,7 +226,8 @@
     modelPropName: 'modelValue',
     api: undefined,
     autoSelect: false,
-    options: () => []
+    options: () => [],
+    requestMethod: 'post'
   })
 
   const emit = defineEmits<{
@@ -283,8 +287,16 @@
 
   async function fetchApi() {
     const { api, beforeFetch, afterFetch, resultField } = props
-
-    if (!api || !isFunction(api)) {
+    let funApi = api
+    if (api && typeof api === 'string') {
+      funApi = (params) => {
+        return request[props.requestMethod]({
+          url: api,
+          params
+        })
+      }
+    }
+    if (!funApi || !isFunction(funApi)) {
       return
     }
 
@@ -301,7 +313,7 @@
       if (beforeFetch && isFunction(beforeFetch)) {
         finalParams = (await beforeFetch(cloneDeep(finalParams))) || finalParams
       }
-      let res = await api(finalParams)
+      let res = await funApi(finalParams)
       if (afterFetch && isFunction(afterFetch)) {
         res = (await afterFetch(res)) || res
       }
