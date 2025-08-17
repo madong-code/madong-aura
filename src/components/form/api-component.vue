@@ -151,7 +151,7 @@
    */
 
   type AnyPromiseFunction<T extends any[] = any[], R = void> = (...arg: T) => PromiseLike<R>
-  type OptionsItem = {
+  export type OptionsItem = {
     [name: string]: any
     children?: OptionsItem[]
     disabled?: boolean
@@ -159,7 +159,7 @@
     value?: string
   }
 
-  interface Props {
+  export interface Props {
     /** 组件 */
     component: Component
     /** 是否将value从数字转为string */
