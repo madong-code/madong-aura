@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import { ElImage as Image } from 'element-plus'
-
+  defineOptions({
+    name: 'AvatarView',
+    inheritAttrs: false
+  })
   defineProps({
     value: {
       type: String,
