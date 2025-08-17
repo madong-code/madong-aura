@@ -13,6 +13,7 @@
   const [Dialog, dialogApi] = useDialog({
     title: '用户详情',
     // dialogType: 'drawer',
+    destroyOnClose: true,
     footer: false
   })
   const show = ({ data }: { data: any }) => {

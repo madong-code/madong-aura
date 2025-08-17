@@ -19,6 +19,7 @@
   const [Dialog, dialogApi] = useDialog({
     title: '用户管理',
     // dialogType: 'drawer',
+    destroyOnClose: true,
     onConfirm: () => {
       handleSubmit()
     }
