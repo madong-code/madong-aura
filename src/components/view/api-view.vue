@@ -11,6 +11,7 @@
       valueField?: string
       labelField?: string
       childrenField?: string
+      multiple?: boolean
     }>(),
     {
       valueField: 'id',
@@ -45,10 +46,14 @@
     ) {
       return props.value
     }
-
+    let values = props.value
+    // 处理multiple模式下字符串值需要分割的情况
+    if (props.multiple && typeof values === 'string') {
+      values = values.split(',')
+    }
     // 处理数组值（多选情况）
-    if (Array.isArray(props.value)) {
-      const labels = props.value.map((val) => {
+    if (Array.isArray(values)) {
+      const labels = values.map((val) => {
         const option = findOption(val, props.options!)
         return option ? option.label : val
       })
@@ -56,7 +61,7 @@
     }
 
     // 处理单个值
-    const option = findOption(props.value, props.options)
+    const option = findOption(values, props.options)
     return option ? option.label : props.value
   })
 </script>

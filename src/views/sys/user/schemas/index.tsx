@@ -316,6 +316,8 @@ export const formSchema: FormSchema = {
           message: '请选择所属角色'
         }
       ],
+      ifShow: false,
+      ifDetail: true,
       componentProps: {
         placeholder: '请选择所属角色',
         clearable: true,
