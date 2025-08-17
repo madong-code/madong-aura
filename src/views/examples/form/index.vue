@@ -24,8 +24,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { FormItemSchema, useForm } from '@/components/form'
-  import { useDetailForm } from '@/components/form/useDetailForm'
+  import { FormItemSchema, useForm, useDetailForm } from '@/components/form'
   const activeTab = ref('form')
   const labelPosition = ref<'left' | 'right' | 'top'>('right')
   const options = ref([

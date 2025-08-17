@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useDetailForm } from '@/components/form/useDetailForm'
+  import { useDetailForm } from '@/components/form'
   import { useDialog } from '@/components/dialog/use-dialog'
   import { formSchema } from './schemas'
   const record = ref({})
