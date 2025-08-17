@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
   import { useForm } from '@/components/form'
-  import { useDialog } from '@/components/dialog/use-dialog'
+  import { useDialog } from '@/components/dialog'
   import { formSchema } from './schemas'
   const record = ref({})
   const updateFlag = ref(false)
