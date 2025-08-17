@@ -74,6 +74,14 @@ export const tableSchemas: ColumnOption[] = [
     }
   },
   {
+    prop: 'roleIds',
+    label: '所属角色',
+    component: 'ApiSelect',
+    componentProps: {
+      api: '/sys/role/select'
+    }
+  },
+  {
     prop: 'mobilePhone',
     label: '手机号码'
   }
