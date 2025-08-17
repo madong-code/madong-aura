@@ -11,4 +11,4 @@
 <template>
   <Image v-if="value" :preview-src-list="[value]" :src="value" style="width: 102px" />
 </template>
-<style lang="less" scoped></style>
+<style lang="scss" scoped></style>
