@@ -26,8 +26,6 @@
 <script setup lang="ts">
   import { FormItemSchema, useForm } from '@/components/form'
   import { useDetailForm } from '@/components/form/useDetailForm'
-  import { UserService } from '@/api/sys/userApi'
-  import { DeptService } from '@/api/sys/deptApi'
   const activeTab = ref('form')
   const labelPosition = ref<'left' | 'right' | 'top'>('right')
   const options = ref([
@@ -158,7 +156,7 @@
       component: 'ApiSelect',
       colSpan: 12,
       componentProps: {
-        api: UserService.select
+        api: '/sys/user/select'
       }
     },
     {
@@ -167,7 +165,7 @@
       component: 'ApiSelect',
       colSpan: 12,
       componentProps: {
-        api: UserService.select,
+        api: '/sys/user/select',
         multiple: true
       }
     },
@@ -177,7 +175,7 @@
       component: 'ApiRadioGroup',
       colSpan: 12,
       componentProps: {
-        api: UserService.select
+        api: '/sys/user/select'
       }
     },
     {
@@ -186,7 +184,7 @@
       component: 'ApiCheckboxGroup',
       colSpan: 12,
       componentProps: {
-        api: UserService.select
+        api: '/sys/user/select'
       }
     },
     {
@@ -195,7 +193,7 @@
       component: 'ApiTreeSelect',
       colSpan: 12,
       componentProps: {
-        api: DeptService.tree
+        api: '/sys/dept/tree'
       }
     },
     {
@@ -204,7 +202,7 @@
       component: 'ApiTreeSelect',
       colSpan: 12,
       componentProps: {
-        api: DeptService.tree,
+        api: '/sys/dept/tree',
         showCheckbox: true,
         multiple: true
       }
@@ -215,7 +213,7 @@
       component: 'ApiCascader',
       colSpan: 12,
       componentProps: {
-        api: DeptService.tree
+        api: '/sys/dept/tree'
       }
     },
     {

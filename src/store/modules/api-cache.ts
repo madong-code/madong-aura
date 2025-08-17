@@ -73,7 +73,6 @@ export const withCache = <
   return async (requestParams?: Recordable): Promise<OptionsItem[] | Record<string, any>> => {
     const finalParams = requestParams || params
     const cacheKey = generateCacheKey(api, finalParams, requestMethod)
-    console.log('cacheKey:' + cacheKey)
     // 检查是否存在有效缓存
     const cachedItem = cacheStore.get(cacheKey)
     if (cachedItem && Date.now() - cachedItem.timestamp < cachedItem.expireTime) {
