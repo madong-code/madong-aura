@@ -1,51 +1,53 @@
 import { FormSchema } from '@/components/form'
 import { Icon } from '@/components/icon'
-import { ColumnOption, SearchFormItem } from '@/types'
+import { ColumnOption } from '@/types'
 
 // 搜索表单配置
-export const searchSchemas: SearchFormItem[] = [
-  {
-    label: '用户名',
-    prop: 'm_LIKE_userName',
-    type: 'input',
-    config: {
-      clearable: true,
-      placeholder: '请输入用户名'
+export const searchSchemas: FormSchema = {
+  schema: [
+    {
+      prop: 'm_LIKE_userName',
+      label: '用户名',
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: '请输入用户名'
+      },
+      colSpan: 6
     },
-    elColSpan: 6
-  },
-  {
-    label: '姓名',
-    prop: 'm_LIKE_realName',
-    type: 'input',
-    config: {
-      clearable: true,
-      placeholder: '请输入姓名'
+    {
+      prop: 'm_LIKE_realName',
+      label: '姓名',
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: '请输入姓名'
+      },
+      colSpan: 6
     },
-    elColSpan: 6
-  },
-  {
-    label: '手机号码',
-    prop: 'm_LIKE_mobilePhone',
-    type: 'input',
-    config: {
-      clearable: true,
-      placeholder: '请输入手机号码'
+    {
+      prop: 'm_LIKE_mobilePhone',
+      label: '手机号码',
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: '请输入手机号码'
+      },
+      colSpan: 6
     },
-    elColSpan: 6
-  },
-  {
-    label: '是否锁定',
-    prop: 'm_EQ_isLocked',
-    type: 'dict',
-    config: {
-      clearable: true,
-      code: 'yes_no',
-      placeholder: '请选择是否锁定'
-    },
-    elColSpan: 6
-  }
-]
+    {
+      prop: 'm_EQ_isLocked',
+      label: '是否锁定',
+      component: 'ApiDict',
+      componentProps: {
+        clearable: true,
+        code: 'yes_no',
+        placeholder: '请选择是否锁定'
+      },
+      colSpan: 6
+    }
+  ]
+}
 
 // 表格列配置
 export const tableSchemas: ColumnOption[] = [

@@ -310,6 +310,8 @@
     "whenever": true,
     "ElMessage": true,
     "ElTag": true,
-    "ElMessageBox": true
+    "ElMessageBox": true,
+    "ElTimeSelect": true,
+    "ElRadio": true
   }
 }

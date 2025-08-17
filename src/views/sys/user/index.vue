@@ -1,15 +1,10 @@
 <!-- 基础表格 -->
 <template>
   <div class="user-page art-full-height">
-    <ArtSearchBar
-      v-model:filter="searchFormState"
-      :items="searchSchemas"
-      @reset="handleReset"
-      @search="handleSearch"
-    />
+    <SearchBar @reset="handleReset" @submit="handleSearch" />
     <ElCard class="art-table-card" shadow="never">
       <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" @refresh="refresh">
+      <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
         <template #left>
           <TableAction
             :actions="[
@@ -50,30 +45,34 @@
   import { UserService } from '@/api/usersApi'
   import { ElMessage } from 'element-plus'
   import { searchSchemas, tableSchemas } from './schemas'
+  import { useSearchBar } from '@/components/search-bar'
   import UserForm from './form.vue'
   import UserDetail from './detail.vue'
   defineOptions({ name: 'sys:user' })
-  const searchFormState = ref({})
   const userFormRef = ref()
   const userDetailRef = ref()
 
   const handleReset = () => {
-    searchFormState.value = {}
-    searchData()
+    Object.assign(searchParams, {})
+    getData()
   }
-  const handleSearch = () => {
-    searchData(searchFormState.value)
+  const handleSearch = (param: any) => {
+    Object.assign(searchParams, param)
+    // 搜索参数赋值
+    getData()
   }
+  const [SearchBar] = useSearchBar(searchSchemas)
   const {
-    tableData,
+    data: tableData,
     columns,
     columnChecks,
-    isLoading: loading,
-    paginationState: pagination,
-    refreshAll: refresh,
-    searchData,
-    onPageSizeChange: handleSizeChange,
-    onCurrentPageChange: handleCurrentChange
+    loading,
+    pagination,
+    refreshData,
+    searchParams,
+    getData,
+    handleSizeChange,
+    handleCurrentChange
   } = useTable<any>({
     core: {
       apiFn: UserService.getUserList,

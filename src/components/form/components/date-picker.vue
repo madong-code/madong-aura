@@ -1,38 +1,22 @@
 <template>
-  <ArtSearchDate v-model:value="value" :item="item" />
+  <ElDatePicker v-model="value">
+    <template v-for="(_, slotName) in slots" #[slotName]>
+      <slot :name="slotName"></slot>
+    </template>
+  </ElDatePicker>
 </template>
+
 <script setup lang="ts">
-  import ArtSearchDate, {
-    type ValueVO
-  } from '@/components/core/forms/art-search-bar/widget/art-search-date/index.vue'
-  // 日期选择器类型
-  type DatePickerType =
-    | 'date' // 单日期
-    | 'datetime' // 日期时间
-    | 'daterange' // 日期范围
-    | 'datetimerange' // 日期时间范围
-    | 'month' // 月份
-    | 'monthrange' // 月份范围
-    | 'year' // 年份
-    | 'yearrange' // 年份范围
-    | 'week' // 周
+  import { useSlots, computed } from 'vue'
+
   const props = defineProps<{
-    value: ValueVO
-    type?: DatePickerType
+    value: any
   }>()
-  const attrs = useAttrs()
+
   const emit = defineEmits<{
-    (e: 'update:value', value: ValueVO): void
+    (e: 'update:value', value: any): void
   }>()
-  const item: any = {
-    label: attrs.label || '日期',
-    prop: props.type || 'date',
-    type: props.type || 'date',
-    config: {
-      ...props,
-      ...attrs
-    }
-  }
+
   const value = computed({
     get() {
       return props.value
@@ -42,6 +26,8 @@
     }
   })
 
+  // 使用 useSlots 获取所有插槽
+  const slots = useSlots()
   defineExpose({
     getValue() {
       return value.value
