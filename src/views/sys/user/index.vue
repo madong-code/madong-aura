@@ -1,6 +1,6 @@
 <template>
   <div class="user-page art-full-height">
-    <el-button @click="handleClick">隐藏搜索表单</el-button>
+    <el-button @click="handleClick">刷新</el-button>
     <BasicTable />
   </div>
 </template>
@@ -10,16 +10,8 @@
   const [BasicTable, tableApi] = useTable({
     ...tableSchema
   })
-  let flag = true
   const handleClick = () => {
-    console.log('flag:', flag)
-    tableApi
-      .setState({
-        useSearchForm: !flag
-      })
-      .then(() => {
-        flag = false
-      })
+    tableApi.reload()
   }
 </script>
 <style lang="scss" scoped></style>

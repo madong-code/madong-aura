@@ -18,6 +18,10 @@ export function useTable(tableSchema: TableSchema) {
     // 获取组件状态
     getState() {
       return tableRef.value?.getState()
+    },
+    // 刷新表格数据，保留当前表单搜索条件
+    reload(params?: Record<string, any>) {
+      return tableRef.value?.reload(params)
     }
   }
 

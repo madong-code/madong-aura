@@ -61,7 +61,7 @@
     }
     return props.tableSchema.api as any
   })
-  const [SearchBar] = useSearchBar(tableSchemaRef.value.searchFormSchema || {})
+  const [SearchBar, searchBarApi] = useSearchBar(tableSchemaRef.value.searchFormSchema || {})
   const {
     data: tableData,
     columns,
@@ -100,8 +100,12 @@
     emit('reset')
   }
   const tableInstanceMethods: TableInstance = {
-    reload(params) {
-      return getData(params)
+    async reload(params) {
+      const values = await searchBarApi.getValues()
+      return getData({
+        ...values,
+        ...params
+      })
     },
     // 设置组件状态（props）
     setState(state: TableSchema) {

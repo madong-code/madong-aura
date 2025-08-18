@@ -18,6 +18,14 @@ export function useSearchBar(formSchema: FormSchema) {
     // 获取组件状态
     getState() {
       return formRef.value?.getState()
+    },
+    // 获取表单值
+    getValues() {
+      return formRef.value?.getValues()
+    },
+    // 设置表单值
+    setValues(fields: Record<string, any>, filterFields?: boolean, shouldValidate?: boolean) {
+      return formRef.value?.setValues(fields, filterFields, shouldValidate)
     }
   }
 
