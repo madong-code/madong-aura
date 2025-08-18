@@ -91,7 +91,8 @@ export const tableSchemas: ColumnOption[] = [
 ]
 export const tableSchema: TableSchema = {
   api: '/sys/user/page',
-  columns: tableSchemas
+  columns: tableSchemas,
+  searchFormSchema: searchSchemas
 }
 // 表单配置
 export const formSchema: FormSchema = {

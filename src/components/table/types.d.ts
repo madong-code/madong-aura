@@ -1,3 +1,4 @@
+import { FormSchema } from '../form'
 export interface TableSchema {
   // 请求接口
   api: ((params: any) => Promise<any>) | string
@@ -5,6 +6,10 @@ export interface TableSchema {
   requestMethod?: 'get' | 'post'
   // 列定义
   columns: TableColumn[]
+  // 是否显示搜索表单
+  useSearchForm?: boolean
+  // 搜索表单配置
+  searchFormSchema?: FormSchema
 }
 // 表格列配置接口
 export interface TableColumn<T = any> {
