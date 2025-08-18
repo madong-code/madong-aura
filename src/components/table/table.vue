@@ -7,19 +7,12 @@
   <ElCard class="art-table-card" shadow="never">
     <!-- 表格头部 -->
     <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
-      <!-- <template #left>
-        <TableAction
-          :actions="[
-            {
-              label: '新增',
-              type: 'primary',
-              icon: '&#xe83e;',
-              auth: 'sys:user:save',
-              onClick: handleAdd.bind(null)
-            }
-          ]"
-        />
-      </template> -->
+      <template #left>
+        <slot name="toolbar-actions"></slot>
+      </template>
+      <template #right>
+        <slot name="toolbar-tools"></slot>
+      </template>
     </ArtTableHeader>
     <!-- 表格 -->
     <ArtTable
