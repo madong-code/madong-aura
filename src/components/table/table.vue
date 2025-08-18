@@ -4,17 +4,35 @@
     @reset="handleReset"
     @submit="handleSearch"
   />
-  <!-- 表格 -->
-  <ArtTable
-    rowKey="id"
-    :loading="loading"
-    :data="tableData"
-    :columns="columns"
-    :pagination="pagination"
-    @pagination:size-change="handleSizeChange"
-    @pagination:current-change="handleCurrentChange"
-  >
-  </ArtTable>
+  <ElCard class="art-table-card" shadow="never">
+    <!-- 表格头部 -->
+    <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
+      <!-- <template #left>
+        <TableAction
+          :actions="[
+            {
+              label: '新增',
+              type: 'primary',
+              icon: '&#xe83e;',
+              auth: 'sys:user:save',
+              onClick: handleAdd.bind(null)
+            }
+          ]"
+        />
+      </template> -->
+    </ArtTableHeader>
+    <!-- 表格 -->
+    <ArtTable
+      rowKey="id"
+      :loading="loading"
+      :data="tableData"
+      :columns="columns"
+      :pagination="pagination"
+      @pagination:size-change="handleSizeChange"
+      @pagination:current-change="handleCurrentChange"
+    >
+    </ArtTable>
+  </ElCard>
 </template>
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
@@ -67,7 +85,9 @@
     columns,
     loading,
     pagination,
+    columnChecks,
     getData,
+    refreshData,
     handleSizeChange,
     handleCurrentChange
   } = useTable<any>({
