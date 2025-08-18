@@ -1,5 +1,6 @@
 import { FormSchema } from '@/components/form'
 import { Icon } from '@/components/icon'
+import { TableSchema } from '@/components/table'
 import { ColumnOption } from '@/types'
 
 // 搜索表单配置
@@ -88,7 +89,7 @@ export const tableSchemas: ColumnOption[] = [
     label: '手机号码'
   }
 ]
-
+export const tableSchema: TableSchema = { columns: tableSchemas }
 // 表单配置
 export const formSchema: FormSchema = {
   showDefaultActions: false,

@@ -5,8 +5,9 @@
 </template>
 <script setup lang="ts">
   import { useTable } from '@/components/table'
+  import { tableSchema } from './schemas'
   const [BasicTable] = useTable({
-    columns: []
+    ...tableSchema
   })
 </script>
 <style lang="scss" scoped></style>
