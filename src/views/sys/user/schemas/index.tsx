@@ -89,7 +89,10 @@ export const tableSchemas: ColumnOption[] = [
     label: '手机号码'
   }
 ]
-export const tableSchema: TableSchema = { columns: tableSchemas }
+export const tableSchema: TableSchema = {
+  api: '/sys/user/page',
+  columns: tableSchemas
+}
 // 表单配置
 export const formSchema: FormSchema = {
   showDefaultActions: false,

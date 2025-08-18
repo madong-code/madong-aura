@@ -12,10 +12,10 @@
   </ArtTable>
 </template>
 <script setup lang="ts">
-  import { UserService } from '@/api/usersApi'
   import { useTable } from '@/composables/useTable'
   import { TableSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
+  import request from '@/utils/http'
   const props = withDefaults(
     defineProps<{
       tableSchema: TableSchema
@@ -24,12 +24,25 @@
     {
       tableSchema: () => {
         return {
-          columns: []
+          columns: [],
+          api: ''
         }
       }
     }
   )
   const tableSchemaRef = ref(props.tableSchema)
+  const funApi = computed(() => {
+    if (props.tableSchema.api && typeof props.tableSchema.api === 'string') {
+      const fun = (params: any) => {
+        return request[props.tableSchema.requestMethod ?? 'post']({
+          url: props.tableSchema.api as string,
+          params
+        })
+      }
+      return fun
+    }
+    return props.tableSchema.api as any
+  })
   const {
     data: tableData,
     columns,
@@ -39,7 +52,7 @@
     handleCurrentChange
   } = useTable<any>({
     core: {
-      apiFn: UserService.getUserList,
+      apiFn: funApi.value,
       apiParams: {
         // 其他搜索参数
       },

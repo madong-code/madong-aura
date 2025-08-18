@@ -1,4 +1,9 @@
 export interface TableSchema {
+  // 请求接口
+  api: ((params: any) => Promise<any>) | string
+  // 请求方法
+  requestMethod?: 'get' | 'post'
+  // 列定义
   columns: TableColumn[]
 }
 // 表格列配置接口
