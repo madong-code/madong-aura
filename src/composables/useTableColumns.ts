@@ -1,7 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { $t } from '@/locales'
 import type { ColumnOption } from '@/types/component'
-import { viewColumnFormatter } from '@/components/view/component-map'
 
 /**
  * 特殊列类型
@@ -27,8 +26,6 @@ export const getColumnChecks = <T>(columns: ColumnOption<T>[]) =>
     if (special) {
       return { ...col, prop: special.prop, label: special.label, checked: true }
     }
-    // 追加自定义列回显组件的逻辑
-    viewColumnFormatter(col)
     return { ...col, checked: col.checked ?? true }
   })
 

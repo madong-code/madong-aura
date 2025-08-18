@@ -15,6 +15,7 @@
   import { UserService } from '@/api/usersApi'
   import { useTable } from '@/composables/useTable'
   import { TableSchema } from './types'
+  import { viewColumnFormatter } from '../view/component-map'
   const props = withDefaults(
     defineProps<{
       tableSchema: TableSchema
@@ -42,7 +43,16 @@
       apiParams: {
         // 其他搜索参数
       },
-      columnsFactory: () => tableSchemaRef.value.columns
+      columnsFactory: () => {
+        return tableSchemaRef.value.columns.map((column) => {
+          const c = { ...column }
+          viewColumnFormatter(column)
+          c.formatter = column.formatter
+          delete c.component
+          delete c.componentProps
+          return c
+        })
+      }
     }
   })
 </script>
