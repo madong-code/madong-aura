@@ -8,7 +8,7 @@ export function useTable(tableSchema: TableSchema) {
   }
   const tableMethods = {
     // 获取表单实例
-    gettableRef() {
+    getTableRef() {
       return tableRef.value
     },
     // 设置组件状态（props）

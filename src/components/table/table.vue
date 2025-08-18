@@ -1,5 +1,9 @@
 <template>
-  <SearchBar v-if="tableSchemaRef.searchFormSchema" @reset="handleReset" @submit="handleSearch" />
+  <SearchBar
+    v-if="tableSchemaRef.useSearchForm !== false"
+    @reset="handleReset"
+    @submit="handleSearch"
+  />
   <!-- 表格 -->
   <ArtTable
     rowKey="id"
@@ -15,7 +19,7 @@
 <script setup lang="ts">
   import { useTable } from '@/composables/useTable'
   import { useSearchBar } from '@/components/search-bar'
-  import { TableSchema } from './types'
+  import { TableInstance, TableSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
   defineOptions({
@@ -42,6 +46,7 @@
   const emit = defineEmits<{
     (e: 'submit', values: any): void
     (e: 'reset'): void
+    (e: 'register', methods: TableInstance): void
   }>()
   const tableSchemaRef = ref(props.tableSchema)
   const funApi = computed(() => {
@@ -94,5 +99,30 @@
     getData({})
     emit('reset')
   }
+  const tableInstanceMethods: TableInstance = {
+    reload(params) {
+      return getData(params)
+    },
+    // 设置组件状态（props）
+    setState(state: TableSchema) {
+      return new Promise((resolve) => {
+        tableSchemaRef.value = {
+          ...tableSchemaRef.value,
+          ...state
+        }
+        nextTick(() => {
+          resolve()
+        })
+      })
+    },
+    getState(): Promise<TableSchema> {
+      return new Promise((resolve) => {
+        resolve(tableSchemaRef.value)
+      })
+    }
+  }
+  onMounted(() => {
+    emit('register', tableInstanceMethods)
+  })
 </script>
 <style lang="scss" scoped></style>

@@ -55,3 +55,11 @@ export interface TableColumn<T = any> {
   // 列回显组件属性
   componentProps?: Record<string, any>
 }
+export interface TableInstance {
+  // 重新加载数据
+  reload: (params?: Record<string, any>) => Promise<any>
+  // 设置组件状态（props）
+  setState: (state: TableSchema) => Promise<void>
+  // 获取组件状态（props）
+  getState: () => Promise<TableSchema>
+}
