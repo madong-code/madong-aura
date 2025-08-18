@@ -74,10 +74,12 @@
     <ElRow v-if="formSchemaRef.showDefaultActions !== false">
       <ElCol>
         <div class="form-actions">
-          <ElButton type="primary" @click="handleSubmit">{{
+          <ElButton v-if="formSchemaRef.showSubmitButton" type="primary" @click="handleSubmit">{{
             formSchemaRef.submitButtonText || '提交'
           }}</ElButton>
-          <ElButton @click="handleReset">{{ formSchemaRef.resetButtonText || '重置' }}</ElButton>
+          <ElButton v-if="formSchemaRef.showResetButton" @click="handleReset">{{
+            formSchemaRef.resetButtonText || '重置'
+          }}</ElButton>
         </div>
       </ElCol>
     </ElRow>

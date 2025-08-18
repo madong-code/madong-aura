@@ -1,5 +1,13 @@
 <template>
-  <SearchBar :items="cItems" v-model="searchFormState" @search="handleSearch">
+  <SearchBar
+    :show-reset="formSchemaRef.showResetButton"
+    :show-search="formSchemaRef.showSubmitButton"
+    :show-expand="formSchemaRef.showExpandButton"
+    :items="cItems"
+    v-model="searchFormState"
+    @search="handleSearch"
+    @reset="handleReset"
+  >
     <template v-for="schema in filteredSchema" :key="schema.prop" #[schema.prop]>
       <component
         :is="getComponent(schema.component)"
@@ -32,8 +40,12 @@
     (e: 'register', formInstance: FormInstance): void
     (e: 'change', values: any): void
   }>()
+  const formSchemaRef = ref<FormSchema>(props.formSchema)
   const handleSearch = () => {
     emit('submit', searchFormState)
+  }
+  const handleReset = () => {
+    emit('reset')
   }
   const searchFormState = reactive<any>({})
   const cItems = computed(() => {

@@ -5,14 +5,20 @@ export interface FormSchema {
   schema?: FormItemSchema[]
   // 显示默认操作按钮
   showDefaultActions?: boolean
+  // 显示提交按钮
+  showSubmitButton?: boolean
   // 提交按钮文本
   submitButtonText?: string
+  // 显示重置按钮
+  showResetButton?: boolean
   // 重置按钮文本
   resetButtonText?: string
   // 表单验证规则
   rules?: Record<string, any>
   // 行内表单模式
   inline?: boolean
+  // 显示展开按钮
+  showExpandButton?: boolean
 }
 export interface FormItemSchema {
   labelWidth?: string | number
