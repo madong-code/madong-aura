@@ -7,6 +7,10 @@ export function useSearchBar(formSchema: FormSchema) {
     formRef.value = formInstance
   }
   const formMethods = {
+    // 获取表单实例
+    getFormRef() {
+      return formRef.value
+    },
     // 设置组件状态（props）
     setState(state: any) {
       return formRef.value?.setState(state)

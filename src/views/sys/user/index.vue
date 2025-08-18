@@ -60,8 +60,9 @@
     Object.assign(searchParams, param)
     // 搜索参数赋值
     getData()
+    console.log(searchBarApi.getFormRef())
   }
-  const [SearchBar] = useSearchBar(searchSchemas)
+  const [SearchBar, searchBarApi] = useSearchBar(searchSchemas)
   const {
     data: tableData,
     columns,
