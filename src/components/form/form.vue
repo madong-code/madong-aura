@@ -47,7 +47,8 @@
               <component
                 style="padding-right: 8px"
                 :ref="(obj: any) => setComponentRef(item.prop, obj)"
-                v-model:value="formModel[item.prop]"
+                :value="get(formModel, item.prop)"
+                @update:value="(val: any) => set(formModel, item.prop, val)"
                 v-if="hasComponent(item.component)"
                 :is="getComponent(item.component)"
                 v-bind="getComponentProps(item)"
@@ -90,6 +91,7 @@
   import { getComponent, hasComponent } from './component-map'
   import { FormInstance, FormItemSchema, FormSchema } from './types'
   import { h, reactive, onMounted, watch } from 'vue'
+  import { get, set } from 'lodash-es'
 
   // slot 渲染组件
   const RenderSlot = defineComponent({
@@ -130,14 +132,13 @@
     (e: 'register', formInstance: FormInstance): void
     (e: 'change', values: any): void
   }>()
-
   // 初始化表单默认值
   const initFormModel = () => {
     const schema = props.formSchema.schema || []
     schema.forEach((item) => {
       // 只有当formModel中没有该属性时才设置默认值
-      if (!(item.prop in formModel)) {
-        formModel[item.prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+      if (get(formModel, item.prop) === undefined) {
+        set(formModel, item.prop, item.defaultValue !== undefined ? item.defaultValue : undefined)
       }
     })
   }
@@ -289,8 +290,8 @@
         const schema = formSchemaRef.value.schema || []
         propList.forEach((prop) => {
           const item = schema.find((s) => s.prop === prop)
-          if (item && formModel[prop] === undefined) {
-            formModel[prop] = item.defaultValue !== undefined ? item.defaultValue : undefined
+          if (item && get(formModel, prop) === undefined) {
+            set(formModel, prop, item.defaultValue !== undefined ? item.defaultValue : undefined)
           }
         })
       }
@@ -304,11 +305,30 @@
       formRef.value?.scrollToField(prop)
     },
 
+    // 获取表单数据
     // 自定义方法
     getValues() {
       // 通过schema来遍历key获取表单值（包含show隐藏但仍存在于DOM中的字段）
       const values: Record<string, any> = {}
       const schema = props.formSchema.schema || []
+
+      // 先添加扁平结构
+      schema.forEach((item) => {
+        // 处理ifShow字段（js控制是否渲染）
+        const shouldRender =
+          item.ifShow === undefined ||
+          (typeof item.ifShow === 'function'
+            ? item.ifShow(formModel, props.formMethods)
+            : item.ifShow)
+
+        // 只有在DOM中渲染的字段才获取值（无论是否CSS隐藏）
+        if (shouldRender) {
+          values[item.prop] = get(formModel, item.prop)
+        }
+      })
+
+      // 再处理嵌套结构，提取根属性并构建嵌套对象
+      const rootProps: Record<string, any> = {}
 
       schema.forEach((item) => {
         // 处理ifShow字段（js控制是否渲染）
@@ -320,9 +340,26 @@
 
         // 只有在DOM中渲染的字段才获取值（无论是否CSS隐藏）
         if (shouldRender) {
-          values[item.prop] = formModel[item.prop]
+          // 检查是否包含点号或方括号，表示是嵌套属性
+          if (item.prop.includes('.') || item.prop.includes('[')) {
+            // 提取根属性名，例如 ext.a.b => ext
+            const rootProp = item.prop.replace(/[.[].*$/, '')
+            // 初始化根属性对象
+            if (!rootProps[rootProp]) {
+              rootProps[rootProp] = {}
+            }
+            // 使用 lodash 的 set 方法设置嵌套值
+            set(
+              rootProps[rootProp],
+              item.prop.substring(rootProp.length + 1),
+              get(formModel, item.prop)
+            )
+          }
         }
       })
+
+      // 将根属性对象合并到结果中
+      Object.assign(values, rootProps)
 
       return Promise.resolve(values)
     },
@@ -339,7 +376,7 @@
         Object.keys(fields).forEach((key) => {
           // 如果启用过滤，则只设置在 schema 中定义的字段
           if (!filterFields || schemaProps.includes(key)) {
-            formModel[key] = fields[key]
+            set(formModel, key, fields[key])
           }
         })
 

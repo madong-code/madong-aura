@@ -7,8 +7,8 @@
 
   import { FileInfoService } from '@/api/sys/file-info'
   import { Icon } from '@/components/icon'
-  import { omit } from '@/utils/tool'
   import { useUserStore } from '@/store/modules/user'
+  import { omit } from 'lodash-es'
   const abortMultipartUpload = FileInfoService.abortMultipartUpload,
     completeMultipartUpload = FileInfoService.completeMultipartUpload,
     getFileInfoByIds = FileInfoService.getFileInfoByIds,

@@ -1,6 +1,8 @@
 // const modules: any = import.meta.glob('./components/**/**.vue', { eager: true })
 import { ColumnOption } from '@/types'
 import { Component } from 'vue'
+import { get } from 'lodash-es'
+
 const componentMap = new Map<string, Component>()
 const componentObj = import.meta.glob('./components/**/**.vue', { eager: true })
 // 将key转换为大驼峰命名
@@ -64,7 +66,9 @@ export function viewColumnFormatter(column: ColumnOption<any>) {
       return h(component, {
         ...column.componentProps,
         record: row,
-        value: row[column.prop as string]
+        value: get(row, column.prop as string),
+        prop: column.prop as string,
+        column: column
       })
     }
   }

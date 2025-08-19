@@ -41,12 +41,12 @@
                 style="padding-right: 8px"
                 v-if="hasComponent(item.component)"
                 :is="getComponent(item.component)"
-                :value="formModel[item.prop]"
+                :value="get(formModel, item.prop)"
                 v-bind="getComponentProps(item)"
               >
               </component>
               <template v-else>
-                {{ formModel[item.prop] }}
+                {{ get(formModel, item.prop) }}
               </template>
             </template>
           </ElFormItem>
@@ -62,6 +62,7 @@
   import { FormItemSchema, FormSchema } from './types'
   import { computed, reactive, ref, watch } from 'vue'
   import { useChart } from '@/composables/useChart'
+  import { get } from 'lodash-es'
 
   const props = withDefaults(
     defineProps<{

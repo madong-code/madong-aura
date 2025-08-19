@@ -7,76 +7,7 @@
 
   import { objectOmit } from '@vueuse/core'
   import { Icon } from '../icon'
-  /**
-   * 检查给定值是否为函数类型
-   * @param fn 待检查的值
-   * @returns 如果是函数返回true，否则返回false
-   */
-  const isFunction = <T extends (...args: any[]) => any>(value: unknown): value is T => {
-    return typeof value === 'function'
-  }
-
-  /**
-   * 从对象中获取指定路径的值
-   * @param obj 源对象
-   * @param path 路径，可以是字符串或数组
-   * @param defaultValue 默认值
-   * @returns 获取到的值或默认值
-   */
-  const get = (obj: any, path: string | string[], defaultValue: any = undefined): any => {
-    if (!obj || typeof obj !== 'object') {
-      return defaultValue
-    }
-
-    const paths = Array.isArray(path) ? path : path.replace(/\[(\d+)\]/g, '.$1').split('.')
-    let result = obj
-
-    for (const key of paths) {
-      if (result === null || result === undefined || typeof result !== 'object') {
-        return defaultValue
-      }
-      result = result[key]
-    }
-
-    return result !== undefined ? result : defaultValue
-  }
-
-  /**
-   * 深度克隆对象
-   * @param obj 待克隆的对象
-   * @returns 克隆后的新对象
-   */
-  const cloneDeep = (obj: any): any => {
-    // 处理 null、undefined 和非对象类型
-    if (obj === null || typeof obj !== 'object') {
-      return obj
-    }
-
-    // 处理 Date 类型
-    if (obj instanceof Date) {
-      return new Date(obj.getTime())
-    }
-
-    // 处理 Array 类型
-    if (Array.isArray(obj)) {
-      return obj.map((item) => cloneDeep(item))
-    }
-
-    // 处理 RegExp 类型
-    if (obj instanceof RegExp) {
-      return new RegExp(obj)
-    }
-
-    // 处理普通对象
-    const clonedObj: any = {}
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        clonedObj[key] = cloneDeep(obj[key])
-      }
-    }
-
-    return clonedObj
-  }
+  import { cloneDeep, get, isFunction } from 'lodash-es'
 
   /**
    * 比较两个值是否相等
