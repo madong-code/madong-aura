@@ -1,3 +1,5 @@
+import { FormRules } from 'element-plus'
+
 export interface FormSchema {
   labelPosition?: 'left' | 'right' | 'top'
   gutter?: number // 栅格间隔
@@ -14,7 +16,7 @@ export interface FormSchema {
   // 重置按钮文本
   resetButtonText?: string
   // 表单验证规则
-  rules?: Record<string, any>
+  rules?: FormRules
   // 行内表单模式
   inline?: boolean
   // 显示展开按钮
@@ -37,7 +39,7 @@ export interface FormItemSchema {
   // 表单组件的插槽
   renderComponentContent?: Record<string, function> | (() => Record<string, function>)
   // 校验规则
-  rules?: Array<Record<string, any>>
+  rules?: FormRules[string]
   // 动态判断当前组件是否显示，js 控制，会删除 dom
   ifShow?: ((values: any, formApi: any) => boolean) | boolean
   // 动态判断当前组件是否显示，css 控制，不会删除 dom

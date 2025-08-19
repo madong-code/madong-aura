@@ -1,4 +1,5 @@
 import { FormSchema } from '../form'
+import { ActionItem } from '../table-action'
 export interface TableSchema {
   // 请求接口
   api: ((params: any) => Promise<any>) | string
@@ -10,6 +11,12 @@ export interface TableSchema {
   useSearchForm?: boolean
   // 搜索表单配置
   searchFormSchema?: FormSchema
+  // 操作列-按钮定义
+  tableActions?: ActionItem[]
+  // 操作列-下拉菜单定义
+  dropDownActions?: ActionItem[]
+  // 操作列配置
+  tableActionColumn?: TableColumn
 }
 // 表格列配置接口
 export interface TableColumn<T = any> {

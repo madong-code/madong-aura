@@ -15,6 +15,13 @@
   import { useAuth } from '@/composables/useAuth'
 
   const props = defineProps({
+    record: {
+      // 行数据
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     actions: {
       type: Array as PropType<ActionItem[]>,
       default() {
@@ -65,6 +72,7 @@
     }
     return isIfShow
   }
+
   const wrapConfirm = (action: ActionItem) => {
     if (action.confirm) {
       // 重写点击事件
@@ -82,14 +90,28 @@
         ElMessageBox.confirm(content, title, options)
           .then(() => {
             if (ok && typeof ok === 'function') {
-              ok()
+              ok(props.record)
             }
           })
           .catch(() => {
             if (cancel && typeof cancel === 'function') {
-              cancel()
+              cancel(props.record)
             }
           })
+      }
+    }
+    // 如果存在dialogRef，则直接调用show方法
+    if (action.dialogRef) {
+      const params =
+        typeof action.dialogParams === 'function'
+          ? action.dialogParams(props.record)
+          : action.dialogParams
+      const dialogRef = action.dialogRef
+      action.onClick = () => {
+        ;(dialogRef.value || dialogRef).show({
+          data: props.record,
+          ...params
+        })
       }
     }
     return action
@@ -136,16 +158,28 @@
     const originAttrs: any = attrs
     delete originAttrs.icon
     if (attrs.confirm && isFunction(attrs.confirm)) {
-      originAttrs.onConfirm = attrs.confirm
+      const confirm = attrs.confirm
+      originAttrs.onConfirm = (e: Event) => {
+        confirm(e, props.record)
+      }
       delete originAttrs.confirm
     }
     if (attrs.cancel && isFunction(attrs.cancel)) {
-      originAttrs.onCancel = attrs.cancel
+      const cancel = attrs.cancel
+      originAttrs.onCancel = () => {
+        cancel(props.record)
+      }
       delete originAttrs.cancel
     }
     return originAttrs
   }
   const getButtonProps = (action: ActionItem): any => {
+    const onClick = action.onClick
+    if (onClick) {
+      action.onClick = (e: Event) => {
+        onClick(e, props.record)
+      }
+    }
     const res = {
       ...action,
       type: action.type || 'primary'
@@ -155,10 +189,10 @@
   const handleCommand = (index: number) => {
     const action = getDropdownList.value[index]
     if (action.onClick && isFunction(action.onClick)) {
-      action.onClick()
+      action.onClick(action, props.record)
     } else {
       const currentPopconfirmRef = popconfirmRef[index.toString()]
-      currentPopconfirmRef?.click()
+      currentPopconfirmRef?.click(action, props.record)
     }
   }
   const handleRef = (e: any, index: number) => {
@@ -177,7 +211,7 @@
             </ElButton>
           </template>
         </ElPopconfirm>
-        <ElButton v-else v-bind="getButtonProps(action)" @click="action.onClick">
+        <ElButton v-else v-bind="getButtonProps(action)">
           {{ action.label }}
         </ElButton>
       </template>

@@ -9,7 +9,11 @@
               type: 'primary',
               icon: '&#xe83e;',
               auth: 'sys:user:save',
-              onClick: handleAdd.bind(null)
+              dialogRef: userFormRef,
+              dialogParams: {
+                isUpdate: false,
+                getTableApi: () => tableApi
+              }
             }
           ]"
         />
@@ -24,74 +28,62 @@
   import { tableSchema } from './schemas'
   import UserForm from './form.vue'
   import UserDetail from './detail.vue'
-  import { ActionItem, TableAction } from '@/components/table-action'
+  import { TableAction } from '@/components/table-action'
+  import { UserService } from '@/api/sys/user'
   const userFormRef = ref()
   const userDetailRef = ref()
-  const [BasicTable] = useTable({
+  const [BasicTable, tableApi] = useTable({
     ...tableSchema,
-    columns: [
-      ...tableSchema.columns,
+    columns: tableSchema.columns,
+    // 表格行操作
+    tableActions: [
       {
-        prop: '__ACTION__',
-        label: '操作',
-        width: 120,
-        fixed: 'right', // 固定列
-        formatter: (row: unknown) => {
-          const actions: ActionItem[] = [
-            {
-              label: '详情',
-              type: 'primary',
-              link: true,
-              size: 'small',
-              auth: 'sys:user:detail',
-              onClick: handleDetail.bind(null, row)
-            },
-            {
-              label: '编辑',
-              type: 'primary',
-              link: true,
-              size: 'small',
-              auth: 'sys:user:update',
-              onClick: handleEdit.bind(null, row)
-            }
-          ]
-          const dropDownActions: ActionItem[] = [
-            {
-              label: '删除',
-              type: 'danger',
-              icon: '&#xe783;',
-              size: 'small',
-              auth: 'sys:user:remove',
-              confirm: {
-                title: '提示',
-                content: '确定删除吗？',
-                ok: handleDelete.bind(null, row)
-              }
-            }
-          ]
-          return <TableAction actions={actions} dropDownActions={dropDownActions} />
+        label: '详情',
+        type: 'primary',
+        link: true,
+        size: 'small',
+        auth: 'sys:user:detail',
+        dialogRef: userDetailRef
+      },
+      {
+        label: '编辑',
+        type: 'primary',
+        link: true,
+        size: 'small',
+        auth: 'sys:user:update',
+        dialogRef: userFormRef,
+        dialogParams: {
+          isUpdate: true,
+          getTableApi: () => tableApi
+        }
+      }
+    ],
+    // 表格行操作-下拉菜单
+    dropDownActions: [
+      {
+        label: '删除',
+        type: 'danger',
+        icon: '&#xe783;',
+        size: 'small',
+        auth: 'sys:user:remove',
+        confirm: {
+          title: '提示',
+          content: '确定删除吗？',
+          ok(record: any) {
+            handleDelete(record)
+          }
         }
       }
     ]
   })
-  const handleAdd = () => {
-    userFormRef.value.show({
-      isUpdate: false
-    })
-  }
-  const handleEdit = (row: any) => {
-    userFormRef.value.show({
-      data: row,
-      isUpdate: true
-    })
-  }
-  const handleDetail = (row: any) => {
-    userDetailRef.value.show({
-      data: row
-    })
-  }
+  // 删除
   const handleDelete = (row: any) => {
-    ElMessage.info(`删除用户 ${row.nickName}`)
+    UserService.remove({
+      ids: [row.id]
+    }).then(() => {
+      ElMessage.success('删除用户成功')
+      tableApi.reload()
+    })
   }
 </script>
 <style lang="scss" scoped></style>

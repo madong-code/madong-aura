@@ -8,7 +8,8 @@
   import { useDetailForm } from '@/components/form'
   import { useDialog } from '@/components/dialog'
   import { formSchema } from './schemas'
-  const record = ref({})
+  import { UserService } from '@/api/sys/user'
+  const record = ref<any>({})
   const [DetailForm] = useDetailForm(formSchema)
   const [Dialog, dialogApi] = useDialog({
     title: '用户详情',
@@ -17,7 +18,13 @@
     footer: false
   })
   const show = ({ data }: { data: any }) => {
+    console.log('data', data)
     record.value = data || {}
+    UserService.detail({
+      id: record.value.id
+    }).then((res) => {
+      record.value = res
+    })
     dialogApi.open()
   }
 

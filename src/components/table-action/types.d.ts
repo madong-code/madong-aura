@@ -28,4 +28,8 @@ export interface ActionItem {
   tooltip?: string | TooltipProps
   // MessageBox.confirm
   confirm?: any
+  // 弹窗组件ref,如果存在，则默认调用其show方法
+  dialogRef?: Ref<any>
+  // 弹窗组件娄据参数
+  dialogParams?: Record<string, any> | ((action: ActionItem) => Record<string, any>)
 }

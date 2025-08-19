@@ -27,12 +27,13 @@
     </ArtTable>
   </ElCard>
 </template>
-<script setup lang="ts">
+<script setup lang="tsx">
   import { useTable } from '@/composables/useTable'
   import { useSearchBar } from '@/components/search-bar'
   import { TableInstance, TableSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
+  import { TableAction } from '../table-action'
   defineOptions({
     inheritAttrs: false
   })
@@ -90,7 +91,7 @@
         // 其他搜索参数
       },
       columnsFactory: () => {
-        return tableSchemaRef.value.columns.map((column) => {
+        const columns = tableSchemaRef.value.columns.map((column) => {
           const c = { ...column }
           viewColumnFormatter(column)
           c.formatter = column.formatter
@@ -98,6 +99,26 @@
           delete c.componentProps
           return c
         })
+        // 有操作列配置才添加操作列
+        if (tableSchemaRef.value.tableActions && tableSchemaRef.value.tableActions.length > 0) {
+          columns.push({
+            prop: '__ACTION__',
+            label: '操作',
+            width: 120,
+            fixed: 'right', // 固定列
+            formatter: (row: unknown) => {
+              return (
+                <TableAction
+                  record={row}
+                  actions={tableSchemaRef.value.tableActions}
+                  dropDownActions={tableSchemaRef.value.dropDownActions}
+                />
+              )
+            },
+            ...tableSchemaRef.value.tableActionColumn
+          })
+        }
+        return columns
       }
     }
   })

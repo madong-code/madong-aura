@@ -1,10 +1,6 @@
 <template>
   <Dialog>
-    <BasicForm :model="formModel">
-      <!-- <template #realName="{ model }">
-        <ElInput v-model="model.realName" placeholder="请输入姓名==" />
-      </template> -->
-    </BasicForm>
+    <BasicForm :model="formModel" />
   </Dialog>
 </template>
 
@@ -12,9 +8,11 @@
   import { useForm } from '@/components/form'
   import { useDialog } from '@/components/dialog'
   import { formSchema } from './schemas'
-  const record = ref({})
+  import { UserService } from '@/api/sys/user'
+  const record = ref<any>({})
   const updateFlag = ref(false)
   const formModel = reactive<any>({})
+  const tableApi = ref()
   const [BasicForm, formApi] = useForm(formSchema)
   const [Dialog, dialogApi] = useDialog({
     title: '用户管理',
@@ -24,9 +22,23 @@
       handleSubmit()
     }
   })
-  const show = ({ data, isUpdate }: { data: any; isUpdate: boolean }) => {
+  const show = ({
+    data,
+    isUpdate,
+    getTableApi
+  }: {
+    data: any
+    isUpdate: boolean
+    getTableApi: () => any
+  }) => {
     updateFlag.value = isUpdate === true
     record.value = data || {}
+    tableApi.value = getTableApi()
+    UserService.detail({
+      id: record.value.id
+    }).then((res) => {
+      record.value = res
+    })
     dialogApi.open()
     dialogApi.setState({
       title: updateFlag.value ? '修改用户' : '新增用户'
@@ -42,7 +54,12 @@
       .validate()
       .then(async () => {
         const values = await formApi.getValues()
-        console.log(values)
+        const submitApi = updateFlag.value ? UserService.update : UserService.save
+        submitApi(values).then(() => {
+          ElMessage.success(updateFlag.value ? '修改用户成功' : '新增用户成功')
+          dialogApi.close()
+          tableApi.value.reload()
+        })
       })
       .finally(() => {
         dialogApi.setState({ loading: false, confirmLoading: false })

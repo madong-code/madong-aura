@@ -1,98 +1,95 @@
 import { FormSchema } from '@/components/form'
-import { Icon } from '@/components/icon'
 import { TableSchema } from '@/components/table'
-import { ColumnOption } from '@/types'
 
-// 搜索表单配置
-export const searchSchemas: FormSchema = {
-  schema: [
+// 表格列配置
+export const tableSchema: TableSchema = {
+  // 接口地址
+  api: '/sys/user/page',
+  // 表格列定义
+  columns: [
     {
-      prop: 'm_LIKE_userName',
-      label: '用户名',
-      component: 'Input',
-      componentProps: {
-        clearable: true,
-        placeholder: '请输入用户名'
-      },
-      colSpan: 6
+      type: 'selection'
     },
     {
-      prop: 'm_LIKE_realName',
-      label: '姓名',
-      component: 'Input',
-      componentProps: {
-        clearable: true,
-        placeholder: '请输入姓名'
-      },
-      colSpan: 6
+      prop: 'userName',
+      label: '用户名'
     },
     {
-      prop: 'm_LIKE_mobilePhone',
-      label: '手机号码',
-      component: 'Input',
-      componentProps: {
-        clearable: true,
-        placeholder: '请输入手机号码'
-      },
-      colSpan: 6
+      prop: 'realName',
+      label: '姓名'
     },
     {
-      prop: 'm_EQ_isLocked',
+      prop: 'isLocked',
       label: '是否锁定',
       component: 'ApiDict',
       componentProps: {
-        clearable: true,
         code: 'yes_no',
-        placeholder: '请选择是否锁定'
+        typeMap: {
+          1: 'success',
+          0: 'danger'
+        },
+        useColorList: false
+      }
+    },
+    {
+      prop: 'roleIds',
+      label: '所属角色',
+      component: 'ApiSelect',
+      componentProps: {
+        api: '/sys/role/select'
+      }
+    },
+    {
+      prop: 'mobilePhone',
+      label: '手机号码'
+    }
+  ],
+  // 搜索表单定义
+  searchFormSchema: {
+    schema: [
+      {
+        prop: 'm_LIKE_userName',
+        label: '用户名',
+        component: 'Input',
+        componentProps: {
+          clearable: true,
+          placeholder: '请输入用户名'
+        },
+        colSpan: 6
       },
-      colSpan: 6
-    }
-  ]
-}
-
-// 表格列配置
-export const tableSchemas: ColumnOption[] = [
-  {
-    type: 'selection'
-  },
-  {
-    prop: 'userName',
-    label: '用户名'
-  },
-  {
-    prop: 'realName',
-    label: '姓名'
-  },
-  {
-    prop: 'isLocked',
-    label: '是否锁定',
-    component: 'ApiDict',
-    componentProps: {
-      code: 'yes_no',
-      typeMap: {
-        1: 'success',
-        0: 'danger'
+      {
+        prop: 'm_LIKE_realName',
+        label: '姓名',
+        component: 'Input',
+        componentProps: {
+          clearable: true,
+          placeholder: '请输入姓名'
+        },
+        colSpan: 6
       },
-      useColorList: false
-    }
-  },
-  {
-    prop: 'roleIds',
-    label: '所属角色',
-    component: 'ApiSelect',
-    componentProps: {
-      api: '/sys/role/select'
-    }
-  },
-  {
-    prop: 'mobilePhone',
-    label: '手机号码'
+      {
+        prop: 'm_LIKE_mobilePhone',
+        label: '手机号码',
+        component: 'Input',
+        componentProps: {
+          clearable: true,
+          placeholder: '请输入手机号码'
+        },
+        colSpan: 6
+      },
+      {
+        prop: 'm_EQ_isLocked',
+        label: '是否锁定',
+        component: 'ApiDict',
+        componentProps: {
+          clearable: true,
+          code: 'yes_no',
+          placeholder: '请选择是否锁定'
+        },
+        colSpan: 6
+      }
+    ]
   }
-]
-export const tableSchema: TableSchema = {
-  api: '/sys/user/page',
-  columns: tableSchemas,
-  searchFormSchema: searchSchemas
 }
 // 表单配置
 export const formSchema: FormSchema = {
@@ -168,10 +165,15 @@ export const formSchema: FormSchema = {
         return !values.id
       },
       ifDetail: false,
+      helpMessage: ['5-18位数字、字母、特殊字符组成。'],
       rules: [
         {
           required: true,
           message: '请输入密码'
+        },
+        {
+          pattern: /[\w!@#$%^&*]{5,18}/,
+          message: '密码由5-18位数字、字母、特殊字符组成。'
         }
       ],
       componentProps: {
@@ -256,11 +258,6 @@ export const formSchema: FormSchema = {
           message: '请输入手机号码'
         }
       ],
-      renderComponentContent() {
-        return {
-          prefix: () => <Icon icon="&#xe7a1;" />
-        }
-      },
       componentProps: {
         placeholder: '请输入手机号码',
         clearable: true

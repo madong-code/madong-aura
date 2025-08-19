@@ -91,15 +91,17 @@
   }
   const handleCancel = () => {
     dialogVisible.value = false
-    emit('cancel')
     if (props.onCancel) {
       props.onCancel()
+    } else {
+      emit('cancel')
     }
   }
   const handleSubmit = () => {
-    emit('confirm')
     if (props.onConfirm) {
       props.onConfirm()
+    } else {
+      emit('confirm')
     }
   }
   const methods: MyDialogInstance = {
