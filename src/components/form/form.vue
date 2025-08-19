@@ -174,7 +174,45 @@
       typeof item.componentProps === 'function'
         ? item.componentProps(formModel, props.formMethods)
         : item.componentProps || {}
-
+    // 对于日期范围组件，使用 start-placeholder 和 end-placeholder
+    if (item.component.toLowerCase().includes('date')) {
+      if (
+        ['daterange', 'datetimerange', 'monthrange', 'yearrange'].includes(componentProps?.type)
+      ) {
+        // 如果已经定义了 startPlaceholder 和 endPlaceholder，则不覆盖
+        if (!componentProps.startPlaceholder && !componentProps.endPlaceholder) {
+          // 根据类型设置不同的默认文本
+          switch (componentProps.type) {
+            case 'monthrange':
+              return {
+                ...componentProps,
+                startPlaceholder: '开始月份',
+                endPlaceholder: '结束月份'
+              }
+            case 'yearrange':
+              return {
+                ...componentProps,
+                startPlaceholder: '开始年份',
+                endPlaceholder: '结束年份'
+              }
+            case 'datetimerange':
+              return {
+                ...componentProps,
+                startPlaceholder: '开始时间',
+                endPlaceholder: '结束时间'
+              }
+            default:
+              return {
+                ...componentProps,
+                startPlaceholder: '开始日期',
+                endPlaceholder: '结束日期'
+              }
+          }
+        }
+        // 如果已经有 startPlaceholder 或 endPlaceholder，则直接返回
+        return componentProps
+      }
+    }
     // 合并属性，如果未提供placeholder则自动生成
     const text = item.component.toLowerCase().includes('select') ? '请选择' : '请输入'
     return {
