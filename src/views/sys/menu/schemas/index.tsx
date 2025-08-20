@@ -185,7 +185,8 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: '请选择所属上级',
           clearable: true,
-          checkOnClickNode: true,
+          // 任意节点可选
+          checkStrictly: true,
           api: '/sys/menu/tree',
           labelField: 'name',
           valueField: 'id'
