@@ -46,6 +46,33 @@ export const routes: AppRouteRecord[] = [
             }
           ]
         }
+      },
+      {
+        path: '/sys/role/index',
+        name: 'sys:role',
+        component: '/sys/role/index',
+        meta: {
+          title: '角色管理',
+          keepAlive: true,
+          authList: [
+            {
+              title: '分页查询角色列表',
+              authMark: 'sys:role:page'
+            },
+            {
+              title: '新增角色',
+              authMark: 'sys:role:save'
+            },
+            {
+              title: '编辑角色',
+              authMark: 'sys:role:update'
+            },
+            {
+              title: '删除角色',
+              authMark: 'sys:role:remove'
+            }
+          ]
+        }
       }
     ]
   }

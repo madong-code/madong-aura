@@ -39,7 +39,11 @@
       </template>
     </ArtTable>
   </ElCard>
-  <DialogForm ref="dialogFormRef" :table-schema="tableSchemaRef" />
+  <DialogForm
+    v-bind="{ ...tableSchemaRef.dialogProps }"
+    ref="dialogFormRef"
+    :table-schema="tableSchemaRef"
+  />
 </template>
 <script setup lang="tsx">
   import { useTable } from '@/composables/useTable'

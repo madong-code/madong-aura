@@ -4,6 +4,7 @@
       ref="formRef"
       :label-position="formSchemaRef.labelPosition"
       :model="formModel"
+      :class="{ 'form-with-top-spacing': shouldAddTopSpacing }"
       :inline="formSchemaRef.inline || false"
       :label-width="formSchemaRef.labelWidth || '80px'"
     >
@@ -83,6 +84,13 @@
   const emit = defineEmits<{
     (e: 'register', formInstance: any): void
   }>()
+  // 判断是否需要添加顶部间距
+  const shouldAddTopSpacing = computed(() => {
+    // 获取第一个显示的组件
+    const firstVisibleItem = schemaList.value.find((item) => shouldShow(item))
+    // 如果第一个显示的组件不是分割线，则添加顶部间距
+    return firstVisibleItem && firstVisibleItem.component !== 'Divider'
+  })
   const formModel = reactive<any>({})
   const formSchemaRef = ref<FormSchema>(props.formSchema)
   const formRef = ref()
@@ -106,17 +114,21 @@
     },
     { deep: true, immediate: true }
   )
+  // 是否显示
+  const shouldShow = (item: FormItemSchema) => {
+    if (item.ifDetail !== undefined) {
+      if (typeof item.ifDetail === 'function') {
+        return item.ifDetail(formModel, null)
+      } else if (typeof item.ifDetail === 'boolean') {
+        return item.ifDetail
+      }
+    }
+    return true
+  }
 
   const schemaList = computed<FormItemSchema[]>(() => {
     return (formSchemaRef.value.schema || []).filter((item) => {
-      if (item.ifDetail !== undefined) {
-        if (typeof item.ifDetail === 'function') {
-          return item.ifDetail(formModel, null)
-        } else if (typeof item.ifDetail === 'boolean') {
-          return item.ifDetail
-        }
-      }
-      return true
+      return shouldShow(item)
     })
   })
 
@@ -156,6 +168,9 @@
 </script>
 <style lang="scss" scoped>
   .detail-form {
+    // .form-with-top-spacing {
+    //   margin-top: 0px;
+    // }
     :deep(.el-form-item) {
       margin-bottom: 0;
     }

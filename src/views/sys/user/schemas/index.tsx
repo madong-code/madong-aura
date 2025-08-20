@@ -4,6 +4,7 @@ import { UserService } from '@/api/sys/user'
 export const tableSchema: TableSchema = {
   // 接口地址
   api: UserService.page,
+  dialogTitle: '用户',
   crudApi: {
     // 新增接口
     add: UserService.save,
@@ -116,6 +117,10 @@ export const tableSchema: TableSchema = {
         colSpan: 6
       }
     ]
+  },
+  // 内置弹窗配置
+  dialogProps: {
+    dialogType: 'drawer'
   },
   // crud表单配置
   formSchema: {

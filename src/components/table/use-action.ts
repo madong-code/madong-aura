@@ -76,6 +76,7 @@ export function useAction(
         dialogRef: dialogFormRef,
         dialogParams: {
           isUpdate: true,
+          type: 'edit',
           getTableApi: () => tableMethods
         }
       })

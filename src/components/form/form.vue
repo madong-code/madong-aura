@@ -3,6 +3,7 @@
     <ElForm
       ref="formRef"
       class="form-container"
+      :class="{ 'form-with-top-spacing': shouldAddTopSpacing }"
       :label-position="formSchemaRef.labelPosition"
       :rules="formSchemaRef.rules"
       :model="formModel"
@@ -132,6 +133,13 @@
     (e: 'register', formInstance: FormInstance): void
     (e: 'change', values: any): void
   }>()
+  // 判断是否需要添加顶部间距
+  const shouldAddTopSpacing = computed(() => {
+    // 获取第一个显示的组件
+    const firstVisibleItem = schemaList.value.find((item) => shouldShow(item))
+    // 如果第一个显示的组件不是分割线，则添加顶部间距
+    return firstVisibleItem && firstVisibleItem.component !== 'Divider'
+  })
   // 初始化表单默认值
   const initFormModel = () => {
     const schema = props.formSchema.schema || []
@@ -467,6 +475,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .form-container.form-with-top-spacing {
+    margin-top: 12px;
+  }
   .form-actions {
     display: flex;
     justify-content: center;

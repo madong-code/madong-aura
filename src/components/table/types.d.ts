@@ -1,3 +1,4 @@
+import { MyDialogProps } from '../dialog'
 import { FormSchema } from '../form'
 import { ActionItem } from '../table-action'
 export interface TableSchema {
@@ -25,6 +26,8 @@ export interface TableSchema {
   toolbarActions?: ActionItem[]
   // 左侧栏-下拉菜单定义
   dropDownToolbarActions?: ActionItem[]
+  // 内置弹窗配置
+  dialogProps?: MyDialogProps
   // 增删改查接口
   crudApi?: CrudApi
   // 是否使用crud

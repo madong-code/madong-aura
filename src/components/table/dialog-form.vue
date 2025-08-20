@@ -27,6 +27,7 @@
     title: dialogTitle.value,
     // dialogType: 'drawer',
     destroyOnClose: true,
+    modal: true,
     onConfirm: () => {
       handleSubmit()
     }
@@ -44,11 +45,13 @@
     viewType.value = type
     if (type === 'view') {
       dialogApi.setState({
-        footer: false
+        footer: false,
+        closeOnClickModal: true
       })
     } else {
       dialogApi.setState({
-        footer: true
+        footer: true,
+        closeOnClickModal: false
       })
     }
     updateFlag.value = type === 'edit'
