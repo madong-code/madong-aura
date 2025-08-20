@@ -222,7 +222,7 @@
             <slot name="more">
               <ElButton link size="small" type="primary">
                 <template #icon>
-                  <Icon class="icon-more" icon="&#xe6dd;" />
+                  <Icon class="icon-more" icon="ant-design:more-outlined" />
                 </template>
               </ElButton>
             </slot>
