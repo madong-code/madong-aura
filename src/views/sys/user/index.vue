@@ -30,6 +30,7 @@
   import UserDetail from './detail.vue'
   import { TableAction } from '@/components/table-action'
   import { UserService } from '@/api/sys/user'
+  import { ElMessage } from 'element-plus'
   const userFormRef = ref()
   const userDetailRef = ref()
   const [BasicTable, tableApi] = useTable({
@@ -82,7 +83,7 @@
       ids: [row.id]
     }).then(() => {
       ElMessage.success('删除用户成功')
-      tableApi.reload()
+      tableApi.refreshRemove()
     })
   }
 </script>

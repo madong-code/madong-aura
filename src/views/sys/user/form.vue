@@ -9,10 +9,12 @@
   import { useDialog } from '@/components/dialog'
   import { formSchema } from './schemas'
   import { UserService } from '@/api/sys/user'
+  import { ElMessage } from 'element-plus'
+  import { TableMethods } from '@/components/table'
   const record = ref<any>({})
   const updateFlag = ref(false)
   const formModel = reactive<any>({})
-  const tableApi = ref()
+  const tableApi = ref<TableMethods>()
   const [BasicForm, formApi] = useForm(formSchema)
   const [Dialog, dialogApi] = useDialog({
     title: '用户管理',
@@ -58,7 +60,12 @@
         submitApi(values).then(() => {
           ElMessage.success(updateFlag.value ? '修改用户成功' : '新增用户成功')
           dialogApi.close()
-          tableApi.value.reload()
+          if (updateFlag.value) {
+            tableApi.value?.refreshUpdate()
+          } else {
+            tableApi.value?.refreshCreate()
+          }
+          tableApi.value?.reload()
         })
       })
       .finally(() => {

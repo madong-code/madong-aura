@@ -1,6 +1,8 @@
 import { FormSchema } from '../form'
 import { ActionItem } from '../table-action'
 export interface TableSchema {
+  // 行id
+  rowKey?: string
   // 请求接口
   api: ((params: any) => Promise<any>) | string
   // 请求方法
@@ -69,4 +71,29 @@ export interface TableInstance {
   setState: (state: TableSchema) => Promise<void>
   // 获取组件状态（props）
   getState: () => Promise<TableSchema>
+  getArtTableInstance: () => any
+}
+// 定义表格方法接口，提供更好的类型提示
+export interface TableMethods {
+  // 获取表单实例
+  getTableRef(): any
+  // 设置组件状态（props）
+  setState(state: any): void
+  // 获取组件状态
+  getState(): any
+  // 刷新表格数据，保留当前表单搜索条件
+  reload(params?: Record<string, any>): void
+  // 获取art表格实例，可通过该方法来操作原生的art-table组件
+  getArtTableInstance(): any
+  // 刷新策略
+  /** 全量刷新：清空所有缓存，重新获取数据（适用于手动刷新按钮） */
+  refreshData(): void
+  /** 轻量刷新：仅清空当前搜索条件的缓存，保持分页状态（适用于定时刷新） */
+  refreshSoft(): void
+  /** 新增后刷新：回到第一页并清空分页缓存（适用于新增数据后） */
+  refreshCreate(): void
+  /** 更新后刷新：保持当前页，仅清空当前搜索缓存（适用于更新数据后） */
+  refreshUpdate(): void
+  /** 删除后刷新：智能处理页码，避免空页面（适用于删除数据后） */
+  refreshRemove(): void
 }

@@ -16,7 +16,7 @@
     </ArtTableHeader>
     <!-- 表格 -->
     <ArtTable
-      rowKey="id"
+      :rowKey="tableSchemaRef.rowKey ?? 'id'"
       :loading="loading"
       :data="tableData"
       :columns="columns"
@@ -24,6 +24,9 @@
       @pagination:size-change="handleSizeChange"
       @pagination:current-change="handleCurrentChange"
     >
+      <template v-for="(_, slotName) in $slots" #[slotName]>
+        <slot :name="slotName"></slot>
+      </template>
     </ArtTable>
   </ElCard>
 </template>
@@ -74,17 +77,7 @@
     return props.tableSchema.api as any
   })
   const [SearchBar, searchBarApi] = useSearchBar(tableSchemaRef.value.searchFormSchema || {})
-  const {
-    data: tableData,
-    columns,
-    loading,
-    pagination,
-    columnChecks,
-    getData,
-    refreshData,
-    handleSizeChange,
-    handleCurrentChange
-  } = useTable<any>({
+  const tableObject = useTable<any>({
     core: {
       apiFn: funApi.value,
       apiParams: {
@@ -122,7 +115,17 @@
       }
     }
   })
-
+  const {
+    data: tableData,
+    columns,
+    loading,
+    pagination,
+    columnChecks,
+    getData,
+    refreshData,
+    handleSizeChange,
+    handleCurrentChange
+  } = tableObject
   const handleSearch = (values: any) => {
     //Object.assign(searchParams, values)
     getData(values)
@@ -157,6 +160,9 @@
       return new Promise((resolve) => {
         resolve(tableSchemaRef.value)
       })
+    },
+    getArtTableInstance() {
+      return tableObject
     }
   }
   onMounted(() => {
