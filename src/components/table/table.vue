@@ -9,10 +9,7 @@
     <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
       <template #left>
         <slot name="toolbar-actions">
-          <TableAction
-            :actions="tableSchemaRef.toolbarActions"
-            :drop-down-actions="tableSchemaRef.dropDownToolbarActions"
-          >
+          <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
             <template #more>
               <ElButton>
                 <template #icon><Icon class="icon-more" icon="&#xe6dd;" /></template>
@@ -42,6 +39,7 @@
       </template>
     </ArtTable>
   </ElCard>
+  <DialogForm ref="dialogFormRef" :table-schema="tableSchemaRef" />
 </template>
 <script setup lang="tsx">
   import { useTable } from '@/composables/useTable'
@@ -50,6 +48,8 @@
   import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
   import { TableAction } from '../table-action'
+  import DialogForm from './dialog-form.vue'
+  import { useAction } from './use-action'
   defineOptions({
     inheritAttrs: false
   })
@@ -77,6 +77,14 @@
     (e: 'register', methods: TableInstance): void
   }>()
   const tableSchemaRef = ref(props.tableSchema)
+  const dialogFormRef = ref<any>(null)
+  // 计算各种操作按钮配置
+  const { toolbarActions, dropDownToolbarActions, tableActions, dropDownActions } = useAction(
+    tableSchemaRef.value,
+    dialogFormRef,
+    props.tableMethods
+  )
+
   const funApi = computed(() => {
     if (props.tableSchema.api && typeof props.tableSchema.api === 'string') {
       const fun = (params: any) => {
@@ -106,7 +114,10 @@
           return c
         })
         // 有操作列配置才添加操作列
-        if (tableSchemaRef.value.tableActions && tableSchemaRef.value.tableActions.length > 0) {
+        if (
+          (tableActions.value && tableActions.value.length > 0) ||
+          (dropDownActions.value && dropDownActions.value.length > 0)
+        ) {
           columns.push({
             prop: '__ACTION__',
             label: '操作',
@@ -116,8 +127,8 @@
               return (
                 <TableAction
                   record={row}
-                  actions={tableSchemaRef.value.tableActions}
-                  dropDownActions={tableSchemaRef.value.dropDownActions}
+                  actions={tableActions.value}
+                  dropDownActions={dropDownActions.value}
                 />
               )
             },
@@ -148,6 +159,21 @@
     //Object.assign(searchParams, {})
     getData({})
     emit('reset')
+  }
+  // 删除
+  const handleDelete = (row: any) => {
+    const rowKey = props.tableSchema.rowKey || 'id'
+    const ids = row?.[rowKey]
+      ? [row[rowKey]]
+      : multipleSelection.value.map((item: any) => item[rowKey])
+    props.tableSchema.crudApi
+      ?.remove?.({
+        [`${rowKey}s`]: ids
+      })
+      .then(() => {
+        ElMessage.success(`删除${props.tableSchema.dialogTitle}成功`)
+        tableObject.refreshRemove()
+      })
   }
   // 定义一些只读状态
   const readonlyState = reactive<TableReadonlyState>({
@@ -191,6 +217,9 @@
     },
     getRowSelection() {
       return multipleSelection.value
+    },
+    removeByApi(row) {
+      handleDelete(row)
     }
   }
   onMounted(() => {

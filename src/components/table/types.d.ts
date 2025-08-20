@@ -4,7 +4,7 @@ export interface TableSchema {
   // 行id
   rowKey?: string
   // 请求接口
-  api: ((params: any) => Promise<any>) | string
+  api?: ((params: any) => Promise<any>) | string
   // 请求方法
   requestMethod?: 'get' | 'post'
   // 列定义
@@ -13,6 +13,8 @@ export interface TableSchema {
   useSearchForm?: boolean
   // 搜索表单配置
   searchFormSchema?: FormSchema
+  // crud表单配置
+  formSchema?: FormSchema
   // 操作列-按钮定义
   tableActions?: ActionItem[]
   // 操作列-下拉菜单定义
@@ -23,6 +25,36 @@ export interface TableSchema {
   toolbarActions?: ActionItem[]
   // 左侧栏-下拉菜单定义
   dropDownToolbarActions?: ActionItem[]
+  // 增删改查接口
+  crudApi?: CrudApi
+  // 是否使用crud
+  useCrud?: boolean
+  // 模块名
+  dialogTitle?: string
+  // 是否有新增
+  hasAdd?: boolean
+  // 新增按钮文本
+  addButtonText?: string
+  // 新增按钮权限编码
+  addAuth?: string
+  // 是否有编辑
+  hasEdit?: boolean
+  // 编辑按钮文本
+  editButtonText?: string
+  // 编辑按钮权限编码
+  editAuth?: string
+  // 是否有详情
+  hasView?: boolean
+  // 详情按钮文本
+  viewButtonText?: string
+  // 详情按钮权限编码
+  viewAuth?: string
+  // 是否有删除
+  hasRemove?: boolean
+  // 删除按钮文本
+  removeButtonText?: string
+  // 删除按钮权限编码
+  removeAuth?: string
 }
 // 表格列配置接口
 export interface TableColumn<T = any> {
@@ -68,9 +100,17 @@ export interface TableColumn<T = any> {
   // 列回显组件属性
   componentProps?: Record<string, any>
 }
+export interface CrudApi {
+  add?: (params: any) => Promise<any>
+  edit?: (params: any) => Promise<any>
+  remove?: (params: any) => Promise<any>
+  view?: (params: any) => Promise<any>
+}
+// 只读配置
 export interface TableReadonlyState {
   selection: []
 }
+// 表格基础方法，和tableRef和tableApi相同的方法
 export interface TableBaseMethods {
   // 重新加载数据
   reload: (params?: Record<string, any>) => Promise<any>
@@ -84,6 +124,8 @@ export interface TableBaseMethods {
   getReadonlyState: () => TableReadonlyState
   // 获取art table实例
   getArtTableInstance: () => any
+  // 通过接口删除行
+  removeByApi: (row: any) => void
 }
 export type TableInstance = TableBaseMethods
 // 定义表格方法接口，提供更好的类型提示

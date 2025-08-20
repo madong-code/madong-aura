@@ -37,6 +37,10 @@ export function useTable(tableSchema: TableSchema) {
     getReadonlyState() {
       return tableRef.value?.getReadonlyState() || { selection: [] }
     },
+    // 通过接口删除行
+    removeByApi(row) {
+      return tableRef.value?.removeByApi(row)
+    },
     // 获取art表格实例，可通过该方法来操作原生的art-table组件
     // 个人建议，可以在该文件上包装一层再暴露给外部使用，如上述的reload方法一样
     getArtTableInstance() {
@@ -74,7 +78,8 @@ export function useTable(tableSchema: TableSchema) {
           {
             ...attrs,
             tableSchema: tableSchema,
-            onRegister: register
+            onRegister: register,
+            tableMethods: tableMethods
           },
           slots
         )

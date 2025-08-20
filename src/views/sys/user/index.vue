@@ -1,105 +1,23 @@
 <template>
   <div class="user-page art-full-height">
     <BasicTable />
-    <UserForm ref="userFormRef" />
-    <UserDetail ref="userDetailRef" />
   </div>
 </template>
 <script setup lang="tsx">
   import { useTable } from '@/components/table'
   import { tableSchema } from './schemas'
-  import UserForm from './form.vue'
-  import UserDetail from './detail.vue'
-  import { UserService } from '@/api/sys/user'
-  import { ElMessage } from 'element-plus'
-  const userFormRef = ref()
-  const userDetailRef = ref()
-  const [BasicTable, tableApi] = useTable({
+  const [BasicTable] = useTable({
     ...tableSchema,
     columns: tableSchema.columns,
-    // 左侧栏工具
-    toolbarActions: [
-      {
-        label: '新增',
-        type: 'primary',
-        icon: '&#xe83e;',
-        auth: 'sys:user:save',
-        dialogRef: userFormRef,
-        dialogParams: {
-          isUpdate: false,
-          getTableApi: () => tableApi
-        }
-      }
-    ],
-    dropDownToolbarActions: [
-      {
-        label: '批量删除',
-        type: 'danger',
-        icon: '&#xe783;',
-        auth: 'sys:user:remove',
-        ifShow: () => selectionCount.value > 0,
-        confirm: {
-          title: '提示',
-          content: '确定批量删除吗？',
-          ok() {
-            handleDelete({})
-          }
-        }
-      }
-    ],
+    // hasAdd: true,
+    // 左侧工具栏
+    toolbarActions: [],
+    // 左侧栏工具-下拉菜单
+    dropDownToolbarActions: [],
     // 表格行操作
-    tableActions: [
-      {
-        label: '详情',
-        type: 'primary',
-        link: true,
-        size: 'small',
-        auth: 'sys:user:detail',
-        dialogRef: userDetailRef
-      },
-      {
-        label: '编辑',
-        type: 'primary',
-        link: true,
-        size: 'small',
-        auth: 'sys:user:update',
-        dialogRef: userFormRef,
-        dialogParams: {
-          isUpdate: true,
-          getTableApi: () => tableApi
-        }
-      }
-    ],
+    tableActions: [],
     // 表格行操作-下拉菜单
-    dropDownActions: [
-      {
-        label: '删除',
-        type: 'danger',
-        icon: '&#xe783;',
-        size: 'small',
-        auth: 'sys:user:remove',
-        confirm: {
-          title: '提示',
-          content: '确定删除吗？',
-          ok(record: any) {
-            handleDelete(record)
-          }
-        }
-      }
-    ]
+    dropDownActions: []
   })
-  const selectionCount = computed(() => {
-    return tableApi.getReadonlyState()?.selection?.length || 0
-  })
-  // 删除
-  const handleDelete = (row: any) => {
-    const ids = row?.id ? [row.id] : tableApi.getRowSelection().map((item: any) => item.id)
-    UserService.remove({
-      ids: ids
-    }).then(() => {
-      ElMessage.success('删除用户成功')
-      tableApi.refreshRemove()
-    })
-  }
 </script>
 <style lang="scss" scoped></style>
