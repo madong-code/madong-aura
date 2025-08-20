@@ -1,50 +1,50 @@
-import { TableMethods, TableSchema } from '../table'
-import Table from './table.vue'
+import { CrudMethods, CrudSchema } from '.'
+import Table from './crud.vue'
 /**
  *
  * 防止未来重构影响
- *    通过统一的 useTable 钩子封装，即使内部实现发生重构，外部调用方也不会受到影响
+ *    通过统一的 useCrud 钩子封装，即使内部实现发生重构，外部调用方也不会受到影响
  *    提供稳定的API接口，隔离底层实现细节的变化
- * @param tableSchema
+ * @param crudSchema
  * @returns
  */
-export function useTable(tableSchema: TableSchema) {
-  const tableRef = ref<any>(null)
-  const register = (tableInstance: any) => {
-    tableRef.value = tableInstance
+export function useCrud(crudSchema: CrudSchema) {
+  const crudRef = ref<any>(null)
+  const register = (crudInstance: any) => {
+    crudRef.value = crudInstance
   }
-  const tableMethods: TableMethods = {
+  const crudMethods: CrudMethods = {
     // 获取表格实例
-    getTableRef() {
-      return tableRef.value
+    getCrudRef() {
+      return crudRef.value
     },
     // 设置组件状态（props）
     setState(state: any) {
-      return tableRef.value?.setState(state)
+      return crudRef.value?.setState(state)
     },
     // 获取组件状态
     getState() {
-      return tableRef.value?.getState()
+      return crudRef.value?.getState()
     },
     getRowSelection() {
-      return tableRef.value?.getRowSelection()
+      return crudRef.value?.getRowSelection()
     },
     // 刷新表格数据，保留当前表单搜索条件
     reload(params?: Record<string, any>) {
-      return tableRef.value?.reload(params)
+      return crudRef.value?.reload(params)
     },
     // 获取只读状态信息
     getReadonlyState() {
-      return tableRef.value?.getReadonlyState() || { selection: [] }
+      return crudRef.value?.getReadonlyState() || { selection: [] }
     },
     // 通过接口删除行
     removeByApi(row) {
-      return tableRef.value?.removeByApi(row)
+      return crudRef.value?.removeByApi(row)
     },
     // 获取art表格实例，可通过该方法来操作原生的art-table组件
     // 个人建议，可以在该文件上包装一层再暴露给外部使用，如上述的reload方法一样
     getArtTableInstance() {
-      return tableRef.value?.getArtTableInstance()
+      return crudRef.value?.getArtCrudInstance()
     },
     // 刷新策略
     /** 全量刷新：清空所有缓存，重新获取数据（适用于手动刷新按钮） */
@@ -77,14 +77,14 @@ export function useTable(tableSchema: TableSchema) {
           Table,
           {
             ...attrs,
-            tableSchema: tableSchema,
+            crudSchema: crudSchema,
             onRegister: register,
-            tableMethods: tableMethods
+            crudMethods: crudMethods
           },
           slots
         )
     }
   })
 
-  return [TableComponent, tableMethods] as const
+  return [TableComponent, crudMethods] as const
 }

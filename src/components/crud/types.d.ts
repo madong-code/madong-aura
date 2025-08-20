@@ -1,7 +1,7 @@
 import { MyDialogProps } from '../dialog'
 import { FormSchema } from '../form'
 import { ActionItem } from '../table-action'
-export interface TableSchema {
+export interface CrudSchema {
   // 行id
   rowKey?: string
   // 请求接口
@@ -9,7 +9,7 @@ export interface TableSchema {
   // 请求方法
   requestMethod?: 'get' | 'post'
   // 列定义
-  columns: TableColumn[]
+  columns: CrudColumn[]
   // 是否显示搜索表单
   useSearchForm?: boolean
   // 搜索表单配置
@@ -60,7 +60,7 @@ export interface TableSchema {
   removeAuth?: string
 }
 // 表格列配置接口
-export interface TableColumn<T = any> {
+export interface CrudColumn<T = any> {
   // 列类型
   type?: 'selection' | 'expand' | 'index' | 'globalIndex'
   // 列属性名
@@ -110,31 +110,31 @@ export interface CrudApi {
   view?: (params: any) => Promise<any>
 }
 // 只读配置
-export interface TableReadonlyState {
+export interface CrudReadonlyState {
   selection: []
 }
 // 表格基础方法，和tableRef和tableApi相同的方法
-export interface TableBaseMethods {
+export interface CrudBaseMethods {
   // 重新加载数据
   reload: (params?: Record<string, any>) => Promise<any>
   // 设置组件状态（props）
-  setState: (state: TableSchema) => Promise<void>
+  setState: (state: CrudSchema) => Promise<void>
   // 获取组件状态（props）
-  getState: () => Promise<TableSchema>
+  getState: () => Promise<CrudSchema>
   // 获取勾选行信息
   getRowSelection: () => []
   // 获取只读状态信息
-  getReadonlyState: () => TableReadonlyState
+  getReadonlyState: () => CrudReadonlyState
   // 获取art table实例
   getArtTableInstance: () => any
   // 通过接口删除行
   removeByApi: (row: any) => void
 }
-export type TableInstance = TableBaseMethods
+export type CrudInstance = CrudBaseMethods
 // 定义表格方法接口，提供更好的类型提示
-export interface TableMethods extends TableBaseMethods {
-  // 获取表单实例
-  getTableRef(): any
+export interface CrudMethods extends CrudBaseMethods {
+  // 获取crud实例
+  getCrudRef(): any
   // 获取art表格实例，可通过该方法来操作原生的art-table组件
   getArtTableInstance(): any
   // 刷新策略

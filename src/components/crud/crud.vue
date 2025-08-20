@@ -1,6 +1,6 @@
 <template>
   <SearchBar
-    v-if="tableSchemaRef.useSearchForm !== false"
+    v-if="crudSchemaRef.useSearchForm !== false"
     @reset="handleReset"
     @submit="handleSearch"
   />
@@ -25,7 +25,7 @@
     </ArtTableHeader>
     <!-- 表格 -->
     <ArtTable
-      :rowKey="tableSchemaRef.rowKey ?? 'id'"
+      :rowKey="crudSchemaRef.rowKey ?? 'id'"
       :loading="loading"
       :data="tableData"
       :columns="columns"
@@ -40,15 +40,15 @@
     </ArtTable>
   </ElCard>
   <DialogForm
-    v-bind="{ ...tableSchemaRef.dialogProps }"
+    v-bind="{ ...crudSchemaRef.dialogProps }"
     ref="dialogFormRef"
-    :table-schema="tableSchemaRef"
+    :crud-schema="crudSchemaRef"
   />
 </template>
 <script setup lang="tsx">
   import { useTable } from '@/composables/useTable'
   import { useSearchBar } from '@/components/search-bar'
-  import { TableInstance, TableReadonlyState, TableSchema } from './types'
+  import { CrudInstance, CrudReadonlyState, CrudSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
   import { TableAction } from '../table-action'
@@ -59,11 +59,11 @@
   })
   const props = withDefaults(
     defineProps<{
-      tableSchema: TableSchema
-      tableMethods?: any
+      crudSchema: CrudSchema
+      crudMethods?: any
     }>(),
     {
-      tableSchema: () => {
+      crudSchema: () => {
         return {
           columns: [],
           api: '',
@@ -78,30 +78,30 @@
   const emit = defineEmits<{
     (e: 'submit', values: any): void
     (e: 'reset'): void
-    (e: 'register', methods: TableInstance): void
+    (e: 'register', methods: CrudInstance): void
   }>()
-  const tableSchemaRef = ref(props.tableSchema)
+  const crudSchemaRef = ref(props.crudSchema)
   const dialogFormRef = ref<any>(null)
   // 计算各种操作按钮配置
   const { toolbarActions, dropDownToolbarActions, tableActions, dropDownActions } = useAction(
-    tableSchemaRef.value,
+    crudSchemaRef.value,
     dialogFormRef,
-    props.tableMethods
+    props.crudMethods
   )
 
   const funApi = computed(() => {
-    if (props.tableSchema.api && typeof props.tableSchema.api === 'string') {
+    if (props.crudSchema.api && typeof props.crudSchema.api === 'string') {
       const fun = (params: any) => {
-        return request[props.tableSchema.requestMethod ?? 'post']({
-          url: props.tableSchema.api as string,
+        return request[props.crudSchema.requestMethod ?? 'post']({
+          url: props.crudSchema.api as string,
           params
         })
       }
       return fun
     }
-    return props.tableSchema.api as any
+    return props.crudSchema.api as any
   })
-  const [SearchBar, searchBarApi] = useSearchBar(tableSchemaRef.value.searchFormSchema || {})
+  const [SearchBar, searchBarApi] = useSearchBar(crudSchemaRef.value.searchFormSchema || {})
   const tableObject = useTable<any>({
     core: {
       apiFn: funApi.value,
@@ -109,7 +109,7 @@
         // 其他搜索参数
       },
       columnsFactory: () => {
-        const columns = tableSchemaRef.value.columns.map((column) => {
+        const columns = crudSchemaRef.value.columns.map((column) => {
           const c = { ...column }
           viewColumnFormatter(column)
           c.formatter = column.formatter
@@ -136,7 +136,7 @@
                 />
               )
             },
-            ...tableSchemaRef.value.tableActionColumn
+            ...crudSchemaRef.value.tableActionColumn
           })
         }
         return columns
@@ -166,21 +166,21 @@
   }
   // 删除
   const handleDelete = (row: any) => {
-    const rowKey = props.tableSchema.rowKey || 'id'
+    const rowKey = props.crudSchema.rowKey || 'id'
     const ids = row?.[rowKey]
       ? [row[rowKey]]
       : multipleSelection.value.map((item: any) => item[rowKey])
-    props.tableSchema.crudApi
+    props.crudSchema.crudApi
       ?.remove?.({
         [`${rowKey}s`]: ids
       })
       .then(() => {
-        ElMessage.success(`删除${props.tableSchema.dialogTitle}成功`)
+        ElMessage.success(`删除${props.crudSchema.dialogTitle}成功`)
         tableObject.refreshRemove()
       })
   }
   // 定义一些只读状态
-  const readonlyState = reactive<TableReadonlyState>({
+  const readonlyState = reactive<CrudReadonlyState>({
     selection: []
   })
   const multipleSelection = ref<any>([])
@@ -188,7 +188,7 @@
     multipleSelection.value = selection
     readonlyState.selection = selection
   }
-  const tableInstanceMethods: TableInstance = {
+  const crudInstanceMethods: CrudInstance = {
     async reload(params) {
       const values = await searchBarApi.getValues()
       return getData({
@@ -197,10 +197,10 @@
       })
     },
     // 设置组件状态（props）
-    setState(state: TableSchema) {
+    setState(state: CrudSchema) {
       return new Promise((resolve) => {
-        tableSchemaRef.value = {
-          ...tableSchemaRef.value,
+        crudSchemaRef.value = {
+          ...crudSchemaRef.value,
           ...state
         }
         nextTick(() => {
@@ -208,9 +208,9 @@
         })
       })
     },
-    getState(): Promise<TableSchema> {
+    getState(): Promise<CrudSchema> {
       return new Promise((resolve) => {
-        resolve(tableSchemaRef.value)
+        resolve(crudSchemaRef.value)
       })
     },
     getReadonlyState() {
@@ -227,7 +227,7 @@
     }
   }
   onMounted(() => {
-    emit('register', tableInstanceMethods)
+    emit('register', crudInstanceMethods)
   })
 </script>
 <style lang="scss" scoped></style>

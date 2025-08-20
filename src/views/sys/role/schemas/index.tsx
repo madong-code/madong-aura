@@ -1,8 +1,8 @@
 import { RoleService } from '@/api/sys/role'
-import { TableSchema } from '@/components/table'
+import { CrudSchema } from '@/components/crud'
 
-// 表格列配置
-export const tableSchema: TableSchema = {
+// crud配置
+export const crudSchema: CrudSchema = {
   // 接口地址
   api: RoleService.page,
   dialogTitle: '角色',

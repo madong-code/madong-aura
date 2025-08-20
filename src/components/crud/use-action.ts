@@ -1,108 +1,108 @@
 import { ActionItem } from '../table-action'
-import { TableMethods, TableSchema } from './types'
+import { CrudMethods, CrudSchema } from './types'
 
 export function useAction(
-  tableSchema: TableSchema,
+  crudSchema: CrudSchema,
   dialogFormRef: Ref<any>,
-  tableMethods: TableMethods
+  crudMethods: CrudMethods
 ) {
   // 左侧栏工具，默认有新增按钮
   const toolbarActions = computed(() => {
     const actions: ActionItem[] = []
-    if (tableSchema.useCrud === true && tableSchema.hasAdd !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
       actions.push({
-        label: tableSchema.addButtonText || '新增',
+        label: crudSchema.addButtonText || '新增',
         type: 'primary',
         icon: '&#xe83e;',
-        auth: tableSchema.addAuth,
+        auth: crudSchema.addAuth,
         dialogRef: dialogFormRef,
         dialogParams: {
           isUpdate: false,
-          getTableApi: () => tableMethods,
+          getCrudApi: () => crudMethods,
           type: 'add'
         }
       })
     }
-    actions.push(...(tableSchema.toolbarActions || []))
+    actions.push(...(crudSchema.toolbarActions || []))
     return actions
   })
   // 左侧栏工具-下拉菜单，默认有删除按钮
   const dropDownToolbarActions = computed(() => {
     const actions: ActionItem[] = []
-    if (tableSchema.useCrud === true && tableSchema.hasAdd !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
       actions.push({
         label: '批量删除',
         type: 'danger',
         icon: '&#xe783;',
         auth: 'sys:user:remove',
-        ifShow: () => tableMethods.getReadonlyState().selection.length > 0,
+        ifShow: () => crudMethods.getReadonlyState().selection.length > 0,
         confirm: {
           title: '提示',
           content: '确定批量删除吗？',
           ok() {
-            tableMethods.removeByApi({})
+            crudMethods.removeByApi({})
           }
         }
       })
     }
-    actions.push(...(tableSchema.dropDownToolbarActions || []))
+    actions.push(...(crudSchema.dropDownToolbarActions || []))
     return actions
   })
   // 行操作-默认有详情、编辑
   const tableActions = computed(() => {
     const actions: ActionItem[] = []
-    if (tableSchema.useCrud === true && tableSchema.hasView !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasView !== false) {
       actions.push({
-        label: tableSchema.viewButtonText || '详情',
+        label: crudSchema.viewButtonText || '详情',
         type: 'primary',
         link: true,
         size: 'small',
-        auth: tableSchema.viewAuth,
+        auth: crudSchema.viewAuth,
         dialogRef: dialogFormRef,
         dialogParams() {
           return {
-            getTableApi: () => tableMethods
+            getCrudApi: () => crudMethods
           }
         }
       })
     }
-    if (tableSchema.useCrud === true && tableSchema.hasEdit !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasEdit !== false) {
       actions.push({
-        label: tableSchema.editButtonText || '编辑',
+        label: crudSchema.editButtonText || '编辑',
         type: 'primary',
         link: true,
         size: 'small',
-        auth: tableSchema.editAuth,
+        auth: crudSchema.editAuth,
         dialogRef: dialogFormRef,
         dialogParams: {
           isUpdate: true,
           type: 'edit',
-          getTableApi: () => tableMethods
+          getCrudApi: () => crudMethods
         }
       })
     }
-    actions.push(...(tableSchema.tableActions || []))
+    actions.push(...(crudSchema.tableActions || []))
     return actions
   })
   const dropDownActions = computed(() => {
     const actions: ActionItem[] = []
-    if (tableSchema.useCrud === true && tableSchema.hasAdd !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
       actions.push({
-        label: tableSchema.removeButtonText || '删除',
+        label: crudSchema.removeButtonText || '删除',
         type: 'danger',
         icon: '&#xe783;',
         size: 'small',
-        auth: tableSchema.removeAuth,
+        auth: crudSchema.removeAuth,
         confirm: {
           title: '提示',
           content: '确定删除吗？',
           ok(record: any) {
-            tableMethods.removeByApi(record)
+            crudMethods.removeByApi(record)
           }
         }
       })
     }
-    actions.push(...(tableSchema.dropDownActions || []))
+    actions.push(...(crudSchema.dropDownActions || []))
     return actions
   })
   return {

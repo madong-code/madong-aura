@@ -1,7 +1,7 @@
-import { TableSchema } from '@/components/table'
+import { CrudSchema } from '@/components/crud'
 import { UserService } from '@/api/sys/user'
-// 表格列配置
-export const tableSchema: TableSchema = {
+// crud配置
+export const crudSchema: CrudSchema = {
   // 接口地址
   api: UserService.page,
   dialogTitle: '用户',

@@ -1,14 +1,13 @@
 <template>
   <div class="user-page art-full-height">
-    <BasicTable />
+    <BasicCrud />
   </div>
 </template>
 <script setup lang="tsx">
-  import { useTable } from '@/components/table'
-  import { tableSchema } from './schemas'
-  const [BasicTable] = useTable({
-    ...tableSchema,
-    columns: tableSchema.columns,
+  import { useCrud } from '@/components/crud'
+  import { crudSchema } from './schemas'
+  const [BasicCrud] = useCrud({
+    ...crudSchema,
     // hasAdd: true,
     // 左侧工具栏
     toolbarActions: [],

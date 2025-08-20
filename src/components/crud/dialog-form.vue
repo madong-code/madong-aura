@@ -9,19 +9,19 @@
   import { useDetailForm, useForm } from '@/components/form'
   import { useDialog } from '@/components/dialog'
   import { ElMessage } from 'element-plus'
-  import { TableMethods, TableSchema } from '@/components/table'
+  import { CrudMethods, CrudSchema } from '@/components/crud'
   const props = defineProps<{
-    tableSchema: TableSchema
+    crudSchema: CrudSchema
   }>()
   const record = ref<any>({})
   const updateFlag = ref(false)
   const formModel = reactive<any>({})
-  const tableApi = ref<TableMethods>()
+  const crudApi = ref<CrudMethods>()
   const viewType = ref('view')
-  const [BasicForm, formApi] = useForm(props.tableSchema.formSchema || {})
-  const [DetailForm] = useDetailForm(props.tableSchema.formSchema || {})
+  const [BasicForm, formApi] = useForm(props.crudSchema.formSchema || {})
+  const [DetailForm] = useDetailForm(props.crudSchema.formSchema || {})
   const dialogTitle = computed(() => {
-    return props.tableSchema.dialogTitle || '标题'
+    return props.crudSchema.dialogTitle || '标题'
   })
   const [Dialog, dialogApi] = useDialog({
     title: dialogTitle.value,
@@ -35,11 +35,11 @@
 
   const show = ({
     data,
-    getTableApi,
+    getCrudApi,
     type = 'view'
   }: {
     data: any
-    getTableApi: () => any
+    getCrudApi: () => any
     type?: 'add' | 'edit' | 'view'
   }) => {
     viewType.value = type
@@ -56,9 +56,9 @@
     }
     updateFlag.value = type === 'edit'
     record.value = data || {}
-    tableApi.value = getTableApi()
-    const detailApi = props.tableSchema.crudApi?.view
-    const rowKey = props.tableSchema.rowKey || 'id'
+    crudApi.value = getCrudApi()
+    const detailApi = props.crudSchema.crudApi?.view
+    const rowKey = props.crudSchema.rowKey || 'id'
     detailApi?.({
       [rowKey]: record.value[rowKey]
     }).then((res) => {
@@ -88,19 +88,19 @@
       .then(async () => {
         const values = await formApi.getValues()
         const submitApi = updateFlag.value
-          ? props.tableSchema.crudApi?.edit
-          : props.tableSchema.crudApi?.add
+          ? props.crudSchema.crudApi?.edit
+          : props.crudSchema.crudApi?.add
         submitApi?.(values).then(() => {
           ElMessage.success(
             updateFlag.value ? `修改${dialogTitle.value}成功` : `新增${dialogTitle.value}成功`
           )
           dialogApi.close()
           if (updateFlag.value) {
-            tableApi.value?.refreshUpdate()
+            crudApi.value?.refreshUpdate()
           } else {
-            tableApi.value?.refreshCreate()
+            crudApi.value?.refreshCreate()
           }
-          tableApi.value?.reload()
+          crudApi.value?.reload()
         })
       })
       .finally(() => {
