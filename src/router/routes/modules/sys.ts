@@ -73,6 +73,33 @@ export const routes: AppRouteRecord[] = [
             }
           ]
         }
+      },
+      {
+        path: '/sys/menu/index',
+        name: 'sys:menu',
+        component: '/sys/menu/index',
+        meta: {
+          title: '菜单管理',
+          keepAlive: true,
+          authList: [
+            {
+              title: '分页查询菜单列表',
+              authMark: 'sys:menu:tree'
+            },
+            {
+              title: '新增菜单',
+              authMark: 'sys:menu:save'
+            },
+            {
+              title: '编辑菜单',
+              authMark: 'sys:menu:update'
+            },
+            {
+              title: '删除菜单',
+              authMark: 'sys:menu:remove'
+            }
+          ]
+        }
       }
     ]
   }

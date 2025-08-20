@@ -7,10 +7,11 @@
 </template>
 
 <script setup lang="ts">
+  import { isString } from 'lodash-es'
   import { useSlots, computed } from 'vue'
 
   const props = defineProps<{
-    value: number | undefined
+    value: number | undefined | string
   }>()
 
   const emit = defineEmits<{
@@ -19,6 +20,9 @@
 
   const value = computed({
     get() {
+      if (isString(props.value)) {
+        return Number(props.value)
+      }
       return props.value
     },
     set(val) {
