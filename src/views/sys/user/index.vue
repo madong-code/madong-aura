@@ -1,46 +1,6 @@
 <template>
   <div class="user-page art-full-height">
-    <BasicTable>
-      <template #toolbar-actions>
-        <TableAction
-          :actions="[
-            {
-              label: '新增',
-              type: 'primary',
-              icon: '&#xe83e;',
-              auth: 'sys:user:save',
-              dialogRef: userFormRef,
-              dialogParams: {
-                isUpdate: false,
-                getTableApi: () => tableApi
-              }
-            }
-          ]"
-          :dropDownActions="[
-            {
-              label: '批量删除',
-              type: 'danger',
-              icon: '&#xe783;',
-              auth: 'sys:user:remove',
-              ifShow: () => selectionCount > 0,
-              confirm: {
-                title: '提示',
-                content: '确定批量删除吗？',
-                ok() {
-                  handleDelete({})
-                }
-              }
-            }
-          ]"
-          ><template #more>
-            <ElButton>
-              <template #icon><Icon class="icon-more" icon="&#xe6dd;" /></template>
-              更多操作</ElButton
-            >
-          </template></TableAction
-        >
-      </template>
-    </BasicTable>
+    <BasicTable />
     <UserForm ref="userFormRef" />
     <UserDetail ref="userDetailRef" />
   </div>
@@ -50,15 +10,43 @@
   import { tableSchema } from './schemas'
   import UserForm from './form.vue'
   import UserDetail from './detail.vue'
-  import { TableAction } from '@/components/table-action'
   import { UserService } from '@/api/sys/user'
   import { ElMessage } from 'element-plus'
-  import { Icon } from '@/components/icon'
   const userFormRef = ref()
   const userDetailRef = ref()
   const [BasicTable, tableApi] = useTable({
     ...tableSchema,
     columns: tableSchema.columns,
+    // 左侧栏工具
+    toolbarActions: [
+      {
+        label: '新增',
+        type: 'primary',
+        icon: '&#xe83e;',
+        auth: 'sys:user:save',
+        dialogRef: userFormRef,
+        dialogParams: {
+          isUpdate: false,
+          getTableApi: () => tableApi
+        }
+      }
+    ],
+    dropDownToolbarActions: [
+      {
+        label: '批量删除',
+        type: 'danger',
+        icon: '&#xe783;',
+        auth: 'sys:user:remove',
+        ifShow: () => selectionCount.value > 0,
+        confirm: {
+          title: '提示',
+          content: '确定批量删除吗？',
+          ok() {
+            handleDelete({})
+          }
+        }
+      }
+    ],
     // 表格行操作
     tableActions: [
       {

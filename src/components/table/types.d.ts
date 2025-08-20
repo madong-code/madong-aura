@@ -19,6 +19,10 @@ export interface TableSchema {
   dropDownActions?: ActionItem[]
   // 操作列配置
   tableActionColumn?: TableColumn
+  // 左侧栏工具配置
+  toolbarActions?: ActionItem[]
+  // 左侧栏-下拉菜单定义
+  dropDownToolbarActions?: ActionItem[]
 }
 // 表格列配置接口
 export interface TableColumn<T = any> {
@@ -81,7 +85,7 @@ export interface TableBaseMethods {
   // 获取art table实例
   getArtTableInstance: () => any
 }
-export interface TableInstance extends TableBaseMethods {}
+export type TableInstance = TableBaseMethods
 // 定义表格方法接口，提供更好的类型提示
 export interface TableMethods extends TableBaseMethods {
   // 获取表单实例

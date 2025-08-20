@@ -8,7 +8,19 @@
     <!-- 表格头部 -->
     <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
       <template #left>
-        <slot name="toolbar-actions"></slot>
+        <slot name="toolbar-actions">
+          <TableAction
+            :actions="tableSchemaRef.toolbarActions"
+            :drop-down-actions="tableSchemaRef.dropDownToolbarActions"
+          >
+            <template #more>
+              <ElButton>
+                <template #icon><Icon class="icon-more" icon="&#xe6dd;" /></template>
+                更多操作</ElButton
+              >
+            </template>
+          </TableAction>
+        </slot>
       </template>
       <template #right>
         <slot name="toolbar-tools"></slot>
