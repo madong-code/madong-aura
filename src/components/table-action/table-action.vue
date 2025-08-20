@@ -13,6 +13,7 @@
     ElSpace
   } from 'element-plus'
   import { useAuth } from '@/composables/useAuth'
+  import { isBoolean, isFunction } from 'lodash-es'
 
   const props = defineProps({
     record: {
@@ -52,12 +53,7 @@
     }
     return true
   }
-  const isBoolean = (val: any) => {
-    return typeof val === 'boolean'
-  }
-  const isFunction = <T extends (...args: any[]) => any>(value: unknown): value is T => {
-    return typeof value === 'function'
-  }
+
   const popconfirmRef = reactive<any>({})
   function isIfShow(action: ActionItem): boolean {
     const ifShow = action.ifShow
@@ -108,10 +104,12 @@
           : action.dialogParams
       const dialogRef = action.dialogRef
       action.onClick = () => {
-        ;(dialogRef.value || dialogRef).show({
-          data: props.record,
-          ...params
-        })
+        if (isFunction((dialogRef.value || dialogRef).show)) {
+          ;(dialogRef.value || dialogRef).show({
+            data: props.record,
+            ...params
+          })
+        }
       }
     }
     return action
@@ -220,13 +218,15 @@
     <ElDropdown v-if="getDropdownList.length > 0" trigger="hover" @command="handleCommand">
       <template #default>
         <div>
-          <slot name="more">
-            <ElButton link size="small" style="margin-left: 6px" type="primary">
-              <template #icon>
-                <Icon class="icon-more" icon="&#xe6dd;" />
-              </template>
-            </ElButton>
-          </slot>
+          <span style="margin-left: 6px">
+            <slot name="more">
+              <ElButton link size="small" type="primary">
+                <template #icon>
+                  <Icon class="icon-more" icon="&#xe6dd;" />
+                </template>
+              </ElButton>
+            </slot>
+          </span>
           <template v-for="(action, index) in getDropdownList" :key="index">
             <ElPopconfirm v-if="action.popConfirm" v-bind="getPopConfirmProps(action.popConfirm)">
               <template #reference>

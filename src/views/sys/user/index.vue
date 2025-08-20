@@ -16,7 +16,29 @@
               }
             }
           ]"
-        />
+          :dropDownActions="[
+            {
+              label: '批量删除',
+              type: 'danger',
+              icon: '&#xe783;',
+              auth: 'sys:user:remove',
+              ifShow: () => selectionCount > 0,
+              confirm: {
+                title: '提示',
+                content: '确定批量删除吗？',
+                ok() {
+                  handleDelete({})
+                }
+              }
+            }
+          ]"
+          ><template #more>
+            <ElButton>
+              <template #icon><Icon class="icon-more" icon="&#xe6dd;" /></template>
+              更多操作</ElButton
+            >
+          </template></TableAction
+        >
       </template>
     </BasicTable>
     <UserForm ref="userFormRef" />
@@ -31,6 +53,7 @@
   import { TableAction } from '@/components/table-action'
   import { UserService } from '@/api/sys/user'
   import { ElMessage } from 'element-plus'
+  import { Icon } from '@/components/icon'
   const userFormRef = ref()
   const userDetailRef = ref()
   const [BasicTable, tableApi] = useTable({
@@ -77,10 +100,14 @@
       }
     ]
   })
+  const selectionCount = computed(() => {
+    return tableApi.getReadonlyState()?.selection?.length || 0
+  })
   // 删除
   const handleDelete = (row: any) => {
+    const ids = row?.id ? [row.id] : tableApi.getRowSelection().map((item: any) => item.id)
     UserService.remove({
-      ids: [row.id]
+      ids: ids
     }).then(() => {
       ElMessage.success('删除用户成功')
       tableApi.refreshRemove()

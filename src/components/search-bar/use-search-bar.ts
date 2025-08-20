@@ -1,6 +1,15 @@
 import { FormSchema } from '../form'
 import SearchBar from './search-bar.vue'
 
+/**
+ *
+ * 防止未来重构影响
+ *    通过统一的 useTable 钩子封装，即使内部实现发生重构，外部调用方也不会受到影响
+ *    提供稳定的API接口，隔离底层实现细节的变化
+ *    顺便使用../form/components/**下的自定义控件，保持一form组件统一
+ * @param formSchema
+ * @returns
+ */
 export function useSearchBar(formSchema: FormSchema) {
   const formRef = ref<any>(null)
   const register = (formInstance: any) => {

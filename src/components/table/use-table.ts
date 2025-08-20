@@ -1,6 +1,13 @@
 import { TableMethods, TableSchema } from '../table'
 import Table from './table.vue'
-
+/**
+ *
+ * 防止未来重构影响
+ *    通过统一的 useTable 钩子封装，即使内部实现发生重构，外部调用方也不会受到影响
+ *    提供稳定的API接口，隔离底层实现细节的变化
+ * @param tableSchema
+ * @returns
+ */
 export function useTable(tableSchema: TableSchema) {
   const tableRef = ref<any>(null)
   const register = (tableInstance: any) => {
@@ -19,9 +26,16 @@ export function useTable(tableSchema: TableSchema) {
     getState() {
       return tableRef.value?.getState()
     },
+    getRowSelection() {
+      return tableRef.value?.getRowSelection()
+    },
     // 刷新表格数据，保留当前表单搜索条件
     reload(params?: Record<string, any>) {
       return tableRef.value?.reload(params)
+    },
+    // 获取只读状态信息
+    getReadonlyState() {
+      return tableRef.value?.getReadonlyState() || { selection: [] }
     },
     // 获取art表格实例，可通过该方法来操作原生的art-table组件
     // 个人建议，可以在该文件上包装一层再暴露给外部使用，如上述的reload方法一样

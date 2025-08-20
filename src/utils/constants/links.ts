@@ -9,7 +9,7 @@ export const WEB_LINKS = {
   BLOG: 'https://www.mldong.com',
 
   // 项目文档
-  DOCS: 'https://gitee.com/mldong/mldong-art-design',
+  DOCS: 'https://doc.mldong.com/art-design/',
 
   // 项目社区
   COMMUNITY: 'https://www.mldong.com/',
@@ -18,5 +18,5 @@ export const WEB_LINKS = {
   BILIBILI: 'https://space.bilibili.com/1395438398',
 
   // 项目介绍
-  INTRODUCE: 'https://gitee.com/mldong/mldong-art-design'
+  INTRODUCE: 'https://doc.mldong.com/art-design/'
 }

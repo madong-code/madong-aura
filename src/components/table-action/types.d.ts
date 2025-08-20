@@ -13,7 +13,7 @@ export interface PopConfirm {
 export interface ActionItem {
   type?: 'danger' | 'info' | 'primary' | 'success' | 'warning'
   link?: boolean
-  size?: 'large' | 'medium' | 'mini' | 'small'
+  size?: 'large' | 'default' | 'small'
   onClick?: Fn
   label?: string
   color?: 'error' | 'success' | 'warning'

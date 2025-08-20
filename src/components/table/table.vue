@@ -23,6 +23,7 @@
       :pagination="pagination"
       @pagination:size-change="handleSizeChange"
       @pagination:current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
     >
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName"></slot>
@@ -33,7 +34,7 @@
 <script setup lang="tsx">
   import { useTable } from '@/composables/useTable'
   import { useSearchBar } from '@/components/search-bar'
-  import { TableInstance, TableSchema } from './types'
+  import { TableInstance, TableReadonlyState, TableSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
   import { TableAction } from '../table-action'
@@ -136,6 +137,15 @@
     getData({})
     emit('reset')
   }
+  // 定义一些只读状态
+  const readonlyState = reactive<TableReadonlyState>({
+    selection: []
+  })
+  const multipleSelection = ref<any>([])
+  const handleSelectionChange = (selection: any) => {
+    multipleSelection.value = selection
+    readonlyState.selection = selection
+  }
   const tableInstanceMethods: TableInstance = {
     async reload(params) {
       const values = await searchBarApi.getValues()
@@ -161,8 +171,14 @@
         resolve(tableSchemaRef.value)
       })
     },
+    getReadonlyState() {
+      return readonlyState
+    },
     getArtTableInstance() {
       return tableObject
+    },
+    getRowSelection() {
+      return multipleSelection.value
     }
   }
   onMounted(() => {

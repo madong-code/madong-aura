@@ -1,6 +1,14 @@
 import Dialog from './dialog.vue'
 import { MyDialogInstance, MyDialogProps } from './types'
-
+/**
+ *
+ * 防止未来重构影响
+ *    通过统一的 useTable 钩子封装，即使内部实现发生重构，外部调用方也不会受到影响
+ *    提供稳定的API接口，隔离底层实现细节的变化
+ *    封装弹窗的逻辑，也便于业务中使用
+ * @param props
+ * @returns
+ */
 export function useDialog(props: MyDialogProps) {
   const dialogRef = ref<any>(null)
   const register = (dialogInstance: MyDialogInstance) => {

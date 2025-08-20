@@ -64,25 +64,28 @@ export interface TableColumn<T = any> {
   // 列回显组件属性
   componentProps?: Record<string, any>
 }
-export interface TableInstance {
+export interface TableReadonlyState {
+  selection: []
+}
+export interface TableBaseMethods {
   // 重新加载数据
   reload: (params?: Record<string, any>) => Promise<any>
   // 设置组件状态（props）
   setState: (state: TableSchema) => Promise<void>
   // 获取组件状态（props）
   getState: () => Promise<TableSchema>
+  // 获取勾选行信息
+  getRowSelection: () => []
+  // 获取只读状态信息
+  getReadonlyState: () => TableReadonlyState
+  // 获取art table实例
   getArtTableInstance: () => any
 }
+export interface TableInstance extends TableBaseMethods {}
 // 定义表格方法接口，提供更好的类型提示
-export interface TableMethods {
+export interface TableMethods extends TableBaseMethods {
   // 获取表单实例
   getTableRef(): any
-  // 设置组件状态（props）
-  setState(state: any): void
-  // 获取组件状态
-  getState(): any
-  // 刷新表格数据，保留当前表单搜索条件
-  reload(params?: Record<string, any>): void
   // 获取art表格实例，可通过该方法来操作原生的art-table组件
   getArtTableInstance(): any
   // 刷新策略
