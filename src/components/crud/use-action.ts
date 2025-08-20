@@ -13,7 +13,7 @@ export function useAction(
       actions.push({
         label: crudSchema.addButtonText || '新增',
         type: 'primary',
-        icon: '&#xe83e;',
+        icon: 'ant-design:plus-outlined',
         auth: crudSchema.addAuth,
         dialogRef: dialogFormRef,
         dialogParams: {
@@ -33,7 +33,7 @@ export function useAction(
       actions.push({
         label: '批量删除',
         type: 'danger',
-        icon: '&#xe783;',
+        icon: 'ant-design:delete-outlined',
         auth: 'sys:user:remove',
         ifShow: () => crudMethods.getReadonlyState().selection.length > 0,
         confirm: {
@@ -90,7 +90,7 @@ export function useAction(
       actions.push({
         label: crudSchema.removeButtonText || '删除',
         type: 'danger',
-        icon: '&#xe783;',
+        icon: 'ant-design:delete-outlined',
         size: 'small',
         auth: crudSchema.removeAuth,
         confirm: {
