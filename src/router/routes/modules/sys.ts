@@ -9,7 +9,7 @@ export const routes: AppRouteRecord[] = [
     meta: {
       order: 10,
       title: '系统设置',
-      icon: '&#xe7ae;'
+      icon: 'ant-design:setting-outlined'
     },
     children: [
       {
@@ -17,7 +17,8 @@ export const routes: AppRouteRecord[] = [
         name: 'examples:form',
         component: '/examples/form/index',
         meta: {
-          title: '表单示例'
+          title: '表单示例',
+          icon: 'ant-design:form-outlined'
         }
       },
       {
@@ -26,6 +27,7 @@ export const routes: AppRouteRecord[] = [
         component: '/sys/user/index',
         meta: {
           title: '用户管理',
+          icon: 'ant-design:user-outlined',
           keepAlive: true,
           authList: [
             {
@@ -53,6 +55,7 @@ export const routes: AppRouteRecord[] = [
         component: '/sys/role/index',
         meta: {
           title: '角色管理',
+          icon: 'ant-design:team-outlined',
           keepAlive: true,
           authList: [
             {
@@ -80,6 +83,7 @@ export const routes: AppRouteRecord[] = [
         component: '/sys/menu/index',
         meta: {
           title: '菜单管理',
+          icon: 'ant-design:menu-outlined',
           keepAlive: true,
           authList: [
             {

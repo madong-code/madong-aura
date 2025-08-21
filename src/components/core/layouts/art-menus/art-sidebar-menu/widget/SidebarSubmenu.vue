@@ -52,6 +52,7 @@
   import { formatMenuTitle } from '@/router/utils/utils'
   import { handleMenuJump } from '@/utils/navigation'
   import { useSettingStore } from '@/store/modules/setting'
+  import { Icon } from '@/components/icon'
 
   interface MenuTheme {
     iconColor?: string
@@ -177,12 +178,16 @@
       }
     },
     setup(props) {
-      return () =>
-        h('i', {
+      return () => {
+        if (props.icon?.includes(':')) {
+          return h(Icon, { icon: props.icon, class: 'menu-icon', color: props.color })
+        }
+        return h('i', {
           class: 'menu-icon iconfont-sys',
           style: props.color ? { color: props.color } : undefined,
           innerHTML: props.icon
         })
+      }
     }
   })
 </script>

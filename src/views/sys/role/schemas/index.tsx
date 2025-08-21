@@ -103,7 +103,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           clearable: true,
           code: 'yes_no',
-          placeholder: '请选择',
+          placeholder: '请选择是否启用',
           renderType: 'Select'
         },
         colSpan: 6

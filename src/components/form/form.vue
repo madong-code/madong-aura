@@ -223,7 +223,11 @@
       }
     }
     // 合并属性，如果未提供placeholder则自动生成
-    const text = item.component.toLowerCase().includes('select') ? '请选择' : '请输入'
+    const text =
+      item.component.toLowerCase().includes('select') ||
+      item.component.toLowerCase().includes('dict')
+        ? '请选择'
+        : '请输入'
     return {
       ...componentProps,
       placeholder: componentProps.placeholder || `${text}${item.label}`
