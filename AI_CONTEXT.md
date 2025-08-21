@@ -3,7 +3,8 @@
 ### 1. 目录结构模板
 
 ```
-src/views/{模块名}/
+src/api/{模块名}/{实体文件名}.ts
+src/views/{模块名}/实体文件名
 ├── index.vue                 # 页面入口文件
 ├── schemas/
 │   └── index.tsx             # CRUD 配置定义
