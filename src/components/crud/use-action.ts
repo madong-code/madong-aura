@@ -56,7 +56,6 @@ export function useAction(
         label: crudSchema.viewButtonText || '详情',
         type: 'primary',
         link: true,
-        size: 'small',
         auth: crudSchema.viewAuth,
         dialogRef: dialogFormRef,
         dialogParams() {
@@ -71,7 +70,6 @@ export function useAction(
         label: crudSchema.editButtonText || '编辑',
         type: 'primary',
         link: true,
-        size: 'small',
         auth: crudSchema.editAuth,
         dialogRef: dialogFormRef,
         dialogParams: {

@@ -27,7 +27,7 @@ export const routes: AppRouteRecord[] = [
         component: '/sys/user/index',
         meta: {
           title: '用户管理',
-          icon: 'ant-design:user-outlined',
+          icon: 'ant-design:form-outlined',
           keepAlive: true,
           authList: [
             {

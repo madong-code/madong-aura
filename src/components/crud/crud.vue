@@ -12,7 +12,9 @@
           <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
             <template #more>
               <ElButton>
-                <template #icon><Icon class="icon-more" icon="&#xe6dd;" /></template>
+                <template #icon
+                  ><Icon class="icon-more" icon="ant-design:down-outlined"
+                /></template>
                 更多操作</ElButton
               >
             </template>

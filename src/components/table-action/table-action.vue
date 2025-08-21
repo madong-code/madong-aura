@@ -220,9 +220,9 @@
         <div>
           <span style="margin-left: 6px">
             <slot name="more">
-              <ElButton link size="small" type="primary">
+              <ElButton link type="primary">
                 <template #icon>
-                  <Icon class="icon-more" icon="ant-design:more-outlined" />
+                  <Icon class="icon-more" icon="ant-design:bars-outlined" />
                 </template>
               </ElButton>
             </slot>
@@ -240,7 +240,7 @@
         <ElDropdownMenu>
           <ElDropdownItem v-for="(action, index) in getDropdownList" :key="index" :command="index">
             <Icon v-if="action.icon" :icon="action.icon" />
-            {{ action.label }}
+            <span style="margin-left: 8px">{{ action.label }}</span>
           </ElDropdownItem>
         </ElDropdownMenu>
       </template>
