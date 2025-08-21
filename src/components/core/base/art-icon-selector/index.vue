@@ -17,6 +17,7 @@
           v-html="selectValue"
           v-show="props.iconType === IconTypeEnum.UNICODE"
         ></i>
+        <Icon v-show="selectValue?.includes(':')" :icon="selectValue" />
       </div>
       <div class="text"> {{ props.text }} </div>
       <div class="arrow">
@@ -26,22 +27,61 @@
     </div>
 
     <el-dialog title="选择图标" width="40%" v-model="visible" align-center>
-      <el-scrollbar height="400px">
-        <ul class="icons-list" v-show="activeName === 'icons'">
-          <li v-for="icon in iconsList" :key="icon.className" @click="selectorIcon(icon)">
-            <i
-              :class="`iconfont-sys ${icon.className}`"
-              v-show="iconType === IconTypeEnum.CLASS_NAME"
-            ></i>
-            <i
-              class="iconfont-sys"
-              v-html="icon.unicode"
-              v-show="iconType === IconTypeEnum.UNICODE"
-            ></i>
-          </li>
-        </ul>
-      </el-scrollbar>
-
+      <el-tabs v-model="activeTab">
+        <el-tab-pane v-for="prefix in iconifyPrefixs" :key="prefix" :label="prefix" :name="prefix">
+          <el-scrollbar height="400px">
+            <el-input v-model="searchText" placeholder="请输入图标名称"></el-input>
+            <ul class="icons-list" style="margin-top: 10px">
+              <li
+                v-for="icon in paginatedIconifyList"
+                :key="icon"
+                @click="selectorIconifyIcon(icon)"
+              >
+                <i class="iconfont-sys">
+                  <Icon :icon="icon" />
+                </i>
+              </li>
+            </ul>
+            <el-pagination
+              v-if="filteredIconifyList.length > iconifyPageSize"
+              layout="prev, pager, next"
+              :total="filteredIconifyList.length"
+              :page-size="iconifyPageSize"
+              v-model:current-page="iconifyCurrentPage"
+              size="small"
+              style="margin-top: 10px; justify-content: center"
+            />
+          </el-scrollbar>
+        </el-tab-pane>
+        <el-tab-pane label="Svg图标" name="svg">
+          <el-scrollbar height="400px">
+            <ul class="icons-list">
+              <li v-for="icon in svgList" :key="icon" @click="selectorIconifyIcon(icon)">
+                <i class="iconfont-sys">
+                  <Icon :icon="icon" />
+                </i>
+              </li>
+            </ul>
+          </el-scrollbar>
+        </el-tab-pane>
+        <el-tab-pane label="原内置图标" name="icons">
+          <el-scrollbar height="400px">
+            <ul class="icons-list" v-show="activeName === 'icons'">
+              <li v-for="icon in iconsList" :key="icon.className" @click="selectorIcon(icon)">
+                <i
+                  :class="`iconfont-sys ${icon.className}`"
+                  v-show="iconType === IconTypeEnum.CLASS_NAME"
+                ></i>
+                <i
+                  class="iconfont-sys"
+                  v-html="icon.unicode"
+                  v-show="iconType === IconTypeEnum.UNICODE"
+                ></i>
+              </li>
+            </ul>
+          </el-scrollbar>
+        </el-tab-pane>
+      </el-tabs>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="visible = false">取 消</el-button>
@@ -55,9 +95,68 @@
 <script setup lang="ts">
   import { IconTypeEnum } from '@/enums/appEnum'
   import { extractIconClasses, type IconfontType } from '@/utils/constants'
+  import { Icon } from '@/components/icon'
+  import { listIcons } from '@iconify/vue'
+  import { fetchIconsData } from './icons'
 
   defineOptions({ name: 'ArtIconSelector' })
+  const searchText = ref('')
+  const activeTab = ref('ant-design')
+  const iconifyCurrentPage = ref(1)
+  const iconifyPageSize = ref(60)
 
+  const svgList = computed(() => {
+    return listIcons('', 'svg')
+  })
+  const iconifyMap = reactive<any>({})
+  const iconifyPrefixs = import.meta.env.VITE_APP_ICONIFY_PREFIX?.split(',') || []
+  const iconifyList = computed(() => {
+    return iconifyMap[activeTab.value]
+  })
+  onMounted(() => {
+    // 离线模式下，已存缓存了所有图标
+    if (import.meta.env.VITE_APP_ICON_OFFLINE === 'true') {
+      iconifyPrefixs.forEach((prefix: any) => {
+        const icons = listIcons('', prefix)
+        iconifyMap[prefix] = icons
+      })
+    } else {
+      // 在线模式下，根据当前激活的tab加载图标
+      if (iconifyPrefixs.includes(activeTab.value)) {
+        fetchIconsData(activeTab.value).then((res) => {
+          iconifyMap[activeTab.value] = res
+        })
+      }
+    }
+  })
+  watchDebounced(
+    () => activeTab.value,
+    () => {
+      // 在线模式下，根据当前激活的tab加载图标
+      if (import.meta.env.VITE_APP_ICON_OFFLINE === 'false') {
+        if (iconifyPrefixs.includes(activeTab.value)) {
+          fetchIconsData(activeTab.value).then((res) => {
+            iconifyMap[activeTab.value] = res
+          })
+        }
+      }
+    }
+  )
+
+  // 过滤后的图标列表（搜索功能）
+  const filteredIconifyList = computed<string[]>(() => {
+    if (!searchText.value) {
+      return iconifyList.value || []
+    }
+    return (iconifyList.value || []).filter((icon: any) => icon.includes(searchText.value))
+  })
+
+  // 分页后的图标列表
+  const paginatedIconifyList = computed<string[]>(() => {
+    const start = (iconifyCurrentPage.value - 1) * iconifyPageSize.value
+    const end = start + iconifyPageSize.value
+    return filteredIconifyList.value.slice(start, end)
+  })
   // 组件大小类型
   type ComponentSize = 'large' | 'default' | 'small'
 
@@ -113,6 +212,11 @@
     { immediate: true }
   )
 
+  // 当搜索条件变化时，重置到第一页
+  watch(searchText, () => {
+    iconifyCurrentPage.value = 1
+  })
+
   // 选择图标
   const selectorIcon = (icon: IconfontType): void => {
     const iconValue =
@@ -125,11 +229,23 @@
     emits('update:modelValue', iconValue)
     emits('getIcon', iconValue)
   }
+  // 选择图标
+  const selectorIconifyIcon = (icon: string): void => {
+    selectValue.value = icon
+    visible.value = false
+
+    // 发射 v-model 更新事件和自定义事件
+    emits('update:modelValue', icon)
+    emits('getIcon', icon)
+  }
 
   // 处理点击事件
   const handleClick = (): void => {
     if (!props.disabled) {
       visible.value = true
+      // 重置分页和搜索条件
+      iconifyCurrentPage.value = 1
+      searchText.value = ''
     }
   }
 
