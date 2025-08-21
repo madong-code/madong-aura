@@ -6,6 +6,7 @@
     :value-field="valueField"
     :label-field="labelField"
     :children-field="childrenField"
+    :teleported="$attrs.teleported ?? false"
   />
 </template>
 <script setup lang="ts">

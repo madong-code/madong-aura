@@ -138,7 +138,7 @@ export const crudSchema: CrudSchema = {
   // 内置弹窗配置
   dialogProps: {
     width: '60%',
-    dialogType: 'dialog'
+    dialogType: 'drawer'
   },
   // crud表单配置
   formSchema: {
