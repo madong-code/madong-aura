@@ -27,6 +27,7 @@
     title: dialogTitle.value,
     // dialogType: 'drawer',
     destroyOnClose: true,
+    draggable: true,
     modal: true,
     onConfirm: () => {
       handleSubmit()

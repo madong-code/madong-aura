@@ -35,6 +35,8 @@
       @pagination:size-change="handleSizeChange"
       @pagination:current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
+      :stripe="true"
+      v-bind="{ ...$attrs }"
     >
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName"></slot>
@@ -127,7 +129,8 @@
           columns.push({
             prop: '__ACTION__',
             label: '操作',
-            width: 120,
+            width: 150,
+            align: 'center',
             fixed: 'right', // 固定列
             formatter: (row: unknown) => {
               return (

@@ -21,7 +21,7 @@ export interface CrudSchema {
   // 操作列-下拉菜单定义
   dropDownActions?: ActionItem[]
   // 操作列配置
-  tableActionColumn?: TableColumn
+  tableActionColumn?: CrudColumn
   // 左侧栏工具配置
   toolbarActions?: ActionItem[]
   // 左侧栏-下拉菜单定义

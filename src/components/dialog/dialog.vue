@@ -14,6 +14,7 @@
     :size="dialogPropsRef.width ?? '40%'"
     :modal="dialogPropsRef.modal ?? true"
     :append-to-body="true"
+    :draggable="dialogPropsRef.draggable ?? true"
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="el-dialog__header-inner">
@@ -67,7 +68,8 @@
     showConfirmButton: true,
     showCancelButton: true,
     footer: true,
-    dialogType: 'dialog'
+    dialogType: 'dialog',
+    draggable: false
   })
 
   const emit = defineEmits<DialogEmits>()

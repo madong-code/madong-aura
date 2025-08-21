@@ -17,6 +17,8 @@ export type MyDialogProps = {
   showCancelButton?: boolean
   // 显示底部
   footer?: boolean
+  // 拖拽
+  draggable?: boolean
   onConfirm?: () => void
   onCancel?: () => void
   // 弹窗类型
