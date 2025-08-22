@@ -5,6 +5,7 @@
       <slot name="left"></slot>
     </div>
     <div class="right">
+      <slot name="tools"></slot>
       <div v-if="shouldShow('refresh')" class="btn" @click="refresh">
         <i class="iconfont-sys">&#xe614;</i>
       </div>

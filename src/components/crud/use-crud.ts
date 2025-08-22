@@ -44,7 +44,7 @@ export function useCrud(crudSchema: CrudSchema) {
     // 获取art表格实例，可通过该方法来操作原生的art-table组件
     // 个人建议，可以在该文件上包装一层再暴露给外部使用，如上述的reload方法一样
     getArtTableInstance() {
-      return crudRef.value?.getArtCrudInstance()
+      return crudRef.value?.getArtTableInstance()
     },
     // 刷新策略
     /** 全量刷新：清空所有缓存，重新获取数据（适用于手动刷新按钮） */

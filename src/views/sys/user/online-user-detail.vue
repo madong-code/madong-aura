@@ -152,12 +152,6 @@
     // 表格行操作-下拉菜单
     dropDownActions: []
   })
-  const requestData = () => {
-    UserService.onlineUserList({}).then((res) => {
-      dataSource.value = res
-      crudApi.reload()
-    })
-  }
   const handleDelete = (record: any, type: string) => {
     const ids: any = []
     if (record && record.id) {
@@ -176,10 +170,6 @@
       crudApi.refreshRemove()
     })
   }
-
-  onMounted(() => {
-    requestData()
-  })
   const [Dialog, dialogApi] = useDialog({
     title: '在线用户详情',
     footer: false

@@ -70,12 +70,14 @@
   }
 
   const wrapConfirm = (action: ActionItem) => {
+    const newAction = { ...action }
+
     if (action.confirm) {
       // 重写点击事件
-      action.onClick = () => {
+      newAction.onClick = () => {
         const title = action.confirm.title || '提示'
         const content = action.confirm.content || '确定要执行此操作吗？'
-        const options = action.confirm
+        const options = { ...action.confirm }
         if (!options.type) {
           options.type = 'warning'
         }
@@ -103,7 +105,7 @@
           ? action.dialogParams(props.record || {})
           : action.dialogParams
       const dialogRef = action.dialogRef
-      action.onClick = () => {
+      newAction.onClick = () => {
         if (isFunction((dialogRef.value || dialogRef).show)) {
           ;(dialogRef.value || dialogRef).show({
             data: props.record,
@@ -112,23 +114,27 @@
         }
       }
     }
-    if (action.dynamicProps && isFunction(action.dynamicProps)) {
-      return { ...action, ...action.dynamicProps(props.record || {}) }
-    }
-    return action
+    return newAction
   }
+
   const getActions = computed(() => {
     return (toRaw(props.actions) || [])
       .filter((action) => {
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
       .map((action) => {
-        action = wrapConfirm(action)
-        const { popConfirm } = action
-        const icon = action.icon ? renderIcon(action.icon) : undefined
+        let processedAction = wrapConfirm(action)
+        if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {
+          processedAction = {
+            ...processedAction,
+            ...processedAction.dynamicProps(props.record || {})
+          }
+        }
+        const { popConfirm } = processedAction
+        const icon = processedAction.icon ? renderIcon(processedAction.icon) : undefined
         return {
           // getPopupContainer: document.body,
-          ...action,
+          ...processedAction,
           ...popConfirm,
           icon,
           onConfirm: popConfirm?.confirm,
@@ -137,16 +143,23 @@
         }
       })
   })
+
   const getDropdownList = computed((): any[] => {
     return (toRaw(props.dropDownActions) || [])
       .filter((action) => {
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
       .map((action, index) => {
-        action = wrapConfirm(action)
-        const { label, popConfirm } = action
+        let processedAction = wrapConfirm(action)
+        if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {
+          processedAction = {
+            ...processedAction,
+            ...processedAction.dynamicProps(props.record || {})
+          }
+        }
+        const { label, popConfirm } = processedAction
         return {
-          ...action,
+          ...processedAction,
           ...popConfirm,
           onConfirm: popConfirm?.confirm,
           onCancel: popConfirm?.cancel,
@@ -155,8 +168,9 @@
         }
       })
   })
+
   const getPopConfirmProps = (attrs: PopConfirm) => {
-    const originAttrs: any = attrs
+    const originAttrs: any = { ...attrs }
     delete originAttrs.icon
     if (attrs.confirm && isFunction(attrs.confirm)) {
       const confirm = attrs.confirm
@@ -174,19 +188,19 @@
     }
     return originAttrs
   }
+
   const getButtonProps = (action: ActionItem): any => {
     const onClick = action.onClick
+    const res: any = { ...action }
     if (onClick) {
-      action.onClick = (e: Event) => {
+      res.onClick = (e: Event) => {
         onClick(e, props.record)
       }
     }
-    const res = {
-      ...action,
-      type: action.type || 'primary'
-    }
+    res.type = action.type || 'primary'
     return res
   }
+
   const handleCommand = (index: number) => {
     const action = getDropdownList.value[index]
     if (action.onClick && isFunction(action.onClick)) {
@@ -196,6 +210,7 @@
       currentPopconfirmRef?.click(action, props.record)
     }
   }
+
   const handleRef = (e: any, index: number) => {
     popconfirmRef[index.toString()] = e
   }

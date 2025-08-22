@@ -10,6 +10,7 @@ export interface CrudSchema {
   requestMethod?: 'get' | 'post'
   // 是否立即加载数据
   immediate?: boolean
+  data?: any
   // 右侧工具栏
   toolbarConfig?: {
     // 是否显示刷新按钮
@@ -22,9 +23,11 @@ export interface CrudSchema {
     columns?: boolean
     // 是否显示列设置按钮
     settings?: boolean
+    // 表格右上工具栏，在左侧追加
+    tools?: ActionItem[]
   }
   // 列定义
-  columns: CrudColumn[]
+  columns?: CrudColumn[]
   // 是否显示搜索表单
   useSearchForm?: boolean
   // 搜索表单配置

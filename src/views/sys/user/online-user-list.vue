@@ -38,13 +38,20 @@
   }
   const [BasicCrud, crudApi] = useCrud({
     useCrud: false,
-    api: async (params: any) => {
-      return await handlePage(params)
+    api: (params: any) => {
+      return handlePage(params)
     },
     immediate: false,
     toolbarConfig: {
       // 禁用表格右上角工具栏刷新按钮
-      refresh: false
+      refresh: false,
+      tools: [
+        // 添加自定义按钮
+        {
+          auth: 'refresh',
+          icon: '&#xe614;'
+        }
+      ]
     },
     searchFormSchema: {
       labelWidth: '120px',
@@ -162,7 +169,7 @@
           title: '提示',
           content: '确定强制注销吗？',
           ok: (row: any) => {
-            handleDelete(row, 'kickoutByLoginId')
+            handleDelete(row, 'logoutByLoginId')
           }
         },
         dynamicProps(row) {
@@ -170,7 +177,7 @@
             disabled: row.isCurrentUser || row.superAdmin
           }
         },
-        auth: 'sys:user:kickoutByLoginId'
+        auth: 'sys:user:logoutByLoginId'
       }
     ],
     // 表格行操作-下拉菜单

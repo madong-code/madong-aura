@@ -1,6 +1,5 @@
-import type { VNode } from 'vue'
-
 import { TooltipProps } from 'element-plus'
+import { VNode } from 'vue'
 
 export interface PopConfirm {
   title: string
