@@ -6,7 +6,7 @@
   />
   <ElCard class="art-table-card" shadow="never">
     <!-- 表格头部 -->
-    <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData">
+    <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData" :layout="headerLayout">
       <template #left>
         <slot name="toolbar-actions">
           <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
@@ -83,6 +83,7 @@
     (e: 'submit', values: any): void
     (e: 'reset'): void
     (e: 'register', methods: CrudInstance): void
+    (e: 'toolbarToolClick', code: string): void
   }>()
   const crudSchemaRef = ref(props.crudSchema)
   const dialogFormRef = ref<any>(null)
@@ -92,7 +93,14 @@
     dialogFormRef,
     props.crudMethods
   )
+  const headerLayout = computed(() => {
+    const defaultLayout = ['refresh', 'size', 'fullscreen', 'columns', 'settings'] as const
+    const toolbarConfig = crudSchemaRef.value.toolbarConfig || {}
+    // 过滤掉被禁用的选项
+    const layout = defaultLayout.filter((item) => toolbarConfig[item] !== false)
 
+    return layout.join(',')
+  })
   const funApi = computed(() => {
     if (props.crudSchema.api && typeof props.crudSchema.api === 'string') {
       const fun = (params: any) => {
@@ -109,6 +117,7 @@
   const tableObject = useTable<any>({
     core: {
       apiFn: funApi.value,
+      immediate: crudSchemaRef.value.immediate ?? true,
       apiParams: {
         // 其他搜索参数
       },

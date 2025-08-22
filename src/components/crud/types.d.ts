@@ -8,6 +8,21 @@ export interface CrudSchema {
   api?: ((params: any) => Promise<any>) | string
   // 请求方法
   requestMethod?: 'get' | 'post'
+  // 是否立即加载数据
+  immediate?: boolean
+  // 右侧工具栏
+  toolbarConfig?: {
+    // 是否显示刷新按钮
+    refresh?: boolean
+    // 是否显示大小按钮
+    size?: boolean
+    // 是否显示全屏按钮
+    fullscreen?: boolean
+    // 是否显示列设置按钮
+    columns?: boolean
+    // 是否显示列设置按钮
+    settings?: boolean
+  }
   // 列定义
   columns: CrudColumn[]
   // 是否显示搜索表单

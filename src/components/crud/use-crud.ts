@@ -1,5 +1,5 @@
 import { CrudMethods, CrudSchema } from '.'
-import Table from './crud.vue'
+import Crud from './crud.vue'
 /**
  *
  * 防止未来重构影响
@@ -70,11 +70,11 @@ export function useCrud(crudSchema: CrudSchema) {
   }
 
   // 创建表单组件的配置
-  const TableComponent = defineComponent({
+  const CrudComponent = defineComponent({
     setup(_, { attrs, slots }) {
       return () =>
         h(
-          Table,
+          Crud,
           {
             ...attrs,
             crudSchema: crudSchema,
@@ -86,5 +86,5 @@ export function useCrud(crudSchema: CrudSchema) {
     }
   })
 
-  return [TableComponent, crudMethods] as const
+  return [CrudComponent, crudMethods] as const
 }

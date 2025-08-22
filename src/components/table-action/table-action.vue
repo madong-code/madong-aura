@@ -100,7 +100,7 @@
     if (action.dialogRef) {
       const params =
         typeof action.dialogParams === 'function'
-          ? action.dialogParams(props.record)
+          ? action.dialogParams(props.record || {})
           : action.dialogParams
       const dialogRef = action.dialogRef
       action.onClick = () => {
@@ -111,6 +111,9 @@
           })
         }
       }
+    }
+    if (action.dynamicProps && isFunction(action.dynamicProps)) {
+      return { ...action, ...action.dynamicProps(props.record || {}) }
     }
     return action
   }

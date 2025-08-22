@@ -31,5 +31,7 @@ export interface ActionItem {
   // 弹窗组件ref,如果存在，则默认调用其show方法
   dialogRef?: Ref<any>
   // 弹窗组件娄据参数
-  dialogParams?: Record<string, any> | ((action: ActionItem) => Record<string, any>)
+  dialogParams?: Record<string, any> | ((record: Record<string, any>) => Record<string, any>)
+  // action的动态配置
+  dynamicProps?: (record: Record<string, any>) => ActionItem
 }

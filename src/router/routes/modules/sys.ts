@@ -27,7 +27,7 @@ export const routes: AppRouteRecord[] = [
         component: '/sys/user/index',
         meta: {
           title: '用户管理',
-          icon: 'ant-design:form-outlined',
+          icon: 'ant-design:user-outlined',
           keepAlive: true,
           authList: [
             {
@@ -45,6 +45,38 @@ export const routes: AppRouteRecord[] = [
             {
               title: '删除用户',
               authMark: 'sys:user:remove'
+            }
+          ]
+        }
+      },
+      {
+        path: '/sys/user/online-user-list',
+        name: 'sys:onlineUserList',
+        component: '/sys/user/online-user-list',
+        meta: {
+          title: '在用用户',
+          icon: 'ant-design:cloud-server-outlined',
+          keepAlive: true,
+          authList: [
+            {
+              title: '在线用户详情',
+              authMark: 'btn:onlineUser:detail'
+            },
+            {
+              title: '强制注销用户',
+              authMark: 'sys:user:logoutByLoginId'
+            },
+            {
+              title: '将用户踢下线',
+              authMark: 'sys:user:kickoutByLoginId'
+            },
+            {
+              title: '强制注销Token凭证',
+              authMark: 'sys:user:logoutByTokenValue'
+            },
+            {
+              title: '将Token凭证踢下线',
+              authMark: 'sys:user:kickoutByTokenValue'
             }
           ]
         }

@@ -36,4 +36,42 @@ export class UserService {
       params
     })
   }
+  // 根据登录ID踢出用户
+  static kickoutByLoginId(params: any) {
+    return request.post({
+      url: '/sys/user/kickoutByLoginId',
+      params
+    })
+  }
+
+  // 根据登录ID登出用户
+  static logoutByLoginId(params: any) {
+    return request.post({
+      url: '/sys/user/logoutByLoginId',
+      params
+    })
+  }
+  // 根据登录token踢出用户
+  static kickoutByTokenValue(params: any) {
+    return request.post({
+      url: '/sys/user/kickoutByTokenValue',
+      params
+    })
+  }
+
+  // 根据登录token登出用户
+  static logoutByTokenValue(params: any) {
+    return request.post({
+      url: '/sys/user/logoutByTokenValue',
+      params
+    })
+  }
+
+  // 在线用户列表
+  static onlineUserList(params: any) {
+    return request.post({
+      url: '/sys/user/onlineUserList',
+      params
+    })
+  }
 }
