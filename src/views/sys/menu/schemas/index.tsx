@@ -102,43 +102,8 @@ export const crudSchema: CrudSchema = {
       }
     }
   ],
-  // 搜索表单定义
-  searchFormSchema: {
-    schema: [
-      {
-        prop: 'm_LIKE_name',
-        label: '菜单名称',
-        component: 'Input',
-        componentProps: {
-          clearable: true,
-          placeholder: '请输入菜单名称'
-        },
-        colSpan: 6
-      },
-      {
-        prop: 'm_LIKE_code',
-        label: '唯一编码',
-        component: 'Input',
-        componentProps: {
-          clearable: true,
-          placeholder: '请输入唯一编码'
-        },
-        colSpan: 6
-      },
-      {
-        prop: 'm_EQ_enabled',
-        label: '是否启用',
-        component: 'ApiDict',
-        componentProps: {
-          clearable: true,
-          code: 'yes_no',
-          placeholder: '请选择是否启用',
-          renderType: 'Select'
-        },
-        colSpan: 6
-      }
-    ]
-  },
+  // 树型是全量数据，不需要搜索
+  useSearchForm: false,
   // 内置弹窗配置
   dialogProps: {
     width: '60%',

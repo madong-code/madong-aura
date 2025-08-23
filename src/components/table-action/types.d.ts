@@ -10,12 +10,12 @@ export interface PopConfirm {
   icon?: string
 }
 export interface ActionItem {
-  type?: 'danger' | 'info' | 'primary' | 'success' | 'warning'
+  type?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
   link?: boolean
   size?: 'large' | 'default' | 'small'
   onClick?: Fn
   label?: string
-  color?: 'error' | 'success' | 'warning'
+  color?: string
   icon?: string | VNode
   popConfirm?: PopConfirm
   disabled?: boolean

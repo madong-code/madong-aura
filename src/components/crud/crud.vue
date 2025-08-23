@@ -43,7 +43,7 @@
       :loading="loading"
       :data="crudSchemaRef.data ?? tableData"
       :columns="columns"
-      :pagination="pagination"
+      :pagination="crudSchemaRef.tree ? undefined : pagination"
       @pagination:size-change="handleSizeChange"
       @pagination:current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"

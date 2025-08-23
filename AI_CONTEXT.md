@@ -256,6 +256,8 @@ export const crudSchema: CrudSchema = {
 export const crudSchema: CrudSchema = {
   // 使用 tree 接口而不是 page 接口
   api: {EntityName}Service.tree,
+  // 树型是全量数据，不需要搜索
+  useSearchForm: false,
   // 树形结构配置
   tree: {
     id: 'id',       // 树形节点唯一标识字段名，默认为 'id'
