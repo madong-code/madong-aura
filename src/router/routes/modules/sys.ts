@@ -136,6 +136,34 @@ export const routes: AppRouteRecord[] = [
             }
           ]
         }
+      },
+      {
+        path: '/sys/post/index',
+        name: 'sys:post',
+        component: '/sys/post/index',
+        meta: {
+          title: '岗位管理',
+          icon: 'ant-design:share-alt-outlined',
+          keepAlive: true,
+          authList: [
+            {
+              title: '分页查询岗位列表',
+              authMark: 'sys:post:page'
+            },
+            {
+              title: '新增岗位',
+              authMark: 'sys:post:save'
+            },
+            {
+              title: '编辑岗位',
+              authMark: 'sys:post:update'
+            },
+            {
+              title: '删除岗位',
+              authMark: 'sys:post:remove'
+            }
+          ]
+        }
       }
     ]
   }
