@@ -74,4 +74,11 @@ export class UserService {
       params
     })
   }
+  // 授权角色
+  static grantRole(params: any) {
+    return request.post({
+      url: '/sys/user/grantRole',
+      params
+    })
+  }
 }

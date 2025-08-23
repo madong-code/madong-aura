@@ -9,7 +9,7 @@
   import { crudSchema } from './schemas'
   import GrantRole from './grant-role.vue'
   const grantRoleRef = ref()
-  const [BasicCrud] = useCrud({
+  const [BasicCrud, crudApi] = useCrud({
     ...crudSchema,
     // hasAdd: true,
     // 左侧工具栏
@@ -25,10 +25,12 @@
         icon: 'ant-design:team-outlined',
         type: 'primary',
         link: true,
-        dialogRef: grantRoleRef
-        // dialogParams() {
-        //   return {}
-        // }
+        dialogRef: grantRoleRef,
+        dialogParams() {
+          return {
+            getCrudApi: () => crudApi
+          }
+        }
       }
     ]
   })
