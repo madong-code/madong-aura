@@ -63,7 +63,10 @@
     detailApi?.({
       [rowKey]: record.value[rowKey]
     }).then((res) => {
-      record.value = res
+      record.value = {
+        ...record.value,
+        ...res
+      }
     })
     dialogApi.open()
     const viewButtonText = props.crudSchema.viewButtonText || '详情'

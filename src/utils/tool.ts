@@ -37,3 +37,46 @@ export const getRelativeTime = (dateString: string): string => {
   }
   return `${diffSeconds}秒${suffix}`
 }
+
+/**
+ * 根据指定ID获取树形结构中该节点及其所有子节点的ID
+ * @param data 树形数据数组
+ * @param id 当前节点ID
+ * @param idKey ID字段名，默认为'id'
+ * @param childrenKey 子节点字段名，默认为'children'
+ * @returns 包含当前节点及所有子节点ID的数组
+ */
+export const getTreeNodeAndChildrenIds = (
+  data: any[],
+  id: any,
+  idKey = 'id',
+  childrenKey = 'children'
+): any[] => {
+  const result: any[] = []
+
+  const traverse = (nodes: any[]) => {
+    if (!nodes || !Array.isArray(nodes)) return
+
+    for (const node of nodes) {
+      if (node[idKey] === id) {
+        // 找到目标节点，收集该节点及其所有子节点
+        const collectIds = (n: any) => {
+          result.push(n[idKey])
+          if (n[childrenKey] && Array.isArray(n[childrenKey])) {
+            n[childrenKey].forEach((child: any) => collectIds(child))
+          }
+        }
+        collectIds(node)
+        return // 找到目标节点后可以提前结束
+      }
+
+      // 递归查找子节点
+      if (node[childrenKey] && Array.isArray(node[childrenKey])) {
+        traverse(node[childrenKey])
+      }
+    }
+  }
+
+  traverse(data)
+  return result
+}

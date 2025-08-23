@@ -71,6 +71,7 @@
   import DialogForm from './dialog-form.vue'
   import { useAction } from './use-action'
   import { Icon } from '@/components/icon'
+  import { getTreeNodeAndChildrenIds } from '@/utils/tool'
   defineOptions({
     inheritAttrs: false
   })
@@ -194,9 +195,32 @@
   // 删除
   const handleDelete = (row: any) => {
     const rowKey = props.crudSchema.rowKey || 'id'
-    const ids = row?.[rowKey]
+    let ids = row?.[rowKey]
       ? [row[rowKey]]
       : multipleSelection.value.map((item: any) => item[rowKey])
+
+    // 如果是树形结构，需要获取节点及其所有子节点
+    if (crudSchemaRef.value.tree) {
+      const idKey = crudSchemaRef.value.tree.id || 'id'
+      const childrenKey = crudSchemaRef.value.tree.children || 'children'
+
+      // 收集所有选中节点及其子节点的ID
+      const allIds: any[] = []
+      const selectedRows = row?.[rowKey] ? [row] : multipleSelection.value
+
+      selectedRows.forEach((selectedRow: any) => {
+        const nodeIds = getTreeNodeAndChildrenIds(
+          tableData.value,
+          selectedRow[idKey],
+          idKey,
+          childrenKey
+        )
+        allIds.push(...nodeIds)
+      })
+
+      ids = allIds
+    }
+
     props.crudSchema.crudApi
       ?.remove?.({
         [`${rowKey}s`]: ids
