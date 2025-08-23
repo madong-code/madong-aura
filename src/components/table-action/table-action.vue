@@ -101,9 +101,9 @@
     // 如果存在dialogRef，则直接调用show方法
     if (action.dialogRef) {
       const params =
-        typeof action.dialogParams === 'function'
+        (typeof action.dialogParams === 'function'
           ? action.dialogParams(props.record || {})
-          : action.dialogParams
+          : action.dialogParams) || {}
       const dialogRef = action.dialogRef
       newAction.onClick = () => {
         if (isFunction((dialogRef.value || dialogRef).show)) {

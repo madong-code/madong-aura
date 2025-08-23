@@ -1,11 +1,14 @@
 <template>
   <div class="user-page art-full-height">
     <BasicCrud />
+    <GrantRole ref="grantRoleRef" />
   </div>
 </template>
 <script setup lang="tsx">
   import { useCrud } from '@/components/crud'
   import { crudSchema } from './schemas'
+  import GrantRole from './grant-role.vue'
+  const grantRoleRef = ref()
   const [BasicCrud] = useCrud({
     ...crudSchema,
     // hasAdd: true,
@@ -16,7 +19,18 @@
     // 表格行操作
     tableActions: [],
     // 表格行操作-下拉菜单
-    dropDownActions: []
+    dropDownActions: [
+      {
+        label: '授权角色',
+        icon: 'ant-design:team-outlined',
+        type: 'primary',
+        link: true,
+        dialogRef: grantRoleRef
+        // dialogParams() {
+        //   return {}
+        // }
+      }
+    ]
   })
 </script>
 <style lang="scss" scoped></style>
