@@ -164,6 +164,34 @@ export const routes: AppRouteRecord[] = [
             }
           ]
         }
+      },
+      {
+        path: '/sys/dept/index',
+        name: 'sys:dept',
+        component: '/sys/dept/index',
+        meta: {
+          title: '部门管理',
+          icon: 'ant-design:deployment-unit-outlined',
+          keepAlive: true,
+          authList: [
+            {
+              title: '部门树',
+              authMark: 'sys:dept:tree'
+            },
+            {
+              title: '新增部门',
+              authMark: 'sys:dept:save'
+            },
+            {
+              title: '编辑部门',
+              authMark: 'sys:dept:update'
+            },
+            {
+              title: '删除部门',
+              authMark: 'sys:dept:remove'
+            }
+          ]
+        }
       }
     ]
   }
