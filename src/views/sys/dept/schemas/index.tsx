@@ -5,7 +5,7 @@ import { DeptService } from '@/api/sys/dept'
 export const crudSchema: CrudSchema = {
   // 接口地址：改为 tree 接口以支持树形结构
   api: DeptService.tree,
-  dialogTitle: '部门管理',
+  dialogTitle: '部门',
   crudApi: {
     add: DeptService.save,
     edit: DeptService.update,
@@ -59,27 +59,6 @@ export const crudSchema: CrudSchema = {
         code: 'yes_no',
         renderType: 'RadioGroup'
       }
-    },
-    {
-      prop: 'leaderIds',
-      label: '负责人',
-      component: 'ApiSelect',
-      componentProps: {
-        api: '/sys/user/select',
-        labelField: 'realName',
-        valueField: 'id',
-        multiple: true
-      }
-    },
-    {
-      prop: 'mainLeaderId',
-      label: '分管领导',
-      component: 'ApiSelect',
-      componentProps: {
-        api: '/sys/user/select',
-        labelField: 'realName',
-        valueField: 'id'
-      }
     }
   ],
 
@@ -103,10 +82,12 @@ export const crudSchema: CrudSchema = {
           api: '/sys/dept/tree',
           labelField: 'name',
           valueField: 'id',
+          // 任意节点可选
+          checkStrictly: true,
           clearable: true,
           placeholder: '请选择父级部门'
         },
-        colSpan: 12,
+        colSpan: 24,
         rules: [
           {
             required: true,
@@ -121,7 +102,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: '请输入部门名称'
         },
-        colSpan: 12,
+        colSpan: 24,
         rules: [
           {
             required: true,
@@ -136,7 +117,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: '请输入唯一编码'
         },
-        colSpan: 12,
+        colSpan: 24,
         rules: [
           {
             required: true,
@@ -152,7 +133,7 @@ export const crudSchema: CrudSchema = {
           min: 0,
           max: 9999
         },
-        colSpan: 12,
+        colSpan: 24,
         rules: [
           {
             required: true,
@@ -163,14 +144,13 @@ export const crudSchema: CrudSchema = {
       {
         label: '是否启用',
         prop: 'enabled',
-        component: 'RadioGroup',
+        component: 'ApiDict',
         componentProps: {
-          options: [
-            { label: '是', value: 1 },
-            { label: '否', value: 0 }
-          ]
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
         },
-        colSpan: 12,
+        colSpan: 24,
         rules: [
           {
             required: true,
@@ -180,15 +160,14 @@ export const crudSchema: CrudSchema = {
       },
       {
         label: '部门负责人',
-        prop: 'leaderIds',
-        component: 'ApiCheckboxGroup',
+        prop: 'leaderIdList',
+        component: 'ApiSelect',
         componentProps: {
           api: '/sys/user/select',
-          labelField: 'nickname',
-          valueField: 'id',
-          placeholder: '请选择负责人'
+          placeholder: '请选择负责人',
+          multiple: true
         },
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '分管领导',
@@ -196,11 +175,9 @@ export const crudSchema: CrudSchema = {
         component: 'ApiSelect',
         componentProps: {
           api: '/sys/user/select',
-          labelField: 'nickname',
-          valueField: 'id',
           placeholder: '请选择分管领导'
         },
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '备注',

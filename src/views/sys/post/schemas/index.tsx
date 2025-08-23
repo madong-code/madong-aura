@@ -5,7 +5,7 @@ import { PostService } from '@/api/sys/post'
 export const crudSchema: CrudSchema = {
   // 接口地址
   api: PostService.page,
-  dialogTitle: '岗位管理',
+  dialogTitle: '岗位',
   crudApi: {
     // 新增接口
     add: PostService.save,
