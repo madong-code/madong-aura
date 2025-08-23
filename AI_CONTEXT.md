@@ -11,14 +11,19 @@ src/views/{模块名}/实体文件名
 └── components/               # 模块特定组件（可选）
 ```
 
-命名规范：
+**命名规范：**
 
 - 数据库表名：使用下划线命名法，如 `sys_user`、`sys_user_role`
 - 模块名：使用表名中下划线前的部分，如 `sys`
 - 实体名：使用表名中下划线后的部分，如 `user`，如果有多个部分则用中横线连接，如 `user-role`
 - 文件名：使用中横线命名法，如 `user-role.ts`
 
-示例：
+**约束规则：**
+
+1. id不需要不列表上显示
+2. 列表字段宽度不用设置，默认宽度自适应
+3. 字段太多时，备注字段不需要在列表显示
+4. 如果字段太少，表单`colSpan`默认为24，如果字段太多，可以设置colSpan为12示例：
 
 - 表名 `sys_user`
   - 模块名 `sys`
@@ -279,6 +284,8 @@ export const crudSchema: CrudSchema = {
 - `CheckboxGroup`: 多选框组
 - `DatePicker`: 日期选择器
 - `ApiDict`: 字典组件（支持Select/Radio/Checkbox渲染）
+  - code: 字典编码
+  - renderType: 渲染类型(Select/RadioGroup/Checkbox)
 - `ApiSelect`: 异步下拉选择组件
 - `ApiCascader`: 异步级联选择组件
 - `ApiTreeSelect`: 异步树形选择组件

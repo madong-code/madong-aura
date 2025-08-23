@@ -111,7 +111,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: '请输入岗位名称'
         },
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '唯一编码',
@@ -126,7 +126,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: '请输入唯一编码'
         },
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '排序',
@@ -136,17 +136,16 @@ export const crudSchema: CrudSchema = {
           min: 0,
           placeholder: '请输入排序值'
         },
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '是否启用',
         prop: 'enabled',
-        component: 'RadioGroup',
+        component: 'ApiDict',
         componentProps: {
-          options: [
-            { label: '是', value: 1 },
-            { label: '否', value: 0 }
-          ]
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
         },
         rules: [
           {
@@ -154,7 +153,7 @@ export const crudSchema: CrudSchema = {
             message: '请选择是否启用'
           }
         ],
-        colSpan: 12
+        colSpan: 24
       },
       {
         label: '备注',
