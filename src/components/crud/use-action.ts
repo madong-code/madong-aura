@@ -56,6 +56,7 @@ export function useAction(
         label: crudSchema.viewButtonText || '详情',
         type: 'primary',
         link: true,
+        icon: 'ant-design:eye-outlined',
         auth: crudSchema.viewAuth,
         dialogRef: dialogFormRef,
         dialogParams() {
@@ -70,6 +71,7 @@ export function useAction(
         label: crudSchema.editButtonText || '编辑',
         type: 'primary',
         link: true,
+        icon: 'ant-design:edit-outlined',
         auth: crudSchema.editAuth,
         dialogRef: dialogFormRef,
         dialogParams: {

@@ -151,7 +151,7 @@
           columns.push({
             prop: '__ACTION__',
             label: '操作',
-            width: 150,
+            width: 220,
             align: 'center',
             fixed: 'right', // 固定列
             formatter: (row: unknown) => {

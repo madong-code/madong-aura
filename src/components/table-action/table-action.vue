@@ -242,6 +242,7 @@
           <span style="margin-left: 6px">
             <slot name="more">
               <ElButton link type="primary">
+                更多
                 <template #icon>
                   <Icon class="icon-more" icon="ant-design:bars-outlined" />
                 </template>
