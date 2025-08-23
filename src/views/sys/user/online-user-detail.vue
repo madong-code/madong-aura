@@ -173,7 +173,9 @@
   }
   const [Dialog, dialogApi] = useDialog({
     title: '在线用户详情',
-    footer: false
+    footer: false,
+    draggable: true,
+    modal: true
   })
   defineExpose({
     show({ data }: { data: any }) {
