@@ -108,7 +108,10 @@
       newAction.onClick = () => {
         if (isFunction((dialogRef.value || dialogRef).show)) {
           ;(dialogRef.value || dialogRef).show({
-            data: props.record,
+            data: {
+              ...props.record,
+              ...params.data
+            },
             ...params
           })
         }

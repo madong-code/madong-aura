@@ -82,9 +82,28 @@ export function useAction(
     actions.push(...(crudSchema.tableActions || []))
     return actions
   })
+  // 行操作-下拉菜单默认有删除按钮，树形表格默认添加子节点按钮
   const dropDownActions = computed(() => {
     const actions: ActionItem[] = []
     if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
+      // 判断一下是否则为树结构
+      if (crudSchema.tree) {
+        actions.push({
+          label: (crudSchema.addButtonText || '新增') + '子节点',
+          icon: 'ant-design:plus-outlined',
+          size: 'small',
+          auth: crudSchema.addAuth,
+          dialogRef: dialogFormRef,
+          dialogParams: {
+            isUpdate: true,
+            type: 'add',
+            tree: crudSchema.tree,
+            getCrudApi: () => crudMethods
+          }
+        })
+      }
+    }
+    if (crudSchema.useCrud === true && crudSchema.hasRemove !== false) {
       actions.push({
         label: crudSchema.removeButtonText || '删除',
         type: 'danger',

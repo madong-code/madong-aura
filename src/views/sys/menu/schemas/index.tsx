@@ -7,6 +7,10 @@ export const crudSchema: CrudSchema = {
   // 接口地址
   api: MenuService.tree,
   dialogTitle: '菜单',
+  tree: {
+    id: 'id',
+    pid: 'parentId'
+  },
   crudApi: {
     // 新增接口
     add: MenuService.save,

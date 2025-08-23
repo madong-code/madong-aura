@@ -11,6 +11,15 @@ export interface CrudSchema {
   // 是否立即加载数据
   immediate?: boolean
   data?: any
+  // 树型配置
+  tree?: {
+    // 树形id字段名
+    id?: string
+    // 树形pid字段名
+    pid?: string
+    // 树形children字段名
+    children?: string
+  }
   // 右侧工具栏
   toolbarConfig?: {
     // 是否显示刷新按钮

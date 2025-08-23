@@ -66,11 +66,22 @@
       record.value = res
     })
     dialogApi.open()
-    let title = `${dialogTitle.value}详情`
+    const viewButtonText = props.crudSchema.viewButtonText || '详情'
+    const editButtonText = props.crudSchema.editButtonText || '编辑'
+    const addButtonText = props.crudSchema.addButtonText || '新增'
+    let title = `${dialogTitle.value}${viewButtonText}`
     if (type === 'add') {
-      title = `新增${dialogTitle.value}`
+      title = `${addButtonText}${dialogTitle.value}`
+      // 这里处理一下树型结构
+      if (props.crudSchema.tree) {
+        const idKey = props.crudSchema.tree.id || 'id'
+        const pidKey = props.crudSchema.tree.pid || 'parentId'
+        record.value = {
+          [pidKey]: record.value[idKey]
+        }
+      }
     } else if (type === 'edit') {
-      title = `修改${dialogTitle.value}`
+      title = `${editButtonText}${dialogTitle.value}`
     }
     dialogApi.setState({
       title: title
@@ -92,8 +103,12 @@
           ? props.crudSchema.crudApi?.edit
           : props.crudSchema.crudApi?.add
         submitApi?.(values).then(() => {
+          const editButtonText = props.crudSchema.editButtonText || '编辑'
+          const addButtonText = props.crudSchema.addButtonText || '新增'
           ElMessage.success(
-            updateFlag.value ? `修改${dialogTitle.value}成功` : `新增${dialogTitle.value}成功`
+            updateFlag.value
+              ? `${editButtonText}${dialogTitle.value}成功`
+              : `${addButtonText}${dialogTitle.value}成功`
           )
           dialogApi.close()
           if (updateFlag.value) {
