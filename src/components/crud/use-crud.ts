@@ -66,6 +66,18 @@ export function useCrud(crudSchema: CrudSchema) {
     /** 删除后刷新：智能处理页码，避免空页面（适用于删除数据后） */
     refreshRemove() {
       return this.getArtTableInstance()?.refreshRemove()
+    },
+    // 打开内置新增表单
+    openAddDialog() {
+      return this.getCrudRef()?.openAddDialog()
+    },
+    // 打开内置修改表单
+    openEditDialog() {
+      return this.getCrudRef()?.openEditDialog()
+    },
+    // 打开内置详情表单
+    openViewDialog() {
+      return this.getCrudRef()?.openViewDialog()
     }
   }
 

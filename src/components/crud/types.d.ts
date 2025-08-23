@@ -158,6 +158,12 @@ export interface CrudBaseMethods {
   getArtTableInstance: () => any
   // 通过接口删除行
   removeByApi: (row: any) => void
+  // 打开内置新增表单
+  openAddDialog: () => void
+  // 打开内置修改表单
+  openEditDialog: () => void
+  // 打开内置详情表单
+  openViewDialog: () => void
 }
 export type CrudInstance = CrudBaseMethods
 // 定义表格方法接口，提供更好的类型提示

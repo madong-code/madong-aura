@@ -127,6 +127,10 @@
     }
     return props.crudSchema.api as any
   })
+  const actionItemRecord = ref()
+  const handleActionItemClick = (record: any) => {
+    actionItemRecord.value = record
+  }
   const [SearchBar, searchBarApi] = useSearchBar(crudSchemaRef.value.searchFormSchema || {})
   const tableObject = useTable<any>({
     core: {
@@ -158,6 +162,7 @@
             formatter: (row: unknown) => {
               return (
                 <TableAction
+                  onActionItemClick={handleActionItemClick}
                   record={row}
                   actions={tableActions.value}
                   dropDownActions={dropDownActions.value}
@@ -278,6 +283,33 @@
     },
     removeByApi(row) {
       handleDelete(row)
+    },
+    openAddDialog() {
+      dialogFormRef.value?.show({
+        data: {},
+        type: 'add',
+        getCrudApi() {
+          return props.crudMethods
+        }
+      })
+    },
+    openEditDialog() {
+      dialogFormRef.value?.show({
+        data: actionItemRecord.value,
+        type: 'edit',
+        getCrudApi() {
+          return props.crudMethods
+        }
+      })
+    },
+    openViewDialog() {
+      dialogFormRef.value?.show({
+        data: {},
+        type: 'view',
+        getCrudApi() {
+          return props.crudMethods
+        }
+      })
     }
   }
   onMounted(() => {
