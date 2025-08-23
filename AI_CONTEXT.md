@@ -248,6 +248,24 @@ export const crudSchema: CrudSchema = {
 }
 ```
 
+#### 5.4 树形结构配置 (tree)
+
+对于具有树形结构的数据（如菜单、组织架构等），需要配置 tree 属性来启用树形功能：
+
+```typescript
+export const crudSchema: CrudSchema = {
+  // 使用 tree 接口而不是 page 接口
+  api: {EntityName}Service.tree,
+  // 树形结构配置
+  tree: {
+    id: 'id',       // 树形节点唯一标识字段名，默认为 'id'
+    pid: 'parentId', // 父节点字段名，默认为 'parentId'
+    children: 'children' // 子节点字段名，默认为 'children'
+  },
+  // 其他配置...
+}
+```
+
 ### 6. 常用组件
 
 表单组件：
