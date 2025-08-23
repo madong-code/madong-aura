@@ -40,6 +40,9 @@
       default: true
     }
   })
+  const emit = defineEmits<{
+    (e: 'actionItemClick', record: any): void
+  }>()
   const renderIcon = (icon: string | VNode) => {
     if (typeof icon === 'string') {
       return h(Icon, { icon })
@@ -75,6 +78,7 @@
     if (action.confirm) {
       // 重写点击事件
       newAction.onClick = () => {
+        emit('actionItemClick', props.record)
         const title = action.confirm.title || '提示'
         const content = action.confirm.content || '确定要执行此操作吗？'
         const options = { ...action.confirm }
@@ -101,9 +105,9 @@
     // 如果存在dialogRef，则直接调用show方法
     if (action.dialogRef) {
       const params =
-        typeof action.dialogParams === 'function'
+        (typeof action.dialogParams === 'function'
           ? action.dialogParams(props.record || {})
-          : action.dialogParams
+          : action.dialogParams) || {}
       const dialogRef = action.dialogRef
       newAction.onClick = () => {
         if (isFunction((dialogRef.value || dialogRef).show)) {
@@ -197,6 +201,7 @@
     const res: any = { ...action }
     if (onClick) {
       res.onClick = (e: Event) => {
+        emit('actionItemClick', props.record)
         onClick(e, props.record)
       }
     }
@@ -207,9 +212,11 @@
   const handleCommand = (index: number) => {
     const action = getDropdownList.value[index]
     if (action.onClick && isFunction(action.onClick)) {
+      emit('actionItemClick', props.record)
       action.onClick(action, props.record)
     } else {
       const currentPopconfirmRef = popconfirmRef[index.toString()]
+      emit('actionItemClick', props.record)
       currentPopconfirmRef?.click(action, props.record)
     }
   }
