@@ -99,10 +99,16 @@
       .validate()
       .then(async () => {
         const values = await formApi.getValues()
+        // 转换表单值
+        let submitValues = values
+        if (props.crudSchema.transformFormValues) {
+          const type = updateFlag.value ? 'edit' : 'add'
+          submitValues = props.crudSchema.transformFormValues(values, type)
+        }
         const submitApi = updateFlag.value
           ? props.crudSchema.crudApi?.edit
           : props.crudSchema.crudApi?.add
-        submitApi?.(values).then(() => {
+        submitApi?.(submitValues).then(() => {
           const editButtonText = props.crudSchema.editButtonText || '编辑'
           const addButtonText = props.crudSchema.addButtonText || '新增'
           ElMessage.success(

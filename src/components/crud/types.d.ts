@@ -85,6 +85,8 @@ export interface CrudSchema {
   removeButtonText?: string
   // 删除按钮权限编码
   removeAuth?: string
+  // 转换表单值的函数，可用于添加隐藏字段、格式化数据等
+  transformFormValues?: (values: Record<string, any>, type: 'add' | 'edit') => Record<string, any>
 }
 // 表格列配置接口
 export interface CrudColumn<T = any> {
