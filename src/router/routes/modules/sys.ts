@@ -54,7 +54,7 @@ export const routes: AppRouteRecord[] = [
         name: 'sys:onlineUserList',
         component: '/sys/user/online-user-list',
         meta: {
-          title: '在用用户',
+          title: '在线用户',
           icon: 'ant-design:cloud-server-outlined',
           keepAlive: true,
           authList: [
