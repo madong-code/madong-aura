@@ -42,6 +42,7 @@
   }
   const [BasicCrud, crudApi] = useCrud({
     useCrud: false,
+    rowKey: 'tokenValue',
     api: async (params: any) => {
       return await handlePage(params)
     },
@@ -154,8 +155,8 @@
   })
   const handleDelete = (record: any, type: string) => {
     const ids: any = []
-    if (record && record.id) {
-      ids.push(record.id)
+    if (record && record.tokenValue) {
+      ids.push(record.tokenValue)
     }
     const api =
       type === 'logoutByTokenValue'
