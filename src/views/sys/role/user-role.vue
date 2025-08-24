@@ -13,10 +13,18 @@
     dialogType: 'drawer',
     modal: true,
     closeOnClickModal: true,
-    footer: false
+    footer: false,
+    destroyOnClose: true
   })
   const [BasicCrud] = useCrud({
     api: RbacService.userListByRoleId,
+    beforeFetch(params: any) {
+      // 请求参数处理
+      return {
+        ...params,
+        roleId: record.value.id
+      }
+    },
     useCrud: false,
     searchFormSchema: {
       schema: [
@@ -41,6 +49,9 @@
       ]
     },
     columns: [
+      {
+        type: 'selection'
+      },
       {
         prop: 'userName',
         label: '用户名'

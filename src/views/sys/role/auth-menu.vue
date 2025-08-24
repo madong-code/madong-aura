@@ -33,6 +33,7 @@
     dialogType: 'drawer',
     modal: true,
     closeOnClickModal: true,
+    destroyOnClose: true,
     onConfirm() {
       const checkedKeys = treeRef.value.getCheckedKeys()
       // 提交时，除了勾选节点外，半选节点也可提交，半选为非叶子节点
