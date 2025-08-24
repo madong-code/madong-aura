@@ -15,4 +15,11 @@ export class RbacService {
       params
     })
   }
+  // 通过角色ID获取用户列表
+  static userListByRoleId(params: any) {
+    return request.post({
+      url: '/sys/rbac/userListByRoleId',
+      params
+    })
+  }
 }
