@@ -32,7 +32,34 @@
     width: '50%',
     dialogType: 'drawer',
     modal: true,
-    closeOnClickModal: true
+    closeOnClickModal: true,
+    onConfirm() {
+      const checkedKeys = treeRef.value.getCheckedKeys()
+      // 提交时，除了勾选节点外，半选节点也可提交，半选为非叶子节点
+      const halfCheckedKeys = treeRef.value.getHalfCheckedKeys()
+      const submitKeys = [...checkedKeys, ...halfCheckedKeys]
+      dialogApi.setState({
+        confirmLoading: true,
+        loading: true
+      })
+      RbacService.saveRoleMenu(
+        submitKeys.map((menuId) => {
+          return {
+            menuId,
+            roleId: record.value.id
+          }
+        })
+      )
+        .then(() => {
+          ElMessage.success('授权成功')
+        })
+        .finally(() => {
+          dialogApi.setState({
+            confirmLoading: false,
+            loading: false
+          })
+        })
+    }
   })
   defineExpose({
     show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
