@@ -77,7 +77,7 @@
         auth: 'sys:rbac:saveUserRole',
         dialogParams() {
           return {
-            data: {},
+            data: record.value,
             getCrudApi() {
               return crudApi
             }

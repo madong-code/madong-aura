@@ -22,4 +22,11 @@ export class RbacService {
       params
     })
   }
+  // 获取用户列表-排除指定角色
+  static userListExcludeRoleId(params: any) {
+    return request.post({
+      url: '/sys/rbac/userListExcludeRoleId',
+      params
+    })
+  }
 }
