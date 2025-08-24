@@ -1,13 +1,19 @@
 <template>
-  <div class="user-page art-full-height">
+  <div class="role-page art-full-height">
     <BasicCrud />
+    <AuthMenu ref="authMenuRef" />
   </div>
 </template>
 <script setup lang="tsx">
   import { useCrud } from '@/components/crud'
   import { crudSchema } from './schemas'
+  import AuthMenu from './auth-menu.vue'
+  const authMenuRef = ref()
   const [BasicCrud, crudApi] = useCrud({
     ...crudSchema,
+    tableActionColumn: {
+      width: 250
+    },
     // 是否有修改
     hasEdit: false,
     // hasAdd: true,
@@ -16,7 +22,25 @@
     // 左侧栏工具-下拉菜单
     dropDownToolbarActions: [],
     // 表格行操作
-    tableActions: [],
+    tableActions: [
+      {
+        label: '授权菜单',
+        type: 'primary',
+        sort: 1010,
+        link: true,
+        icon: 'ant-design:setting-outlined',
+        auth: 'sys:rbac:saveRoleMenu',
+        dialogRef: authMenuRef,
+        dialogParams(record) {
+          return {
+            data: record,
+            getCrudApi() {
+              return crudApi
+            }
+          }
+        }
+      }
+    ],
     // 表格行操作-下拉菜单
     dropDownActions: [
       {
