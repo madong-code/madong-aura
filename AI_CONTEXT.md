@@ -49,14 +49,14 @@ export class {EntityName}Service {
   // 分页查询
   static page(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/page',
+      url: '/{模块路径}/{实体名-小驼峰}/page',
       params
     })
   }
   // 树形接口，注意，只有id/name/parentId字段的树形接口才需要此方法
   static tree(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/tree',
+      url: '/{模块路径}/{实体名-小驼峰}/tree',
       params
     })
   }
@@ -64,7 +64,7 @@ export class {EntityName}Service {
   // 添加
   static save(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/save',
+      url: '/{模块路径}/{实体名-小驼峰}/save',
       params
     })
   }
@@ -72,7 +72,7 @@ export class {EntityName}Service {
   // 修改
   static update(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/update',
+      url: '/{模块路径}/{实体名-小驼峰}/update',
       params
     })
   }
@@ -80,7 +80,7 @@ export class {EntityName}Service {
   // 删除
   static remove(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/remove',
+      url: '/{模块路径}/{实体名-小驼峰}/remove',
       params
     })
   }
@@ -88,7 +88,7 @@ export class {EntityName}Service {
   // 详情
   static detail(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名}/detail',
+      url: '/{模块路径}/{实体名-小驼峰}/detail',
       params
     })
   }

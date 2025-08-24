@@ -99,6 +99,14 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
+        label: '岗位ID',
+        prop: 'id',
+        component: 'Input',
+        colSpan: 24,
+        show: false,
+        ifDetail: false
+      },
+      {
         label: '岗位名称',
         prop: 'name',
         component: 'Input',

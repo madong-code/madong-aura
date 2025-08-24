@@ -5,7 +5,7 @@ import { DictService } from '@/api/sys/dict'
 export const crudSchema: CrudSchema = {
   // 接口地址
   api: DictService.page,
-  dialogTitle: '字典管理',
+  dialogTitle: '字典',
   crudApi: {
     // 新增接口
     add: DictService.save,
@@ -139,6 +139,14 @@ export const crudSchema: CrudSchema = {
     showDefaultActions: false,
     labelWidth: '100px',
     schema: [
+      {
+        label: '菜单ID',
+        prop: 'id',
+        component: 'Input',
+        colSpan: 24,
+        show: false,
+        ifDetail: false
+      },
       {
         label: '所属分组',
         prop: 'groupCode',

@@ -75,6 +75,14 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
+        label: '部门ID',
+        prop: 'id',
+        component: 'Input',
+        colSpan: 24,
+        show: false,
+        ifDetail: false
+      },
+      {
         label: '父级部门',
         prop: 'parentId',
         component: 'ApiTreeSelect',

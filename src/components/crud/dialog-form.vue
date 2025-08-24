@@ -58,16 +58,18 @@
     updateFlag.value = type === 'edit'
     record.value = data || {}
     crudApi.value = getCrudApi()
-    const detailApi = props.crudSchema.crudApi?.view
-    const rowKey = props.crudSchema.rowKey || 'id'
-    detailApi?.({
-      [rowKey]: record.value[rowKey]
-    }).then((res) => {
-      record.value = {
-        ...record.value,
-        ...res
-      }
-    })
+    if (type === 'view' || type === 'edit') {
+      const detailApi = props.crudSchema.crudApi?.view
+      const rowKey = props.crudSchema.rowKey || 'id'
+      detailApi?.({
+        [rowKey]: record.value[rowKey]
+      }).then((res) => {
+        record.value = {
+          ...record.value,
+          ...res
+        }
+      })
+    }
     dialogApi.open()
     const viewButtonText = props.crudSchema.viewButtonText || '详情'
     const editButtonText = props.crudSchema.editButtonText || '编辑'
@@ -125,7 +127,6 @@
           } else {
             crudApi.value?.refreshCreate()
           }
-          crudApi.value?.reload()
         })
       })
       .finally(() => {
