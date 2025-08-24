@@ -1,6 +1,15 @@
 <template>
   <div class="user-page art-full-height">
-    <BasicCrud />
+    <div class="tree-container">
+      <div class="left-sidebar">
+        <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
+          <DeptTree v-model:value="deptIdList" @check="handleCheck" />
+        </ElCard>
+      </div>
+      <div class="right-content art-full-height">
+        <BasicCrud @reset="handleReset" />
+      </div>
+    </div>
     <GrantRole ref="grantRoleRef" />
   </div>
 </template>
@@ -8,9 +17,15 @@
   import { useCrud } from '@/components/crud'
   import { crudSchema } from './schemas'
   import GrantRole from './grant-role.vue'
+  import DeptTree from './dept-tree.vue'
   const grantRoleRef = ref()
+  const deptIdList = ref([])
+
   const [BasicCrud, crudApi] = useCrud({
     ...crudSchema,
+    beforeFetch: (params: any) => {
+      return { ...params, m_IN_deptId: deptIdList.value }
+    },
     // hasAdd: true,
     // 左侧工具栏
     toolbarActions: [],
@@ -34,5 +49,49 @@
       }
     ]
   })
+  const handleCheck = () => {
+    crudApi.reload()
+  }
+  const handleReset = () => {
+    deptIdList.value = []
+  }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .tree-container {
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+    // gap: 16px;
+    .left-sidebar {
+      flex-shrink: 0;
+      width: 280px;
+      height: 100%;
+    }
+
+    .right-content {
+      flex-grow: 1;
+      min-width: 0;
+      height: 100%;
+    }
+
+    .art-table-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+
+  @media screen and (max-width: $device-ipad) {
+    .tree-container {
+      display: block;
+      gap: 0;
+      height: auto;
+
+      .left-sidebar {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+    }
+  }
+</style>

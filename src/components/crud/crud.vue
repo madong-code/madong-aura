@@ -198,13 +198,15 @@
   } = tableObject
   const handleSearch = (values: any) => {
     //Object.assign(searchParams, values)
-    getData(values)
     emit('submit', values)
+
+    getData(values)
   }
   const handleReset = () => {
     //Object.assign(searchParams, {})
-    getData({})
     emit('reset')
+
+    getData({})
   }
   // 删除
   const handleDelete = (row: any) => {
