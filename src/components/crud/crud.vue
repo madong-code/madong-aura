@@ -116,16 +116,25 @@
     return layout.join(',')
   })
   const funApi = computed(() => {
-    if (props.crudSchema.api && typeof props.crudSchema.api === 'string') {
-      const fun = (params: any) => {
-        return request[props.crudSchema.requestMethod ?? 'post']({
-          url: props.crudSchema.api as string,
-          params
-        })
-      }
-      return fun
+    const { api, requestMethod, beforeFetch, afterFetch } = props.crudSchema
+
+    if (!api) return api as any
+
+    const fun = (params: any) => {
+      // 处理请求前的参数
+      let processedParams = beforeFetch ? beforeFetch(params) : params
+
+      // 发起请求
+      const apiRequest =
+        typeof api === 'string'
+          ? request[requestMethod ?? 'post']({ url: api, params: processedParams })
+          : api(processedParams)
+
+      // 处理响应后的结果
+      return afterFetch ? apiRequest.then(afterFetch) : apiRequest
     }
-    return props.crudSchema.api as any
+
+    return fun
   })
   const actionItemRecord = ref()
   const handleActionItemClick = (record: any) => {
