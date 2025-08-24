@@ -36,4 +36,11 @@ export class RbacService {
       params
     })
   }
+  // 删除用户角色关系
+  static removeUserRole(params: any) {
+    return request.post({
+      url: '/sys/rbac/removeUserRole',
+      params
+    })
+  }
 }

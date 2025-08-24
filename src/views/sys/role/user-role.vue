@@ -27,6 +27,9 @@
         roleId: record.value.id
       }
     },
+    tableActionColumn: {
+      width: '120px'
+    },
     useCrud: false,
     searchFormSchema: {
       schema: [
@@ -83,6 +86,22 @@
           }
         }
       }
+    ],
+    tableActions: [
+      {
+        label: '移除用户',
+        type: 'danger',
+        link: true,
+        icon: 'ant-design:delete-outlined',
+        auth: 'sys:rbac:removeUserRole',
+        confirm: {
+          title: '提示',
+          content: '确定删除吗？',
+          ok(record: any) {
+            handleRemove(record)
+          }
+        }
+      }
     ]
   })
   defineExpose({
@@ -94,5 +113,30 @@
       dialogApi.open()
     }
   })
+  const handleRemove = (row: any) => {
+    const userIds = [row.id]
+    dialogApi.setState({
+      loading: true,
+      confirmLoading: true
+    })
+    RbacService.removeUserRole(
+      userIds.map((userId) => {
+        return {
+          roleId: record.value.id,
+          userId: userId
+        }
+      })
+    )
+      .then(() => {
+        ElMessage.success('删除成功')
+        crudApi.refreshRemove()
+      })
+      .finally(() => {
+        dialogApi.setState({
+          loading: false,
+          confirmLoading: false
+        })
+      })
+  }
 </script>
 <style lang="scss" scoped></style>
