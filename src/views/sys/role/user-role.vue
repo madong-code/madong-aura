@@ -4,11 +4,10 @@
 </template>
 <script setup lang="tsx">
   import { useDialog } from '@/components/dialog'
-  import { CrudMethods, useCrud } from '@/components/crud'
+  import { useCrud } from '@/components/crud'
   import { RbacService } from '@/api/sys/rbac'
   import AddUser from './add-user.vue'
   const record = ref<any>({})
-  const crudApi = ref<CrudMethods>()
   const addUserRef = ref()
   const [Dialog, dialogApi] = useDialog({
     title: '成员管理',
@@ -19,7 +18,7 @@
     footer: false,
     destroyOnClose: true
   })
-  const [BasicCrud] = useCrud({
+  const [BasicCrud, crudApi] = useCrud({
     api: RbacService.userListByRoleId,
     beforeFetch(params: any) {
       // 请求参数处理
@@ -87,12 +86,11 @@
     ]
   })
   defineExpose({
-    show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
+    show({ data }: { data: any }) {
       record.value = data
       dialogApi.setState({
         title: `【${data.name}】成员管理`
       })
-      crudApi.value = getCrudApi()
       dialogApi.open()
     }
   })

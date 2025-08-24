@@ -29,4 +29,11 @@ export class RbacService {
       params
     })
   }
+  // 添加用户角色关系
+  static saveUserRole(params: any) {
+    return request.post({
+      url: '/sys/rbac/saveUserRole',
+      params
+    })
+  }
 }

@@ -8,12 +8,46 @@
   import { CrudMethods, useCrud } from '@/components/crud'
   import { RbacService } from '@/api/sys/rbac'
   const record = ref<any>({})
-  const crudApi = ref<CrudMethods>()
+  const parentCrudApi = ref<CrudMethods>()
   const [Dialog, dialogApi] = useDialog({
     title: '添加用户',
-    width: '70%'
+    width: '70%',
+    modal: true,
+    destroyOnClose: true,
+    onConfirm: () => {
+      const selection = crudApi.getRowSelection()
+      if (selection.length === 0) {
+        ElMessage.warning('请选择用户')
+        return
+      }
+      dialogApi.setState({
+        confirmLoading: true,
+        loading: true
+      })
+      RbacService.saveUserRole(
+        selection.map((item: any) => {
+          return {
+            roleId: record.value.id,
+            userId: item.id
+          }
+        })
+      )
+        .then(() => {
+          ElMessage.success('保存成功')
+          // 当前可选列表查当于删除数据，所以使用删除刷新
+          crudApi.refreshRemove()
+          // 用户角色列表会新增数据，所以使用新增刷新
+          parentCrudApi.value?.refreshCreate()
+        })
+        .finally(() => {
+          dialogApi.setState({
+            confirmLoading: false,
+            loading: false
+          })
+        })
+    }
   })
-  const [BasicCrud] = useCrud({
+  const [BasicCrud, crudApi] = useCrud({
     api: RbacService.userListExcludeRoleId,
     beforeFetch(params: any) {
       // 请求参数处理
@@ -66,7 +100,7 @@
   defineExpose({
     show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
       record.value = data
-      crudApi.value = getCrudApi()
+      parentCrudApi.value = getCrudApi()
       dialogApi.open()
     }
   })
