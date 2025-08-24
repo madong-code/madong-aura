@@ -4,7 +4,7 @@
 </template>
 <script setup lang="tsx">
   import { useDialog } from '@/components/dialog'
-  import { useCrud } from '@/components/crud'
+  import { CrudReadonlyState, useCrud } from '@/components/crud'
   import { RbacService } from '@/api/sys/rbac'
   import AddUser from './add-user.vue'
   const record = ref<any>({})
@@ -85,6 +85,22 @@
             }
           }
         }
+      },
+      {
+        label: '移除用户',
+        type: 'danger',
+        icon: 'ant-design:delete-outlined',
+        auth: 'sys:rbac:removeUserRole',
+        confirm: {
+          title: '提示',
+          content: '确定删除吗？',
+          ok() {
+            handleRemove({})
+          }
+        },
+        ifShow() {
+          return readonlyState.value?.selection.length > 0
+        }
       }
     ],
     tableActions: [
@@ -104,17 +120,8 @@
       }
     ]
   })
-  defineExpose({
-    show({ data }: { data: any }) {
-      record.value = data
-      dialogApi.setState({
-        title: `【${data.name}】成员管理`
-      })
-      dialogApi.open()
-    }
-  })
   const handleRemove = (row: any) => {
-    const userIds = [row.id]
+    const userIds = row.id ? [row.id] : readonlyState.value.selection.map((item: any) => item.id)
     dialogApi.setState({
       loading: true,
       confirmLoading: true
@@ -138,5 +145,20 @@
         })
       })
   }
+  const readonlyState = ref<CrudReadonlyState>({
+    selection: []
+  })
+  defineExpose({
+    show({ data }: { data: any }) {
+      record.value = data
+      dialogApi.setState({
+        title: `【${data.name}】成员管理`
+      })
+      dialogApi.open()
+      nextTick(() => {
+        readonlyState.value = crudApi.getReadonlyState()
+      })
+    }
+  })
 </script>
 <style lang="scss" scoped></style>
