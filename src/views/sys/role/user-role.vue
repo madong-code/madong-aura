@@ -1,12 +1,15 @@
 <template>
   <Dialog> <BasicCrud /> </Dialog>
+  <AddUser ref="addUserRef" />
 </template>
 <script setup lang="tsx">
   import { useDialog } from '@/components/dialog'
   import { CrudMethods, useCrud } from '@/components/crud'
   import { RbacService } from '@/api/sys/rbac'
+  import AddUser from './add-user.vue'
   const record = ref<any>({})
   const crudApi = ref<CrudMethods>()
+  const addUserRef = ref()
   const [Dialog, dialogApi] = useDialog({
     title: '成员管理',
     width: '70%',
@@ -63,6 +66,23 @@
       {
         prop: 'mobilePhone',
         label: '手机号码'
+      }
+    ],
+    toolbarActions: [
+      {
+        label: '添加用户',
+        icon: 'ant-design:plus-outlined',
+        type: 'primary',
+        dialogRef: addUserRef,
+        auth: 'sys:rbac:saveUserRole',
+        dialogParams() {
+          return {
+            data: {},
+            getCrudApi() {
+              return crudApi
+            }
+          }
+        }
       }
     ]
   })
