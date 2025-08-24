@@ -1,13 +1,24 @@
 <template>
   <Dialog>
-    <BasicCrud />
+    <div class="tree-container">
+      <div class="left-sidebar">
+        <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
+          <DeptTree v-model:value="deptIdList" @check="handleCheck" />
+        </ElCard>
+      </div>
+      <div class="right-content art-full-height">
+        <BasicCrud @reset="handleReset" />
+      </div>
+    </div>
   </Dialog>
 </template>
 <script setup lang="tsx">
   import { useDialog } from '@/components/dialog'
   import { CrudMethods, useCrud } from '@/components/crud'
   import { RbacService } from '@/api/sys/rbac'
+  import DeptTree from '../user/dept-tree.vue'
   const record = ref<any>({})
+  const deptIdList = ref<any>([])
   const parentCrudApi = ref<CrudMethods>()
   const [Dialog, dialogApi] = useDialog({
     title: '添加用户',
@@ -53,7 +64,8 @@
       // 请求参数处理
       return {
         ...params,
-        roleId: record.value.id
+        roleId: record.value.id,
+        m_IN_deptId: deptIdList.value
       }
     },
     useCrud: false,
@@ -97,6 +109,12 @@
       }
     ]
   })
+  const handleCheck = () => {
+    crudApi.reload()
+  }
+  const handleReset = () => {
+    deptIdList.value = []
+  }
   defineExpose({
     show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
       record.value = data
@@ -105,4 +123,42 @@
     }
   })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .tree-container {
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+    // gap: 16px;
+    .left-sidebar {
+      flex-shrink: 0;
+      width: 280px;
+      height: 100%;
+    }
+
+    .right-content {
+      flex-grow: 1;
+      min-width: 0;
+      height: 100%;
+    }
+
+    .art-table-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+
+  @media screen and (max-width: $device-ipad) {
+    .tree-container {
+      display: block;
+      gap: 0;
+      height: auto;
+
+      .left-sidebar {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+    }
+  }
+</style>

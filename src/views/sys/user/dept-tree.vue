@@ -41,10 +41,11 @@
     value: string[]
   }>()
 
-  const emit = defineEmits(['update:value'])
+  const emit = defineEmits(['update:value', 'check'])
 
   const handleTreeCheck = (data: any, { checkedKeys }: any) => {
     emit('update:value', checkedKeys)
+    emit('check', checkedKeys)
   }
 
   // 过滤节点的方法
