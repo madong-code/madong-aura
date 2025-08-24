@@ -8,6 +8,10 @@ export interface CrudSchema {
   api?: ((params: any) => Promise<any>) | string
   // 请求方法
   requestMethod?: 'get' | 'post'
+  // 请求之前对参数进行处理
+  beforeFetch?: (params: any) => any
+  // 请求之后对返回值进行处理
+  afterFetch?: (res: any) => any
   // 是否立即加载数据
   immediate?: boolean
   data?: any
