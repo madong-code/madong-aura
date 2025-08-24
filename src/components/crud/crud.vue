@@ -313,6 +313,9 @@
     },
     executeRemove() {
       handleDelete(actionItemRecord.value)
+    },
+    executeBatchRemove() {
+      handleDelete({})
     }
   }
   onMounted(() => {

@@ -82,6 +82,10 @@ export function useCrud(crudSchema: CrudSchema) {
     // 执行内置的删除方法
     executeRemove() {
       return this.getCrudRef()?.executeRemove()
+    },
+    // 执行内置的批量删除方法
+    executeBatchRemove() {
+      return this.getCrudRef()?.executeBatchRemove()
     }
   }
 

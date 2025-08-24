@@ -129,6 +129,7 @@
       .filter((action) => {
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
+      .sort((a, b) => (a.sort || 1000) - (b.sort || 1000))
       .map((action) => {
         let processedAction = wrapConfirm(action)
         if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {
@@ -156,6 +157,8 @@
       .filter((action) => {
         return hasAccessByCodes(action.auth) && isIfShow(action)
       })
+      .sort((a, b) => (a.sort || 1000) - (b.sort || 1000))
+
       .map((action, index) => {
         let processedAction = wrapConfirm(action)
         if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {

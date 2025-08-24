@@ -17,6 +17,8 @@ export interface ActionItem {
   label?: string
   color?: string
   icon?: string | VNode
+  // 顺序,正序排序，数字越小越靠前
+  sort?: number
   popConfirm?: PopConfirm
   disabled?: boolean
   divider?: boolean
