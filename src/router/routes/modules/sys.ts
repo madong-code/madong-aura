@@ -31,19 +31,23 @@ export const routes: AppRouteRecord[] = [
           keepAlive: true,
           authList: [
             {
-              title: '分页查询用户列表',
+              title: '列表',
               authMark: 'sys:user:page'
             },
             {
-              title: '新增用户',
+              title: '详情',
+              authMark: 'sys:user:destail'
+            },
+            {
+              title: '新增',
               authMark: 'sys:user:save'
             },
             {
-              title: '编辑用户',
+              title: '编辑',
               authMark: 'sys:user:update'
             },
             {
-              title: '删除用户',
+              title: '删除',
               authMark: 'sys:user:remove'
             }
           ]
@@ -91,19 +95,23 @@ export const routes: AppRouteRecord[] = [
           keepAlive: true,
           authList: [
             {
-              title: '分页查询角色列表',
+              title: '列表',
               authMark: 'sys:role:page'
             },
             {
-              title: '新增角色',
+              title: '详情',
+              authMark: 'sys:role:detail'
+            },
+            {
+              title: '新增',
               authMark: 'sys:role:save'
             },
             {
-              title: '编辑角色',
+              title: '编辑',
               authMark: 'sys:role:update'
             },
             {
-              title: '删除角色',
+              title: '删除',
               authMark: 'sys:role:remove'
             }
           ]
@@ -119,19 +127,23 @@ export const routes: AppRouteRecord[] = [
           keepAlive: true,
           authList: [
             {
-              title: '分页查询菜单列表',
+              title: '列表',
               authMark: 'sys:menu:tree'
             },
             {
-              title: '新增菜单',
+              title: '详情',
+              authMark: 'sys:menu:detail'
+            },
+            {
+              title: '新增',
               authMark: 'sys:menu:save'
             },
             {
-              title: '编辑菜单',
+              title: '编辑',
               authMark: 'sys:menu:update'
             },
             {
-              title: '删除菜单',
+              title: '删除',
               authMark: 'sys:menu:remove'
             }
           ]
@@ -147,19 +159,23 @@ export const routes: AppRouteRecord[] = [
           keepAlive: true,
           authList: [
             {
-              title: '分页查询岗位列表',
+              title: '列表',
               authMark: 'sys:post:page'
             },
             {
-              title: '新增岗位',
+              title: '详情',
+              authMark: 'sys:post:detail'
+            },
+            {
+              title: '新增',
               authMark: 'sys:post:save'
             },
             {
-              title: '编辑岗位',
+              title: '编辑',
               authMark: 'sys:post:update'
             },
             {
-              title: '删除岗位',
+              title: '删除',
               authMark: 'sys:post:remove'
             }
           ]
@@ -179,15 +195,19 @@ export const routes: AppRouteRecord[] = [
               authMark: 'sys:dept:tree'
             },
             {
-              title: '新增部门',
+              title: '详情',
+              authMark: 'sys:dept:detail'
+            },
+            {
+              title: '新增',
               authMark: 'sys:dept:save'
             },
             {
-              title: '编辑部门',
+              title: '编辑',
               authMark: 'sys:dept:update'
             },
             {
-              title: '删除部门',
+              title: '删除',
               authMark: 'sys:dept:remove'
             }
           ]
@@ -203,20 +223,68 @@ export const routes: AppRouteRecord[] = [
           keepAlive: true,
           authList: [
             {
-              title: '分页查询字典列表',
+              title: '列表',
               authMark: 'sys:dict:page'
             },
             {
-              title: '新增字典',
+              title: '新增',
               authMark: 'sys:dict:save'
             },
             {
-              title: '编辑字典',
+              title: '编辑',
               authMark: 'sys:dict:update'
             },
             {
-              title: '删除字典',
+              title: '删除',
               authMark: 'sys:dict:remove'
+            },
+            {
+              title: '字典项列表',
+              authMark: 'sys:dictItem:page'
+            },
+            {
+              title: '新增字典项',
+              authMark: 'sys:dictItem:save'
+            },
+            {
+              title: '编辑字典项',
+              authMark: 'sys:dictItem:update'
+            },
+            {
+              title: '删除字典项',
+              authMark: 'sys:dictItem:remove'
+            }
+          ]
+        }
+      },
+      {
+        path: '/sys/config/index',
+        name: 'sys:config',
+        component: '/sys/config/index',
+        meta: {
+          title: '参数配置',
+          icon: 'ant-design:file-text-outlined',
+          keepAlive: true,
+          authList: [
+            {
+              title: '列表',
+              authMark: 'sys:config:page'
+            },
+            {
+              title: '详情',
+              authMark: 'sys:config:detail'
+            },
+            {
+              title: '新增',
+              authMark: 'sys:config:save'
+            },
+            {
+              title: '编辑',
+              authMark: 'sys:config:update'
+            },
+            {
+              title: '删除',
+              authMark: 'sys:config:remove'
             }
           ]
         }

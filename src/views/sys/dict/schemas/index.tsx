@@ -140,7 +140,7 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
-        label: '菜单ID',
+        label: '字典ID',
         prop: 'id',
         component: 'Input',
         colSpan: 24,
