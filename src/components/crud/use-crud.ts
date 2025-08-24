@@ -78,6 +78,10 @@ export function useCrud(crudSchema: CrudSchema) {
     // 打开内置详情表单
     openViewDialog() {
       return this.getCrudRef()?.openViewDialog()
+    },
+    // 执行内置的删除方法
+    executeRemove() {
+      return this.getCrudRef()?.executeRemove()
     }
   }
 

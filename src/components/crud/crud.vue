@@ -310,6 +310,9 @@
           return props.crudMethods
         }
       })
+    },
+    executeRemove() {
+      handleDelete(actionItemRecord.value)
     }
   }
   onMounted(() => {

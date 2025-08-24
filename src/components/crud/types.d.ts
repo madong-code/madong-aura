@@ -164,6 +164,8 @@ export interface CrudBaseMethods {
   openEditDialog: () => void
   // 打开内置详情表单
   openViewDialog: () => void
+  // 执行内置的删除方法
+  executeRemove: () => void
 }
 export type CrudInstance = CrudBaseMethods
 // 定义表格方法接口，提供更好的类型提示
