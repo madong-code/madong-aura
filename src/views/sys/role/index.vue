@@ -2,17 +2,20 @@
   <div class="role-page art-full-height">
     <BasicCrud />
     <AuthMenu ref="authMenuRef" />
+    <UserRole ref="userRoleRef" />
   </div>
 </template>
 <script setup lang="tsx">
   import { useCrud } from '@/components/crud'
   import { crudSchema } from './schemas'
   import AuthMenu from './auth-menu.vue'
+  import UserRole from './user-role.vue'
   const authMenuRef = ref()
+  const userRoleRef = ref()
   const [BasicCrud, crudApi] = useCrud({
     ...crudSchema,
     tableActionColumn: {
-      width: 250
+      width: 320
     },
     // 是否有修改
     hasEdit: false,
@@ -31,6 +34,23 @@
         icon: 'ant-design:setting-outlined',
         auth: 'sys:rbac:saveRoleMenu',
         dialogRef: authMenuRef,
+        dialogParams(record) {
+          return {
+            data: record,
+            getCrudApi() {
+              return crudApi
+            }
+          }
+        }
+      },
+      {
+        label: '成员管理',
+        type: 'primary',
+        sort: 1010,
+        link: true,
+        icon: 'ant-design:team-outlined',
+        auth: 'sys:rbac:userListByRoleId',
+        dialogRef: userRoleRef,
         dialogParams(record) {
           return {
             data: record,

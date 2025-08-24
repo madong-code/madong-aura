@@ -7,13 +7,18 @@
   const record = ref<any>({})
   const crudApi = ref<CrudMethods>()
   const [Dialog, dialogApi] = useDialog({
-    title: '我是标题',
+    title: '授权菜单',
     width: '50%',
-    dialogType: 'drawer'
+    dialogType: 'drawer',
+    modal: true,
+    closeOnClickModal: true
   })
   defineExpose({
     show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
       record.value = data
+      dialogApi.setState({
+        title: `【${data.name}】授权菜单`
+      })
       crudApi.value = getCrudApi()
       dialogApi.open()
     }
