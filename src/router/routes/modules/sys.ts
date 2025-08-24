@@ -192,6 +192,34 @@ export const routes: AppRouteRecord[] = [
             }
           ]
         }
+      },
+      {
+        path: '/sys/dict/index',
+        name: 'sys:dict',
+        component: '/sys/dict/index',
+        meta: {
+          title: '数据字典',
+          icon: 'ant-design:database-outlined',
+          keepAlive: true,
+          authList: [
+            {
+              title: '分页查询字典列表',
+              authMark: 'sys:dict:page'
+            },
+            {
+              title: '新增字典',
+              authMark: 'sys:dict:save'
+            },
+            {
+              title: '编辑字典',
+              authMark: 'sys:dict:update'
+            },
+            {
+              title: '删除字典',
+              authMark: 'sys:dict:remove'
+            }
+          ]
+        }
       }
     ]
   }
