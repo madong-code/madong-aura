@@ -80,3 +80,66 @@ export const getTreeNodeAndChildrenIds = (
   traverse(data)
   return result
 }
+
+/**
+ * 获取树形数据中的所有叶子节点
+ * @param data 树形数据数组
+ * @param childrenKey 子节点字段名，默认为'children'
+ * @returns 包含所有叶子节点的数组
+ */
+export const getTreeLeafNodes = (data: any[], childrenKey = 'children'): any[] => {
+  const result: any[] = []
+
+  const traverse = (nodes: any[]) => {
+    if (!nodes || !Array.isArray(nodes)) return
+
+    for (const node of nodes) {
+      // 如果节点没有子节点或者子节点为空数组，则为叶子节点
+      if (
+        !node[childrenKey] ||
+        !Array.isArray(node[childrenKey]) ||
+        node[childrenKey].length === 0
+      ) {
+        result.push(node)
+      } else {
+        // 递归查找子节点
+        traverse(node[childrenKey])
+      }
+    }
+  }
+
+  traverse(data)
+  return result
+}
+
+/**
+ * 获取树形数据中的所有叶子节点ID
+ * @param data 树形数据数组
+ * @param idKey ID字段名，默认为'id'
+ * @param childrenKey 子节点字段名，默认为'children'
+ * @returns 包含所有叶子节点ID的数组
+ */
+export const getTreeLeafNodeIds = (data: any[], idKey = 'id', childrenKey = 'children'): any[] => {
+  const result: any[] = []
+
+  const traverse = (nodes: any[]) => {
+    if (!nodes || !Array.isArray(nodes)) return
+
+    for (const node of nodes) {
+      // 如果节点没有子节点或者子节点为空数组，则为叶子节点
+      if (
+        !node[childrenKey] ||
+        !Array.isArray(node[childrenKey]) ||
+        node[childrenKey].length === 0
+      ) {
+        result.push(node[idKey])
+      } else {
+        // 递归查找子节点
+        traverse(node[childrenKey])
+      }
+    }
+  }
+
+  traverse(data)
+  return result
+}

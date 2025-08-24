@@ -15,11 +15,13 @@
   import { CrudMethods } from '@/components/crud'
   import { MenuService } from '@/api/sys/menu'
   import { RbacService } from '@/api/sys/rbac'
+  import { getTreeLeafNodeIds } from '@/utils/tool'
   const record = ref<any>({})
   const crudApi = ref<CrudMethods>()
   const treeData = ref<any>([])
   const treeRef = ref()
   const checkedKeys = ref<any>([])
+  const leafNodeIds = ref<any>([])
   const defaultProps = ref({
     label: (data: any) => {
       return `${data.name} | ${data.code}`
@@ -38,20 +40,22 @@
       dialogApi.setState({
         title: `【${data.name}】授权菜单`
       })
-      MenuService.tree({
-        filterByUser: 1
-      }).then((res) => {
-        treeData.value = res
-      })
 
       crudApi.value = getCrudApi()
       dialogApi.open()
       nextTick(() => {
-        RbacService.roleMenuIds({
-          roleId: data.id
+        MenuService.tree({
+          filterByUser: 1
         }).then((res) => {
-          checkedKeys.value = res
-          treeRef.value.setCheckedKeys(checkedKeys.value)
+          treeData.value = res
+          leafNodeIds.value = getTreeLeafNodeIds(treeData.value)
+          RbacService.roleMenuIds({
+            roleId: data.id
+          }).then((res: any) => {
+            // 只能设置叶子节点，原因是当勾选父节点时，子节点也会被勾选
+            checkedKeys.value = res.filter((id: any) => leafNodeIds.value.includes(id))
+            treeRef.value.setCheckedKeys(checkedKeys.value)
+          })
         })
       })
     }
