@@ -1,13 +1,24 @@
 <template>
   <Dialog>
-    <el-tree
-      ref="treeRef"
-      node-key="id"
-      style="max-width: 600px"
-      :data="treeData"
-      :props="defaultProps"
-      show-checkbox
-    />
+    <div class="tree-toolbar">
+      <ElDropdown @command="handleExpandCommand">
+        <ElButton type="primary">
+          <template #icon>
+            <Icon icon="ant-design:folder-open-outlined" />
+          </template>
+          展开/折叠<ElIcon class="el-icon--right"><Icon icon="ant-design:down-outlined" /></ElIcon>
+        </ElButton>
+        <template #dropdown>
+          <ElDropdownMenu>
+            <ElDropdownItem command="expandAll">展开所有</ElDropdownItem>
+            <ElDropdownItem command="expandLevel1">展开一级</ElDropdownItem>
+            <ElDropdownItem command="expandLevel2">展开二级</ElDropdownItem>
+            <ElDropdownItem command="collapseAll">折叠所有</ElDropdownItem>
+          </ElDropdownMenu>
+        </template>
+      </ElDropdown>
+    </div>
+    <el-tree ref="treeRef" node-key="id" :data="treeData" :props="defaultProps" show-checkbox />
   </Dialog>
 </template>
 <script setup lang="tsx">
@@ -16,6 +27,7 @@
   import { MenuService } from '@/api/sys/menu'
   import { RbacService } from '@/api/sys/rbac'
   import { getTreeLeafNodeIds } from '@/utils/tool'
+  import { Icon } from '@/components/icon'
   const record = ref<any>({})
   const crudApi = ref<CrudMethods>()
   const treeData = ref<any>([])
@@ -62,6 +74,94 @@
         })
     }
   })
+
+  // 处理展开命令
+  const handleExpandCommand = (command: string) => {
+    switch (command) {
+      case 'expandAll':
+        expandAll()
+        break
+      case 'expandLevel1':
+        expandToLevel(1)
+        break
+      case 'expandLevel2':
+        expandToLevel(2)
+        break
+      case 'collapseAll':
+        collapseAll()
+        break
+    }
+  }
+
+  // 展开所有节点
+  const expandAll = () => {
+    if (treeData.value && treeData.value.length > 0) {
+      treeData.value.forEach((node: any) => {
+        if (treeRef.value.store.nodesMap[node.id]) {
+          treeRef.value.store.nodesMap[node.id].expanded = true
+          expandNodeChildren(node)
+        }
+      })
+    }
+  }
+
+  // 展开到指定层级
+  const expandToLevel = (level: number) => {
+    collapseAll() // 先折叠所有
+    if (treeData.value && treeData.value.length > 0) {
+      treeData.value.forEach((node: any) => {
+        if (treeRef.value.store.nodesMap[node.id]) {
+          if (level >= 1) {
+            treeRef.value.store.nodesMap[node.id].expanded = true
+            if (level >= 2 && node.children && node.children.length > 0) {
+              node.children.forEach((child: any) => {
+                if (treeRef.value.store.nodesMap[child.id]) {
+                  treeRef.value.store.nodesMap[child.id].expanded = true
+                }
+              })
+            }
+          }
+        }
+      })
+    }
+  }
+
+  // 折叠所有节点
+  const collapseAll = () => {
+    if (treeData.value && treeData.value.length > 0) {
+      treeData.value.forEach((node: any) => {
+        if (treeRef.value.store.nodesMap[node.id]) {
+          treeRef.value.store.nodesMap[node.id].expanded = false
+          collapseNodeChildren(node)
+        }
+      })
+    }
+  }
+
+  // 递归展开节点的子节点
+  const expandNodeChildren = (node: any) => {
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child: any) => {
+        if (treeRef.value.store.nodesMap[child.id]) {
+          treeRef.value.store.nodesMap[child.id].expanded = true
+          expandNodeChildren(child)
+        }
+      })
+    }
+  }
+
+  // 递归折叠节点的子节点
+  const collapseNodeChildren = (node: any) => {
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child: any) => {
+        if (treeRef.value.store.nodesMap[child.id]) {
+          treeRef.value.store.nodesMap[child.id].expanded = false
+          collapseNodeChildren(child)
+        }
+      })
+    }
+  }
+
   defineExpose({
     show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
       record.value = data
@@ -89,4 +189,8 @@
     }
   })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .tree-toolbar {
+    padding: 10px;
+  }
+</style>
