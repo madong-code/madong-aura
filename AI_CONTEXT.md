@@ -30,11 +30,13 @@ src/views/{模块名}/实体文件名
 - 表名 `sys_user`
   - 模块名 `sys`
   - 实体名 `user`
+  - 实体小驼峰名 `user`
   - API 服务文件 `./src/api/sys/user.ts`
   - API 服务类名 `UserService`
 - 表名 `sys_user_role`
   - 模块名 `sys`
   - 实体名 `user-role`
+  - 实体小驼峰名 `userRole`
   - API 服务文件 `./src/api/sys/user-role.ts`
   - API 服务类名 `UserRoleService`
 
@@ -49,14 +51,14 @@ export class {EntityName}Service {
   // 分页查询
   static page(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/page',
+      url: '/{模块路径}/{实体小驼峰名}/page',
       params
     })
   }
   // 树形接口，注意，只有id/name/parentId字段的树形接口才需要此方法
   static tree(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/tree',
+      url: '/{模块路径}/{实体小驼峰名}/tree',
       params
     })
   }
@@ -64,7 +66,7 @@ export class {EntityName}Service {
   // 添加
   static save(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/save',
+      url: '/{模块路径}/{实体小驼峰名}/save',
       params
     })
   }
@@ -72,7 +74,7 @@ export class {EntityName}Service {
   // 修改
   static update(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/update',
+      url: '/{模块路径}/{实体小驼峰名}/update',
       params
     })
   }
@@ -80,7 +82,7 @@ export class {EntityName}Service {
   // 删除
   static remove(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/remove',
+      url: '/{模块路径}/{实体小驼峰名}/remove',
       params
     })
   }
@@ -88,7 +90,7 @@ export class {EntityName}Service {
   // 详情
   static detail(params: any) {
     return request.post({
-      url: '/{模块路径}/{实体名-小驼峰}/detail',
+      url: '/{模块路径}/{实体小驼峰名}/detail',
       params
     })
   }
@@ -319,3 +321,572 @@ export const crudSchema: CrudSchema = {
 - refreshCreate(): 新增后刷新
 - refreshUpdate(): 更新后刷新
 - refreshRemove(): 删除后刷新
+
+## 例子
+
+### 普通表-岗位管理(sys_post)
+
+#### 接口文件
+
+`src/api/sys/post.ts`
+
+```ts
+import request from '@/utils/http'
+
+export class PostService {
+  // 分页查询
+  static page(params: any) {
+    return request.post({
+      url: '/sys/post/page',
+      params
+    })
+  }
+
+  // 添加
+  static save(params: any) {
+    return request.post({
+      url: '/sys/post/save',
+      params
+    })
+  }
+
+  // 修改
+  static update(params: any) {
+    return request.post({
+      url: '/sys/post/update',
+      params
+    })
+  }
+
+  // 删除
+  static remove(params: any) {
+    return request.post({
+      url: '/sys/post/remove',
+      params
+    })
+  }
+
+  // 详情
+  static detail(params: any) {
+    return request.post({
+      url: '/sys/post/detail',
+      params
+    })
+  }
+}
+```
+
+#### 元数据文件
+
+`src/views/sys/post/schemas/index.tsx`
+
+```tsx
+import { CrudSchema } from '@/components/crud'
+import { PostService } from '@/api/sys/post'
+
+// crud配置
+export const crudSchema: CrudSchema = {
+  // 接口地址
+  api: PostService.page,
+  dialogTitle: '岗位',
+  crudApi: {
+    // 新增接口
+    add: PostService.save,
+    // 修改接口
+    edit: PostService.update,
+    // 删除接口
+    remove: PostService.remove,
+    // 详情接口
+    view: PostService.detail
+  },
+  // 使用crud
+  useCrud: true,
+  // 是否有新增
+  hasAdd: true,
+  // 是否有删除
+  hasRemove: true,
+  // 是否有修改
+  hasEdit: true,
+  // 是否有详情
+  hasView: true,
+  // 新增权限码
+  addAuth: 'sys:post:save',
+  // 删除权限码
+  removeAuth: 'sys:post:remove',
+  // 修改权限码
+  editAuth: 'sys:post:update',
+  // 详情权限码
+  viewAuth: 'sys:post:detail',
+  // 表格列定义
+  columns: [
+    {
+      type: 'selection'
+    },
+    {
+      prop: 'name',
+      label: '岗位名称'
+    },
+    {
+      prop: 'code',
+      label: '唯一编码'
+    },
+    {
+      prop: 'sort',
+      label: '排序'
+    },
+    {
+      prop: 'enabled',
+      label: '是否启用',
+      component: 'ApiDict',
+      componentProps: {
+        code: 'yes_no'
+      }
+    },
+    {
+      prop: 'remark',
+      label: '备注'
+    }
+  ],
+  // 搜索表单定义
+  searchFormSchema: {
+    schema: [
+      {
+        prop: 'm_LIKE_name',
+        label: '岗位名称',
+        component: 'Input',
+        componentProps: {
+          clearable: true,
+          placeholder: '请输入岗位名称'
+        },
+        colSpan: 6
+      },
+      {
+        prop: 'm_EQ_enabled',
+        label: '状态',
+        component: 'ApiDict',
+        componentProps: {
+          code: 'yes_no',
+          placeholder: '请选择状态'
+        },
+        colSpan: 6
+      }
+    ]
+  },
+  // 内置弹窗配置
+  dialogProps: {
+    width: '50%'
+  },
+  // crud表单配置
+  formSchema: {
+    showDefaultActions: false,
+    labelWidth: '100px',
+    schema: [
+      {
+        label: '岗位ID',
+        prop: 'id',
+        component: 'Input',
+        colSpan: 24,
+        show: false,
+        ifDetail: false
+      },
+      {
+        label: '岗位名称',
+        prop: 'name',
+        component: 'Input',
+        rules: [
+          {
+            required: true,
+            message: '请输入岗位名称'
+          }
+        ],
+        componentProps: {
+          placeholder: '请输入岗位名称'
+        },
+        colSpan: 24
+      },
+      {
+        label: '唯一编码',
+        prop: 'code',
+        component: 'Input',
+        rules: [
+          {
+            required: true,
+            message: '请输入唯一编码'
+          }
+        ],
+        componentProps: {
+          placeholder: '请输入唯一编码'
+        },
+        colSpan: 24
+      },
+      {
+        label: '排序',
+        prop: 'sort',
+        component: 'InputNumber',
+        componentProps: {
+          min: 0,
+          placeholder: '请输入排序值'
+        },
+        colSpan: 24
+      },
+      {
+        label: '是否启用',
+        prop: 'enabled',
+        component: 'ApiDict',
+        componentProps: {
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
+        },
+        rules: [
+          {
+            required: true,
+            message: '请选择是否启用'
+          }
+        ],
+        colSpan: 24
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          placeholder: '请输入备注'
+        },
+        colSpan: 24
+      }
+    ]
+  }
+}
+```
+
+#### 页面入口文件
+
+`src/views/sys/post/schemas/index.tsx`
+
+```vue
+<template>
+  <div class="sys-post-page art-full-height">
+    <BasicCrud />
+  </div>
+</template>
+<script setup lang="tsx">
+  import { useCrud } from '@/components/crud'
+  import { crudSchema } from './schemas'
+
+  const [BasicCrud] = useCrud({
+    ...crudSchema,
+    // 左侧工具栏
+    toolbarActions: [],
+    // 左侧栏工具-下拉菜单
+    dropDownToolbarActions: [],
+    // 表格行操作
+    tableActions: [],
+    // 表格行操作-下拉菜单
+    dropDownActions: []
+  })
+</script>
+<style lang="scss" scoped></style>
+```
+
+### 树型表-部门管理(sys_dept)
+
+#### 接口文件
+
+`src/api/sys/dept.ts`
+
+```ts
+import request from '@/utils/http'
+
+export class DeptService {
+  // 分页查询
+  static page(params: any) {
+    return request.post({
+      url: '/sys/dept/page',
+      params
+    })
+  }
+
+  // 树形接口
+  static tree(params: any) {
+    return request.post({
+      url: '/sys/dept/tree',
+      params
+    })
+  }
+
+  // 添加
+  static save(params: any) {
+    return request.post({
+      url: '/sys/dept/save',
+      params
+    })
+  }
+
+  // 修改
+  static update(params: any) {
+    return request.post({
+      url: '/sys/dept/update',
+      params
+    })
+  }
+
+  // 删除
+  static remove(params: any) {
+    return request.post({
+      url: '/sys/dept/remove',
+      params
+    })
+  }
+
+  // 详情
+  static detail(params: any) {
+    return request.post({
+      url: '/sys/dept/detail',
+      params
+    })
+  }
+}
+```
+
+#### 元数据文件
+
+`src/views/sys/dept/schemas/index.tsx`
+
+```tsx
+import { CrudSchema } from '@/components/crud'
+import { DeptService } from '@/api/sys/dept'
+
+// crud配置
+export const crudSchema: CrudSchema = {
+  // 接口地址：改为 tree 接口以支持树形结构
+  api: DeptService.tree,
+  dialogTitle: '部门',
+  crudApi: {
+    add: DeptService.save,
+    edit: DeptService.update,
+    remove: DeptService.remove,
+    view: DeptService.detail
+  },
+  useCrud: true,
+  hasAdd: true,
+  hasRemove: true,
+  hasEdit: true,
+  hasView: true,
+  addAuth: 'sys:dept:save',
+  removeAuth: 'sys:dept:remove',
+  editAuth: 'sys:dept:update',
+  viewAuth: 'sys:dept:detail',
+
+  // 禁用搜索表单，因为树形结构是全量数据
+  useSearchForm: false,
+
+  // 树形结构配置
+  tree: {
+    id: 'id',
+    pid: 'parentId',
+    children: 'children'
+  },
+
+  columns: [
+    {
+      type: 'selection'
+    },
+    {
+      prop: 'name',
+      label: '部门名称',
+      component: 'Input'
+    },
+    {
+      prop: 'code',
+      label: '唯一编码',
+      component: 'Input'
+    },
+    {
+      prop: 'sort',
+      label: '排序',
+      component: 'InputNumber'
+    },
+    {
+      prop: 'enabled',
+      label: '状态',
+      component: 'ApiDict',
+      componentProps: {
+        code: 'yes_no',
+        renderType: 'RadioGroup'
+      }
+    }
+  ],
+
+  searchFormSchema: {
+    schema: []
+  },
+
+  dialogProps: {
+    width: '50%'
+  },
+
+  formSchema: {
+    showDefaultActions: false,
+    labelWidth: '100px',
+    schema: [
+      {
+        label: '部门ID',
+        prop: 'id',
+        component: 'Input',
+        colSpan: 24,
+        show: false,
+        ifDetail: false
+      },
+      {
+        label: '父级部门',
+        prop: 'parentId',
+        component: 'ApiTreeSelect',
+        componentProps: {
+          api: '/sys/dept/tree',
+          labelField: 'name',
+          valueField: 'id',
+          // 任意节点可选
+          checkStrictly: true,
+          clearable: true,
+          placeholder: '请选择父级部门'
+        },
+        colSpan: 24,
+        rules: [
+          {
+            required: true,
+            message: '请选择父级部门'
+          }
+        ]
+      },
+      {
+        label: '部门名称',
+        prop: 'name',
+        component: 'Input',
+        componentProps: {
+          placeholder: '请输入部门名称'
+        },
+        colSpan: 24,
+        rules: [
+          {
+            required: true,
+            message: '请输入部门名称'
+          }
+        ]
+      },
+      {
+        label: '唯一编码',
+        prop: 'code',
+        component: 'Input',
+        componentProps: {
+          placeholder: '请输入唯一编码'
+        },
+        colSpan: 24,
+        rules: [
+          {
+            required: true,
+            message: '请输入唯一编码'
+          }
+        ]
+      },
+      {
+        label: '排序',
+        prop: 'sort',
+        component: 'InputNumber',
+        componentProps: {
+          min: 0,
+          max: 9999
+        },
+        colSpan: 24,
+        rules: [
+          {
+            required: true,
+            message: '请输入排序值'
+          }
+        ]
+      },
+      {
+        label: '是否启用',
+        prop: 'enabled',
+        component: 'ApiDict',
+        componentProps: {
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
+        },
+        colSpan: 24,
+        rules: [
+          {
+            required: true,
+            message: '请选择启用状态'
+          }
+        ]
+      },
+      {
+        label: '部门负责人',
+        prop: 'leaderIdList',
+        component: 'ApiSelect',
+        componentProps: {
+          api: '/sys/user/select',
+          placeholder: '请选择负责人',
+          multiple: true
+        },
+        colSpan: 24
+      },
+      {
+        label: '分管领导',
+        prop: 'mainLeaderId',
+        component: 'ApiSelect',
+        componentProps: {
+          api: '/sys/user/select',
+          placeholder: '请选择分管领导'
+        },
+        colSpan: 24
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 3,
+          placeholder: '请输入备注'
+        },
+        colSpan: 24
+      }
+    ]
+  }
+}
+```
+
+#### 页面入口文件
+
+`src/views/sys/dept/schemas/index.tsx`
+
+```vue
+<template>
+  <div class="sys-dept-page art-full-height">
+    <BasicCrud />
+  </div>
+</template>
+
+<script setup lang="tsx">
+  import { useCrud } from '@/components/crud'
+  import { crudSchema } from './schemas'
+
+  const [BasicCrud] = useCrud({
+    ...crudSchema,
+    toolbarActions: [],
+    dropDownToolbarActions: [],
+    tableActions: [],
+    dropDownActions: []
+  })
+</script>
+
+<style lang="scss" scoped>
+  .sys-dept-page {
+    height: 100%;
+  }
+</style>
+```
