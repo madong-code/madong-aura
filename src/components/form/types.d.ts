@@ -3,7 +3,7 @@ import { FormRules } from 'element-plus'
 export interface FormSchema {
   labelPosition?: 'left' | 'right' | 'top'
   gutter?: number // 栅格间隔
-  labelWidth?: string
+  labelWidth?: string | number
   schema?: FormItemSchema[]
   // 显示默认操作按钮
   showDefaultActions?: boolean
