@@ -20,6 +20,7 @@ export default ({ mode }: { mode: string }) => {
 
   console.log(`🚀 API_URL = ${VITE_API_URL}`)
   console.log(`🚀 VERSION = ${VITE_VERSION}`)
+  console.log(`🚀 API_PROXY_URL = ${VITE_API_PROXY_URL}`)
 
   return defineConfig({
     define: {
@@ -30,7 +31,7 @@ export default ({ mode }: { mode: string }) => {
       port: Number(VITE_PORT),
       proxy: {
         '/api': {
-          target: 'https://apifox-plus.mldong.com/m1/3323228-2823297-default',
+          target: VITE_API_PROXY_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }
