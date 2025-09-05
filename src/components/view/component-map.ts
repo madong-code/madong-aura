@@ -60,7 +60,11 @@ export function getAllComponents() {
  * @param column 列配置
  */
 export function viewColumnFormatter(column: ColumnOption<any>) {
-  if (column.component && hasComponent(column.component as string)) {
+  if (
+    column.component &&
+    hasComponent(column.component as string) &&
+    column.formatter === undefined
+  ) {
     column.formatter = (row: any) => {
       const component = getComponent(column.component as string)
       return h(component, {
