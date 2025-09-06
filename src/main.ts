@@ -16,11 +16,14 @@ import '@icons/system/iconfont.css'                 // 系统图标
 import '@utils/sys/console.ts'                      // 控制台输出内容
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { setupGlobDirectives } from './directives'
+import { setupErrorHandle } from './utils/sys/error-handle'
 import language from './locales'
 if ((import.meta as any).env.VITE_APP_ICON_OFFLINE === 'true') {
   // 加载图标
   await import('@/utils/load-icon');
 }
+
+
 document.addEventListener(
   'touchstart',
   function () {},
@@ -31,6 +34,7 @@ const app = createApp(App)
 initStore(app)
 initRouter(app)
 setupGlobDirectives(app)
+setupErrorHandle(app)
 
 app.use(language)
 

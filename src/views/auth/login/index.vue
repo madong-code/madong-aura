@@ -291,7 +291,7 @@
 
   // 切换主题
   import { useTheme } from '@/composables/useTheme'
-  import { UserService } from '@/api/usersApi'
+  import { UserService } from '@/api/sys/user'
   import { useDictStore } from '@/store/modules/dict'
   import { DictService } from '@/api/dictApi'
 

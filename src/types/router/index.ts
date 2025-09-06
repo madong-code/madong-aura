@@ -41,6 +41,12 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
   isFullPage?: boolean
   /** 排序-正序 */
   order?: number
+  /** 是否为权限按钮行 */
+  isAuthButton?: boolean
+  /** 权限标识 */
+  authMark?: string
+  /** 父级路径 */
+  parentPath?: string
 }
 
 // 扩展路由记录
