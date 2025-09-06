@@ -15,7 +15,7 @@ import { asyncRoutes } from '../routes/asyncRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/composables/useCommon'
 import { useWorktabStore } from '@/store/modules/worktab'
-import { UserService } from '@/api/usersApi'
+import { UserService } from '@/api/sys/user'
 
 // 前端权限模式 loading 关闭延时，提升用户体验
 const LOADING_DELAY = 100

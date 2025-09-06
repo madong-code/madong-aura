@@ -36,6 +36,28 @@ export class UserService {
       params
     })
   }
+  // 登录
+  static login(params: Api.Auth.LoginParams) {
+    return request.post<Api.Auth.LoginResponse>({
+      url: '/sys/login',
+      params
+      // showErrorMessage: false // 不显示错误消息
+    })
+  }
+
+  // 获取用户信息
+  static getUserInfo() {
+    return request.post<any>({
+      url: '/sys/user/info'
+    })
+  }
+  // 获取用户权限码
+  static getPermCode() {
+    return request.post<string[]>({
+      url: '/sys/user/permCode'
+    })
+  }
+
   // 根据登录ID踢出用户
   static kickoutByLoginId(params: any) {
     return request.post({

@@ -1,3 +1,4 @@
+import { AppRouteRecord } from '@/types'
 import request from '@/utils/http'
 
 export class MenuService {
@@ -35,5 +36,11 @@ export class MenuService {
       url: '/sys/menu/detail',
       params
     })
+  }
+  static async getMenuList(): Promise<any> {
+    const menuList = await request.get<AppRouteRecord[]>({
+      url: '/getArtDesignMenu'
+    })
+    return { menuList }
   }
 }
