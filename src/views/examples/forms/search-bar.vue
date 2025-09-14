@@ -35,17 +35,17 @@
     </div>
 
     <div class="button-group">
-      <el-button @click="getLevelOptions"> 获取用户等级数据 </el-button>
-      <el-button @click="advancedValidate"> 校验表单 </el-button>
-      <el-button @click="advancedReset"> 重置 </el-button>
-      <el-button v-if="showUserName" @click="updateUserName"> 修改用户名 </el-button>
-      <el-button v-if="showUserName" @click="deleteUserName"> 删除用户名 </el-button>
-      <el-button @click="labelWidthAdvanced = 120"> 修改 label 宽度 </el-button>
-      <el-button @click="spanAdvanced = 8"> 设置一行显示的组件数 </el-button>
-      <el-button @click="gutterAdvanced = 50"> 修改 gutter </el-button>
-      <el-button @click="labelPositionAdvanced = 'left'"> label 左对齐 </el-button>
-      <el-button @click="labelPositionAdvanced = 'right'"> label 右对齐 </el-button>
-      <el-button @click="labelPositionAdvanced = 'top'"> label 顶部对齐 </el-button>
+      <ElButton @click="getLevelOptions"> 获取用户等级数据 </ElButton>
+      <ElButton @click="advancedValidate"> 校验表单 </ElButton>
+      <ElButton @click="advancedReset"> 重置 </ElButton>
+      <ElButton v-if="showUserName" @click="updateUserName"> 修改用户名 </ElButton>
+      <ElButton v-if="showUserName" @click="deleteUserName"> 删除用户名 </ElButton>
+      <ElButton @click="labelWidthAdvanced = 120"> 修改 label 宽度 </ElButton>
+      <ElButton @click="spanAdvanced = 8"> 设置一行显示的组件数 </ElButton>
+      <ElButton @click="gutterAdvanced = 50"> 修改 gutter </ElButton>
+      <ElButton @click="labelPositionAdvanced = 'left'"> label 左对齐 </ElButton>
+      <ElButton @click="labelPositionAdvanced = 'right'"> label 右对齐 </ElButton>
+      <ElButton @click="labelPositionAdvanced = 'top'"> label 顶部对齐 </ElButton>
     </div>
   </div>
 </template>

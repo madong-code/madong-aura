@@ -312,6 +312,8 @@
     "ElTag": true,
     "ElMessageBox": true,
     "ElTimeSelect": true,
-    "ElRadio": true
+    "ElRadio": true,
+    "ElUpload": true,
+    "ElButton": true
   }
 }
