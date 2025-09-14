@@ -69,6 +69,7 @@ export default ({ mode }: { mode: string }) => {
     },
     plugins: [
       vue(),
+      vueJsx(),
       // 自动导入 components 目录下的组件
       Components({
         deep: true,
