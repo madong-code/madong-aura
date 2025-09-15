@@ -69,9 +69,10 @@ pnpm build
 ## 相关项目
 
 - [配套后端-java版](https://gitee.com/mldong/mldong)
-- [配套后端-python版](https://gitee.com/mldong666/mldong-python)
+- [配套后端-python-flask版](https://gitee.com/mldong666/mldong-python)
 - [配套后端-nodejs版](https://gitee.com/mldong/mldong-koa)
 - [配套后端-GoLang版](https://gitee.com/mldong/mldong-goframe)
+- [配套后端-python-fastapi版](https://gitee.com/mldong/mldong-fastapi)
 - [vben5文档](https://doc.mldong.com/mldong/front-pro/pro-explain.html/)
 
 * 第一章·基础篇
