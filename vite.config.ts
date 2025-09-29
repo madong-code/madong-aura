@@ -1,13 +1,15 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 import path from 'path'
+import { fileURLToPath } from 'url'
+import vueDevTools from 'vite-plugin-vue-devtools'
 import viteCompression from 'vite-plugin-compression'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import ElementPlus from 'unplugin-element-plus/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { fileURLToPath } from 'url'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+
 // import { visualizer } from 'rollup-plugin-visualizer'
 
 export default ({ mode }: { mode: string }) => {
@@ -17,7 +19,6 @@ export default ({ mode }: { mode: string }) => {
 
   console.log(`🚀 API_URL = ${VITE_API_URL}`)
   console.log(`🚀 VERSION = ${VITE_VERSION}`)
-  console.log(`🚀 API_PROXY_URL = ${VITE_API_PROXY_URL}`)
 
   return defineConfig({
     define: {
@@ -70,28 +71,24 @@ export default ({ mode }: { mode: string }) => {
     plugins: [
       vue(),
       vueJsx(),
-      // 自动导入 components 目录下的组件
-      Components({
-        deep: true,
-        extensions: ['vue'],
-        dirs: ['src/components'],
-        resolvers: [ElementPlusResolver({ importStyle: false })],
-        dts: 'src/types/components.d.ts'
-      }),
-      // 自动导入组件 Api
+      // 自动按需导入 API
       AutoImport({
         imports: ['vue', 'vue-router', '@vueuse/core', 'pinia'],
-        resolvers: [ElementPlusResolver()],
         dts: 'src/types/auto-imports.d.ts',
-        // ESLint 配置
         eslintrc: {
-          // 首次运行时设置为 true 生成配置文件，之后改为 false
           enabled: true,
-          // ESLint 配置文件路径
-          filepath: './.auto-import.json',
-          // 允许全局使用自动导入的 API
-          globalsPropValue: true
-        }
+          filepath: './.auto-import.json'
+        },
+        resolvers: [ElementPlusResolver()]
+      }),
+      // 自动按需导入组件
+      Components({
+        dts: 'src/types/components.d.ts',
+        resolvers: [ElementPlusResolver()]
+      }),
+      // 按需定制主题配置
+      ElementPlus({
+        useSource: true
       }),
       // 压缩
       viteCompression({
@@ -111,12 +108,16 @@ export default ({ mode }: { mode: string }) => {
       //   filename: 'dist/stats.html' // 分析图生成的文件名及路径
       // }),
     ],
+    // 依赖预构建
+    optimizeDeps: {
+      include: ['element-plus/es/components/*/style/css']
+    },
     css: {
       preprocessorOptions: {
         // sass variable and mixin
         scss: {
-          api: 'modern-compiler',
           additionalData: `
+            @use "@styles/el-light.scss" as *; 
             @use "@styles/variables.scss" as *; 
             @use "@styles/mixin.scss" as *;
           `
