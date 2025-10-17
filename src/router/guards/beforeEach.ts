@@ -176,7 +176,11 @@ async function handleDynamicRoutes(
     try {
       const data = await UserService.getUserInfo()
       let permCode = data.buttons
-      if (useCommon().isFrontendMode.value && !permCode) {
+      if (
+        (useCommon().isFrontendMode.value ||
+          import.meta.env.VITE_BACKEND_MODE_USE_CODE === 'true') &&
+        !permCode
+      ) {
         permCode = await UserService.getPermCode()
       }
       userStore.setUserInfo({

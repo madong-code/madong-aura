@@ -6,8 +6,6 @@ import type { AppRouteRecord } from '@/types/router'
 
 type AuthItem = NonNullable<AppRouteRecord['meta']['authList']>[number]
 
-const userStore = useUserStore()
-
 /**
  * 按钮权限（前后端模式通用）
  * 用法：
@@ -15,6 +13,7 @@ const userStore = useUserStore()
  * hasAuth('add') // 检查是否拥有新增权限
  */
 export const useAuth = () => {
+  const userStore = useUserStore()
   const route = useRoute()
   const { isFrontendMode } = useCommon()
   const { info } = storeToRefs(userStore)
@@ -40,7 +39,14 @@ export const useAuth = () => {
     }
 
     // 后端模式 超级管理标识为admin==>所有权限
-    return backendAuthList.some((item) => item?.authMark === 'admin' || item?.authMark === auth)
+    const flag = backendAuthList.some(
+      (item) => item?.authMark === 'admin' || item?.authMark === auth
+    )
+    if (!flag) {
+      // 如果没有权限，则检查前端权限
+      return frontendAuthList.includes('admin') || frontendAuthList.includes(auth)
+    }
+    return flag
   }
 
   return {
