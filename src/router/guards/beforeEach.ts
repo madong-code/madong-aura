@@ -12,7 +12,7 @@ import { AppRouteRecord } from '@/types/router'
 import { RoutesAlias } from '../routesAlias'
 import { menuDataToRouter } from '../utils/menuToRouter'
 import { asyncRoutes } from '../routes/asyncRoutes'
-import { staticRoutes } from '../routes/staticRoutes'
+import { localRoutes, staticRoutes } from '../routes/staticRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/composables/useCommon'
 import { useWorktabStore } from '@/store/modules/worktab'
@@ -247,8 +247,23 @@ async function processFrontendMenu(router: Router): Promise<void> {
  * 处理后端控制模式的菜单逻辑
  */
 async function processBackendMenu(router: Router): Promise<void> {
-  const { menuList } = await MenuService.getMenuList()
-  await registerAndStoreMenu(router, menuList)
+  try {
+    // 获取菜单数据并添加空数组默认值
+    const { menuList = [] } = await MenuService.getMenuList() || {};
+
+    // 合并路由并转换数据结构
+    const processedRoutes = [
+      ...(menuList as AppRouteRecord[]),
+      ...localRoutes
+    ].map(route => menuDataToRouter(route));
+
+    // 注册并存储菜单
+    await registerAndStoreMenu(router, processedRoutes);
+  } catch (error) {
+    console.error('菜单处理失败:', error);
+    // 根据业务需求决定是否抛出错误
+    // throw new Error('菜单初始化失败');
+  }
 }
 
 /**

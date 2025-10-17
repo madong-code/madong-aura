@@ -215,7 +215,7 @@ function handleIframeRoute(
   iframeRoutes: AppRouteRecord[],
   depth: number
 ): void {
-  const LAYOUT_VIEW = () => import('@/views/index/index.vue')
+  const LAYOUT_VIEW = () => import('@/views/layout/index.vue')
   const IFRAME_VIEW = () => import('@/views/outside/Iframe.vue')
 
   if (depth === 0) {
@@ -247,7 +247,7 @@ function handleLayoutRoute(
   route: AppRouteRecord,
   component: string | undefined
 ): void {
-  converted.component = () => import('@/views/index/index.vue')
+  converted.component = () => import('@/views/layout/index.vue')
   converted.path = `/${(route.path?.split('/')[1] || '').trim()}`
   converted.name = ''
   route.meta.isFirstLevel = true

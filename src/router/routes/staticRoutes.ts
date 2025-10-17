@@ -1,5 +1,7 @@
 import { AppRouteRecordRaw } from '../utils/utils'
 import { RoutesAlias } from '../routesAlias'
+import { routeModules } from './modules/example'
+import { AppRouteRecord } from '@/types'
 
 /**
  * 静态路由配置（不需要权限就能访问的路由）
@@ -55,7 +57,7 @@ export const staticRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/outside',
-    component: () => import('@views/index/index.vue'),
+    component: () => import('@views/layout/index.vue'),
     name: 'Outside',
     meta: { title: 'menus.outside.title' },
     children: [
@@ -68,4 +70,59 @@ export const staticRoutes: AppRouteRecordRaw[] = [
       }
     ]
   }
+]
+
+
+
+
+/**
+ *
+ * 后端路由模式-静态路由配置（不需要权限就能访问的路由并显示左侧菜单）
+ *
+ * 属性说明：
+ * isHideTab: true 表示不在标签页中显示
+ *
+ * 注意事项：
+ * 1、path、name 不要和动态路由冲突，否则会导致路由冲突无法访问
+ * 2、静态路由不管是否登录都可以访问
+ */
+export const localRoutes: AppRouteRecord[] = [
+  // 示例嵌套路由定义
+  // {
+  //   name: 'Test',
+  //   path: '/test',
+  //   component: RoutesAlias.Layout,
+  //   meta: {
+  //     base: 'admin',
+  //     order: 999,
+  //     title: '测试路由',
+  //     icon: '&#xe721;',
+  //     roles: []
+  //   },
+  //   children: [
+  //     {
+  //       path: '/123',
+  //       name: 'test123',
+  //       component: '/dashboard/console',
+  //       meta: {
+  //         base: 'admin',
+  //         title: 'test123',
+  //         keepAlive: false,
+  //         fixedTab: true
+  //       },
+  //       children: []
+  //     },
+  //     {
+  //       path: '/1234',
+  //       name: 'test1234',
+  //       component: '/dashboard/analysis',
+  //       meta: {
+  //         title: 'test1234',
+  //         keepAlive: false
+  //       },
+  //       children: []
+  //     }
+  //   ]
+  // },
+  routeModules
 ]
