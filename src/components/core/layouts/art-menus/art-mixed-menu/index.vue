@@ -24,7 +24,8 @@
             :class="{ active: item.isActive }"
             @click="handleMenuJump(item, true)"
           >
-            <i class="iconfont-sys" v-html="item.meta.icon" />
+            <Icon v-if="item.meta.icon && item.meta.icon.includes(':')" :icon="item.meta.icon" :color="theme?.iconColor" class="menu-icon" />
+            <i v-else class="iconfont-sys" v-html="item.meta.icon" />
             <span>{{ item.formattedTitle }}</span>
             <div v-if="item.meta.showBadge" class="art-badge art-badge-mixed" />
           </div>
@@ -47,6 +48,7 @@
   import { useThrottleFn } from '@vueuse/core'
   import { formatMenuTitle } from '@/router/utils/utils'
   import { handleMenuJump } from '@/utils/navigation'
+  import { Icon } from '@/components/icon'
   import type { AppRouteRecord } from '@/types/router'
 
   defineOptions({ name: 'ArtMixedMenu' })
@@ -252,12 +254,16 @@
         line-height: 40px;
         cursor: pointer;
         border-radius: 6px;
-
+        display: flex;
+        align-items: center;
         i {
           margin-right: 5px;
           font-size: 15px;
         }
-
+        .menu-icon {
+          margin-right: 5px;
+          font-size: 16px;
+        }
         &:hover {
           color: var(--main-color);
         }

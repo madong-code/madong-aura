@@ -1,7 +1,9 @@
 <template>
   <ElSubMenu v-if="hasChildren" :index="item.path || item.meta.title">
     <template #title>
+      <Icon v-if="item.meta.icon && item.meta.icon.includes(':')" :icon="item.meta.icon" :color="theme?.iconColor" class="menu-icon" />
       <i
+        v-else
         class="menu-icon iconfont-sys"
         :style="{ color: theme?.iconColor }"
         v-html="item.meta.icon"
@@ -30,7 +32,9 @@
     :index="item.path || item.meta.title"
     @click="goPage(item)"
   >
+    <Icon v-if="item.meta.icon && item.meta.icon.includes(':')" :icon="item.meta.icon" :color="theme?.iconColor" class="menu-icon" />
     <i
+    v-else
       class="menu-icon iconfont-sys"
       :style="{ color: theme?.iconColor }"
       v-html="item.meta.icon"
@@ -52,7 +56,7 @@
   import { AppRouteRecord } from '@/types/router'
   import { handleMenuJump } from '@/utils/navigation'
   import { formatMenuTitle } from '@/router/utils/utils'
-
+  import { Icon } from '@/components/icon'
   const props = defineProps({
     item: {
       type: Object as PropType<AppRouteRecord>,
