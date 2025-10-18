@@ -1,5 +1,21 @@
 import { CrudSchema } from '@/components/crud'
 import { UserService } from '@/api/sys/user'
+const lockUser = (
+  flag: boolean,
+  row: {
+    id: string
+  }
+) => {
+  if (flag) {
+    return UserService.locked({
+      id: row.id
+    })
+  } else {
+    return UserService.unLocked({
+      id: row.id
+    })
+  }
+}
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
@@ -56,7 +72,12 @@ export const crudSchema: CrudSchema = {
           1: 'success',
           0: 'danger'
         },
-        useColorList: false
+        useColorList: false,
+        switch: {
+          enabled: true,
+          permCode: 'sys:user:locked',
+          api: lockUser
+        }
       }
     },
     {

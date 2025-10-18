@@ -14,6 +14,12 @@
       </template>
     </el-space>
   </template>
+  <el-switch
+    v-loading="switchLoading"
+    v-model="switchValue"
+    @change="handleChange"
+    v-else-if="props.switch.enabled === true && hasAuth(props.switch.permCode as string)"
+  ></el-switch>
   <span v-else>{{ cValue }}</span>
 </template>
 <script lang="ts" setup>
@@ -21,6 +27,16 @@
   import { useChart } from '@/composables/useChart'
   import { PropType } from 'vue'
   import { ColorType, NewOption } from '@/types/component/dict'
+  import { useAuth } from '@/composables/useAuth'
+  const { hasAuth } = useAuth()
+  type SwitchType = {
+    // 是否启用
+    enabled: boolean
+    // 接口
+    api?: (flag: boolean, record: any) => Promise<any>
+    // 权限码
+    permCode?: string
+  }
   // 使用基础的 useChart hook
   const { isDark } = useChart()
   defineOptions({
@@ -97,20 +113,31 @@
       // 是否使用预设的颜色列表
       type: Boolean,
       default: true
+    },
+    switch: {
+      // 字典开头配置
+      type: Object as PropType<SwitchType>,
+      default: () => ({})
     }
   })
-
+  const emits = defineEmits(['switch-change'])
+  const switchValue = ref(props.value === 1 || props.value === '1')
+  const switchLoading = ref(false)
   const dictStore = useDictStore()
   const options = ref<NewOption[]>([])
   const effect = computed<'dark' | 'light' | 'plain'>(() => {
     return isDark.value ? 'dark' : 'light'
   })
-  const isTag = computed(
-    () =>
+  const isTag = computed(() => {
+    if (props.switch.enabled === true) {
+      return false
+    }
+    return (
       Object.keys(props.typeMap).length > 0 ||
       Object.keys(props.colorMap).length > 0 ||
       props.useColorList
-  )
+    )
+  })
   type NewOptionType = NewOption & { tagProps?: any }
   const cValue = computed(() => {
     // 查找匹配的选项并返回标签
@@ -118,13 +145,13 @@
       // 处理数组值的情况
       return props.value
         .map((val) => {
-          const option = options.value.find((opt) => opt.value === val)
+          const option = options.value.find((opt: any) => opt.value === val)
           return option ? option.label : val
         })
         .join(', ')
     } else {
       // 处理单个值的情况
-      const option = options.value.find((opt) => opt.value === props.value)
+      const option = options.value.find((opt: any) => opt.value === props.value)
       return option ? option.label : props.value
     }
   })
@@ -167,7 +194,7 @@
   const cNewOptions = computed<NewOptionType[]>(() => {
     if (Array.isArray(props.value)) {
       return props.value.map((val: any) => {
-        const option = options.value.find((opt) => opt.value === val) ?? null
+        const option = options.value.find((opt: any) => opt.value === val) ?? null
         // 修复：根据选项在 options 数组中的实际索引来获取 colorList 颜色
         const optionIndex = option ? options.value.indexOf(option) : 0
         return createTagOption(option, val, optionIndex)
@@ -176,7 +203,7 @@
       if (props.value === undefined || props.value === null) {
         return []
       }
-      const option = options.value.find((opt) => opt.value === props.value)
+      const option = options.value.find((opt: any) => opt.value === props.value)
       // 修复：根据选项在 options 数组中的实际索引来获取 colorList 颜色
       const optionIndex = option ? options.value.indexOf(option) : 0
       return option
@@ -201,6 +228,21 @@
     } catch (error) {
       console.error('获取字典数据失败:', error)
       options.value = []
+    }
+  }
+  const handleChange = (value: any) => {
+    if (props.switch.api) {
+      switchLoading.value = true
+      props.switch
+        .api(value, props.record)
+        .then(() => {
+          emits('switch-change', value)
+        })
+        .finally(() => {
+          switchLoading.value = false
+        })
+    } else {
+      emits('switch-change', value)
     }
   }
 </script>
