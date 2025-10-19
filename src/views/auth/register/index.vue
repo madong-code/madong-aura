@@ -4,7 +4,7 @@
     <div class="right-wrap">
       <div class="header">
         <ArtLogo class="icon" />
-        <h1>{{ systemName }}</h1>
+        <h1>{{ systemInfo.title || systemName }}</h1>
       </div>
       <div class="login-wrap">
         <div class="form">
@@ -80,7 +80,9 @@
   import { RoutesAlias } from '@/router/routesAlias'
   import type { FormInstance, FormRules } from 'element-plus'
   import { useI18n } from 'vue-i18n'
-
+  import { useSystemConfigStore } from '@/store/modules/system-config'
+  const systemConfigStore = useSystemConfigStore()
+  const systemInfo = computed(() => systemConfigStore.config)
   defineOptions({ name: 'Register' })
 
   const { t } = useI18n()

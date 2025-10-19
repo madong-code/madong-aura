@@ -14,9 +14,11 @@
   import { checkStorageCompatibility } from './utils/storage'
   import { useDictStore } from './store/modules/dict'
   import { DictService } from './api/dictApi'
+  import { useSystemConfigStore } from './store/modules/system-config'
 
   const userStore = useUserStore()
   const dictStore = useDictStore()
+  const systemConfigStore = useSystemConfigStore()
   const { language } = storeToRefs(userStore)
 
   const locales = {
@@ -26,6 +28,8 @@
 
   onBeforeMount(() => {
     setThemeTransitionClass(true)
+    // 获取站点信息
+    systemConfigStore.fetchSystemConfig()
     // 这里可以一次性初始化所有字典
     if (userStore.isLogin) {
       dictStore.initAllDicts(DictService.getAllDict)

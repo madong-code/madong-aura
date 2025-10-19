@@ -134,7 +134,9 @@
   const { t } = useI18n()
   import { useSettingStore } from '@/store/modules/setting'
   import type { FormInstance, FormRules } from 'element-plus'
-
+  import { useSystemConfigStore } from '@/store/modules/system-config'
+  const systemConfigStore = useSystemConfigStore()
+  const systemInfo = computed(() => systemConfigStore.config)
   type AccountKey = 'super' | 'admin' | 'user'
 
   export interface Account {
@@ -275,7 +277,7 @@
         type: 'success',
         duration: 2500,
         zIndex: 10000,
-        message: `${t('login.success.message')}, ${systemName}!`
+        message: `${t('login.success.message')}, ${systemInfo.value?.title || systemName}!`
       })
     }, 150)
   }
