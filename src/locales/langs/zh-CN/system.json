@@ -70,6 +70,7 @@
         "mobile_phone": "手机号码",
         "enabled": "状态",
         "created_date": "日期",
+        "is_locked": "是否锁定",
         "placeholder": {
           "user_name": "请输入用户名",
           "real_name": "请输入姓名",
@@ -92,6 +93,7 @@
         "post_name": "职位名称",
         "role_name": "角色名称",
         "login_date": "上次登录时间",
+        "avatar":"头像",
         "remark": "备注"
       },
       "help": {

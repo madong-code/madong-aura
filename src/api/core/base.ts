@@ -52,7 +52,15 @@ function BaseService<T = any>(options: BaseApiOptions) {
             })
         },
 
-        remove(id: string | number, params?: Record<string, any>): Promise<T> {
+        remove(params?: Record<string, any>): Promise<T> {
+            checkMethod('remove')
+            return request.del({
+                url: `${baseUrl}/0`,
+                params,
+            })
+        },
+
+        delete(id: string | number, params?: Record<string, any>): Promise<T> {
             checkMethod('remove')
             return request.del({
                 url: `${baseUrl}/${id}`,

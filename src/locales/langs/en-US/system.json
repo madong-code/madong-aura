@@ -69,6 +69,7 @@
         "mobile_phone": "Mobile",
         "enabled": "Status",
         "created_date": "Date",
+        "is_locked": "Is Locked",
         "placeholder": {
           "user_name": "Enter username",
           "real_name": "Enter name",
