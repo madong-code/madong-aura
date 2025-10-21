@@ -3,7 +3,7 @@ import AppConfig from '@/config'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import i18n, { $t } from '@/locales'
-
+import { useSystemConfigStore } from '@/store/modules/system-config'
 /** 扩展的路由配置类型 */
 export type AppRouteRecordRaw = RouteRecordRaw & {
   hidden?: boolean
@@ -28,7 +28,9 @@ export const setPageTitle = (to: RouteLocationNormalized): void => {
   const { title } = to.meta
   if (title) {
     setTimeout(() => {
-      document.title = `${formatMenuTitle(String(title))} - ${AppConfig.systemInfo.name}`
+      const systemConfigStore = useSystemConfigStore()
+
+      document.title = `${formatMenuTitle(String(title))} - ${systemConfigStore.config.title || AppConfig.systemInfo.name}`
     }, 150)
   }
 }

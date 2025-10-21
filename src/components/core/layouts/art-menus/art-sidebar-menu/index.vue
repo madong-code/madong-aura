@@ -29,14 +29,24 @@
                 }"
                 :style="{
                   margin: dualMenuShowText ? '5px' : '15px',
-                  height: dualMenuShowText ? '60px' : '46px',
+                  height: dualMenuShowText ? '60px' : '46px'
                 }"
               >
-                <Icon 
-                style="margin-right: 0px;"
- v-if="menu.meta.icon && menu.meta.icon.includes(':')" :icon="menu.meta.icon" :color="(menu.meta.isFirstLevel
-                    ? menu.path === route.path
-                    : menu.path === firstLevelMenuPath)?'#ffffff':getMenuTheme.theme.iconColor" class="menu-icon" />
+                <Icon
+                  style="margin-right: 0px"
+                  v-if="menu.meta.icon && menu.meta.icon.includes(':')"
+                  :icon="menu.meta.icon"
+                  :color="
+                    (
+                      menu.meta.isFirstLevel
+                        ? menu.path === route.path
+                        : menu.path === firstLevelMenuPath
+                    )
+                      ? '#ffffff'
+                      : getMenuTheme.theme.iconColor
+                  "
+                  class="menu-icon"
+                />
                 <i
                   v-else
                   class="iconfont-sys"
@@ -83,7 +93,7 @@
               opacity: !menuOpen ? 0 : 1
             }"
           >
-            {{ AppConfig.systemInfo.name }}
+            {{ systemInfo.title || AppConfig.systemInfo.name }}
           </p>
         </div>
 
@@ -131,8 +141,11 @@
   import SidebarSubmenu from './widget/SidebarSubmenu.vue'
   import { useCommon } from '@/composables/useCommon'
   import { Icon } from '@/components/icon'
-import { RouteLocationNormalized } from 'vue-router'
-import { AppRouteRecord } from '@/types'
+  import { RouteLocationNormalized } from 'vue-router'
+  import { AppRouteRecord } from '@/types'
+  import { useSystemConfigStore } from '@/store/modules/system-config'
+  const systemConfigStore = useSystemConfigStore()
+  const systemInfo = computed(() => systemConfigStore.config)
   defineOptions({ name: 'ArtSidebarMenu' })
 
   const MOBILE_BREAKPOINT = 800
@@ -197,44 +210,47 @@ import { AppRouteRecord } from '@/types'
     // return currentMenu?.children ?? []
     return getCurrentTopLevelChildren(route, allMenus)
   })
-  
-  /**
- * 递归查找当前路由对应的顶级菜单的子菜单
- * @param route 当前路由
- * @param allMenus 所有菜单列表
- * @returns 顶级菜单的子菜单
- */
-const getCurrentTopLevelChildren = (route: RouteLocationNormalized, allMenus: AppRouteRecord[]): AppRouteRecord[] => {
-  // 如果是顶层菜单（isFirstLevel），直接返回空数组
-  if (route.meta.isFirstLevel) {
-    return []
-  }
 
-  // 查找当前路由的父级菜单项（递归向上查找）
-  const findParentMenu = (menus: AppRouteRecord[], path: string): AppRouteRecord | undefined => {
-    for (const menu of menus) {
-      if (menu.path === path) {
-        return menu
-      }
-      if (menu.children) {
-        const childResult = findParentMenu(menu.children, path)
-        if (childResult) {
-          return childResult
+  /**
+   * 递归查找当前路由对应的顶级菜单的子菜单
+   * @param route 当前路由
+   * @param allMenus 所有菜单列表
+   * @returns 顶级菜单的子菜单
+   */
+  const getCurrentTopLevelChildren = (
+    route: RouteLocationNormalized,
+    allMenus: AppRouteRecord[]
+  ): AppRouteRecord[] => {
+    // 如果是顶层菜单（isFirstLevel），直接返回空数组
+    if (route.meta.isFirstLevel) {
+      return []
+    }
+
+    // 查找当前路由的父级菜单项（递归向上查找）
+    const findParentMenu = (menus: AppRouteRecord[], path: string): AppRouteRecord | undefined => {
+      for (const menu of menus) {
+        if (menu.path === path) {
+          return menu
+        }
+        if (menu.children) {
+          const childResult = findParentMenu(menu.children, path)
+          if (childResult) {
+            return childResult
+          }
         }
       }
+      return undefined
     }
-    return undefined
+
+    // 获取当前路由的父级菜单路径
+    const parentPath = route.matched[0]?.path || '/'
+
+    // 查找父级菜单
+    const parentMenu = findParentMenu(allMenus, parentPath)
+
+    // 返回父级菜单的子菜单
+    return parentMenu?.children ?? []
   }
-
-  // 获取当前路由的父级菜单路径
-  const parentPath = route.matched[0]?.path || '/'
-
-  // 查找父级菜单
-  const parentMenu = findParentMenu(allMenus, parentPath)
-
-  // 返回父级菜单的子菜单
-  return parentMenu?.children ?? []
-}
   /**
    * 检查是否为移动端屏幕
    */

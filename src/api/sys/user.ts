@@ -36,6 +36,20 @@ export class UserService {
       params
     })
   }
+  // 锁定用户
+  static locked(params: any) {
+    return request.post({
+      url: '/sys/user/locked',
+      params
+    })
+  }
+  // 取消锁定
+  static unLocked(params: any) {
+    return request.post({
+      url: '/sys/user/unLocked',
+      params
+    })
+  }
   // 登录
   static login(params: Api.Auth.LoginParams) {
     return request.post<Api.Auth.LoginResponse>({
