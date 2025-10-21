@@ -2,7 +2,7 @@
   <div class="card about-project art-custom-card">
     <div>
       <h2 class="box-title">关于项目</h2>
-      <p>{{ systemInfo.title || systemName }} 是一款专注于用户体验和视觉设计的后台管理系统模版</p>
+      <p>{{ systemName }} 是一款专注于用户体验和视觉设计的后台管理系统模版</p>
       <p>使用了 Vue3、TypeScript、Vite、Element Plus 等前沿技术</p>
 
       <div class="button-wrap">
@@ -31,9 +31,7 @@
 <script setup lang="ts">
   import AppConfig from '@/config'
   import { WEB_LINKS } from '@/utils/constants'
-  import { useSystemConfigStore } from '@/store/modules/system-config'
-  const systemConfigStore = useSystemConfigStore()
-  const systemInfo = computed(() => systemConfigStore.config)
+
   const systemName = AppConfig.systemInfo.name
 
   const goPage = (url: string) => {

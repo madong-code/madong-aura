@@ -40,7 +40,7 @@ export interface ColumnOption<T = any> {
   // 最小列宽度
   minWidth?: string | number
   // 固定列
-  fixed?: boolean | 'left' | 'right'
+  fixed?: boolean | 'left' | 'right'z
   // 是否可排序
   sortable?: boolean
   // 过滤器选项

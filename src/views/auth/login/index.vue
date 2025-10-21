@@ -6,7 +6,7 @@
       <div class="top-right-wrap">
         <div class="btn theme-btn" @click="toggleTheme">
           <i class="iconfont-sys">
-            {{ isDark ? '&#xe6b5;' : '&#xe725;' }}
+            {{ isDark ? "&#xe6b5;" : "&#xe725;" }}
           </i>
         </div>
         <ElDropdown @command="changeLanguage" popper-class="langDropDownStyle">
@@ -15,13 +15,19 @@
           </div>
           <template #dropdown>
             <ElDropdownMenu>
-              <div v-for="lang in languageOptions" :key="lang.value" class="lang-btn-item">
+              <div
+                v-for="lang in languageOptions"
+                :key="lang.value"
+                class="lang-btn-item"
+              >
                 <ElDropdownItem
                   :command="lang.value"
                   :class="{ 'is-selected': locale === lang.value }"
                 >
                   <span class="menu-txt">{{ lang.label }}</span>
-                  <i v-if="locale === lang.value" class="iconfont-sys icon-check">&#xe621;</i>
+                  <i v-if="locale === lang.value" class="iconfont-sys icon-check"
+                    >&#xe621;</i
+                  >
                 </ElDropdownItem>
               </div>
             </ElDropdownMenu>
@@ -34,8 +40,8 @@
       </div>
       <div class="login-wrap">
         <div class="form">
-          <h3 class="title">{{ $t('login.title') }}</h3>
-          <p class="sub-title">{{ $t('login.subTitle') }}</p>
+          <h3 class="title">{{ $t("login.title") }}</h3>
+          <p class="sub-title">{{ $t("login.subTitle") }}</p>
           <ElForm
             ref="formRef"
             :model="formData"
@@ -44,7 +50,11 @@
             style="margin-top: 25px"
           >
             <ElFormItem prop="account">
-              <ElSelect v-model="formData.account" @change="setupAccount" class="account-select">
+              <ElSelect
+                v-model="formData.account"
+                @change="setupAccount"
+                class="account-select"
+              >
                 <ElOption
                   v-for="account in accounts"
                   :key="account.key"
@@ -56,7 +66,10 @@
               </ElSelect>
             </ElFormItem>
             <ElFormItem prop="username">
-              <ElInput :placeholder="$t('login.placeholder[0]')" v-model.trim="formData.username" />
+              <ElInput
+                :placeholder="$t('login.placeholder[0]')"
+                v-model.trim="formData.username"
+              />
             </ElFormItem>
             <ElFormItem prop="password">
               <ElInput
@@ -69,7 +82,10 @@
               />
             </ElFormItem>
             <div class="drag-verify">
-              <div class="drag-verify-content" :class="{ error: !isPassing && isClickPass }">
+              <div
+                class="drag-verify-content"
+                :class="{ error: !isPassing && isClickPass }"
+              >
                 <ArtDragVerify
                   ref="dragVerify"
                   v-model:value="isPassing"
@@ -81,16 +97,21 @@
                   handlerBg="var(--art-main-bg-color)"
                 />
               </div>
-              <p class="error-text" :class="{ 'show-error-text': !isPassing && isClickPass }">{{
-                $t('login.placeholder[2]')
-              }}</p>
+              <p
+                class="error-text"
+                :class="{ 'show-error-text': !isPassing && isClickPass }"
+              >
+                {{ $t("login.placeholder[2]") }}
+              </p>
             </div>
 
             <div class="forget-password">
               <ElCheckbox v-model="formData.rememberPassword">{{
-                $t('login.rememberPwd')
+                $t("login.rememberPwd")
               }}</ElCheckbox>
-              <RouterLink :to="RoutesAlias.ForgetPassword">{{ $t('login.forgetPwd') }}</RouterLink>
+              <RouterLink :to="RoutesAlias.ForgetPassword">{{
+                $t("login.forgetPwd")
+              }}</RouterLink>
             </div>
 
             <div style="margin-top: 30px">
@@ -101,14 +122,16 @@
                 :loading="loading"
                 v-ripple
               >
-                {{ $t('login.btnText') }}
+                {{ $t("login.btnText") }}
               </ElButton>
             </div>
 
             <div class="footer">
               <p>
-                {{ $t('login.noAccount') }}
-                <RouterLink :to="RoutesAlias.Register">{{ $t('login.register') }}</RouterLink>
+                {{ $t("login.noAccount") }}
+                <RouterLink :to="RoutesAlias.Register">{{
+                  $t("login.register")
+                }}</RouterLink>
               </p>
             </div>
           </ElForm>
@@ -119,190 +142,208 @@
 </template>
 
 <script setup lang="ts">
-  import AppConfig from '@/config'
-  import { RoutesAlias } from '@/router/routesAlias'
-  import { ElNotification, ElMessage } from 'element-plus'
-  import { useUserStore } from '@/store/modules/user'
-  import { getCssVar } from '@/utils/ui'
-  import { languageOptions } from '@/locales'
-  import { LanguageEnum, SystemThemeEnum } from '@/enums/appEnum'
-  import { useI18n } from 'vue-i18n'
-  import { HttpError } from '@/utils/http/error'
-  defineOptions({ name: 'Login' })
-  const dictStore = useDictStore()
+import AppConfig from "@/config";
+import { RoutesAlias } from "@/router/routesAlias";
+import { ElNotification, ElMessage } from "element-plus";
+import { useUserStore } from "@/store/modules/user";
+import { getCssVar } from "@/utils/ui";
+import { languageOptions } from "@/locales";
+import { LanguageEnum, SystemThemeEnum } from "@/enums/appEnum";
+import { useI18n } from "vue-i18n";
+import { HttpError } from "@/utils/http/error";
+defineOptions({ name: "Login" });
+const dictStore = useDictStore();
 
-  const { t } = useI18n()
-  import { useSettingStore } from '@/store/modules/setting'
-  import type { FormInstance, FormRules } from 'element-plus'
-  import { useSystemConfigStore } from '@/store/modules/system-config'
-  const systemConfigStore = useSystemConfigStore()
-  const systemInfo = computed(() => systemConfigStore.config)
-  type AccountKey = 'super' | 'admin' | 'user'
+const { t } = useI18n();
+import { useSettingStore } from "@/store/modules/setting";
+import type { FormInstance, FormRules } from "element-plus";
+import { useSystemConfigStore } from "@/store/modules/system-config";
+const systemConfigStore = useSystemConfigStore();
+const systemInfo = computed(() => systemConfigStore.config);
+type AccountKey = "super" | "admin" | "user";
 
-  export interface Account {
-    key: AccountKey
-    label: string
-    userName: string
-    password: string
-    roles: string[]
-  }
+export interface Account {
+  key: AccountKey;
+  label: string;
+  userName: string;
+  password: string;
+  roles: string[];
+}
 
-  const accounts = computed<Account[]>(() => [
-    {
-      key: 'super',
-      label: t('login.roles.super'),
-      userName: 'superAdmin',
-      password: '123456',
-      roles: ['R_SUPER']
-    },
-    {
-      key: 'admin',
-      label: t('login.roles.admin'),
-      userName: 'admin',
-      password: '123456',
-      roles: ['R_ADMIN']
-    },
-    {
-      key: 'user',
-      label: t('login.roles.user'),
-      userName: 'test',
-      password: '123456',
-      roles: ['R_USER']
+const accounts = computed<Account[]>(() => [
+  {
+    key: "super",
+    label: t("login.roles.super"),
+    userName: "superAdmin",
+    password: "123456",
+    roles: ["R_SUPER"],
+  },
+  {
+    key: "admin",
+    label: t("login.roles.admin"),
+    userName: "admin",
+    password: "123456",
+    roles: ["R_ADMIN"],
+  },
+  {
+    key: "user",
+    label: t("login.roles.user"),
+    userName: "test",
+    password: "123456",
+    roles: ["R_USER"],
+  },
+]);
+
+const settingStore = useSettingStore();
+const { isDark, systemThemeType } = storeToRefs(settingStore);
+
+const dragVerify = ref();
+
+const userStore = useUserStore();
+const router = useRouter();
+const isPassing = ref(false);
+const isClickPass = ref(false);
+
+const systemName = AppConfig.systemInfo.name;
+const formRef = ref<FormInstance>();
+
+const formData = reactive({
+  account: "",
+  username: "",
+  password: "",
+  rememberPassword: true,
+});
+
+const rules = computed<FormRules>(() => ({
+  username: [{ required: true, message: t("login.placeholder[0]"), trigger: "blur" }],
+  password: [{ required: true, message: t("login.placeholder[1]"), trigger: "blur" }],
+}));
+
+const loading = ref(false);
+
+onMounted(() => {
+  setupAccount("super");
+});
+
+// 设置账号
+const setupAccount = (key: AccountKey) => {
+  const selectedAccount = accounts.value.find((account: Account) => account.key === key);
+  formData.account = key;
+  formData.username = selectedAccount?.userName ?? "";
+  formData.password = selectedAccount?.password ?? "";
+};
+
+// 登录
+const handleSubmit = async () => {
+  if (!formRef.value) return;
+
+  try {
+    // 表单验证
+    const valid = await formRef.value.validate();
+    if (!valid) return;
+
+    // 拖拽验证
+    if (!isPassing.value) {
+      isClickPass.value = true;
+      return;
     }
-  ])
 
-  const settingStore = useSettingStore()
-  const { isDark, systemThemeType } = storeToRefs(settingStore)
+    loading.value = true;
 
-  const dragVerify = ref()
+    // 登录请求
+    const { username, password } = formData;
 
-  const userStore = useUserStore()
-  const router = useRouter()
-  const isPassing = ref(false)
-  const isClickPass = ref(false)
+    //获取公钥
+    const { public_key, key_id } = (await AuthService.getPublicKey()) as any;
 
-  const systemName = AppConfig.systemInfo.name
-  const formRef = ref<FormInstance>()
-
-  const formData = reactive({
-    account: '',
-    username: '',
-    password: '',
-    rememberPassword: true
-  })
-
-  const rules = computed<FormRules>(() => ({
-    username: [{ required: true, message: t('login.placeholder[0]'), trigger: 'blur' }],
-    password: [{ required: true, message: t('login.placeholder[1]'), trigger: 'blur' }]
-  }))
-
-  const loading = ref(false)
-
-  onMounted(() => {
-    setupAccount('super')
-  })
-
-  // 设置账号
-  const setupAccount = (key: AccountKey) => {
-    const selectedAccount = accounts.value.find((account: Account) => account.key === key)
-    formData.account = key
-    formData.username = selectedAccount?.userName ?? ''
-    formData.password = selectedAccount?.password ?? ''
-  }
-
-  // 登录
-  const handleSubmit = async () => {
-    if (!formRef.value) return
-
-    try {
-      // 表单验证
-      const valid = await formRef.value.validate()
-      if (!valid) return
-
-      // 拖拽验证
-      if (!isPassing.value) {
-        isClickPass.value = true
-        return
-      }
-
-      loading.value = true
-
-      // 登录请求
-      const { username, password } = formData
-
-      const { token, refreshToken } = await UserService.login({
-        userName: username,
-        password
-      })
-
-      // 验证token
-      if (!token) {
-        throw new Error('Login failed - no token received')
-      }
-
-      // 存储token和用户信息
-      userStore.setToken(token, refreshToken)
-      userStore.setLoginStatus(true)
-      // 这里可以一次性初始化所有字典
-      dictStore.initAllDicts(DictService.getAllDict)
-
-      // 登录成功处理
-      showLoginSuccessNotice()
-      router.push('/')
-    } catch (error) {
-      // 处理 HttpError
-      if (error instanceof HttpError) {
-        // console.log(error.code)
-      } else {
-        // 处理非 HttpError
-        ElMessage.error('登录失败，请稍后重试')
-        console.error('[Login] Unexpected error:', error)
-      }
-    } finally {
-      loading.value = false
-      resetDragVerify()
+    if (!public_key) {
+      throw new Error("Missing public key or key_id for encryption");
     }
+
+    //密码加密
+    const encrypt = new JSEncrypt();
+    encrypt.setPublicKey(public_key);
+    const encryptedPassword = encrypt.encrypt(password);
+    if (!encryptedPassword) {
+      throw new Error("RSA encryption failed");
+    }
+
+    const { access_token, refresh_token } = (await AuthService.login({
+      user_name: username,
+      password: encryptedPassword,
+      key_id,
+    })) as any;
+
+    // 验证token
+    if (!access_token) {
+      throw new Error("Login failed - no token received");
+    }
+
+    // 存储token和用户信息
+    userStore.setToken(access_token, refresh_token);
+    userStore.setLoginStatus(true);
+    // 这里可以一次性初始化所有字典
+    dictStore.initAllDicts(DictService.getAllDict);
+
+    // 登录成功处理
+    showLoginSuccessNotice();
+    router.push("/");
+  } catch (error) {
+    // 处理 HttpError
+    if (error instanceof HttpError) {
+      // console.log(error.code)
+    } else {
+      // 处理非 HttpError
+      ElMessage.error("登录失败，请稍后重试");
+      console.error("[Login] Unexpected error:", error);
+    }
+  } finally {
+    loading.value = false;
+    resetDragVerify();
   }
+};
 
-  // 重置拖拽验证
-  const resetDragVerify = () => {
-    dragVerify.value.reset()
-  }
+// 重置拖拽验证
+const resetDragVerify = () => {
+  dragVerify.value.reset();
+};
 
-  // 登录成功提示
-  const showLoginSuccessNotice = () => {
-    setTimeout(() => {
-      ElNotification({
-        title: t('login.success.title'),
-        type: 'success',
-        duration: 2500,
-        zIndex: 10000,
-        message: `${t('login.success.message')}, ${systemInfo.value?.title || systemName}!`
-      })
-    }, 150)
-  }
+// 登录成功提示
+const showLoginSuccessNotice = () => {
+  setTimeout(() => {
+    ElNotification({
+      title: t("login.success.title"),
+      type: "success",
+      duration: 2500,
+      zIndex: 10000,
+      message: `${t("login.success.message")}, ${systemInfo.value?.title || systemName}!`,
+    });
+  }, 150);
+};
 
-  // 切换语言
-  const { locale } = useI18n()
+// 切换语言
+const { locale } = useI18n();
 
-  const changeLanguage = (lang: LanguageEnum) => {
-    if (locale.value === lang) return
-    locale.value = lang
-    userStore.setLanguage(lang)
-  }
+const changeLanguage = (lang: LanguageEnum) => {
+  if (locale.value === lang) return;
+  locale.value = lang;
+  userStore.setLanguage(lang);
+};
 
-  // 切换主题
-  import { useTheme } from '@/composables/useTheme'
-  import { UserService } from '@/api/sys/user'
-  import { useDictStore } from '@/store/modules/dict'
-  import { DictService } from '@/api/dictApi'
+// 切换主题
+import { useTheme } from "@/composables/useTheme";
+import { UserService } from "@/api/system/user";
+import { useDictStore } from "@/store/modules/dict";
+import { DictService } from "@/api/system/dict";
+import { JSEncrypt } from "jsencrypt";
+import { AuthService } from "@/api/system/auth";
 
-  const toggleTheme = () => {
-    let { LIGHT, DARK } = SystemThemeEnum
-    useTheme().switchThemeStyles(systemThemeType.value === LIGHT ? DARK : LIGHT)
-  }
+const toggleTheme = () => {
+  let { LIGHT, DARK } = SystemThemeEnum;
+  useTheme().switchThemeStyles(systemThemeType.value === LIGHT ? DARK : LIGHT);
+};
 </script>
 
 <style lang="scss" scoped>
-  @use './index';
+@use './index';
 </style>

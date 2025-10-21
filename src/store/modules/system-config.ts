@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import request from '@/utils/http'
+import { ConfigService } from '@/api/system/config'
 
 // 定义系统配置接口
 interface SystemConfig {
@@ -38,11 +39,8 @@ export const useSystemConfigStore = defineStore(
       error.value = null
 
       try {
-        const response = await request.get<SystemConfig>({
-          url: '/sys/getSystemConfig'
-        })
-
-        config.value = response || {}
+        const response = await ConfigService.get({ group_code: 'site_setting' });
+        config.value = adaptSystemConfig(response)
       } catch (err: any) {
         error.value = err.message || '获取系统配置失败'
         console.error('获取系统配置失败:', err)
@@ -75,6 +73,36 @@ export const useSystemConfigStore = defineStore(
       config.value = {}
       error.value = null
     }
+
+    /**
+     * 将获取的配置格式化
+     * @param apiData 
+     * @returns 
+     */
+    const adaptSystemConfig = (apiData: any) => {
+      if (!apiData) return {};
+      const {
+        site_logo,
+        site_name,
+        site_record_no,
+        site_open,
+        site_network_security,
+        site_network_security_url,
+        site_icp_url,
+        ...rest
+      } = apiData;
+      return {
+        logo: site_logo,
+        title: site_name,
+        favicon: site_logo, // favicon 缺省为 logo
+        copyright: `© ${new Date().getFullYear()} ${site_name} | ${site_record_no}`,
+        isOpen: site_open === "1",
+        securityInfo: [site_network_security, site_network_security_url].filter(Boolean).join(' '),
+        icpInfo: [site_record_no, site_icp_url].filter(Boolean).join(' '),
+        ...rest,
+      };
+    };
+
 
     return {
       config,

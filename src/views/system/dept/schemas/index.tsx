@@ -1,13 +1,13 @@
 import { CrudSchema } from '@/components/crud'
-import { DeptService } from '@/api/sys/dept'
+import { DeptService } from '@/api/system/dept'
 
 // crud配置
 export const crudSchema: CrudSchema = {
-  // 接口地址：改为 tree 接口以支持树形结构
-  api: DeptService.tree,
+  // 接口地址：改为 getTree 接口以支持树形结构
+  api: DeptService.getTree,
   dialogTitle: '部门',
   crudApi: {
-    add: DeptService.save,
+    add: DeptService.create,
     edit: DeptService.update,
     remove: DeptService.remove,
     view: DeptService.detail
@@ -17,10 +17,10 @@ export const crudSchema: CrudSchema = {
   hasRemove: true,
   hasEdit: true,
   hasView: true,
-  addAuth: 'sys:dept:save',
-  removeAuth: 'sys:dept:remove',
-  editAuth: 'sys:dept:update',
-  viewAuth: 'sys:dept:detail',
+  addAuth: 'system:dept:save',
+  removeAuth: 'system:dept:remove',
+  editAuth: 'system:dept:update',
+  viewAuth: 'system:dept:detail',
 
   // 禁用搜索表单，因为树形结构是全量数据
   useSearchForm: false,
@@ -87,7 +87,9 @@ export const crudSchema: CrudSchema = {
         prop: 'parentId',
         component: 'ApiTreeSelect',
         componentProps: {
-          api: '/sys/dept/tree',
+          api: '/system/dept',
+          params: { format: 'select' },
+          requestMethod: 'get',
           labelField: 'name',
           valueField: 'id',
           // 任意节点可选
@@ -97,10 +99,10 @@ export const crudSchema: CrudSchema = {
         },
         colSpan: 24,
         rules: [
-          {
-            required: true,
-            message: '请选择父级部门'
-          }
+          // {
+          //   required: true,
+          //   message: '请选择父级部门'
+          // }
         ]
       },
       {
@@ -171,7 +173,8 @@ export const crudSchema: CrudSchema = {
         prop: 'leaderIdList',
         component: 'ApiSelect',
         componentProps: {
-          api: '/sys/user/select',
+          api: '/system/user',
+          params: { format: 'select' },
           placeholder: '请选择负责人',
           multiple: true
         },
@@ -182,7 +185,8 @@ export const crudSchema: CrudSchema = {
         prop: 'mainLeaderId',
         component: 'ApiSelect',
         componentProps: {
-          api: '/sys/user/select',
+          api: '/system/user',
+          params: { format: 'select' },
           placeholder: '请选择分管领导'
         },
         colSpan: 24

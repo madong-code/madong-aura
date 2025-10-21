@@ -1,20 +1,22 @@
-import { RoleService } from '@/api/sys/role'
+import { RoleService } from '@/api/system/role'
 import { CrudSchema } from '@/components/crud'
+
+
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: RoleService.page,
+  api: RoleService.list,
   dialogTitle: '角色',
   crudApi: {
     // 新增接口
-    add: RoleService.save,
+    add: RoleService.create,
     // 修改接口
     edit: RoleService.update,
     // 删除接口
     remove: RoleService.remove,
     // 详情接口
-    view: RoleService.detail
+    view: RoleService.get
   },
   // 使用crud
   useCrud: true,
@@ -27,13 +29,13 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'sys:role:save',
+  addAuth: 'system:role:save',
   // 删除权限码
-  removeAuth: 'sys:role:remove',
+  removeAuth: 'system:role:remove',
   // 修改权限码
-  editAuth: 'sys:role:update',
+  editAuth: 'system:role:update',
   // 详情权限码
-  viewAuth: 'sys:role:detail',
+  viewAuth: 'system:role:detail',
   // 表格列定义
   columns: [
     {

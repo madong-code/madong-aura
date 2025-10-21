@@ -6,7 +6,7 @@ import { useUserStore } from '@/store/modules/user'
 import { useMenuStore } from '@/store/modules/menu'
 import { setWorktab } from '@/utils/navigation'
 import { setPageTitle } from '../utils/utils'
-import { MenuService } from '@/api/sys/menu'
+import { MenuService } from '@/api/system/menu'
 import { registerDynamicRoutes } from '../utils/registerRoutes'
 import { AppRouteRecord } from '@/types/router'
 import { RoutesAlias } from '../routesAlias'
@@ -16,7 +16,8 @@ import { localRoutes, staticRoutes } from '../routes/staticRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/composables/useCommon'
 import { useWorktabStore } from '@/store/modules/worktab'
-import { UserService } from '@/api/sys/user'
+import { UserService } from '@/api/system/user'
+import { AuthService } from '@/api/system/auth'
 
 // 是否已注册动态路由
 const isRouteRegistered = ref(false)
@@ -249,7 +250,7 @@ async function processFrontendMenu(router: Router): Promise<void> {
 async function processBackendMenu(router: Router): Promise<void> {
   try {
     // 获取菜单数据并添加空数组默认值
-    const { menuList = [] } = await MenuService.getMenuList() || {};
+    const menuList = await AuthService.getUserPermission() || {};
 
     // 合并路由并转换数据结构
     const processedRoutes = [

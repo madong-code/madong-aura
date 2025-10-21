@@ -117,7 +117,7 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
       excludeParams = [],
       immediate = true,
       columnsFactory,
-      paginationKey = { current: 'pageNum', size: 'pageSize' }
+      paginationKey = { current: 'page', size: 'limit' }
     },
     transform: { dataTransformer, responseAdapter = defaultResponseAdapter } = {},
     performance: {
@@ -131,8 +131,8 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
   } = config
 
   // 🔧 分页字段名配置
-  const pageKey = paginationKey?.current || 'pageNum'
-  const sizeKey = paginationKey?.size || 'pageSize'
+  const pageKey = paginationKey?.current || 'page'
+  const sizeKey = paginationKey?.size || 'limit'
 
   // 响应式触发器，用于手动更新缓存统计信息
   const cacheUpdateTrigger = ref(0)
@@ -295,10 +295,10 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
 
           // 修复：避免重复设置相同的值，防止响应式循环更新
           if ((searchParams as any)[pageKey] !== pagination.current) {
-            ;(searchParams as any)[pageKey] = pagination.current
+            ; (searchParams as any)[pageKey] = pagination.current
           }
           if ((searchParams as any)[sizeKey] !== pagination.size) {
-            ;(searchParams as any)[sizeKey] = pagination.size
+            ; (searchParams as any)[sizeKey] = pagination.size
           }
 
           loading.value = false
@@ -337,10 +337,10 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
 
       // 修复：避免重复设置相同的值，防止响应式循环更新
       if ((searchParams as any)[pageKey] !== pagination.current) {
-        ;(searchParams as any)[pageKey] = pagination.current
+        ; (searchParams as any)[pageKey] = pagination.current
       }
       if ((searchParams as any)[sizeKey] !== pagination.size) {
-        ;(searchParams as any)[sizeKey] = pagination.size
+        ; (searchParams as any)[sizeKey] = pagination.size
       }
 
       // 缓存数据
@@ -388,7 +388,7 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
   // 分页获取数据 (重置到第一页) - 专门用于搜索场景
   const getDataByPage = async (params?: Partial<TParams>): Promise<ApiResponse<TRecord> | void> => {
     pagination.current = 1
-    ;(searchParams as any)[pageKey] = 1
+      ; (searchParams as any)[pageKey] = 1
 
     // 搜索时清空当前搜索条件的缓存，确保获取最新数据
     clearCache(CacheInvalidationStrategy.CLEAR_CURRENT, '搜索数据')
@@ -454,8 +454,8 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
 
     pagination.size = newSize
     pagination.current = 1
-    ;(searchParams as any)[sizeKey] = newSize
-    ;(searchParams as any)[pageKey] = 1
+      ; (searchParams as any)[sizeKey] = newSize
+      ; (searchParams as any)[pageKey] = 1
 
     clearCache(CacheInvalidationStrategy.CLEAR_CURRENT, '分页大小变化')
 
@@ -484,7 +484,7 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
       pagination.current = newCurrent
       // 只有当 searchParams 的分页字段与新值不同时才更新
       if ((searchParams as any)[pageKey] !== newCurrent) {
-        ;(searchParams as any)[pageKey] = newCurrent
+        ; (searchParams as any)[pageKey] = newCurrent
       }
 
       await getData()
@@ -499,7 +499,7 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
   const refreshCreate = async (): Promise<void> => {
     debouncedGetDataByPage.cancel()
     pagination.current = 1
-    ;(searchParams as any)[pageKey] = 1
+      ; (searchParams as any)[pageKey] = 1
     clearCache(CacheInvalidationStrategy.CLEAR_PAGINATION, '新增数据')
     await getData()
   }
@@ -521,7 +521,7 @@ function useTableImpl<TApiFn extends (params: any) => Promise<any>>(
     // 如果当前页为空且不是第一页，回到上一页
     if (data.value.length === 0 && current > 1) {
       pagination.current = current - 1
-      ;(searchParams as any)[pageKey] = current - 1
+        ; (searchParams as any)[pageKey] = current - 1
       await getData()
     }
   }
