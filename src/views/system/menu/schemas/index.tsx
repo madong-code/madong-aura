@@ -2,6 +2,7 @@ import { MenuService } from '@/api/system/menu'
 import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
 import { DictEnum } from '@/enums'
+import { $t } from '@/locales'
 
 // crud配置
 export const crudSchema: CrudSchema = {
@@ -105,11 +106,63 @@ export const crudSchema: CrudSchema = {
     }
   ],
   // 树型是全量数据，不需要搜索
-  useSearchForm: false,
+  useSearchForm: true,
   // 内置弹窗配置
   dialogProps: {
     width: '60%',
     dialogType: 'drawer'
+  },
+  searchFormSchema:{
+    schema:[
+      {
+      component: 'ApiDict',
+      prop: 'EQ_type',
+      label: $t('system.menu.list.query.type'),
+      componentProps: {
+        code: DictEnum.SYS_MENU_TYPE,
+         clearable: true,
+        placeholder:$t('system.menu.list.query.placeholder.type'),
+      },
+    },
+    {
+      component: 'Input',
+      prop: 'LIKE_title',
+      label: $t('system.menu.list.query.title'),
+      componentProps:{
+         clearable: true,
+         placeholder:$t('system.menu.list.query.placeholder.title'),
+      }
+    },
+    {
+      component: 'Input',
+      prop: 'LIKE_code',
+      label: $t('system.menu.list.query.code'),
+      componentProps:{
+         clearable: true,
+         placeholder:$t('system.menu.list.query.placeholder.code'),
+      }
+    },
+    {
+      component: 'Input',
+      prop: 'LIKE_path',
+      label: $t('system.menu.list.query.path'),
+      componentProps:{
+         clearable: true,
+         placeholder:$t('system.menu.list.query.placeholder.path'),
+      }
+    },
+    {
+      component: 'ApiDict',
+      componentProps: {
+         clearable: true,
+        code: DictEnum.SYS_ENABLED_STATUS,
+        placeholder:$t('system.menu.list.query.placeholder.enabled'),
+      },
+      prop: 'enabled',
+      label: $t('system.menu.list.query.enabled'),
+    },
+
+    ]
   },
   // crud表单配置
   formSchema: {
