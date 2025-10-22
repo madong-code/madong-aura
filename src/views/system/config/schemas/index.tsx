@@ -1,12 +1,12 @@
 import { CrudSchema } from '@/components/crud'
-import { ConfigService } from '@/api/sys/config'
+import { ConfigService } from '@/api/system/config'
 
 // crud配置
 export const crudSchema: CrudSchema = {
-  api: ConfigService.page,
+  api: ConfigService.list,
   dialogTitle: '参数配置',
   crudApi: {
-    add: ConfigService.save,
+    add: ConfigService.create,
     edit: ConfigService.update,
     remove: ConfigService.remove,
     view: ConfigService.detail

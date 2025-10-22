@@ -1,14 +1,16 @@
 import { CrudSchema } from '@/components/crud'
-import { DictService } from '@/api/sys/dict'
+import { DictService } from '@/api/system/dict'
+import { DictEnum } from '@/enums'
+import { $t } from '@/locales'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: DictService.page,
+  api: DictService.list,
   dialogTitle: '字典',
   crudApi: {
     // 新增接口
-    add: DictService.save,
+    add: DictService.create,
     // 修改接口
     edit: DictService.update,
     // 删除接口
@@ -27,57 +29,57 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'sys:dict:save',
+  addAuth: 'system:dict:create',
   // 删除权限码
-  removeAuth: 'sys:dict:remove',
+  removeAuth: 'system:dict:delete',
   // 修改权限码
-  editAuth: 'sys:dict:update',
+  editAuth: 'system:dict:update',
   // 详情权限码
-  viewAuth: 'sys:dict:detail',
+  viewAuth: 'system:dict:get',
   // 表格列定义
   columns: [
     {
       type: 'selection'
     },
     {
-      prop: 'groupCode',
-      label: '分组编码',
+      prop: 'group_code',
+      label: $t('system.dict.list.table.columns.group_code'),
       component: 'ApiDict',
       minWidth: 200,
       componentProps: {
-        code: 'sys_dict_group_code'
+        code: DictEnum.SYS_DICT_GROUP_CODE
       }
     },
     {
       prop: 'name',
-      label: '字典名称',
+      label: $t('system.dict.list.table.columns.name'),
       minWidth: 200
     },
     {
       prop: 'code',
-      label: '唯一编码',
+      label: $t('system.dict.list.table.columns.code'),
       minWidth: 200
     },
     {
-      prop: 'dataType',
-      label: '数据类型',
+      prop: 'data_type',
+      label: $t('system.dict.list.table.columns.data_type'),
       component: 'ApiDict',
       componentProps: {
-        code: 'sys_dict_data_type'
+        code: DictEnum.SYS_DICT_DATA_TYPE
       },
       minWidth: 100
     },
     {
       prop: 'sort',
-      label: '排序',
+      label: $t('system.dict.list.table.columns.sort'),
       minWidth: 100
     },
     {
       prop: 'enabled',
-      label: '是否启用',
+      label: $t('system.dict.list.table.columns.enabled'),
       component: 'ApiDict',
       componentProps: {
-        code: 'yes_no'
+        code: DictEnum.SYS_ENABLED_STATUS
       },
       minWidth: 100
     }
@@ -86,45 +88,45 @@ export const crudSchema: CrudSchema = {
   searchFormSchema: {
     schema: [
       {
-        label: '所属分组',
-        prop: 'm_IN_groupCode',
+        label: $t('system.dict.list.query.group_code'),
+        prop: 'IN_groupCode',
         component: 'ApiDict',
         componentProps: {
-          code: 'sys_dict_group_code',
+          code: DictEnum.SYS_DICT_GROUP_CODE,
           clearable: true,
-          placeholder: '请选择所属分组',
+          placeholder: $t('system.dict.list.query.placeholder.group_code'),
           multiple: true
         },
         colSpan: 6
       },
       {
-        prop: 'm_LIKE_name',
-        label: '字典名称',
+        prop: 'LIKE_name',
+        label: $t('system.dict.list.query.name'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: '请输入字典名称'
+          placeholder: $t('system.dict.list.query.placeholder.name')
         },
         colSpan: 6
       },
       {
-        prop: 'm_LIKE_code',
-        label: '唯一编码',
+        prop: 'LIKE_code',
+        label: $t('system.dict.list.query.code'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: '请输入唯一编码'
+          placeholder: $t('system.dict.list.query.placeholder.code')
         },
         colSpan: 6
       },
       {
-        label: '是否启用',
-        prop: 'm_IN_enabled',
+        label: $t('system.dict.list.query.enabled'),
+        prop: 'IN_enabled',
         component: 'ApiDict',
         componentProps: {
-          code: 'yes_no',
+          code: DictEnum.SYS_ENABLED_STATUS,
           clearable: true,
-          placeholder: '请选择是否启用'
+          placeholder: $t('system.dict.list.query.placeholder.enabled')
         },
         colSpan: 6
       }
@@ -132,7 +134,7 @@ export const crudSchema: CrudSchema = {
   },
   // 内置弹窗配置
   dialogProps: {
-    width: '40%'
+    width: '50%'
   },
   // crud表单配置
   formSchema: {
@@ -140,7 +142,7 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
-        label: '字典ID',
+        label: $t('system.dict.form.modal.id'),
         prop: 'id',
         component: 'Input',
         colSpan: 24,
@@ -148,103 +150,93 @@ export const crudSchema: CrudSchema = {
         ifDetail: false
       },
       {
-        label: '所属分组',
-        prop: 'groupCode',
+        label: $t('system.dict.form.modal.group_code'),
+        prop: 'group_code',
         component: 'ApiDict',
         componentProps: {
-          code: 'sys_dict_group_code'
+          code: DictEnum.SYS_DICT_GROUP_CODE
         },
         rules: [
           {
             required: true,
-            message: '请选择所属分组'
+            message: $t('system.dict.form.modal.placeholder.group_code')
           }
         ],
         colSpan: 24
       },
       {
-        label: '字典名称',
+        label: $t('system.dict.form.modal.name'),
         prop: 'name',
         component: 'Input',
         rules: [
           {
             required: true,
-            message: '请输入字典名称'
+            message: $t('system.dict.form.modal.placeholder.name')
           }
         ],
         componentProps: {
-          placeholder: '请输入字典名称'
+          placeholder: $t('system.dict.form.modal.placeholder.name')
         },
         colSpan: 24
       },
       {
-        label: '唯一编码',
+        label: $t('system.dict.form.modal.code'),
         prop: 'code',
         component: 'Input',
         rules: [
           {
             required: true,
-            message: '请输入唯一编码'
+            message: $t('system.dict.form.modal.placeholder.code')
           }
         ],
         componentProps: {
-          placeholder: '请输入唯一编码'
+          placeholder: $t('system.dict.form.modal.placeholder.code')
         },
         colSpan: 24
       },
 
       {
-        label: '数据类型',
-        prop: 'dataType',
+        label: $t('system.dict.form.modal.data_type'),
+        prop: 'data_type',
         component: 'ApiDict',
         defaultValue: 1,
         componentProps: {
-          code: 'sys_dict_data_type',
+          code: DictEnum.SYS_DICT_DATA_TYPE,
           renderType: 'RadioGroup',
-          isBtn: true,
-          placeholder: '请选择数据类型'
+          isBtn: true
         },
-        rules: [
-          {
-            required: true,
-            message: '请选择数据类型'
-          }
-        ],
+        rules: [],
         colSpan: 24
       },
       {
-        label: '是否启用',
+        label: $t('system.dict.form.modal.enabled'),
         prop: 'enabled',
         component: 'ApiDict',
         defaultValue: 1,
         componentProps: {
-          code: 'yes_no',
+          code: DictEnum.SYS_ENABLED_STATUS,
           renderType: 'RadioGroup',
           isBtn: true
         },
-        rules: [
-          {
-            required: true,
-            message: '请选择是否启用'
-          }
-        ],
+        rules: [],
         colSpan: 24
       },
       {
-        label: '排序',
+        label: $t('system.dict.form.modal.sort'),
         prop: 'sort',
         component: 'InputNumber',
+        defaultValue: 0,
         componentProps: {},
         colSpan: 24
       },
       {
-        label: '备注',
+        label: $t('system.dict.form.modal.remark'),
         prop: 'remark',
         component: 'Input',
         componentProps: {
           type: 'textarea',
           rows: 4,
-          placeholder: '请输入备注'
+          placeholder: $t('system.dict.form.modal.placeholder.remark')
         },
         colSpan: 24
       }

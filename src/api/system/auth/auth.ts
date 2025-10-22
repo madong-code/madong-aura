@@ -61,6 +61,10 @@ export const AuthService = {
     getUserPermission() {
         return request.get({ url: `${baseUrl}/permission`, params: { format: 'mixture' } });
     },
+    getUserMenus() {
+        return request.get({ url: `${baseUrl}/user-menus` });
+    }
+
 };
 
 export default AuthService;

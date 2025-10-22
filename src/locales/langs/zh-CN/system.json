@@ -21,7 +21,7 @@
           "login_ip": "登录ip",
           "login_time": "登录时间",
           "backend_setting": "个人配置",
-          "tenants":"授权租户",
+          "tenants": "授权租户",
           "sex": "性别",
           "remark": "备注",
           "birthday": "生日",
@@ -90,10 +90,10 @@
         "sex": "性别",
         "enabled": "状态",
         "dept_name": "部门名称",
-        "post_name": "职位名称",
+        "post_name": "岗位名称",
         "role_name": "角色名称",
         "login_date": "上次登录时间",
-        "avatar":"头像",
+        "avatar": "头像",
         "remark": "备注"
       },
       "help": {
@@ -107,7 +107,7 @@
         "mobile_phone": "请输入手机号码",
         "email": "请输入邮箱",
         "dept_name": "请选择部门",
-        "post_name": "请选择职位",
+        "post_name": "请选择岗位",
         "role_name": "请选择角色",
         "remark": "备注"
       }
@@ -245,18 +245,18 @@
         "enabled": "状态",
         "permissions": "权限",
         "dept_list": "部门列表",
-        "remark": "备注"
+        "remark": "备注",
+        "placeholder": {
+          "code": "请输入角色标识",
+          "name": "请输入角色名称",
+          "role_type": "请选择角色类型",
+          "remark": "请输入备注"
+        }
       },
       "data_scope": {
         "title": "数据权限"
       },
-      "help": {},
-      "placeholder": {
-        "code": "请输入角色标识",
-        "name": "请输入角色名称",
-        "role_type": "请选择角色类型",
-        "remark": "请输入备注"
-      }
+      "help": {}
     },
     "assign_user": {
       "title": "分配用户",
@@ -322,7 +322,8 @@
         "placeholder": {
           "code": "请输入部门代码",
           "name": "请输入部门名称",
-          "enabled": "请选择状态"
+          "enabled": "请选择状态",
+          "leader": "请选择部门领导"
         }
       }
     },
@@ -339,7 +340,8 @@
           "code": "请输入部门标识",
           "name": "请输入部门名称",
           "parent_dept": "请选择上级部门",
-          "remark": "请输入备注"
+          "remark": "请输入备注",
+          "leader": "请选择部门领导"
         }
       },
       "help": {}
@@ -351,12 +353,12 @@
   },
   "post": {
     "list": {
-      "title": "职位管理",
+      "title": "岗位管理",
       "table": {
         "columns": {
           "id": "ID",
-          "code": "职位代码",
-          "name": "职位名称",
+          "code": "岗位代码",
+          "name": "岗位名称",
           "dept_name": "部门名称",
           "sort": "排序",
           "enabled": "状态",
@@ -382,28 +384,28 @@
         }
       },
       "query": {
-        "code": "职位代码",
-        "name": "职位名称",
+        "code": "岗位代码",
+        "name": "岗位名称",
         "enabled": "状态",
         "placeholder": {
-          "code": "请输入职位代码",
-          "name": "请输入职位名称",
+          "code": "请输入岗位代码",
+          "name": "请输入岗位名称",
           "enabled": "请选择状态"
         }
       }
     },
     "form": {
       "modal": {
-        "code": "职位代码",
-        "name": "职位名称",
+        "code": "岗位代码",
+        "name": "岗位名称",
         "dept_name": "部门名称",
         "sort": "排序",
         "enabled": "状态",
         "remark": "备注",
         "placeholder": {
-          "code": "请输入职位标识",
-          "name": "请输入职位名称",
-          "sort": "请输职位排序值",
+          "code": "请输入岗位标识",
+          "name": "请输入岗位名称",
+          "sort": "请输岗位排序值",
           "dept_name": "请选择部门",
           "remark": "请输入备注"
         }
@@ -673,8 +675,8 @@
               "title": "温馨提示",
               "confirm": "是否确认删除?"
             },
-            "publish":{
-              "label":"推送",
+            "publish": {
+              "label": "推送",
               "title": "温馨提示",
               "confirm": "请确认是否推送【{0}】公告？"
             }

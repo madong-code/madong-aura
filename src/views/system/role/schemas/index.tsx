@@ -1,13 +1,13 @@
 import { RoleService } from '@/api/system/role'
 import { CrudSchema } from '@/components/crud'
-
-
+import { DictEnum } from '@/enums'
+import { $t } from '@/locales'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
   api: RoleService.list,
-  dialogTitle: '角色',
+  dialogTitle: $t('system.role.list.title'),
   crudApi: {
     // 新增接口
     add: RoleService.create,
@@ -29,11 +29,11 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'system:role:save',
+  addAuth: 'system:role:create',
   // 删除权限码
-  removeAuth: 'system:role:remove',
+  removeAuth: 'system:role:delete',
   // 修改权限码
-  editAuth: 'system:role:update',
+  editAuth: 'system:role:edit',
   // 详情权限码
   viewAuth: 'system:role:detail',
   // 表格列定义
@@ -43,26 +43,26 @@ export const crudSchema: CrudSchema = {
     },
     {
       prop: 'name',
-      label: '角色名称'
+      label: $t('system.role.list.table.columns.role_name')
     },
     {
       prop: 'code',
-      label: '唯一编码'
+      label: $t('system.role.list.table.columns.code')
     },
     {
-      prop: 'roleType',
-      label: '角色类型',
+      prop: 'role_type',
+      label: $t('system.role.list.table.columns.role_type'),
       component: 'ApiDict',
       componentProps: {
-        code: 'sys_role_role_type'
+        code: DictEnum.SYS_ROLE_TYPE
       }
     },
     {
       prop: 'enabled',
-      label: '是否启用',
+      label: $t('system.role.list.table.columns.enabled'),
       component: 'ApiDict',
       componentProps: {
-        code: 'yes_no',
+        code: DictEnum.SYS_ENABLED_STATUS,
         typeMap: {
           1: 'success',
           0: 'danger'
@@ -72,40 +72,40 @@ export const crudSchema: CrudSchema = {
     },
     {
       prop: 'remark',
-      label: '备注'
+      label: $t('system.role.list.table.columns.remark')
     }
   ],
   // 搜索表单定义
   searchFormSchema: {
     schema: [
       {
-        prop: 'm_LIKE_name',
-        label: '角色名称',
+        prop: 'LIKE_code',
+        label: $t('system.role.list.query.code'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: '请输入角色名称'
+          placeholder: $t('system.role.list.query.placeholder.code')
         },
         colSpan: 6
       },
       {
-        prop: 'm_LIKE_code',
-        label: '唯一编码',
+        prop: 'LIKE_name',
+        label: $t('system.role.list.query.name'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: '请输入唯一编码'
+          placeholder: $t('system.role.list.query.placeholder.name')
         },
         colSpan: 6
       },
       {
-        prop: 'm_EQ_enabled',
-        label: '是否启用',
+        prop: 'EQ_enabled',
+        label: $t('system.role.list.query.enabled'),
         component: 'ApiDict',
         componentProps: {
           clearable: true,
-          code: 'yes_no',
-          placeholder: '请选择是否启用',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          placeholder: $t('system.role.list.query.placeholder.enabled'),
           renderType: 'Select'
         },
         colSpan: 6
@@ -124,7 +124,7 @@ export const crudSchema: CrudSchema = {
     schema: [
       // 角色ID（隐藏字段）
       {
-        label: '角色ID',
+        label: $t('system.role.form.modal.id'),
         prop: 'id',
         component: 'Input',
         colSpan: 24,
@@ -134,69 +134,63 @@ export const crudSchema: CrudSchema = {
 
       // 角色名称
       {
-        label: '角色名称',
+        label: $t('system.role.form.modal.name'),
         prop: 'name',
         component: 'Input',
         colSpan: 24,
         rules: [
           {
             required: true,
-            message: '请输入角色名称'
+            message: $t('system.role.form.modal.placeholder.name')
           }
         ],
         componentProps: {
-          placeholder: '请输入角色名称',
+          placeholder: $t('system.role.form.modal.placeholder.name'),
           clearable: true
         }
       },
 
       // 唯一编码
       {
-        label: '唯一编码',
+        label: $t('system.role.form.modal.code'),
         prop: 'code',
         component: 'Input',
         colSpan: 24,
         rules: [
           {
             required: true,
-            message: '请输入唯一编码'
+            message: $t('system.role.form.modal.placeholder.code')
           }
         ],
         componentProps: {
-          placeholder: '请输入唯一编码',
+          placeholder: $t('system.role.form.modal.placeholder.code'),
           clearable: true
         }
       },
 
       // 角色类型
       {
-        label: '角色类型',
-        prop: 'roleType',
+        label: $t('system.role.form.modal.role_type'),
+        prop: 'role_type',
         component: 'ApiDict',
         colSpan: 24,
         componentProps: {
-          placeholder: '请选择角色类型',
-          code: 'sys_role_role_type',
+          placeholder: $t('system.role.form.modal.placeholder.role_type'),
+          code: DictEnum.SYS_ROLE_TYPE,
           clearable: true
         }
       },
 
       // 是否启用
       {
-        label: '是否启用',
+        label: $t('system.role.form.modal.enabled'),
         prop: 'enabled',
         component: 'ApiDict',
         defaultValue: 1,
         colSpan: 24,
-        rules: [
-          {
-            required: true,
-            message: '请选择是否启用'
-          }
-        ],
+        rules: [],
         componentProps: {
-          placeholder: '请选择是否启用',
-          code: 'yes_no',
+          code: DictEnum.SYS_ENABLED_STATUS,
           isBtn: true,
           renderType: 'RadioGroup'
         }
@@ -204,14 +198,14 @@ export const crudSchema: CrudSchema = {
 
       // 备注
       {
-        label: '备注',
+        label: $t('system.role.form.modal.remark'),
         prop: 'remark',
         component: 'Input',
         colSpan: 24,
         componentProps: {
           type: 'textarea',
           rows: 4,
-          placeholder: '请输入备注'
+          placeholder: $t('system.role.form.modal.placeholder.remark')
         }
       }
     ]

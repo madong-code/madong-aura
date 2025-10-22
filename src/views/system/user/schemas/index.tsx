@@ -28,7 +28,7 @@ export const crudSchema: CrudSchema = {
   // 是否有修改
   hasEdit: true,
   // 是否有详情
-  hasView: false,
+  hasView: true,
   // 新增权限码
   addAuth: 'system:user:save',
   // 删除权限码
@@ -148,17 +148,17 @@ export const crudSchema: CrudSchema = {
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: $t('system.user.list.query.placeholder.real_name'),
+          placeholder: $t('system.user.list.query.placeholder.real_name')
         },
         colSpan: 6
       },
       {
         prop: 'LIKE_mobile_phone',
-        label:  $t('system.user.list.query.mobile_phone'),
+        label: $t('system.user.list.query.mobile_phone'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: $t('system.user.list.query.placeholder.mobile_phone'),
+          placeholder: $t('system.user.list.query.placeholder.mobile_phone')
         },
         colSpan: 6
       },
@@ -169,7 +169,7 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           clearable: true,
           code: 'yes_no',
-          placeholder: $t('system.user.list.query.placeholder.enabled'),
+          placeholder: $t('system.user.list.query.placeholder.enabled')
         },
         colSpan: 6
       }
@@ -178,7 +178,7 @@ export const crudSchema: CrudSchema = {
   // 内置弹窗配置
   dialogProps: {
     dialogType: 'drawer',
-    width:'50%'
+    width: '50%'
   },
   // crud表单配置
   formSchema: {
@@ -307,7 +307,7 @@ export const crudSchema: CrudSchema = {
           title: '其他信息'
         }
       },
-        // 所属部门
+      // 所属部门
       {
         label: $t('system.user.form.modal.dept_name'),
         prop: 'dept_id',
@@ -315,7 +315,7 @@ export const crudSchema: CrudSchema = {
         colSpan: 12,
         rules: [
           {
-            required: true,
+            required: false,
             message: $t('system.user.form.placeholder.dept_name')
           }
         ],
@@ -323,20 +323,21 @@ export const crudSchema: CrudSchema = {
           placeholder: $t('system.user.form.placeholder.dept_name'),
           clearable: true,
           api: '/system/dept/getTree',
-          params:{format:'tree'},
+          params: { format: 'tree' },
           labelField: 'name',
           valueField: 'id'
         }
       },
       // 所属岗位
       {
-        label:$t('system.user.form.modal.post_name'),
-        prop: 'postId',
+        label: $t('system.user.form.modal.post_name'),
+        prop: 'post_id_list',
+        defaultValue: [],
         component: 'ApiSelect',
         colSpan: 12,
         rules: [
           {
-            required: true,
+            required: false,
             message: $t('system.user.form.placeholder.post_name')
           }
         ],
@@ -344,7 +345,8 @@ export const crudSchema: CrudSchema = {
           placeholder: $t('system.user.form.placeholder.post_name'),
           clearable: true,
           api: '/system/post',
-          params:{format:'select'}
+          requestMethod: 'get',
+          params: { format: 'select' }
         }
       },
 
@@ -356,7 +358,7 @@ export const crudSchema: CrudSchema = {
         colSpan: 24,
         rules: [
           {
-            required: true,
+            required: false,
             message: '请选择所属角色'
           }
         ],
@@ -365,12 +367,14 @@ export const crudSchema: CrudSchema = {
         componentProps: {
           placeholder: $t('system.user.form.placeholder.role_name'),
           clearable: true,
-          api: '/system/role/select',
+          api: '/system/role',
+          requestMethod: 'get',
+          params: { format: 'select' },
           multiple: true
         }
       },
       {
-        label:  $t('system.user.form.modal.avatar'),
+        label: $t('system.user.form.modal.avatar'),
         prop: 'avatar',
         component: 'Avatar',
         colSpan: 24,
@@ -387,7 +391,6 @@ export const crudSchema: CrudSchema = {
           placeholder: $t('system.user.form.placeholder.remark')
         }
       }
-
     ]
   }
 }

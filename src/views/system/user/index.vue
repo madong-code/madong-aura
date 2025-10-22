@@ -1,28 +1,14 @@
 <template>
-  <!-- <div class="user-page art-full-height">
-    <div class="tree-container">
-      <div class="left-sidebar">
-        <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
-          <DeptTree v-model:value="deptIdList" @check="handleCheck" />
-        </ElCard>
-      </div>
-      <div class="right-content art-full-height">
-        <BasicCrud @reset="handleReset" />
-      </div>
-    </div>
-    <GrantRole ref="grantRoleRef" />
-  </div> -->
-
   <div class="user-page art-full-height">
     <BasicCrud @reset="handleReset" />
-    <!-- <GrantRole ref="grantRoleRef" /> -->
+    <GrantRole ref="grantRoleRef" />
   </div>
 </template>
 
 <script setup lang="tsx">
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
-// import GrantRole from "./grant-role.vue";
+import GrantRole from "./grant-role.vue";
 // import DeptTree from "./dept-tree.vue";
 const grantRoleRef = ref();
 const deptIdList = ref([]);

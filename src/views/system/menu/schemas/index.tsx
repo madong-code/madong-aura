@@ -1,25 +1,26 @@
-import { MenuService } from '@/api/sys/menu'
+import { MenuService } from '@/api/system/menu'
 import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
+import { DictEnum } from '@/enums'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: MenuService.tree,
+  api: MenuService.list,
   dialogTitle: '菜单',
   tree: {
     id: 'id',
-    pid: 'parentId'
+    pid: 'pid'
   },
   crudApi: {
     // 新增接口
-    add: MenuService.save,
+    add: MenuService.create,
     // 修改接口
     edit: MenuService.update,
     // 删除接口
     remove: MenuService.remove,
     // 详情接口
-    view: MenuService.detail
+    view: MenuService.get
   },
   // 使用crud
   useCrud: true,
@@ -32,18 +33,18 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'sys:menu:save',
+  addAuth: 'system:menu:save',
   // 删除权限码
-  removeAuth: 'sys:menu:remove',
+  removeAuth: 'system:menu:remove',
   // 修改权限码
-  editAuth: 'sys:menu:update',
+  editAuth: 'system:menu:edit',
   // 详情权限码
-  viewAuth: 'sys:menu:detail',
+  viewAuth: 'system:menu:detail',
   rowKey: 'id',
   // 表格列定义
   columns: [
     {
-      prop: 'name',
+      prop: 'title',
       label: '菜单名称',
       formatter: (row) => {
         return row.icon
@@ -58,11 +59,12 @@ export const crudSchema: CrudSchema = {
                     paddingLeft: '6px'
                   }
                 },
-                row.name
+                row.title
               )
             ])
-          : h('span', {}, row.name)
-      }
+          : h('span', {}, row.title)
+      },
+      minWidth: 200
     },
     {
       prop: 'code',
@@ -131,15 +133,10 @@ export const crudSchema: CrudSchema = {
         component: 'ApiDict',
         defaultValue: 1,
         colSpan: 12,
-        rules: [
-          {
-            required: true,
-            message: '请选择菜单类型'
-          }
-        ],
+        rules: [],
         componentProps: {
           placeholder: '请选择菜单类型',
-          code: 'sys_menu_type',
+          code: DictEnum.SYS_MENU_TYPE,
           isBtn: true,
           renderType: 'RadioGroup'
         }
@@ -148,7 +145,7 @@ export const crudSchema: CrudSchema = {
       // 所属上级
       {
         label: '所属上级',
-        prop: 'parentId',
+        prop: 'pid',
         component: 'ApiTreeSelect',
         colSpan: 12,
         componentProps: {
@@ -156,7 +153,8 @@ export const crudSchema: CrudSchema = {
           clearable: true,
           // 任意节点可选
           checkStrictly: true,
-          api: '/sys/menu/tree',
+          api: '/system/menu',
+          params: { format: 'tree' },
           labelField: 'name',
           valueField: 'id'
         }
@@ -165,7 +163,7 @@ export const crudSchema: CrudSchema = {
       // 菜单名称
       {
         label: '菜单名称',
-        prop: 'name',
+        prop: 'title',
         component: 'Input',
         colSpan: 12,
         rules: [
@@ -255,6 +253,7 @@ export const crudSchema: CrudSchema = {
         colSpan: 12,
         componentProps: (values) => {
           return {
+            class: 'w-full',
             placeholder: '请选择图标',
             clearable: true,
             disabled: ![1, 2].includes(values.type)

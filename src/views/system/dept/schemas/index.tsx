@@ -1,16 +1,17 @@
 import { CrudSchema } from '@/components/crud'
 import { DeptService } from '@/api/system/dept'
+import { DictEnum } from '@/enums'
+import { $t } from '@/locales'
 
 // crud配置
 export const crudSchema: CrudSchema = {
-  // 接口地址：改为 getTree 接口以支持树形结构
-  api: DeptService.getTree,
+  api: DeptService.list,
   dialogTitle: '部门',
   crudApi: {
     add: DeptService.create,
     edit: DeptService.update,
     remove: DeptService.remove,
-    view: DeptService.detail
+    view: DeptService.get
   },
   useCrud: true,
   hasAdd: true,
@@ -23,12 +24,12 @@ export const crudSchema: CrudSchema = {
   viewAuth: 'system:dept:detail',
 
   // 禁用搜索表单，因为树形结构是全量数据
-  useSearchForm: false,
+  useSearchForm: true,
 
   // 树形结构配置
   tree: {
     id: 'id',
-    pid: 'parentId',
+    pid: 'pid',
     children: 'children'
   },
 
@@ -38,32 +39,64 @@ export const crudSchema: CrudSchema = {
     },
     {
       prop: 'name',
-      label: '部门名称',
+      label: $t('system.dept.list.table.columns.name'),
       component: 'Input'
     },
     {
       prop: 'code',
-      label: '唯一编码',
+      label: $t('system.dept.list.table.columns.code'),
       component: 'Input'
     },
     {
       prop: 'sort',
-      label: '排序',
+      label: $t('system.dept.list.table.columns.sort'),
       component: 'InputNumber'
     },
     {
       prop: 'enabled',
-      label: '状态',
+      label: $t('system.dept.list.table.columns.enabled'),
       component: 'ApiDict',
       componentProps: {
-        code: 'yes_no',
+        code: DictEnum.SYS_ENABLED_STATUS,
         renderType: 'RadioGroup'
       }
     }
   ],
 
   searchFormSchema: {
-    schema: []
+    schema: [
+      {
+        component: 'Input',
+        prop: 'code',
+        label: $t('system.dept.list.query.code'),
+        componentProps: {
+          placeholder: $t('system.dept.list.query.placeholder.code')
+        },
+        colSpan: 6
+      },
+      {
+        component: 'Input',
+        prop: 'LIKE_name',
+        label: $t('system.dept.list.query.name'),
+        componentProps: {
+          placeholder: $t('system.dept.list.query.placeholder.name')
+        },
+        colSpan: 6
+      },
+
+      {
+        label: $t('system.dept.list.query.enabled'),
+        prop: 'enabled',
+        component: 'ApiDict',
+        componentProps: {
+          api: '/system/user',
+          code: DictEnum.SYS_YES_NO,
+          clearable: true,
+          placeholder: $t('system.dept.list.query.placeholder.enabled')
+        },
+        colSpan: 6
+      }
+    ]
   },
 
   dialogProps: {
@@ -75,7 +108,7 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
-        label: '部门ID',
+        label: $t('system.dept.form.modal.id'),
         prop: 'id',
         component: 'Input',
         colSpan: 24,
@@ -83,19 +116,19 @@ export const crudSchema: CrudSchema = {
         ifDetail: false
       },
       {
-        label: '父级部门',
-        prop: 'parentId',
+        label: $t('system.dept.form.modal.parent_dept'),
+        prop: 'pid',
         component: 'ApiTreeSelect',
         componentProps: {
           api: '/system/dept',
           params: { format: 'select' },
           requestMethod: 'get',
-          labelField: 'name',
-          valueField: 'id',
+          labelField: 'label',
+          valueField: 'value',
           // 任意节点可选
           checkStrictly: true,
           clearable: true,
-          placeholder: '请选择父级部门'
+          placeholder: $t('system.dept.form.modal.placeholder.parent_dept')
         },
         colSpan: 24,
         rules: [
@@ -106,99 +139,85 @@ export const crudSchema: CrudSchema = {
         ]
       },
       {
-        label: '部门名称',
+        label: $t('system.dept.form.modal.name'),
         prop: 'name',
         component: 'Input',
         componentProps: {
-          placeholder: '请输入部门名称'
+          placeholder: $t('system.dept.form.modal.placeholder.name')
         },
         colSpan: 24,
         rules: [
           {
             required: true,
-            message: '请输入部门名称'
+            message: $t('system.dept.form.modal.placeholder.name')
           }
         ]
       },
       {
-        label: '唯一编码',
+        label: $t('system.dept.form.modal.code'),
         prop: 'code',
         component: 'Input',
         componentProps: {
-          placeholder: '请输入唯一编码'
+          placeholder: $t('system.dept.form.modal.placeholder.code')
         },
         colSpan: 24,
         rules: [
           {
             required: true,
-            message: '请输入唯一编码'
+            message: $t('system.dept.form.modal.placeholder.code')
           }
         ]
       },
       {
-        label: '排序',
+        label: $t('system.dept.form.modal.code'),
         prop: 'sort',
         component: 'InputNumber',
         componentProps: {
           min: 0,
           max: 9999
         },
+        defaultValue: 0,
         colSpan: 24,
         rules: [
           {
             required: true,
-            message: '请输入排序值'
+            message: $t('system.dept.form.modal.placeholder.code')
           }
         ]
       },
       {
-        label: '是否启用',
+        label: $t('system.dept.form.modal.enabled'),
         prop: 'enabled',
         component: 'ApiDict',
+        defaultValue: 1,
         componentProps: {
-          code: 'yes_no',
+          code: DictEnum.SYS_ENABLED_STATUS,
           isBtn: true,
           renderType: 'RadioGroup'
         },
-        colSpan: 24,
-        rules: [
-          {
-            required: true,
-            message: '请选择启用状态'
-          }
-        ]
+        colSpan: 24
       },
       {
-        label: '部门负责人',
-        prop: 'leaderIdList',
+        label: $t('system.dept.form.modal.leader'),
+        prop: 'leader_id_list',
         component: 'ApiSelect',
         componentProps: {
           api: '/system/user',
+          requestMethod: 'get',
           params: { format: 'select' },
-          placeholder: '请选择负责人',
+          placeholder: $t('system.dept.form.modal.placeholder.leader'),
           multiple: true
         },
         colSpan: 24
       },
       {
-        label: '分管领导',
-        prop: 'mainLeaderId',
-        component: 'ApiSelect',
-        componentProps: {
-          api: '/system/user',
-          params: { format: 'select' },
-          placeholder: '请选择分管领导'
-        },
-        colSpan: 24
-      },
-      {
-        label: '备注',
+        label: $t('system.dept.form.modal.remark'),
         prop: 'remark',
         component: 'Input',
         componentProps: {
           type: 'textarea',
           rows: 3,
-          placeholder: '请输入备注'
+          placeholder: $t('system.dept.form.modal.placeholder.remark')
         },
         colSpan: 24
       }

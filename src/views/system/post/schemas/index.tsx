@@ -1,20 +1,25 @@
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/sys/post'
+import { PostService } from '@/api/system/post'
+import { $t } from '@/locales'
+import { DictEnum } from '@/enums'
+import { Recordable } from '@/types'
+import { Icon } from '@/components/icon'
+import { DeptService } from '@/api/system/dept'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: PostService.page,
+  api: PostService.list,
   dialogTitle: '岗位',
   crudApi: {
     // 新增接口
-    add: PostService.save,
+    add: PostService.create,
     // 修改接口
     edit: PostService.update,
     // 删除接口
     remove: PostService.remove,
     // 详情接口
-    view: PostService.detail
+    view: PostService.get
   },
   // 使用crud
   useCrud: true,
@@ -27,63 +32,74 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'sys:post:save',
+  addAuth: 'system:post:create',
   // 删除权限码
-  removeAuth: 'sys:post:remove',
+  removeAuth: 'system:post:delete',
   // 修改权限码
-  editAuth: 'sys:post:update',
+  editAuth: 'system:post:edit',
   // 详情权限码
-  viewAuth: 'sys:post:detail',
+  viewAuth: 'system:post:detail',
   // 表格列定义
   columns: [
     {
       type: 'selection'
     },
     {
-      prop: 'name',
-      label: '岗位名称'
+      prop: 'code',
+      label: $t('system.post.list.table.columns.code')
     },
     {
-      prop: 'code',
-      label: '唯一编码'
+      prop: 'name',
+      label: $t('system.post.list.table.columns.name')
     },
     {
       prop: 'sort',
-      label: '排序'
+      label: $t('system.post.list.table.columns.sort')
     },
     {
       prop: 'enabled',
-      label: '是否启用',
+      label: $t('system.post.list.table.columns.enabled'),
       component: 'ApiDict',
       componentProps: {
-        code: 'yes_no'
+        code: DictEnum.SYS_ENABLED_STATUS
       }
     },
     {
       prop: 'remark',
-      label: '备注'
+      label: $t('system.post.list.table.columns.remark')
     }
   ],
   // 搜索表单定义
   searchFormSchema: {
+    labelWidth: '200px',
     schema: [
       {
-        prop: 'm_LIKE_name',
-        label: '岗位名称',
+        prop: 'LIKE_code',
+        label: $t('system.post.list.query.code'),
         component: 'Input',
         componentProps: {
           clearable: true,
-          placeholder: '请输入岗位名称'
+          placeholder: $t('system.post.list.query.placeholder.code')
         },
         colSpan: 6
       },
       {
-        prop: 'm_EQ_enabled',
-        label: '状态',
+        prop: 'LIKE_name',
+        label: $t('system.post.list.query.name'),
+        component: 'Input',
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.post.list.query.placeholder.name')
+        },
+        colSpan: 6
+      },
+      {
+        prop: 'EQ_enabled',
+        label: $t('system.post.list.query.enabled'),
         component: 'ApiDict',
         componentProps: {
-          code: 'yes_no',
-          placeholder: '请选择状态'
+          code: DictEnum.SYS_ENABLED_STATUS,
+          placeholder: $t('system.post.list.query.placeholder.enabled')
         },
         colSpan: 6
       }
@@ -99,7 +115,7 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
-        label: '岗位ID',
+        label: $t('system.post.form.modal.id'),
         prop: 'id',
         component: 'Input',
         colSpan: 24,
@@ -107,69 +123,102 @@ export const crudSchema: CrudSchema = {
         ifDetail: false
       },
       {
-        label: '岗位名称',
+        component: 'ApiTreeSelect',
+        componentProps: {
+          api: '/system/dept',
+          params: { format: 'tree' },
+          class: 'w-full',
+          filterTreeNode(input: string, node: Recordable<any>) {
+            if (!input || input.length === 0) {
+              return true
+            }
+            const name: string = node.label ?? ''
+            if (!name) return false
+            return name.includes(input) || $t(name).includes(input)
+          },
+          labelField: 'name',
+          showSearch: true,
+          treeDefaultExpandAll: true,
+          valueField: 'id',
+          childrenField: 'children',
+          alwaysLoad: false,
+          placeholder: $t('system.post.form.modal.placeholder.dept_name')
+        },
+        prop: 'dept_id',
+        label: $t('system.post.form.modal.dept_name'),
+        renderComponentContent() {
+          return {
+            title({ label, icon }: { label: string; icon: string }) {
+              const coms = []
+              if (!label) return ''
+              if (icon && icon !== '') {
+                coms.push(h(Icon, { class: 'size-4', icon: icon }))
+              }
+              coms.push(h('span', { class: '' }, $t(label || '')))
+              return h('div', { class: 'flex items-center gap-1' }, coms)
+            }
+          }
+        }
+      },
+
+      {
+        label: $t('system.post.form.modal.name'),
         prop: 'name',
         component: 'Input',
         rules: [
           {
             required: true,
-            message: '请输入岗位名称'
+            message: $t('system.post.form.modal.placeholder.name')
           }
         ],
         componentProps: {
-          placeholder: '请输入岗位名称'
+          placeholder: $t('system.post.form.modal.placeholder.name')
         },
         colSpan: 24
       },
       {
-        label: '唯一编码',
+        label: $t('system.post.form.modal.code'),
         prop: 'code',
         component: 'Input',
         rules: [
           {
             required: true,
-            message: '请输入唯一编码'
+            message: $t('system.post.form.modal.placeholder.code')
           }
         ],
         componentProps: {
-          placeholder: '请输入唯一编码'
+          placeholder: $t('system.post.form.modal.placeholder.code')
         },
         colSpan: 24
       },
       {
-        label: '排序',
+        label: $t('system.post.form.modal.sort'),
         prop: 'sort',
         component: 'InputNumber',
         componentProps: {
-          min: 0,
-          placeholder: '请输入排序值'
+          min: 0
         },
         colSpan: 24
       },
       {
-        label: '是否启用',
+        label: $t('system.post.form.modal.enabled'),
         prop: 'enabled',
         component: 'ApiDict',
         componentProps: {
-          code: 'yes_no',
+          code: DictEnum.SYS_ENABLED_STATUS,
           isBtn: true,
           renderType: 'RadioGroup'
         },
-        rules: [
-          {
-            required: true,
-            message: '请选择是否启用'
-          }
-        ],
+        rules: [],
         colSpan: 24
       },
       {
-        label: '备注',
+        label: $t('system.post.form.modal.remark'),
         prop: 'remark',
         component: 'Input',
         componentProps: {
           type: 'textarea',
-          placeholder: '请输入备注'
+          placeholder: $t('system.post.form.modal.placeholder.remark')
         },
         colSpan: 24
       }

@@ -4,31 +4,39 @@
   </div>
 </template>
 <script setup lang="tsx">
-  import { useCrud } from '@/components/crud'
-  import { crudSchema } from './schemas'
-  const props = defineProps<{
-    dictId?: string
-  }>()
-  const [BasicCrud] = useCrud({
-    ...crudSchema,
-    // 查询参数处理
-    beforeFetch(params: any) {
-      return {
-        ...params,
-        m_EQ_dictId: props.dictId
-      }
-    },
-    // 表单提交前处理
-    transformFormValues(values: any) {
-      return {
-        ...values,
-        dictId: props.dictId
-      }
-    },
-    toolbarActions: [],
-    dropDownToolbarActions: [],
-    tableActions: [],
-    dropDownActions: []
-  })
+import { useCrud } from "@/components/crud";
+import { crudSchema } from "./schemas";
+const props = defineProps({
+  dict_id: {
+    type: [String, Number],
+    default: undefined,
+  },
+  dict_code: {
+    type: [String, Number],
+    default: undefined,
+  },
+});
+
+const [BasicCrud] = useCrud({
+  ...crudSchema,
+  // 查询参数处理
+  beforeFetch(params: any) {
+    return {
+      ...params,
+      dict_id: props.dict_id,
+    };
+  },
+  // 表单提交前处理
+  transformFormValues(values: any) {
+    return {
+      ...values,
+      dict_id: props.dict_id,
+    };
+  },
+  toolbarActions: [],
+  dropDownToolbarActions: [],
+  tableActions: [],
+  dropDownActions: [],
+});
 </script>
 <style lang="scss" scoped></style>
