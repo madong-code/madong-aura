@@ -14,7 +14,7 @@ const langMap: Record<string, { value: LanguageEnum; label: string }> = {
 }
 
 // 定义直接合并到语言根节点的文件名（不带后缀）
-const rootFiles = ['en', 'zh', 'common', 'sys'];
+const rootFiles = ['en', 'zh'];
 
 // 导入语言模块
 const langModules = import.meta.glob('./langs/*/**/*.json', { eager: true })

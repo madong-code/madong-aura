@@ -158,7 +158,7 @@ async function onSubmit() {
       fieldLink
     );
     ConfigService.save(data).then(() => {
-      ElMessage.success($t("common.message.success"));
+      ElMessage.success($t("common.operation_success"));
       retrieveData();
     });
   });

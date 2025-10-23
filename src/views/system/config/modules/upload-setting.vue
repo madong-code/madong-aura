@@ -4,6 +4,7 @@ import { $t } from "@/locales";
 import { transformData } from "../schemas";
 import { ConfigService } from "@/api/system/config";
 import { DictEnum } from "@/enums";
+import uploadSettingDrawer from "./upload-setting-drawer.vue";
 
 const fieldLink = {
   mode: "上传模式",
@@ -68,41 +69,34 @@ const [BasicForm, formApi] = useForm({
   ],
 });
 
-// const [Drawer, drawerApi] = useDrawer({
-//   connectedComponent: uploadSettingDrawer,
-// });
-
 /**
  * 提交表单
  */
 function onSubmit() {
   formApi.validate().then(async (e: any) => {
-    if (e.valid) {
-      const values = await formApi.getValues();
-      const data = transformData(
-        values,
-        ["btn"],
-        [],
-        {
-          group_code: "basic_upload_setting",
-        },
-        fieldLink
-      );
-      ConfigService.save(data).then(() => {
-        ElMessage.success($t("common.message.success"));
-        retrieveData();
-      });
-    }
+    const values = await formApi.getValues();
+    const data = transformData(
+      values,
+      ["btn"],
+      [],
+      {
+        group_code: "basic_upload_setting",
+      },
+      fieldLink
+    );
+    ConfigService.save(data).then(() => {
+      ElMessage.success($t("common.operation_success"));
+      retrieveData();
+    });
   });
 }
 
+const uploadSettingDrawerRef = ref();
+
 //更多设置
-const handleSetting = () => {
-  // formApi.validate().then(async (e: any) => {
-  //   const values = await formApi.getValues();
-  //   drawerApi.setData(values);
-  //   drawerApi.open();
-  // });
+const handleSetting = async () => {
+  const values = await formApi.getValues();
+  uploadSettingDrawerRef.value.show(values);
 };
 
 /**
@@ -126,7 +120,7 @@ onMounted(async () => {
       <el-button type="primary" @click="handleSetting">更多设置</el-button>
     </el-row>
 
-    <!-- <Drawer ref="uploadSettingDrawerRef" /> -->
+    <uploadSettingDrawer ref="uploadSettingDrawerRef" />
   </Page>
 </template>
 

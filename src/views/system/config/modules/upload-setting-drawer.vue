@@ -3,13 +3,31 @@ import { ConfigService } from "@/api/system/config";
 import { useDialog } from "@/components/dialog";
 import { useForm } from "@/components/form";
 import { $t } from "@/locales";
+import { templateField, transformData } from "../schemas";
 
 const data = ref();
-const record = ref();
+
+const fieldLink = {
+  root: "存储目录",
+  secretId: "secretId",
+  accessKey: "accessKey",
+  accessKeyId: "accessKeyId",
+  secretKey: "secretKey",
+  key: "key",
+  accessKeySecret: "accessKeySecret",
+  secret: "secret",
+  bucket: "桶名称",
+  dirname: "目录名称",
+  domain: "域名地址",
+  endpoint: "Endpoint",
+  region: "区域",
+  acl: "Acl",
+  remark: "备注",
+};
 
 const [BasicForm, formApi] = useForm({
   labelPosition: "right",
-  labelWidth: "130px",
+  labelWidth: "140px",
   schema: [
     {
       prop: "mode",
@@ -240,6 +258,7 @@ const [BasicForm, formApi] = useForm({
       component: "Input",
       componentProps: {
         type: "textarea",
+        rows: 5,
       },
       prop: "remark",
       label: $t("system.config.upload.extend.remark"),
@@ -247,46 +266,32 @@ const [BasicForm, formApi] = useForm({
   ],
 });
 
-// const [Drawer, drawerApi] = useDrawer({
-//   onCancel() {
-//     drawerApi.close();
-//   },
-//   async onConfirm() {
-//     const values = await formApi.getValues();
-//     const field = templateField(data.value.mode);
-//     let datas = transformData(
-//       values,
-//       ["btn"],
-//       field,
-//       { group_code: data.value.mode },
-//       fieldLink
-//     );
-//     if (field.length == 0) {
-//       datas = [];
-//     }
-//     save(datas).then(() => {
-//       message.success($t("common.message.success"));
-//       retrieveData();
-//     });
-//   },
-
-//   async onOpenChange(isOpen: boolean) {
-//     if (!isOpen) {
-//       return null;
-//     }
-//     retrieveData();
-//   },
-// });
-
 const [Dialog, dialogApi] = useDialog({
-  title: "选择权限",
-  width: "70%",
+  title: "更多设置",
+  width: "50%",
   modal: true,
   dialogType: "drawer",
   direction: "rtl",
   closeOnClickModal: true,
   destroyOnClose: true,
-  onConfirm() {},
+  async onConfirm() {
+    const values = await formApi.getValues();
+    const field = templateField(data.value.mode);
+    let datas = transformData(
+      values,
+      ["btn"],
+      field,
+      { group_code: data.value.mode },
+      fieldLink
+    );
+    if (field.length == 0) {
+      datas = [];
+    }
+    ConfigService.save(datas).then(() => {
+      ElMessage.success($t("common.operation_success"));
+      retrieveData();
+    });
+  },
 });
 
 /**

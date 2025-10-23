@@ -7,7 +7,8 @@
         :name="item.key"
         :label="item.name"
       >
-        <component :is="item.component" v-bind="$attrs" />
+        <!-- 关键：给组件绑定动态key（基于loadKey） -->
+        <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -22,9 +23,16 @@ const activeName = ref("1");
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
+  // 关键：点击标签时，更新该标签的loadKey
+  const targetKey = tab.props.name;
+  settingList.value.forEach((item) => {
+    if (item.key === targetKey) {
+      item.loadKey += 1; // 每次点击已激活的标签，loadKey+1
+    }
+  });
 };
 
-//参数标签页
+// 参数标签页（新增loadKey属性）
 const settingList = ref([
   {
     component: defineAsyncComponent(
@@ -32,6 +40,7 @@ const settingList = ref([
     ),
     key: "1",
     name: $t("system.config.site.title"),
+    loadKey: 0,
   },
   {
     component: defineAsyncComponent(
@@ -39,6 +48,7 @@ const settingList = ref([
     ),
     key: "2",
     name: $t("system.config.upload.title"),
+    loadKey: 0,
   },
   {
     component: defineAsyncComponent(
@@ -46,6 +56,7 @@ const settingList = ref([
     ),
     key: "3",
     name: $t("system.config.email.title"),
+    loadKey: 0,
   },
   {
     component: defineAsyncComponent(
@@ -53,6 +64,7 @@ const settingList = ref([
     ),
     key: "4",
     name: $t("system.config.sms.title"),
+    loadKey: 0,
   },
 ]);
 </script>

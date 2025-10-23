@@ -155,7 +155,7 @@ function onSubmit() {
       fieldLink
     );
     ConfigService.save(data).then(() => {
-      ElMessage.success("保存成功");
+      ElMessage.success($t("common.operation_success"));
       retrieveData();
     });
   });
