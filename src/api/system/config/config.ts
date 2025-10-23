@@ -8,7 +8,7 @@ export const ConfigService = {
   },
 
   save(data: Record<string, any>) {
-    return request.put({ url: baseUrl, data });
+    return request.post({ url: baseUrl, data });
   },
 };
 
