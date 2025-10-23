@@ -33,6 +33,9 @@ const buildRoutePath = (route: AppRouteRecord, parentPath: string): string => {
   if (route.meta?.isIframe) return route.path
 
   // 拼接并规范化路径
+  if (route.path.startsWith('/')) {
+    return route.path
+  }
   return parentPath ? `${parentPath}/${route.path}`.replace(/\/+/g, '/') : route.path
 }
 

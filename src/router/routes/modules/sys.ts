@@ -13,6 +13,17 @@ export const routes: AppRouteRecord[] = [
     },
     children: [
       {
+        path: '/system/user-center',
+        name: 'UserCenter',
+        component: '/system/user-center',
+        meta: {
+          title: 'menus.system.userCenter',
+          isHide: true,
+          keepAlive: true,
+          isHideTab: true
+        }
+      },
+      {
         path: '/examples/form/index',
         name: 'examples:form',
         component: '/examples/form/index',
