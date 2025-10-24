@@ -2,9 +2,12 @@
 import { ref, unref } from 'vue'
 import type { FormInstance, FormItemSchema, FormSchema } from './types'
 import BasicForm from './form.vue'
+import { useUserStore } from '@/store/modules/user'
 
-export function useForm(formSchema: FormSchema) {
+export function useForm(formSchema: FormSchema | (() => FormSchema)) {
   const formRef = ref<FormInstance | null>(null)
+  const userStore = useUserStore()
+  const { language } = storeToRefs(userStore)
   const register = (formInstance: FormInstance) => {
     formRef.value = formInstance
   }
@@ -86,7 +89,9 @@ export function useForm(formSchema: FormSchema) {
     },
     // 获取表单字段配置
     getFormItemSchema(field: string) {
-      return (formSchema.schema || []).find((item) => item.prop === field)
+      return (
+        (typeof formSchema === 'function' ? formSchema().schema : formSchema.schema) || []
+      ).find((item) => item.prop === field)
     },
     // 获取指定字段的组件实例
     getFieldComponentRef(field: string) {
@@ -109,12 +114,19 @@ export function useForm(formSchema: FormSchema) {
   // 创建表单组件的配置
   const FormComponent = defineComponent({
     setup(_, { attrs, slots }) {
+      // 监听语言变化触发重新渲染
+      watch(language, () => {
+        // 语言变化时的操作，如强制更新组件
+        formRef.value?.setState({
+          schema: typeof formSchema === 'function' ? formSchema().schema : formSchema.schema
+        }) // 或其他需要的操作
+      })
       return () =>
         h(
           BasicForm,
           {
             ...attrs,
-            formSchema: formSchema,
+            formSchema: typeof formSchema === 'function' ? formSchema() : formSchema,
             formMethods: formMethods,
             onRegister: register
           },

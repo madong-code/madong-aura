@@ -44,9 +44,9 @@ export interface CrudSchema {
   // 是否显示搜索表单
   useSearchForm?: boolean
   // 搜索表单配置
-  searchFormSchema?: FormSchema
+  searchFormSchema?: FormSchema | (() => FormSchema)
   // crud表单配置
-  formSchema?: FormSchema
+  formSchema?: FormSchema | (() => FormSchema)
   // 操作列-按钮定义
   tableActions?: ActionItem[]
   // 操作列-下拉菜单定义
