@@ -1,25 +1,24 @@
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/system/post'
 import { $t } from '@/locales'
 import { DictEnum } from '@/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { DeptService } from '@/api/system/dept'
+import { GatewayBlacklistService } from '@/api/dev/gateway'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: PostService.list,
-  dialogTitle: '岗位',
+  api: GatewayBlacklistService.list,
+  dialogTitle: $t('dev.blacklist.list.title'),
   crudApi: {
     // 新增接口
-    add: PostService.create,
+    add: GatewayBlacklistService.create,
     // 修改接口
-    edit: PostService.update,
+    edit: GatewayBlacklistService.update,
     // 删除接口
-    remove: PostService.remove,
+    remove: GatewayBlacklistService.remove,
     // 详情接口
-    view: PostService.get
+    view: GatewayBlacklistService.get
   },
   // 使用crud
   useCrud: true,
@@ -44,29 +43,70 @@ export const crudSchema: CrudSchema = {
     {
       type: 'selection'
     },
-    {
-      prop: 'code',
-      label: $t('system.post.list.table.columns.code')
-    },
+    // {
+    //   prop: 'priority',
+    //   label: $t('dev.blacklist.list.table.columns.priority'),
+    //   width: 60,
+    // },
     {
       prop: 'name',
-      label: $t('system.post.list.table.columns.name')
+      label: $t('dev.blacklist.list.table.columns.name'),
+      align: 'left',
+      minWidth: 150
     },
     {
-      prop: 'sort',
-      label: $t('system.post.list.table.columns.sort')
+      prop: 'ip',
+      label: $t('dev.blacklist.list.table.columns.ip'),
+      align: 'left',
+      minWidth: 150
+    },
+    // {
+    //   prop: 'match_type',
+    //   label: $t('dev.blacklist.list.table.columns.match_type'),
+    //   width: 110,
+    // },
+    {
+      prop: 'methods',
+      label: $t('dev.blacklist.list.table.columns.methods'),
+      component: 'ApiDict',
+      componentProps: {
+        code: DictEnum.SYS_REQUEST_MODE
+      },
+      minWidth: 90
     },
     {
-      prop: 'enabled',
-      label: $t('system.post.list.table.columns.enabled'),
+      prop: 'path',
+      label: $t('dev.blacklist.list.table.columns.path'),
+      align: 'left',
+      minWidth: 100
+    },
+    {
       component: 'ApiDict',
       componentProps: {
         code: DictEnum.SYS_ENABLED_STATUS
-      }
+      },
+      prop: 'enabled',
+      label: $t('system.user.list.table.columns.enabled'),
+      width: 100
+    },
+
+    {
+      prop: 'start_date',
+      label: $t('dev.blacklist.list.table.columns.start_date'),
+      align: 'left',
+      minWidth: 100
     },
     {
-      prop: 'remark',
-      label: $t('system.post.list.table.columns.remark')
+      prop: 'end_date',
+      label: $t('dev.blacklist.list.table.columns.end_date'),
+      align: 'left',
+      minWidth: 100
+    },
+    {
+      prop: 'created_date',
+      label: $t('dev.blacklist.list.table.columns.created_date'),
+      align: 'left',
+      minWidth: 100
     }
   ],
   // 搜索表单定义
@@ -74,32 +114,43 @@ export const crudSchema: CrudSchema = {
     labelWidth: '200px',
     schema: [
       {
-        prop: 'LIKE_code',
-        label: $t('system.post.list.query.code'),
         component: 'Input',
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.post.list.query.placeholder.code')
-        },
-        colSpan: 6
-      },
-      {
         prop: 'LIKE_name',
-        label: $t('system.post.list.query.name'),
-        component: 'Input',
+        label: $t('dev.blacklist.list.query.name'),
         componentProps: {
-          clearable: true,
-          placeholder: $t('system.post.list.query.placeholder.name')
+          placeholder: $t('dev.blacklist.list.query.placeholder.name'),
+          clearable: true
         },
         colSpan: 6
       },
       {
-        prop: 'EQ_enabled',
-        label: $t('system.post.list.query.enabled'),
-        component: 'ApiDict',
+        component: 'Input',
+        prop: 'LIKE_ip',
+        label: $t('dev.blacklist.list.query.ip'),
         componentProps: {
+          placeholder: $t('dev.blacklist.list.query.placeholder.ip'),
+          clearable: true
+        },
+        colSpan: 6
+      },
+      {
+        component: 'Input',
+        prop: 'path',
+        label: $t('dev.blacklist.list.query.path'),
+        componentProps: {
+          placeholder: $t('dev.blacklist.list.query.placeholder.path'),
+          clearable: true
+        },
+        colSpan: 6
+      },
+      {
+        component: 'ApiDict',
+        prop: 'EQ_enabled',
+        label: $t('dev.blacklist.list.query.enabled'),
+        componentProps: {
+          placeholder: $t('dev.blacklist.list.query.placeholder.enabled'),
           code: DictEnum.SYS_ENABLED_STATUS,
-          placeholder: $t('system.post.list.query.placeholder.enabled')
+          clearable: true
         },
         colSpan: 6
       }
@@ -115,112 +166,88 @@ export const crudSchema: CrudSchema = {
     labelWidth: '100px',
     schema: [
       {
-        label: $t('system.post.form.modal.id'),
+        label: $t('dev.blacklist.form.modal.id'),
         prop: 'id',
         component: 'Input',
-        colSpan: 24,
+        colSpan: 12,
         show: false,
         ifDetail: false
       },
       {
-        component: 'ApiTreeSelect',
-        componentProps: {
-          api: '/system/dept',
-          params: { format: 'tree' },
-          class: 'w-full',
-          filterTreeNode(input: string, node: Recordable<any>) {
-            if (!input || input.length === 0) {
-              return true
-            }
-            const name: string = node.label ?? ''
-            if (!name) return false
-            return name.includes(input) || $t(name).includes(input)
-          },
-          labelField: 'name',
-          showSearch: true,
-          treeDefaultExpandAll: true,
-          valueField: 'id',
-          childrenField: 'children',
-          alwaysLoad: false,
-          placeholder: $t('system.post.form.modal.placeholder.dept_name')
-        },
-        prop: 'dept_id',
-        label: $t('system.post.form.modal.dept_name'),
-        renderComponentContent() {
-          return {
-            title({ label, icon }: { label: string; icon: string }) {
-              const coms = []
-              if (!label) return ''
-              if (icon && icon !== '') {
-                coms.push(h(Icon, { class: 'size-4', icon: icon }))
-              }
-              coms.push(h('span', { class: '' }, $t(label || '')))
-              return h('div', { class: 'flex items-center gap-1' }, coms)
-            }
-          }
-        }
-      },
-
-      {
-        label: $t('system.post.form.modal.name'),
         prop: 'name',
+        label: $t('dev.blacklist.form.modal.name'),
         component: 'Input',
-        rules: [
-          {
-            required: true,
-            message: $t('system.post.form.modal.placeholder.name')
-          }
-        ],
         componentProps: {
-          placeholder: $t('system.post.form.modal.placeholder.name')
+          placeholder: $t('dev.blacklist.form.modal.placeholder.name'),
+          clearable: true
         },
-        colSpan: 24
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.name') }]
       },
       {
-        label: $t('system.post.form.modal.code'),
-        prop: 'code',
+        prop: 'match_type',
+        label: $t('dev.blacklist.form.modal.match_type'),
+        component: 'Select',
+        defaultValue: 1,
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.placeholder.match_type'),
+          clearable: true,
+          options: [
+            { label: 'ip', value: 1 },
+            { label: '全局', value: 0 }
+          ]
+        },
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.match_type') }]
+      },
+      {
+        prop: 'ip',
+        label: $t('dev.blacklist.form.modal.ip'),
         component: 'Input',
-        rules: [
-          {
-            required: true,
-            message: $t('system.post.form.modal.placeholder.code')
-          }
-        ],
         componentProps: {
-          placeholder: $t('system.post.form.modal.placeholder.code')
+          placeholder: $t('dev.blacklist.form.modal.placeholder.ip'),
+          clearable: true
         },
-        colSpan: 24
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.ip') }]
       },
       {
-        label: $t('system.post.form.modal.sort'),
-        prop: 'sort',
-        component: 'InputNumber',
-        componentProps: {
-          min: 0
-        },
-        colSpan: 24
-      },
-      {
-        label: $t('system.post.form.modal.enabled'),
-        prop: 'enabled',
+        prop: 'methods',
+        label: $t('dev.blacklist.form.modal.methods'),
         component: 'ApiDict',
         componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          isBtn: true,
-          renderType: 'RadioGroup'
+          placeholder: $t('dev.blacklist.form.modal.methods'),
+          code: DictEnum.SYS_REQUEST_MODE
         },
-        rules: [],
-        colSpan: 24
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.methods') }]
       },
       {
-        label: $t('system.post.form.modal.remark'),
-        prop: 'remark',
+        prop: 'path',
+        label: $t('dev.blacklist.form.modal.path'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.placeholder.path'),
+          clearable: true
+        },
+        rules: [{ required: true, message: '' }]
+      },
+      {
+        prop: 'enabled',
+        label: $t('dev.blacklist.form.modal.enabled'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          isBtn: true
+        }
+      },
+      {
+        prop: 'message',
+        label: $t('dev.blacklist.form.modal.message'),
         component: 'Input',
         componentProps: {
           type: 'textarea',
-          placeholder: $t('system.post.form.modal.placeholder.remark')
-        },
-        colSpan: 24
+          rows: 4,
+          placeholder: $t('dev.blacklist.form.modal.placeholder.message')
+        }
       }
     ]
   }

@@ -10,8 +10,8 @@ export const GatewayLimiterService = {
 }
 
 
-export const GatewayBlacklist = {
-    ...BaseService<GatewayBlacklistRow>({ baseUrl })
+export const GatewayBlacklistService = {
+    ...BaseService<GatewayBlacklistRow>({ baseUrl: '/dev/gateway/blacklist' })
 }
 
 

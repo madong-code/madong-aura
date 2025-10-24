@@ -9,7 +9,7 @@ import { CrontabLogService } from '@/api/dev/crontab'
 export const crudSchema: CrudSchema = {
   // 接口地址
   api: CrontabLogService.list,
-  dialogTitle: '定时任务日志',
+  dialogTitle: $t('dev.crontab_log.list.title'),
   crudApi: {
     // 新增接口
     add: CrontabLogService.create,

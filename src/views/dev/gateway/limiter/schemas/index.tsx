@@ -1,25 +1,22 @@
-import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/system/post'
 import { $t } from '@/locales'
 import { DictEnum } from '@/enums'
-import { Recordable } from '@/types'
-import { Icon } from '@/components/icon'
-import { DeptService } from '@/api/system/dept'
+import { CrudSchema } from '@/components/crud'
+import { GatewayLimiterService } from '@/api/dev/gateway'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: PostService.list,
-  dialogTitle: '岗位',
+  api: GatewayLimiterService.list,
+  dialogTitle: $t('dev.limiter.list.title'),
   crudApi: {
     // 新增接口
-    add: PostService.create,
+    add: GatewayLimiterService.create,
     // 修改接口
-    edit: PostService.update,
+    edit: GatewayLimiterService.update,
     // 删除接口
-    remove: PostService.remove,
+    remove: GatewayLimiterService.remove,
     // 详情接口
-    view: PostService.get
+    view: GatewayLimiterService.get
   },
   // 使用crud
   useCrud: true,
@@ -32,41 +29,74 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'system:post:create',
+  addAuth: 'dev:gateway_limiter:create',
   // 删除权限码
-  removeAuth: 'system:post:delete',
+  removeAuth: 'dev:gateway_limiter:delete',
   // 修改权限码
-  editAuth: 'system:post:edit',
+  editAuth: 'dev:gateway_limiter:edit',
   // 详情权限码
-  viewAuth: 'system:post:detail',
+  viewAuth: 'dev:gateway_limiter:detail',
   // 表格列定义
   columns: [
     {
       type: 'selection'
     },
     {
-      prop: 'code',
-      label: $t('system.post.list.table.columns.code')
+      prop: 'priority',
+      label: $t('dev.limiter.list.table.columns.priority'),
+      width: 60
     },
     {
       prop: 'name',
-      label: $t('system.post.list.table.columns.name')
+      label: $t('dev.limiter.list.table.columns.name'),
+      align: 'left',
+      minWidth: 150
     },
     {
-      prop: 'sort',
-      label: $t('system.post.list.table.columns.sort')
+      prop: 'match_type',
+      label: $t('dev.limiter.list.table.columns.match_type'),
+      width: 110
+    },
+    {
+      prop: 'methods',
+      label: $t('dev.limiter.list.table.columns.methods'),
+      componentProps: {
+        code: DictEnum.SYS_REQUEST_MODE
+      },
+      minWidth: 90
+    },
+    {
+      prop: 'path',
+      label: $t('dev.limiter.list.table.columns.path'),
+      align: 'left',
+      minWidth: 100
     },
     {
       prop: 'enabled',
-      label: $t('system.post.list.table.columns.enabled'),
+      label: $t('system.user.list.table.columns.enabled'),
+      width: 100,
       component: 'ApiDict',
       componentProps: {
         code: DictEnum.SYS_ENABLED_STATUS
       }
     },
+
     {
-      prop: 'remark',
-      label: $t('system.post.list.table.columns.remark')
+      prop: 'limit_type',
+      label: $t('dev.limiter.list.table.columns.limit_type')
+    },
+    {
+      prop: 'limit_value',
+      label: $t('dev.limiter.list.table.columns.limit_value')
+    },
+    {
+      prop: 'period',
+      label: $t('dev.limiter.list.table.columns.period'),
+      width: 110
+    },
+    {
+      prop: 'ttl',
+      label: $t('dev.limiter.list.table.columns.ttl')
     }
   ],
   // 搜索表单定义
@@ -74,32 +104,33 @@ export const crudSchema: CrudSchema = {
     labelWidth: '200px',
     schema: [
       {
-        prop: 'LIKE_code',
-        label: $t('system.post.list.query.code'),
         component: 'Input',
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.post.list.query.placeholder.code')
-        },
-        colSpan: 6
-      },
-      {
         prop: 'LIKE_name',
-        label: $t('system.post.list.query.name'),
-        component: 'Input',
+        label: $t('dev.limiter.list.query.name'),
         componentProps: {
-          clearable: true,
-          placeholder: $t('system.post.list.query.placeholder.name')
+          placeholder: $t('dev.limiter.list.query.placeholder.name'),
+          clearable: true
         },
         colSpan: 6
       },
       {
-        prop: 'EQ_enabled',
-        label: $t('system.post.list.query.enabled'),
-        component: 'ApiDict',
+        component: 'Input',
+        prop: 'path',
+        label: $t('dev.limiter.list.query.path'),
         componentProps: {
+          placeholder: $t('dev.limiter.list.query.placeholder.path'),
+          clearable: true
+        },
+        colSpan: 6
+      },
+      {
+        component: 'ApiDict',
+        prop: 'enabled',
+        label: $t('dev.limiter.list.query.enabled'),
+        componentProps: {
+          placeholder: $t('dev.limiter.list.query.placeholder.enabled'),
           code: DictEnum.SYS_ENABLED_STATUS,
-          placeholder: $t('system.post.list.query.placeholder.enabled')
+          clearable: true
         },
         colSpan: 6
       }
@@ -112,115 +143,97 @@ export const crudSchema: CrudSchema = {
   // crud表单配置
   formSchema: {
     showDefaultActions: false,
-    labelWidth: '100px',
+    labelWidth: '120px',
     schema: [
       {
-        label: $t('system.post.form.modal.id'),
-        prop: 'id',
-        component: 'Input',
-        colSpan: 24,
-        show: false,
-        ifDetail: false
-      },
-      {
-        component: 'ApiTreeSelect',
-        componentProps: {
-          api: '/system/dept',
-          params: { format: 'tree' },
-          class: 'w-full',
-          filterTreeNode(input: string, node: Recordable<any>) {
-            if (!input || input.length === 0) {
-              return true
-            }
-            const name: string = node.label ?? ''
-            if (!name) return false
-            return name.includes(input) || $t(name).includes(input)
-          },
-          labelField: 'name',
-          showSearch: true,
-          treeDefaultExpandAll: true,
-          valueField: 'id',
-          childrenField: 'children',
-          alwaysLoad: false,
-          placeholder: $t('system.post.form.modal.placeholder.dept_name')
-        },
-        prop: 'dept_id',
-        label: $t('system.post.form.modal.dept_name'),
-        renderComponentContent() {
-          return {
-            title({ label, icon }: { label: string; icon: string }) {
-              const coms = []
-              if (!label) return ''
-              if (icon && icon !== '') {
-                coms.push(h(Icon, { class: 'size-4', icon: icon }))
-              }
-              coms.push(h('span', { class: '' }, $t(label || '')))
-              return h('div', { class: 'flex items-center gap-1' }, coms)
-            }
-          }
-        }
-      },
-
-      {
-        label: $t('system.post.form.modal.name'),
         prop: 'name',
+        label: $t('dev.limiter.form.modal.name'),
         component: 'Input',
-        rules: [
-          {
-            required: true,
-            message: $t('system.post.form.modal.placeholder.name')
-          }
-        ],
         componentProps: {
-          placeholder: $t('system.post.form.modal.placeholder.name')
+          placeholder: $t('dev.limiter.form.modal.placeholder.name'),
+          clearable: true
         },
-        colSpan: 24
+        rules: []
       },
       {
-        label: $t('system.post.form.modal.code'),
-        prop: 'code',
-        component: 'Input',
-        rules: [
-          {
-            required: true,
-            message: $t('system.post.form.modal.placeholder.code')
-          }
-        ],
+        prop: 'match_type',
+        label: $t('dev.limiter.form.modal.match_type'),
+        component: 'Select',
+        defaultValue: 1,
         componentProps: {
-          placeholder: $t('system.post.form.modal.placeholder.code')
+          placeholder: $t('dev.limiter.form.modal.placeholder.match_type'),
+          clearable: true,
+          options: [
+            { label: 'ip', value: 1 },
+            { label: '全局', value: 0 }
+          ]
         },
-        colSpan: 24
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.match_type') }]
       },
       {
-        label: $t('system.post.form.modal.sort'),
-        prop: 'sort',
-        component: 'InputNumber',
-        componentProps: {
-          min: 0
-        },
-        colSpan: 24
-      },
-      {
-        label: $t('system.post.form.modal.enabled'),
-        prop: 'enabled',
+        prop: 'methods',
+        label: $t('dev.limiter.form.modal.methods'),
         component: 'ApiDict',
         componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          isBtn: true,
-          renderType: 'RadioGroup'
+          placeholder: $t('dev.limiter.form.modal.methods'),
+          code: DictEnum.SYS_REQUEST_MODE
         },
-        rules: [],
-        colSpan: 24
+        rules: []
       },
       {
-        label: $t('system.post.form.modal.remark'),
-        prop: 'remark',
+        prop: 'path',
+        label: $t('dev.limiter.form.modal.path'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.placeholder.path'),
+          clearable: true
+        },
+        rules: []
+      },
+      {
+        prop: 'limit_value',
+        label: $t('dev.limiter.form.modal.limit_value'),
+        component: 'Input',
+        componentProps: {
+          type: 'number',
+          placeholder: $t('dev.limiter.form.modal.placeholder.limit_value')
+        },
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.limit_value') }]
+      },
+      {
+        prop: 'period',
+        defaultValue: 1,
+        label: $t('dev.limiter.form.modal.period'),
+        component: 'Input',
+        componentProps: {
+          min: 1,
+          max: 60,
+          type: 'number',
+          placeholder: $t('dev.limiter.form.modal.placeholder.period')
+        },
+        rules: []
+      },
+      {
+        prop: 'enabled',
+        label: $t('dev.limiter.form.modal.enabled'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          isBtn: true
+        },
+        rules: []
+      },
+      {
+        prop: 'message',
+        label: $t('dev.limiter.form.modal.message'),
         component: 'Input',
         componentProps: {
           type: 'textarea',
-          placeholder: $t('system.post.form.modal.placeholder.remark')
-        },
-        colSpan: 24
+          rows: 4,
+          placeholder: $t('dev.limiter.form.modal.placeholder.message')
+        }
       }
     ]
   }
