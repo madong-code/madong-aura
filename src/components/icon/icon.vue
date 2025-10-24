@@ -1,10 +1,10 @@
 <template>
   <i class="iconfont-sys" v-if="iconType === 'unicode'" v-html="icon"></i>
   <i :class="`iconfont-sys ${icon}`" v-else-if="iconType === 'className'"></i>
-  <ElIcon v-else-if="typeof icon === 'string'">
+  <ElIcon class="m-icon" v-else-if="typeof icon === 'string'">
     <Icon :icon="icon" :width="width" :height="height" :color="color"></Icon>
   </ElIcon>
-  <ElIcon v-else-if="typeof icon === 'object'"
+  <ElIcon class="m-icon" v-else-if="typeof icon === 'object'"
     ><component :is="icon" :width="width" :height="height" :color="color"></component
   ></ElIcon>
 </template>
@@ -38,4 +38,8 @@
     return 'unicode'
   })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .m-icon {
+    width: auto !important;
+  }
+</style>
