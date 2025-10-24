@@ -40,7 +40,7 @@ export interface CrudSchema {
     tools?: ActionItem[]
   }
   // 列定义
-  columns?: CrudColumn[]
+  columns?: CrudColumn[] | (() => CrudColumn[])
   // 是否显示搜索表单
   useSearchForm?: boolean
   // 搜索表单配置
