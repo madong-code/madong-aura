@@ -180,7 +180,7 @@
     setup(props) {
       return () => {
         if (props.icon?.includes(':')) {
-          return h('div', { class: 'menu-icon' }, h(Icon, { icon: props.icon, color: props.color }))
+          return h(Icon, { icon: props.icon, color: props.color, class: 'menu-icon' })
         }
         return h('i', {
           class: 'menu-icon iconfont-sys',
