@@ -1,113 +1,97 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
 import { DictEnum } from '@/enums'
-import { Recordable } from '@/types'
-import { Icon } from '@/components/icon'
-import { GatewayBlacklistService } from '@/api/dev/gateway'
+import { } from '@/api/dev/gateway'
+import { OperateLogService } from '@/api/system/logs'
 
 // crud配置
 export const crudSchema: CrudSchema = {
   // 接口地址
-  api: GatewayBlacklistService.list,
-  dialogTitle: $t('dev.blacklist.list.title'),
+  api: OperateLogService.list,
+  dialogTitle: $t('system.operate_logs.list.title'),
   crudApi: {
     // 新增接口
-    add: GatewayBlacklistService.create,
+    add: OperateLogService.create,
     // 修改接口
-    edit: GatewayBlacklistService.update,
+    edit: OperateLogService.update,
     // 删除接口
-    remove: GatewayBlacklistService.remove,
+    remove: OperateLogService.remove,
     // 详情接口
-    view: GatewayBlacklistService.get
+    view: OperateLogService.get
   },
   // 使用crud
   useCrud: true,
   // 是否有新增
-  hasAdd: true,
+  hasAdd: false,
   // 是否有删除
   hasRemove: true,
   // 是否有修改
-  hasEdit: true,
+  hasEdit: false,
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'system:post:create',
+  addAuth: 'system:logs_operate:create',
   // 删除权限码
-  removeAuth: 'system:post:delete',
+  removeAuth: 'system:logs_operate:delete',
   // 修改权限码
-  editAuth: 'system:post:edit',
+  editAuth: 'system:logs_operate:edit',
   // 详情权限码
-  viewAuth: 'system:post:detail',
+  viewAuth: 'system:logs_operate:detail',
   // 表格列定义
   columns: [
     {
       type: 'selection'
     },
-    // {
-    //   prop: 'priority',
-    //   label: $t('dev.blacklist.list.table.columns.priority'),
-    //   width: 60,
-    // },
+
     {
       prop: 'name',
-      label: $t('dev.blacklist.list.table.columns.name'),
+      label: $t('system.operate_logs.list.table.columns.name'),
       align: 'left',
-      minWidth: 150
+      width: 90,
+
+    },
+    {
+      prop: 'app',
+      label: $t('system.operate_logs.list.table.columns.app'),
+      width: 60
     },
     {
       prop: 'ip',
-      label: $t('dev.blacklist.list.table.columns.ip'),
+      label: $t('system.operate_logs.list.table.columns.ip'),
+      width: 110
+    },
+    {
+      prop: 'ip_location',
+      label: $t('system.operate_logs.list.table.columns.ip_location')
+    },
+    {
+      prop: 'os',
+      label: $t('system.operate_logs.list.table.columns.os')
+    },
+    {
+      prop: 'browser',
+      label: $t('system.operate_logs.list.table.columns.browser')
+    },
+    {
+      prop: 'url',
+      label: $t('system.operate_logs.list.table.columns.url'),
       align: 'left',
-      minWidth: 150
-    },
-    // {
-    //   prop: 'match_type',
-    //   label: $t('dev.blacklist.list.table.columns.match_type'),
-    //   width: 110,
-    // },
-    {
-      prop: 'methods',
-      label: $t('dev.blacklist.list.table.columns.methods'),
-      component: 'ApiDict',
-      componentProps: {
-        code: DictEnum.SYS_REQUEST_MODE
-      },
-      minWidth: 90
+      minWidth: 170
     },
     {
-      prop: 'path',
-      label: $t('dev.blacklist.list.table.columns.path'),
-      align: 'left',
-      minWidth: 100
-    },
-    {
-      component: 'ApiDict',
-      componentProps: {
-        code: DictEnum.SYS_ENABLED_STATUS
-      },
-      prop: 'enabled',
-      label: $t('system.user.list.table.columns.enabled'),
-      width: 100
-    },
-
-    {
-      prop: 'start_date',
-      label: $t('dev.blacklist.list.table.columns.start_date'),
-      align: 'left',
-      minWidth: 100
-    },
-    {
-      prop: 'end_date',
-      label: $t('dev.blacklist.list.table.columns.end_date'),
-      align: 'left',
-      minWidth: 100
+      prop: 'param',
+      label: $t('system.operate_logs.list.table.columns.param'),
+      minWidth: 170,
+      formatter: (row: any) => {
+        const jsonString = JSON.stringify(row.param, null, 2);
+        return jsonString;
+      }
     },
     {
       prop: 'created_date',
-      label: $t('dev.blacklist.list.table.columns.created_date'),
-      align: 'left',
-      minWidth: 100
-    }
+      label: $t('system.operate_logs.list.table.columns.created_date'),
+      width: 170
+    },
   ],
   // 搜索表单定义
   searchFormSchema: {
@@ -115,10 +99,10 @@ export const crudSchema: CrudSchema = {
     schema: [
       {
         component: 'Input',
-        prop: 'LIKE_name',
-        label: $t('dev.blacklist.list.query.name'),
+        prop: 'LIKE_user_name',
+        label: $t('system.operate_logs.list.query.user_name'),
         componentProps: {
-          placeholder: $t('dev.blacklist.list.query.placeholder.name'),
+          placeholder: $t('system.operate_logs.list.query.placeholder.user_name'),
           clearable: true
         },
         colSpan: 6
@@ -126,34 +110,32 @@ export const crudSchema: CrudSchema = {
       {
         component: 'Input',
         prop: 'LIKE_ip',
-        label: $t('dev.blacklist.list.query.ip'),
+        label: $t('system.operate_logs.list.query.ip'),
         componentProps: {
-          placeholder: $t('dev.blacklist.list.query.placeholder.ip'),
+          placeholder: $t('system.operate_logs.list.query.placeholder.ip'),
           clearable: true
         },
         colSpan: 6
       },
       {
         component: 'Input',
-        prop: 'path',
-        label: $t('dev.blacklist.list.query.path'),
+        prop: 'LIKE_url',
+        label: $t('system.operate_logs.list.query.url'),
         componentProps: {
-          placeholder: $t('dev.blacklist.list.query.placeholder.path'),
+          placeholder: $t('system.operate_logs.list.query.placeholder.url'),
           clearable: true
         },
         colSpan: 6
       },
       {
-        component: 'ApiDict',
-        prop: 'EQ_enabled',
-        label: $t('dev.blacklist.list.query.enabled'),
+        component: 'DatePicker',
+        prop: 'BETWEEN_created_at',
+        label: $t('system.operate_logs.list.query.created_date'),
         componentProps: {
-          placeholder: $t('dev.blacklist.list.query.placeholder.enabled'),
-          code: DictEnum.SYS_ENABLED_STATUS,
-          clearable: true
+          type: 'daterange'
         },
         colSpan: 6
-      }
+      },
     ]
   },
   // 内置弹窗配置
@@ -162,93 +144,114 @@ export const crudSchema: CrudSchema = {
   },
   // crud表单配置
   formSchema: {
-    showDefaultActions: false,
-    labelWidth: '100px',
     schema: [
       {
-        label: $t('dev.blacklist.form.modal.id'),
         prop: 'id',
+        label: 'ID',
         component: 'Input',
-        colSpan: 12,
-        show: false,
-        ifDetail: false
+        ifShow: false,
+        ifDetail: false,
       },
       {
-        prop: 'name',
-        label: $t('dev.blacklist.form.modal.name'),
+        prop: 'app',
+        label: $t('system.operate_logs.form.app'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('dev.blacklist.form.modal.placeholder.name'),
-          clearable: true
-        },
-        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.name') }]
-      },
-      {
-        prop: 'match_type',
-        label: $t('dev.blacklist.form.modal.match_type'),
-        component: 'Select',
-        defaultValue: 1,
-        componentProps: {
-          placeholder: $t('dev.blacklist.form.modal.placeholder.match_type'),
-          clearable: true,
-          options: [
-            { label: 'ip', value: 1 },
-            { label: '全局', value: 0 }
-          ]
-        },
-        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.match_type') }]
+          placeholder: '',
+          readOnly: true,
+        }
       },
       {
         prop: 'ip',
-        label: $t('dev.blacklist.form.modal.ip'),
+        label: $t('system.operate_logs.form.ip'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('dev.blacklist.form.modal.placeholder.ip'),
-          clearable: true
+          placeholder: '',
+          readOnly: true,
         },
-        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.ip') }]
       },
       {
-        prop: 'methods',
-        label: $t('dev.blacklist.form.modal.methods'),
-        component: 'ApiDict',
-        componentProps: {
-          placeholder: $t('dev.blacklist.form.modal.methods'),
-          code: DictEnum.SYS_REQUEST_MODE
-        },
-        rules: [{ required: true, message: $t('dev.blacklist.form.modal.methods') }]
-      },
-      {
-        prop: 'path',
-        label: $t('dev.blacklist.form.modal.path'),
+        prop: 'class_name',
+        label: $t('system.operate_logs.form.class_name'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('dev.blacklist.form.modal.placeholder.path'),
-          clearable: true
+          placeholder: '',
+          readOnly: true,
         },
-        rules: [{ required: true, message: '' }]
       },
       {
-        prop: 'enabled',
-        label: $t('dev.blacklist.form.modal.enabled'),
-        component: 'ApiDict',
-        defaultValue: 1,
+        prop: 'method',
+        label: $t('system.operate_logs.form.method'),
+        component: 'Input',
         componentProps: {
-          renderType: 'RadioGroup',
-          code: DictEnum.SYS_ENABLED_STATUS,
-          isBtn: true
-        }
+          placeholder: '',
+          readOnly: true,
+        },
       },
       {
-        prop: 'message',
-        label: $t('dev.blacklist.form.modal.message'),
+        prop: 'action',
+        label: $t('system.operate_logs.form.action'),
+        component: 'Input',
+        componentProps: {
+          placeholder: '',
+          readOnly: true,
+        },
+      },
+      {
+        prop: 'created_date',
+        label: $t('system.operate_logs.form.created_date'),
+        component: 'Input',
+        componentProps: {
+          placeholder: '',
+          readOnly: true,
+        },
+      },
+      {
+        prop: 'user_name',
+        label: $t('system.operate_logs.form.user_name'),
+        component: 'Input',
+        componentProps: {
+          placeholder: '',
+          readOnly: true,
+        },
+      },
+      {
+        prop: 'param',
+        label: $t('system.operate_logs.form.param'),
         component: 'Input',
         componentProps: {
           type: 'textarea',
-          rows: 4,
-          placeholder: $t('dev.blacklist.form.modal.placeholder.message')
-        }
+          placeholder: '',
+          readOnly: true,
+          autoSize: { minRows: 3, maxRows: 5 }, // 自动高度
+          style: {
+            backgroundColor: '#f6f8fa',   // 浅灰背景
+            border: '1px solid #e0e0e0',  // 边框颜色
+            borderRadius: 4,
+            fontFamily: 'monospace',       // 等宽字体
+            cursor: 'text'                 // 保持文本光标
+          }
+        },
+      },
+      {
+        prop: 'result',
+        label: $t('system.operate_logs.form.result'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          placeholder: '',
+          readOnly: true,
+          autosize: { minRows: 8, maxRows: 15 }, // 自动高度
+          style: {
+            backgroundColor: '#f6f8fa',   // 浅灰背景
+            border: '1px solid #e0e0e0',  // 边框颜色
+            borderRadius: 4,
+            fontFamily: 'monospace',       // 等宽字体
+            cursor: 'text'                 // 保持文本光标
+          }
+        },
       }
     ]
+
   }
 }
