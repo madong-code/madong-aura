@@ -19,7 +19,10 @@
         </div>
         <!-- 刷新按钮 -->
         <div class="btn-box" v-if="shouldShowRefreshButton">
-          <div class="btn refresh-btn" :style="{ marginLeft: !isLeftMenu ? '10px' : '0' }">
+          <div
+            class="btn refresh-btn"
+            :style="{ marginLeft: !isLeftMenu ? '10px' : '0' }"
+          >
             <i class="iconfont-sys" @click="reload()"> &#xe6b3; </i>
           </div>
         </div>
@@ -29,7 +32,9 @@
 
         <!-- 面包屑 -->
         <ArtBreadcrumb
-          v-if="(shouldShowBreadcrumb && isLeftMenu) || (shouldShowBreadcrumb && isDualMenu)"
+          v-if="
+            (shouldShowBreadcrumb && isLeftMenu) || (shouldShowBreadcrumb && isDualMenu)
+          "
         />
 
         <!-- 顶部菜单 -->
@@ -45,7 +50,7 @@
           <div class="search-input" @click="openSearchDialog">
             <div class="left">
               <i class="iconfont-sys">&#xe710;</i>
-              <span>{{ $t('topBar.search.title') }}</span>
+              <span>{{ $t("topBar.search.title") }}</span>
             </div>
             <div class="search-keydown">
               <i class="iconfont-sys" v-if="isWindows">&#xeeac;</i>
@@ -56,21 +61,39 @@
         </div>
 
         <!-- 全屏按钮 -->
-        <div class="btn-box screen-box" v-if="shouldShowFullscreen" @click="toggleFullScreen">
+        <div
+          class="btn-box screen-box"
+          v-if="shouldShowFullscreen"
+          @click="toggleFullScreen"
+        >
           <div
             class="btn"
-            :class="{ 'full-screen-btn': !isFullscreen, 'exit-full-screen-btn': isFullscreen }"
+            :class="{
+              'full-screen-btn': !isFullscreen,
+              'exit-full-screen-btn': isFullscreen,
+            }"
           >
-            <i class="iconfont-sys">{{ isFullscreen ? '&#xe62d;' : '&#xe8ce;' }}</i>
+            <i class="iconfont-sys">{{ isFullscreen ? "&#xe62d;" : "&#xe8ce;" }}</i>
           </div>
         </div>
         <!-- 通知 -->
-        <div class="btn-box notice-btn" v-if="shouldShowNotification" @click="visibleNotice">
+        <div
+          class="btn-box notice-btn"
+          v-if="shouldShowNotification"
+          @click="visibleNotice"
+        >
           <div class="btn notice-button">
             <i class="iconfont-sys notice-btn">&#xe6c2;</i>
             <span class="count notice-btn"></span>
           </div>
         </div>
+        <!-- 终端 -->
+        <div class="btn-box terminal-button" @click="openTerminal">
+          <div class="btn terminal-button" style="font-size: 20px; line-height: 2.2">
+            <Icon icon="ant-design:code-outlined" class="terminal-btn" />
+          </div>
+        </div>
+
         <!-- 聊天 -->
         <div class="btn-box chat-btn" v-if="shouldShowChat" @click="openChat">
           <div class="btn chat-button">
@@ -86,7 +109,11 @@
             </div>
             <template #dropdown>
               <ElDropdownMenu>
-                <div v-for="item in languageOptions" :key="item.value" class="lang-btn-item">
+                <div
+                  v-for="item in languageOptions"
+                  :key="item.value"
+                  class="lang-btn-item"
+                >
                   <ElDropdownItem
                     :command="item.value"
                     :class="{ 'is-selected': locale === item.value }"
@@ -101,18 +128,26 @@
         </div>
         <!-- 设置 -->
         <div class="btn-box" v-if="shouldShowSettings" @click="openSetting">
-          <ElPopover :visible="showSettingGuide" placement="bottom-start" :width="190" :offset="0">
+          <ElPopover
+            :visible="showSettingGuide"
+            placement="bottom-start"
+            :width="190"
+            :offset="0"
+          >
             <template #reference>
               <div class="btn setting-btn">
                 <i class="iconfont-sys">&#xe6d0;</i>
               </div>
             </template>
             <template #default>
-              <p
-                >{{ $t('topBar.guide.title')
-                }}<span :style="{ color: systemThemeColor }"> {{ $t('topBar.guide.theme') }} </span
-                >、 <span :style="{ color: systemThemeColor }"> {{ $t('topBar.guide.menu') }} </span
-                >{{ $t('topBar.guide.description') }}
+              <p>
+                {{ $t("topBar.guide.title")
+                }}<span :style="{ color: systemThemeColor }">
+                  {{ $t("topBar.guide.theme") }} </span
+                >、
+                <span :style="{ color: systemThemeColor }">
+                  {{ $t("topBar.guide.menu") }} </span
+                >{{ $t("topBar.guide.description") }}
               </p>
             </template>
           </ElPopover>
@@ -120,7 +155,7 @@
         <!-- 切换主题 -->
         <div class="btn-box" v-if="shouldShowThemeToggle" @click="themeAnimation">
           <div class="btn theme-btn">
-            <i class="iconfont-sys">{{ isDark ? '&#xe6b5;' : '&#xe725;' }}</i>
+            <i class="iconfont-sys">{{ isDark ? "&#xe6b5;" : "&#xe725;" }}</i>
           </div>
         </div>
 
@@ -152,23 +187,23 @@
                 <ul class="user-menu">
                   <li @click="goPage('/system/user-center')">
                     <i class="menu-icon iconfont-sys">&#xe734;</i>
-                    <span class="menu-txt">{{ $t('topBar.user.userCenter') }}</span>
+                    <span class="menu-txt">{{ $t("topBar.user.userCenter") }}</span>
                   </li>
                   <li @click="toDocs()">
                     <i class="menu-icon iconfont-sys" style="font-size: 15px">&#xe828;</i>
-                    <span class="menu-txt">{{ $t('topBar.user.docs') }}</span>
+                    <span class="menu-txt">{{ $t("topBar.user.docs") }}</span>
                   </li>
                   <li @click="toGithub()">
                     <i class="menu-icon iconfont-sys">&#xe8d6;</i>
-                    <span class="menu-txt">{{ $t('topBar.user.github') }}</span>
+                    <span class="menu-txt">{{ $t("topBar.user.github") }}</span>
                   </li>
                   <li @click="lockScreen()">
                     <i class="menu-icon iconfont-sys">&#xe817;</i>
-                    <span class="menu-txt">{{ $t('topBar.user.lockScreen') }}</span>
+                    <span class="menu-txt">{{ $t("topBar.user.lockScreen") }}</span>
                   </li>
                   <div class="line"></div>
                   <div class="logout-btn" @click="loginOut">
-                    {{ $t('topBar.user.logout') }}
+                    {{ $t("topBar.user.logout") }}
                   </div>
                 </ul>
               </div>
@@ -184,234 +219,244 @@
 </template>
 
 <script setup lang="ts">
-  import { useI18n } from 'vue-i18n'
-  import { useRouter } from 'vue-router'
-  import { ElMessageBox } from 'element-plus'
-  import { useFullscreen, useWindowSize } from '@vueuse/core'
-  import { LanguageEnum, MenuTypeEnum } from '@/enums/appEnum'
-  import { useSettingStore } from '@/store/modules/setting'
-  import { useUserStore } from '@/store/modules/user'
-  import { useMenuStore } from '@/store/modules/menu'
-  import AppConfig from '@/config'
-  import { languageOptions } from '@/locales'
-  import { WEB_LINKS } from '@/utils/constants'
-  import { mittBus } from '@/utils/sys'
-  import { themeAnimation } from '@/utils/theme/animation'
-  import { useCommon } from '@/composables/useCommon'
-  import { useHeaderBar } from '@/composables/useHeaderBar'
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { ElMessageBox } from "element-plus";
+import { useFullscreen, useWindowSize } from "@vueuse/core";
+import { LanguageEnum, MenuTypeEnum } from "@/enums/appEnum";
+import { useSettingStore } from "@/store/modules/setting";
+import { useUserStore } from "@/store/modules/user";
+import { useMenuStore } from "@/store/modules/menu";
+import AppConfig from "@/config";
+import { languageOptions } from "@/locales";
+import { WEB_LINKS } from "@/utils/constants";
+import { mittBus } from "@/utils/sys";
+import { themeAnimation } from "@/utils/theme/animation";
+import { useCommon } from "@/composables/useCommon";
+import { useHeaderBar } from "@/composables/useHeaderBar";
 
-  defineOptions({ name: 'ArtHeaderBar' })
+defineOptions({ name: "ArtHeaderBar" });
 
-  // 检测操作系统类型
-  const isWindows = navigator.userAgent.includes('Windows')
+// 检测操作系统类型
+const isWindows = navigator.userAgent.includes("Windows");
 
-  const router = useRouter()
-  const { locale, t } = useI18n()
-  const { width } = useWindowSize()
+const router = useRouter();
+const { locale, t } = useI18n();
+const { width } = useWindowSize();
 
-  const settingStore = useSettingStore()
-  const userStore = useUserStore()
-  const menuStore = useMenuStore()
+const settingStore = useSettingStore();
+const userStore = useUserStore();
+const menuStore = useMenuStore();
 
-  // 顶部栏功能配置
-  const {
-    shouldShowMenuButton,
-    shouldShowRefreshButton,
-    shouldShowFastEnter,
-    shouldShowBreadcrumb,
-    shouldShowGlobalSearch,
-    shouldShowFullscreen,
-    shouldShowNotification,
-    shouldShowChat,
-    shouldShowLanguage,
-    shouldShowSettings,
-    shouldShowThemeToggle,
-    fastEnterMinWidth: headerBarFastEnterMinWidth
-  } = useHeaderBar()
+// 顶部栏功能配置
+const {
+  shouldShowMenuButton,
+  shouldShowRefreshButton,
+  shouldShowFastEnter,
+  shouldShowBreadcrumb,
+  shouldShowGlobalSearch,
+  shouldShowFullscreen,
+  shouldShowNotification,
+  shouldShowChat,
+  shouldShowLanguage,
+  shouldShowSettings,
+  shouldShowThemeToggle,
+  fastEnterMinWidth: headerBarFastEnterMinWidth,
+} = useHeaderBar();
 
-  const { menuOpen, systemThemeColor, showSettingGuide, menuType, isDark, tabStyle } =
-    storeToRefs(settingStore)
+const {
+  menuOpen,
+  systemThemeColor,
+  showSettingGuide,
+  menuType,
+  isDark,
+  tabStyle,
+} = storeToRefs(settingStore);
 
-  const { language, getUserInfo: userInfo } = storeToRefs(userStore)
-  const { menuList } = storeToRefs(menuStore)
+const { language, getUserInfo: userInfo } = storeToRefs(userStore);
+const { menuList } = storeToRefs(menuStore);
 
-  const showNotice = ref(false)
-  const notice = ref(null)
-  const userMenuPopover = ref()
+const showNotice = ref(false);
+const notice = ref(null);
+const userMenuPopover = ref();
 
-  // 菜单类型判断
-  const isLeftMenu = computed(() => menuType.value === MenuTypeEnum.LEFT)
-  const isDualMenu = computed(() => menuType.value === MenuTypeEnum.DUAL_MENU)
-  const isTopMenu = computed(() => menuType.value === MenuTypeEnum.TOP)
-  const isTopLeftMenu = computed(() => menuType.value === MenuTypeEnum.TOP_LEFT)
+// 菜单类型判断
+const isLeftMenu = computed(() => menuType.value === MenuTypeEnum.LEFT);
+const isDualMenu = computed(() => menuType.value === MenuTypeEnum.DUAL_MENU);
+const isTopMenu = computed(() => menuType.value === MenuTypeEnum.TOP);
+const isTopLeftMenu = computed(() => menuType.value === MenuTypeEnum.TOP_LEFT);
 
-  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen()
+const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
 
-  onMounted(() => {
-    initLanguage()
-    document.addEventListener('click', bodyCloseNotice)
-  })
+onMounted(() => {
+  initLanguage();
+  document.addEventListener("click", bodyCloseNotice);
+});
 
-  onUnmounted(() => {
-    document.removeEventListener('click', bodyCloseNotice)
-  })
+onUnmounted(() => {
+  document.removeEventListener("click", bodyCloseNotice);
+});
 
-  /**
-   * 切换全屏状态
-   */
-  const toggleFullScreen = (): void => {
-    toggleFullscreen()
+/**
+ * 切换全屏状态
+ */
+const toggleFullScreen = (): void => {
+  toggleFullscreen();
+};
+
+/**
+ * 切换菜单显示/隐藏状态
+ */
+const visibleMenu = (): void => {
+  settingStore.setMenuOpen(!menuOpen.value);
+};
+
+/**
+ * 页面跳转
+ * @param {string} path - 目标路径
+ */
+const goPage = (path: string): void => {
+  router.push(path);
+};
+
+/**
+ * 打开文档页面
+ */
+const toDocs = (): void => {
+  window.open(WEB_LINKS.DOCS);
+};
+
+/**
+ * 打开 GitHub 页面
+ */
+const toGithub = (): void => {
+  window.open(WEB_LINKS.GITHUB);
+};
+
+/**
+ * 跳转到首页
+ */
+const toHome = (): void => {
+  router.push(useCommon().homePath.value);
+};
+
+/**
+ * 用户登出确认
+ */
+const loginOut = (): void => {
+  closeUserMenu();
+  setTimeout(() => {
+    ElMessageBox.confirm(t("common.logOutTips"), t("common.tips"), {
+      confirmButtonText: t("common.confirm"),
+      cancelButtonText: t("common.cancel"),
+      customClass: "login-out-dialog",
+    }).then(() => {
+      userStore.logOut();
+    });
+  }, 200);
+};
+
+/**
+ * 刷新页面
+ * @param {number} time - 延迟时间，默认为0毫秒
+ */
+const reload = (time: number = 0): void => {
+  setTimeout(() => {
+    useCommon().refresh();
+  }, time);
+};
+
+/**
+ * 初始化语言设置
+ */
+const initLanguage = (): void => {
+  locale.value = language.value;
+};
+
+/**
+ * 切换系统语言
+ * @param {LanguageEnum} lang - 目标语言类型
+ */
+const changeLanguage = (lang: LanguageEnum): void => {
+  if (locale.value === lang) return;
+  locale.value = lang;
+  userStore.setLanguage(lang);
+  reload(50);
+};
+
+/**
+ * 打开设置面板
+ */
+const openSetting = (): void => {
+  mittBus.emit("openSetting");
+
+  // 隐藏设置引导提示
+  if (showSettingGuide.value) {
+    settingStore.hideSettingGuide();
   }
+};
 
-  /**
-   * 切换菜单显示/隐藏状态
-   */
-  const visibleMenu = (): void => {
-    settingStore.setMenuOpen(!menuOpen.value)
-  }
+/**
+ * 打开全局搜索对话框
+ */
+const openSearchDialog = (): void => {
+  mittBus.emit("openSearchDialog");
+};
 
-  /**
-   * 页面跳转
-   * @param {string} path - 目标路径
-   */
-  const goPage = (path: string): void => {
-    router.push(path)
-  }
+/**
+ * 点击页面其他区域关闭通知面板
+ * @param {Event} e - 点击事件对象
+ */
+const bodyCloseNotice = (e: any): void => {
+  let { className } = e.target;
 
-  /**
-   * 打开文档页面
-   */
-  const toDocs = (): void => {
-    window.open(WEB_LINKS.DOCS)
-  }
-
-  /**
-   * 打开 GitHub 页面
-   */
-  const toGithub = (): void => {
-    window.open(WEB_LINKS.GITHUB)
-  }
-
-  /**
-   * 跳转到首页
-   */
-  const toHome = (): void => {
-    router.push(useCommon().homePath.value)
-  }
-
-  /**
-   * 用户登出确认
-   */
-  const loginOut = (): void => {
-    closeUserMenu()
-    setTimeout(() => {
-      ElMessageBox.confirm(t('common.logOutTips'), t('common.tips'), {
-        confirmButtonText: t('common.confirm'),
-        cancelButtonText: t('common.cancel'),
-        customClass: 'login-out-dialog'
-      }).then(() => {
-        userStore.logOut()
-      })
-    }, 200)
-  }
-
-  /**
-   * 刷新页面
-   * @param {number} time - 延迟时间，默认为0毫秒
-   */
-  const reload = (time: number = 0): void => {
-    setTimeout(() => {
-      useCommon().refresh()
-    }, time)
-  }
-
-  /**
-   * 初始化语言设置
-   */
-  const initLanguage = (): void => {
-    locale.value = language.value
-  }
-
-  /**
-   * 切换系统语言
-   * @param {LanguageEnum} lang - 目标语言类型
-   */
-  const changeLanguage = (lang: LanguageEnum): void => {
-    if (locale.value === lang) return
-    locale.value = lang
-    userStore.setLanguage(lang)
-    reload(50)
-  }
-
-  /**
-   * 打开设置面板
-   */
-  const openSetting = (): void => {
-    mittBus.emit('openSetting')
-
-    // 隐藏设置引导提示
-    if (showSettingGuide.value) {
-      settingStore.hideSettingGuide()
+  if (showNotice.value) {
+    if (typeof className === "object") {
+      showNotice.value = false;
+      return;
+    }
+    if (className.indexOf("notice-btn") === -1) {
+      showNotice.value = false;
     }
   }
+};
 
-  /**
-   * 打开全局搜索对话框
-   */
-  const openSearchDialog = (): void => {
-    mittBus.emit('openSearchDialog')
-  }
+/**
+ * 切换通知面板显示状态
+ */
+const visibleNotice = (): void => {
+  showNotice.value = !showNotice.value;
+};
 
-  /**
-   * 点击页面其他区域关闭通知面板
-   * @param {Event} e - 点击事件对象
-   */
-  const bodyCloseNotice = (e: any): void => {
-    let { className } = e.target
+const openTerminal = (): void => {
+  alert("打开终端");
+};
 
-    if (showNotice.value) {
-      if (typeof className === 'object') {
-        showNotice.value = false
-        return
-      }
-      if (className.indexOf('notice-btn') === -1) {
-        showNotice.value = false
-      }
-    }
-  }
+/**
+ * 打开聊天窗口
+ */
+const openChat = (): void => {
+  mittBus.emit("openChat");
+};
 
-  /**
-   * 切换通知面板显示状态
-   */
-  const visibleNotice = (): void => {
-    showNotice.value = !showNotice.value
-  }
+/**
+ * 打开锁屏功能
+ */
+const lockScreen = (): void => {
+  mittBus.emit("openLockScreen");
+};
 
-  /**
-   * 打开聊天窗口
-   */
-  const openChat = (): void => {
-    mittBus.emit('openChat')
-  }
-
-  /**
-   * 打开锁屏功能
-   */
-  const lockScreen = (): void => {
-    mittBus.emit('openLockScreen')
-  }
-
-  /**
-   * 关闭用户菜单弹出层
-   */
-  const closeUserMenu = (): void => {
-    setTimeout(() => {
-      userMenuPopover.value.hide()
-    }, 100)
-  }
+/**
+ * 关闭用户菜单弹出层
+ */
+const closeUserMenu = (): void => {
+  setTimeout(() => {
+    userMenuPopover.value.hide();
+  }, 100);
+};
 </script>
 
 <style lang="scss" scoped>
-  @use './style';
-  @use './mobile';
+@use './style';
+@use './mobile';
 </style>

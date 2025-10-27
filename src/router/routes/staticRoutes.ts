@@ -87,42 +87,17 @@ export const staticRoutes: AppRouteRecordRaw[] = [
  * 2、静态路由不管是否登录都可以访问
  */
 export const localRoutes: AppRouteRecord[] = [
-  // 示例嵌套路由定义
-  // {
-  //   name: 'Test',
-  //   path: '/test',
-  //   component: RoutesAlias.Layout,
-  //   meta: {
-  //     base: 'admin',
-  //     order: 999,
-  //     title: '测试路由',
-  //     icon: '&#xe721;',
-  //     roles: []
-  //   },
-  //   children: [
-  //     {
-  //       path: '/123',
-  //       name: 'test123',
-  //       component: '/dashboard/console',
-  //       meta: {
-  //         base: 'admin',
-  //         title: 'test123',
-  //         keepAlive: false,
-  //         fixedTab: true
-  //       },
-  //       children: []
-  //     },
-  //     {
-  //       path: '/1234',
-  //       name: 'test1234',
-  //       component: '/dashboard/analysis',
-  //       meta: {
-  //         title: 'test1234',
-  //         keepAlive: false
-  //       },
-  //       children: []
-  //     }
-  //   ]
-  // },
+  {
+    path: "/system/user-center",
+    name: "system:user-center",
+    component: "/system/user-center/index",
+    meta: {
+      isHide: true,//不显示在菜单列表
+      title: "个人中心",
+      keepAlive: false,
+    },
+  },
+
+  //示例模块路由
   routeModules
 ]
