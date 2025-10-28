@@ -13,6 +13,7 @@
     "ElInputNumber": true,
     "ElLoading": true,
     "ElMessage": true,
+    "ElMessageBox": true,
     "ElRadioGroup": true,
     "ElRate": true,
     "ElSelect": true,
