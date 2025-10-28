@@ -1,38 +1,35 @@
 <template>
   <div>
-    <el-dialog
+    <ElDialog
       v-model="terminal.state.show"
-      :title="$t('terminal.Terminal')"
-      class="ba-terminal-dialog main-dialog"
+      :title="$t('dev.terminal.title')"
+      class="terminal-dialog"
+      draggable
     >
-      <el-scrollbar
+      <ElScrollbar
         ref="terminalScrollbarRef"
-        :max-height="500"
+        :max-height="400"
         class="terminal-scrollbar"
       >
-        <el-alert
+        <ElAlert
           class="terminal-warning-alert"
-          v-if="!terminal.state.phpDevelopmentServer"
-          :title="
-            $t(
-              'terminal.The current terminal is not running under the installation service, and some commands may not be executed'
-            )
-          "
+          v-if="!terminal.state.developmentServer"
+          :title="$t('演示环境已禁用命令执行')"
           type="error"
         />
 
-        <el-timeline class="terminal-timeline" v-if="terminal.state.taskList.length">
-          <el-timeline-item
+        <ElTimeline class="terminal-timeline" v-if="terminal.state.taskList.length">
+          <ElTimelineItem
             v-for="(item, idx) in terminal.state.taskList"
             :key="idx"
             class="task-item"
             :class="'task-status-' + item.status"
             :type="getTaskStatus(item.status)['statusType']"
             center
-            :timestamp="item.createTime"
+            :timestamp="item.date"
             placement="top"
           >
-            <el-card>
+            <ElCard>
               <div>
                 <el-tag :type="getTaskStatus(item.status)['statusType']">{{
                   getTaskStatus(item.status)["statusText"]
@@ -46,11 +43,7 @@
                   "
                   type="warning"
                 >
-                  {{
-                    $t(
-                      "terminal.Failure to execute this command will block the execution of the queue"
-                    )
-                  }}
+                  {{ $t("dev.terminal.block_on_failure") }}
                 </el-tag>
                 <el-tag
                   class="block-on-failure-tag"
@@ -60,11 +53,11 @@
                   "
                   type="danger"
                 >
-                  {{ $t("terminal.Do not refresh the browser") }}
+                  {{ $t("dev.terminal.not_refresh_browser") }}
                 </el-tag>
                 <span class="command">{{ item.command }}</span>
                 <div class="task-opt">
-                  <el-button
+                  <ElButton
                     :title="$t('Retry')"
                     v-if="
                       item.status == taskStatus.Failed ||
@@ -73,17 +66,17 @@
                     size="small"
                     v-blur
                     type="warning"
-                    icon="el-icon-RefreshRight"
+                    :icon="RefreshRight"
                     circle
                     @click="terminal.retryTask(idx)"
                   />
-                  <el-button
+                  <ElButton
                     @click="terminal.delTask(idx)"
                     :title="$t('Delete')"
                     size="small"
                     v-blur
                     type="danger"
-                    icon="el-icon-Delete"
+                    :icon="Delete"
                     circle
                   />
                 </div>
@@ -97,9 +90,9 @@
                   @click="terminal.setTaskShowMessage(idx)"
                   class="toggle-message-display"
                 >
-                  <span>{{ $t("terminal.Command run log") }}</span>
+                  <span>{{ $t("dev.terminal.actions.command_run_log") }}</span>
                   <Icon
-                    :name="item.showMessage ? 'el-icon-ArrowUp' : 'el-icon-ArrowDown'"
+                    :icon="item.showMessage ? 'ep:arrow-up' : 'ep:arrow-down'"
                     size="16"
                     color="#909399"
                   />
@@ -121,144 +114,98 @@
                   >
                 </div>
               </template>
-            </el-card>
-          </el-timeline-item>
-        </el-timeline>
-        <el-empty v-else :image-size="80" :description="$t('terminal.No mission yet')" />
-      </el-scrollbar>
+            </ElCard>
+          </ElTimelineItem>
+        </ElTimeline>
+        <ElEmpty v-else :image-size="80" :description="$t('dev.terminal.empty')" />
+      </ElScrollbar>
 
       <div class="terminal-buttons">
-        <el-button
+        <ElButton
           class="terminal-menu-item"
-          icon="el-icon-MagicStick"
           v-blur
           @click="addTerminalTask('test', true, false)"
         >
-          {{ $t("terminal.Test command") }}
-        </el-button>
-        <el-dropdown class="terminal-menu-item">
-          <el-button icon="el-icon-Download" v-blur>
-            {{ $t("terminal.Install dependent packages") }}
-          </el-button>
+          <template #icon>
+            <Icon icon="ant-design:code-outlined" style="font-size: 18px" />
+          </template>
+          {{ $t("dev.terminal.actions.test") }}
+        </ElButton>
+        <ElDropdown class="terminal-menu-item">
+          <ElButton v-blur>
+            <template #icon>
+              <Icon icon="ant-design:download-outlined" style="font-size: 20px" />
+            </template>
+            {{ $t("dev.terminal.actions.install.title") }}
+          </ElButton>
           <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                @click="addTerminalTask('web-install', true)"
+            <ElDropdownMenu>
+              <ElDropdownItem
+                @click="addTerminalTask('cmdr-install', true)"
                 v-if="terminal.state.packageManager != 'none'"
               >
                 {{ terminal.state.packageManager }} run install
-              </el-dropdown-item>
-              <el-dropdown-item @click="addTerminalTask('composer.update', false)"
-                >composer update</el-dropdown-item
+              </ElDropdownItem>
+              <ElDropdownItem @click="addTerminalTask('composer.update', false)"
+                >composer update</ElDropdownItem
               >
-            </el-dropdown-menu>
+            </ElDropdownMenu>
           </template>
-        </el-dropdown>
-        <el-button
-          class="terminal-menu-item"
-          icon="el-icon-Sell"
-          v-blur
-          @click="webBuild()"
-          >{{ $t("terminal.Republish") }}</el-button
+        </ElDropdown>
+        <ElButton class="terminal-menu-item" v-blur @click="buildPackaging()">
+          <template #icon>
+            <Icon icon="ant-design:tag-outlined" style="font-size: 20px" />
+          </template>
+          {{ $t("dev.terminal.actions.republish") }}</ElButton
         >
-        <el-button
+        <ElButton class="terminal-menu-item" v-blur @click="terminal.clearSuccessTask()">
+          <template #icon>
+            <Icon icon="ant-design:clear-outlined" style="font-size: 20px" />
+          </template>
+          {{ $t("dev.terminal.actions.empty_task") }}
+        </ElButton>
+        <ElButton
           class="terminal-menu-item"
-          icon="el-icon-Delete"
-          v-blur
-          @click="terminal.clearSuccessTask()"
-        >
-          {{ $t("terminal.Clean up task list") }}
-        </el-button>
-        <el-button
-          class="terminal-menu-item"
-          icon="el-icon-Tools"
           v-blur
           @click="terminal.toggleConfigDialog()"
         >
-          {{ $t("terminal.Terminal settings") }}
-        </el-button>
+          <template #icon>
+            <Icon icon="ant-design:setting-outlined" style="font-size: 20px" />
+          </template>
+          {{ $t("dev.terminal.actions.setting") }}
+        </ElButton>
       </div>
-    </el-dialog>
+    </ElDialog>
 
-    <el-dialog
+    <ElDialog
       @close="terminal.toggleConfigDialog(false)"
       :model-value="terminal.state.showConfig"
-      class="ba-terminal-dialog"
-      :title="$t('terminal.Terminal settings')"
+      class="terminal-dialog"
+      :title="$t('dev.terminal.form.title')"
+      draggable
     >
-      <!-- 表单 -->
-      <!-- <el-form label-position="left" label-width="140">
-        <FormItem
-          :label="'NPM ' + $t('terminal.Source')"
-          :model-value="terminal.state.npmRegistry"
-          :key="terminal.state.npmRegistry"
-          v-loading="state.registryLoading && state.registryLoadingType == 'npm'"
-          type="select"
-          :input-attr="{
-                        border: true,
-                        content: getSourceConten$t('npm'),
-                        teleported: false,
-                        onChange: (val: string) => changeRegistry(val, 'npm'),
-                    }"
-        />
-        <FormItem
-          :label="'Composer ' + $t('terminal.Source')"
-          :model-value="terminal.state.composerRegistry"
-          :key="terminal.state.composerRegistry"
-          v-loading="state.registryLoading && state.registryLoadingType == 'composer'"
-          type="select"
-          :input-attr="{
-                        border: true,
-                        content: getSourceConten$t('composer'),
-                        teleported: false,
-                        onChange: (val: string) => changeRegistry(val, 'composer'),
-                    }"
-        />
-        <FormItem
-          :label="$t('terminal.NPM package manager')"
-          :model-value="terminal.state.packageManager"
-          v-loading="state.packageManagerLoading"
-          type="select"
-          :input-attr="{
-                        border: true,
-                        content: { npm: 'NPM', cnpm: 'CNPM', pnpm: 'PNPM', yarn: 'YARN', ni: 'NI', none: $t('terminal.Manual execution') },
-                        teleported: false,
-                        onChange: (val: string) => changePackageManager(val),
-                    }"
-          :tip="$t('terminal.NPM package manager tip')"
-        />
-        <FormItem
-          :label="$t('terminal.Clear successful task')"
-          :model-value="terminal.state.automaticCleanupTask"
-          type="radio"
-          :input-attr="{
-            border: true,
-            content: { '0': $t('Disable'), '1': $t('Enable') },
-            onChange: terminal.changeAutomaticCleanupTask,
-          }"
-          :tip="$t('terminal.Clear successful task tip')"
-        />
-      </el-form> -->
+      <ConfigForm />
       <div class="config-buttons">
-        <el-button @click="terminal.toggleConfigDialog(false)">{{
-          $t("terminal.Back to terminal")
-        }}</el-button>
+        <ElButton @click="terminal.toggleConfigDialog(false)">
+          <template #icon>
+            <Icon icon="ant-design:rollback-outlined" style="font-size: 20px" />
+          </template>
+          {{ $t("dev.terminal.actions.return_terminal") }}</ElButton
+        >
       </div>
-    </el-dialog>
+    </ElDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TimelineItemProps } from "element-plus";
-import { ElMessageBox, ElScrollbar } from "element-plus";
+import { ElAlert, ElMessageBox, ElScrollbar } from "element-plus";
 import { nextTick, onMounted, reactive, useTemplateRef } from "vue";
-// import { useI18n } from "vue-i18n";
 import { TerminalService } from "@/api/dev/terminal";
-// import FormItem from "/@/components/formItem/index.vue";
-import { taskStatus } from "@/enums/index";
+import { DictEnum, taskStatus } from "@/enums/index";
 import { useTerminalStore } from "@/store/modules/terminal";
 import { $t } from "@/locales";
-// import { changeListenDirtyFileSwitch } from "/@/utils/vite";
+import { RefreshRight, Delete } from "@element-plus/icons-vue";
+import { useForm } from "../form";
 
 type SourceType = "npm" | "composer";
 
@@ -271,39 +218,120 @@ const state = reactive({
   packageManagerLoading: false,
 });
 
+/**
+ * 配置表单
+ */
+const [ConfigForm, formApi] = useForm({
+  labelWidth: "120px",
+  schema: [
+    {
+      component: "Select",
+      prop: "npm_registry",
+      defaultValue: "npm",
+      label: $t("dev.terminal.form.npm_registry"),
+      componentProps: {
+        placeholder: $t("dev.terminal.form.placeholder.npm_registry"),
+        clearable: true,
+        options: [
+          { label: "NPM", value: "npm" },
+          { label: "Taobao", value: "taobao" },
+          { label: "Tencent", value: "tencent" },
+          { label: "未知", value: "unknown" },
+        ],
+        onChange: (value: any) => {
+          changeRegistry(value, "npm");
+        },
+      },
+    },
+    {
+      component: "Select",
+      prop: "composer_registry",
+      defaultValue: "composer",
+      label: $t("dev.terminal.form.composer_registry"),
+      componentProps: {
+        placeholder: $t("dev.terminal.form.placeholder.composer_registry"),
+        clearable: true,
+        options: [
+          { label: "Composer", value: "composer" },
+          { label: "Huawei", value: "huawei" },
+          { label: "Aliyun", value: "aliyun" },
+          { label: "Tencent", value: "tencent" },
+        ],
+        onChange: (value: any) => {
+          changeRegistry(value, "composer");
+        },
+      },
+    },
+    {
+      component: "Select",
+      prop: "package_manager",
+      label: $t("dev.terminal.form.package_manager"),
+      defaultValue: "pnpm",
+      componentProps: {
+        placeholder: $t("dev.terminal.form.placeholder.package_manager"),
+        clearable: true,
+        options: [
+          { label: "NPM", value: "npm" },
+          { label: "PNPM", value: "pnpm" },
+          { label: "YARN", value: "yarn" },
+        ],
+        onChange: (value: any) => {
+          changePackageManager(value);
+        },
+      },
+    },
+    {
+      prop: "automatic_cleanup_task",
+      label: $t("dev.terminal.form.automatic_cleanup_task"),
+      component: "ApiDict",
+      defaultValue: 1,
+      componentProps: {
+        renderType: "RadioGroup",
+        code: DictEnum.SYS_YES_NO,
+        isBtn: true,
+        onChange: (value: any) => {
+          //调用接口
+          console.log(value);
+        },
+      },
+    },
+  ],
+});
+
 const getTaskStatus = (status: number) => {
-  let statusText = $t("terminal.unknown");
-  let statusType: TimelineItemProps["type"] = "info";
-  switch (status) {
-    case taskStatus.Waiting:
-      statusText = $t("terminal.Waiting for execution");
-      statusType = "info";
-      break;
-    case taskStatus.Connecting:
-      statusText = $t("terminal.Connecting");
-      statusType = "warning";
-      break;
-    case taskStatus.Executing:
-      statusText = $t("terminal.Executing");
-      statusType = "warning";
-      break;
-    case taskStatus.Success:
-      statusText = $t("terminal.Successful execution");
-      statusType = "success";
-      break;
-    case taskStatus.Failed:
-      statusText = $t("terminal.Execution failed");
-      statusType = "danger";
-      break;
-    case taskStatus.Unknown:
-      statusText = $t("terminal.Unknown execution result");
-      statusType = "danger";
-      break;
-  }
-  return {
-    statusText: statusText,
-    statusType: statusType,
+  const statusMap: Record<number, { statusText: string; statusType: any }> = {
+    [taskStatus.Waiting]: {
+      statusText: $t("dev.terminal.status.waiting"),
+      statusType: "info",
+    },
+    [taskStatus.Connecting]: {
+      statusText: $t("dev.terminal.status.connecting"),
+      statusType: "warning",
+    },
+    [taskStatus.Executing]: {
+      statusText: $t("dev.terminal.status.executing"),
+      statusType: "warning",
+    },
+    [taskStatus.Success]: {
+      statusText: $t("dev.terminal.status.success"),
+      statusType: "success",
+    },
+    [taskStatus.Failed]: {
+      statusText: $t("dev.terminal.status.failed"),
+      statusType: "danger",
+    },
+    [taskStatus.Unknown]: {
+      statusText: $t("dev.terminal.status.unknown"),
+      statusType: "danger",
+    },
   };
+
+  return (
+    statusMap[status] || {
+      statusText: $t("dev.terminal.status.unknown"),
+      statusType: "danger",
+    }
+  );
 };
 
 const addTerminalTask = (
@@ -329,28 +357,30 @@ const addTerminalTask = (
   });
 };
 
-const webBuild = () => {
+/**
+ * 重新发布
+ */
+const buildPackaging = () => {
   ElMessageBox.confirm(
-    $t("terminal.Are you sure you want to republish?"),
-    $t("Reminder"),
+    $t("dev.terminal.form.confirm.packaging_build"),
+    $t("dev.terminal.form.confirm.title"),
     {
-      confirmButtonText: $t("Confirm"),
-      cancelButtonText: $t("Cancel"),
       type: "warning",
     }
   ).then(() => {
-    // changeListenDirtyFileSwitch(false);
-    // addTerminalTask("web-build", true, true, "", () => {
-    //   changeListenDirtyFileSwitch(true);
-    // });
+    addTerminalTask("cmdr-build", true, true, "");
   });
 };
 
+/**
+ * 更改包管理
+ * @param val
+ */
 const changePackageManager = (val: string) => {
   state.packageManagerLoading = true;
-  postChangeTerminalConfig({ manager: val })
-    .then((res) => {
-      if (res.code == 1) {
+  TerminalService.config({ manager: val })
+    .then((res: any) => {
+      if (res.code == 0) {
         terminal.changePackageManager(val);
       }
     })
@@ -359,7 +389,13 @@ const changePackageManager = (val: string) => {
     });
 };
 
+/**
+ * 更改源
+ * @param val
+ * @param type
+ */
 const changeRegistry = (val: string, type: SourceType) => {
+  const field = type == "npm" ? "npm_registry" : "composer_registry";
   const oldVal =
     type == "npm" ? terminal.state.npmRegistry : terminal.state.composerRegistry;
   terminal.changeRegistry(val, type);
@@ -369,47 +405,39 @@ const changeRegistry = (val: string, type: SourceType) => {
     state.registryLoading = false;
     if (res == taskStatus.Failed || res == taskStatus.Unknown) {
       ElMessageBox.confirm(
-        $t("terminal.Failed to modify the source command, Please try again manually"),
-        $t("Reminder"),
+        $t("dev.terminal.form.confirm.source_command"),
+        $t("dev.terminal.form.confirm.title"),
         {
-          confirmButtonText: $t("Confirm"),
           showCancelButton: false,
           type: "warning",
         }
       ).then(() => {
         terminal.changeRegistry(oldVal, type);
+        const field = type == "npm" ? "npm_registry" : "composer_registry";
+        formApi.setValues({ field: oldVal });
       });
     }
   });
 };
 
-const getSourceContent = (type: SourceType) => {
-  let content: any = {};
-  if (type == "npm") {
-    content = { npm: "npm", taobao: "taobao", tencent: "tencent" };
-  } else if (type == "composer") {
-    content = {
-      composer: "composer",
-      huawei: "huawei",
-      aliyun: "aliyun",
-      tencent: "tencent",
-      kkame: "kkame",
-    };
-  }
-
-  // 如果值为 unknown，则 unknown 选项
-  if (terminal.state[type == "npm" ? "npmRegistry" : "composerRegistry"] == "unknown") {
-    content.unknown = $t("Unknown");
-  }
-  return content;
-};
-
 onMounted(() => {
   terminal.init();
+});
+
+defineExpose({
+  show() {
+    terminal.state.show = true;
+  },
 });
 </script>
 
 <style scoped lang="scss">
+:deep(.terminal-dialog) {
+  --el-dialog-padding-primary: 15px 15px 0 15px;
+  .el-dialog__body {
+    margin-top: 15px;
+  }
+}
 .terminal-warning-alert {
   margin: 0 0 20px 0;
 }
@@ -499,27 +527,5 @@ onMounted(() => {
   justify-content: flex-end;
   padding-top: 20px;
   padding-right: 20px;
-}
-:deep(.main-dialog) {
-  --el-dialog-padding-primary: 16px 16px 0 16px;
-  .el-dialog__body {
-    margin-top: 16px;
-  }
-}
-:deep(.ba-terminal-dialog) {
-  --el-dialog-width: 46% !important;
-  .el-loading-spinner {
-    --el-loading-spinner-size: 20px;
-  }
-}
-@media screen and (max-width: 768px) {
-  :deep(.ba-terminal-dialog) {
-    --el-dialog-width: 80% !important;
-  }
-}
-@media screen and (max-width: 540px) {
-  :deep(.ba-terminal-dialog) {
-    --el-dialog-width: 94% !important;
-  }
 }
 </style>

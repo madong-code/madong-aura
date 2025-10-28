@@ -215,7 +215,7 @@
     <ArtWorkTab />
 
     <ArtNotification v-model:value="showNotice" ref="notice" />
-    <TerminalWrap ref="terminalWrapRef" />
+    <TerminalDialog ref="terminalDialogRef" />
   </div>
 </template>
 
@@ -235,7 +235,7 @@ import { mittBus } from "@/utils/sys";
 import { themeAnimation } from "@/utils/theme/animation";
 import { useCommon } from "@/composables/useCommon";
 import { useHeaderBar } from "@/composables/useHeaderBar";
-import TerminalWrap from "@/views/dev/terminal/index.vue";
+import TerminalDialog from "@/components/terminal/index.vue";
 
 defineOptions({ name: "ArtHeaderBar" });
 
@@ -433,9 +433,9 @@ const visibleNotice = (): void => {
 /**
  * 打开终端窗口
  */
-const terminalWrapRef = ref(null);
+const terminalDialogRef = ref(null);
 const openTerminal = (): void => {
-  const terminal = terminalWrapRef.value;
+  const terminal = terminalDialogRef.value;
   if (terminal && typeof terminal.show === "function") {
     terminal.show();
   }

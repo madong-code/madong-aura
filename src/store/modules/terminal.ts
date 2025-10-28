@@ -15,7 +15,7 @@ export const useTerminalStore = defineStore(
   () => {
     const state: Terminal = reactive({
       // 显示终端窗口
-      show: true,
+      show: false,
       // 在后台终端按钮上显示一个红点
       showDot: false,
       // 任务列表
@@ -26,6 +26,8 @@ export const useTerminalStore = defineStore(
       showPackageManagerDialog: false,
       // 显示终端设置窗口
       showConfig: false,
+      // 开发服务器
+      developmentServer: false,
       // 开始任务时自动清理已完成任务
       automaticCleanupTask: '0',
       // npm源

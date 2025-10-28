@@ -28,7 +28,8 @@ export interface Terminal {
     packageManager: string
     showPackageManagerDialog: boolean
     showConfig: boolean
+    developmentServer: boolean
     automaticCleanupTask: string
     npmRegistry: string;
-    composerRegistry:string;
+    composerRegistry: string;
 }
