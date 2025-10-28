@@ -48,20 +48,11 @@
   "setting": {
     "menuType": {
       "title": "Menu Layout",
-      "list": [
-        "Vertical",
-        "Horizontal",
-        "Mixed",
-        "Dual"
-      ]
+      "list": ["Vertical", "Horizontal", "Mixed", "Dual"]
     },
     "theme": {
       "title": "Theme Style",
-      "list": [
-        "Light",
-        "Dark",
-        "System"
-      ]
+      "list": ["Light", "Dark", "System"]
     },
     "menu": {
       "title": "Menu Style"
@@ -71,17 +62,11 @@
     },
     "box": {
       "title": "Box Style",
-      "list": [
-        "Border",
-        "Shadow"
-      ]
+      "list": ["Border", "Shadow"]
     },
     "container": {
       "title": "Container Width",
-      "list": [
-        "Full",
-        "Boxed"
-      ]
+      "list": ["Full", "Boxed"]
     },
     "basics": {
       "title": "Basic Config",
@@ -120,14 +105,8 @@
   "notice": {
     "title": "Notice",
     "btnRead": "Mark as read",
-    "bar": [
-      "Notice",
-      "Message",
-      "Todo"
-    ],
-    "text": [
-      "No"
-    ],
+    "bar": ["Notice", "Message", "Todo"],
+    "text": ["No"],
     "viewAll": "View all"
   },
   "worktab": {
@@ -143,7 +122,7 @@
   },
   "login": {
     "leftView": {
-      "title": "An Admin template focused on user experience",
+      "title": "A backend system of beauty and efficiency",
       "subTitle": "A sleek and practical interface for a great user experience"
     },
     "title": "Welcome back",
@@ -153,11 +132,11 @@
       "admin": "Admin",
       "user": "User"
     },
-    "placeholder": [
-      "Please enter your account",
-      "Please enter your password",
-      "Please slide to verify"
-    ],
+    "placeholder": {
+      "username": "Please enter your account",
+      "password": "Please enter your password",
+      "slider": "Please slide to verify"
+    },
     "sliderText": "Please slide to verify",
     "sliderSuccessText": "Verification successful",
     "rememberPwd": "Remember password",
@@ -180,18 +159,18 @@
   "register": {
     "title": "Create account",
     "subTitle": "Welcome to join us, please fill in the following information to complete the registration",
-    "placeholder": [
-      "Please enter your account",
-      "Please enter your password",
-      "Please enter your password again"
-    ],
-    "rule": [
-      "Please enter your password again",
-      "The two passwords are inconsistent!",
-      "The length is 3 to 20 characters",
-      "The password length cannot be less than 6 digits",
-      "Please agree to the privacy policy"
-    ],
+    "placeholder": {
+      "username": "Please enter your account",
+      "password": "Please enter your password",
+      "confirmPassword": "Please enter your password again"
+    },
+    "rule": {
+      "confirmPasswordRequired": "Please enter your password again",
+      "passwordMismatch": "The two passwords are inconsistent!",
+      "usernameLength": "The length is 3 to 20 characters",
+      "passwordLength": "The password length cannot be less than 6 digits",
+      "agreementRequired": "Please agree to the privacy policy"
+    },
     "agreeText": "I agree",
     "privacyPolicy": "Privacy policy",
     "submitBtnText": "Register",
@@ -217,10 +196,10 @@
     "evening": "Good evening!"
   },
   "exceptionPage": {
+    "gohome": "Go Home",
     "403": "Sorry, you do not have permission to access this page",
     "404": "Sorry, the page you are trying to access does not exist",
-    "500": "Sorry, there was an error on the server",
-    "gohome": "Go Home"
+    "500": "Sorry, there was an error on the server"
   },
   "menus": {
     "login": {
@@ -237,7 +216,43 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "console": "Console"
+      "console": "Console",
+      "analysis": "Analysis",
+      "ecommerce": "Ecommerce"
+    },
+    "widgets": {
+      "title": "Components",
+      "iconList": "Icon List",
+      "iconSelector": "Icon Selector",
+      "imageCrop": "Image Crop",
+      "excel": "Excel Import Export",
+      "video": "Video Player",
+      "countTo": "Count To",
+      "wangEditor": "Wang Editor",
+      "watermark": "Watermark",
+      "contextMenu": "Context Menu",
+      "qrcode": "QR Code",
+      "drag": "Drag",
+      "textScroll": "Text Scroll",
+      "fireworks": "Fireworks",
+      "elementUI": "Component Overview"
+    },
+    "template": {
+      "title": "Template Center",
+      "chat": "Chat",
+      "cards": "Cards",
+      "banners": "Banners",
+      "charts": "Charts",
+      "map": "Map",
+      "calendar": "Calendar",
+      "pricing": "Pricing"
+    },
+    "article": {
+      "title": "Article",
+      "articleList": "Article List",
+      "articleDetail": "Article Detail",
+      "comment": "Comment",
+      "articlePublish": "Article Publish"
     },
     "result": {
       "title": "Result Page",
@@ -250,12 +265,48 @@
       "notFound": "404",
       "serverError": "500"
     },
+    "examples": {
+      "title": "Feature Examples",
+      "tabs": "Tabs",
+      "tablesBasic": "Basic Tables",
+      "tables": "Advanced Tables",
+      "tablesTree": "Tree Table Layout",
+      "forms": "Forms",
+      "searchBar": "Search Form",
+      "permission": {
+        "title": "Frontend Permission",
+        "switchRole": "Toggle Auth",
+        "buttonAuth": "Button Authority",
+        "pageVisibility": "Super Admin Visibility"
+      }
+    },
     "system": {
       "title": "System Settings",
       "user": "User Manage",
       "role": "Role Manage",
       "userCenter": "User Center",
-      "menu": "Menu Manage"
+      "menu": "Menu Manage",
+      "nested": "Nested Menu",
+      "menu1": "Menu 1",
+      "menu2": "Menu 2",
+      "menu21": "Menu 2-1",
+      "menu3": "Menu 3",
+      "menu31": "Menu 3-1",
+      "menu32": "Menu 3-2",
+      "menu321": "Menu 3-2-1"
+    },
+    "safeguard": {
+      "title": "Safeguard",
+      "server": "Server"
+    },
+    "plan": {
+      "title": "Version Plan",
+      "log": "Change Log"
+    },
+    "help": {
+      "title": "Help Center",
+      "document": "Document",
+      "liteVersion": "Lite Version"
     }
   },
   "table": {
