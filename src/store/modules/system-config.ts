@@ -10,6 +10,8 @@ interface SystemConfig {
   title?: string
   favicon?: string
   copyright?: string
+  cdnUrl?: string
+  cdnUrlParams?: string
   [key: string]: any // 允许其他自定义字段
 }
 
@@ -82,13 +84,17 @@ export const useSystemConfigStore = defineStore(
     const adaptSystemConfig = (apiData: any) => {
       if (!apiData) return {};
       const {
-        site_logo,
-        site_name,
-        site_record_no,
         site_open,
+        site_url,
+        site_name,
+        site_logo,
         site_network_security,
-        site_network_security_url,
+        site_description,
+        site_record_no,
         site_icp_url,
+        site_network_security_url,
+        cdn_url,
+        cdn_url_params,
         ...rest
       } = apiData;
       return {
@@ -99,6 +105,8 @@ export const useSystemConfigStore = defineStore(
         isOpen: site_open === "1",
         securityInfo: [site_network_security, site_network_security_url].filter(Boolean).join(' '),
         icpInfo: [site_record_no, site_icp_url].filter(Boolean).join(' '),
+        cdnUrl: cdn_url,
+        cdnUrlParams: cdn_url_params,
         ...rest,
       };
     };

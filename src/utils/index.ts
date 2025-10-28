@@ -33,4 +33,7 @@ export * from './http'
 // 验证相关
 export * from './validation'
 
+// Url处理
+export * from './url'
+
 

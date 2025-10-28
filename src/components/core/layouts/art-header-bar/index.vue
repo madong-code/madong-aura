@@ -184,7 +184,7 @@
                 <div class="user-head">
                   <img class="cover" src="@imgs/user/avatar.webp" style="float: left" />
                   <div class="user-wrap">
-                    <span class="name">{{ userInfo.userName }}</span>
+                    <span class="name">{{ userInfo.user_name }}</span>
                     <span class="email">{{ userInfo.email }}</span>
                   </div>
                 </div>

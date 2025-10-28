@@ -18,6 +18,7 @@
     "ElSelect": true,
     "ElSlider": true,
     "ElSwitch": true,
+    "ElTag": true,
     "ElTimePicker": true,
     "ElTimeSelect": true,
     "ElTreeSelect": true,
