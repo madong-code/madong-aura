@@ -2,7 +2,7 @@
 import type { FormSchema } from './types'
 import DetailForm from './detail-form.vue'
 
-export function useDetailForm(formSchema: FormSchema) {
+export function useDetailForm(formSchema: FormSchema | (() => FormSchema)) {
   const formRef = ref<any>(null)
   const register = (formInstance: any) => {
     formRef.value = formInstance
@@ -26,7 +26,7 @@ export function useDetailForm(formSchema: FormSchema) {
           DetailForm,
           {
             ...attrs,
-            formSchema: formSchema,
+            formSchema: typeof formSchema === 'function' ? formSchema() : formSchema,
             model: attrs.model || {},
             onRegister: register
           },

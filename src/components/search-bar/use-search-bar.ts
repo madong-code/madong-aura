@@ -1,3 +1,4 @@
+import { useUserStore } from '@/store/modules/user'
 import { FormSchema } from '../form'
 import SearchBar from './search-bar.vue'
 
@@ -10,7 +11,9 @@ import SearchBar from './search-bar.vue'
  * @param formSchema
  * @returns
  */
-export function useSearchBar(formSchema: FormSchema) {
+export function useSearchBar(formSchema: FormSchema | (() => FormSchema)) {
+  const userStore = useUserStore()
+  const { language } = storeToRefs(userStore)
   const formRef = ref<any>(null)
   const register = (formInstance: any) => {
     formRef.value = formInstance
@@ -41,12 +44,19 @@ export function useSearchBar(formSchema: FormSchema) {
   // 创建表单组件的配置
   const FormComponent = defineComponent({
     setup(_, { attrs, slots }) {
+      // 监听语言变化触发重新渲染
+      watch(language, () => {
+        // 语言变化时的操作，如强制更新组件
+        formRef.value?.setState({
+          schema: typeof formSchema === 'function' ? formSchema().schema : formSchema.schema
+        }) // 或其他需要的操作
+      })
       return () =>
         h(
           SearchBar,
           {
             ...attrs,
-            formSchema: formSchema,
+            formSchema: typeof formSchema === 'function' ? formSchema() : formSchema,
             model: attrs.model || {},
             onRegister: register
           },

@@ -110,7 +110,25 @@ export default ({ mode }: { mode: string }) => {
     ],
     // 依赖预构建
     optimizeDeps: {
-      include: ['element-plus/es/components/*/style/css']
+      include: [
+        'echarts/core',
+        'echarts/charts',
+        'echarts/components',
+        'echarts/renderers',
+        'xlsx',
+        'xgplayer',
+        'crypto-js',
+        'file-saver',
+        'vue-img-cutter',
+        'element-plus/es',
+        'element-plus/es/components/*/style/css',
+        'element-plus/es/components/message-box/style/index',
+        'element-plus/es/components/notification/style/index',
+        'element-plus/es/components/message/style/index',
+        'element-plus/es/components/upload/style/index',
+        'element-plus/es/components/button/style/index',
+        'element-plus/es/components/icon/style/index'
+      ]
     },
     css: {
       preprocessorOptions: {

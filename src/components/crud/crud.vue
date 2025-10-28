@@ -149,7 +149,11 @@
         // 其他搜索参数
       },
       columnsFactory: () => {
-        const columns = (crudSchemaRef.value.columns || []).map((column) => {
+        const columns = (
+          (typeof crudSchemaRef.value.columns === 'function'
+            ? crudSchemaRef.value.columns()
+            : crudSchemaRef.value.columns) || []
+        ).map((column) => {
           const c = { ...column }
           viewColumnFormatter(column)
           c.formatter = column.formatter
