@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import request from '@/utils/http'
 import { ConfigService } from '@/api/system/config'
+import { fullUrl } from '@/utils'
 
 // 定义系统配置接口
 interface SystemConfig {
@@ -98,9 +99,9 @@ export const useSystemConfigStore = defineStore(
         ...rest
       } = apiData;
       return {
-        logo: site_logo,
+        logo: fullUrl(site_logo),
         title: site_name,
-        favicon: site_logo, // favicon 缺省为 logo
+        favicon: fullUrl(site_logo), // favicon 缺省为 logo
         copyright: `© ${new Date().getFullYear()} ${site_name} | ${site_record_no}`,
         isOpen: site_open === "1",
         securityInfo: [site_network_security, site_network_security_url].filter(Boolean).join(' '),

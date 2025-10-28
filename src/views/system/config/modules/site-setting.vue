@@ -69,9 +69,7 @@ const schema = [
     prop: "site_logo",
     label: $t("system.config.site.logo"),
     component: "Avatar",
-    componentProps: {
-      placeholder: "",
-    },
+    componentProps: {},
   },
   {
     prop: "site_network_security",

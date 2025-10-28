@@ -10,7 +10,7 @@ export const dashboardRoutes: AppRouteRecord = {
   },
   children: [
     {
-      path: 'console',
+      path: '/console',
       name: 'example-console',
       component: '/example/dashboard/console',
       meta: {
@@ -20,7 +20,7 @@ export const dashboardRoutes: AppRouteRecord = {
       }
     },
     {
-      path: 'analysis',
+      path: '/analysis',
       name: 'example-analysis',
       component: '/example/dashboard/analysis',
       meta: {
@@ -29,7 +29,7 @@ export const dashboardRoutes: AppRouteRecord = {
       }
     },
     {
-      path: 'ecommerce',
+      path: '/ecommerce',
       name: 'example-ecommerce',
       component: '/example/dashboard/ecommerce',
       meta: {

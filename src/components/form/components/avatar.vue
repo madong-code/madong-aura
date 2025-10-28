@@ -11,7 +11,7 @@ defineOptions({
 });
 
 const props = defineProps({
-  modelValue: {
+  value: {
     type: String,
     default: "",
   },
@@ -21,9 +21,10 @@ const props = defineProps({
     default: true,
   },
 });
-const emits = defineEmits(["update:modelValue", "change"]);
-const mValue = useVModel(props, "modelValue", emits, {
-  defaultValue: props.modelValue,
+
+const emits = defineEmits(["update:value"]);
+const mValue = useVModel(props, "value", emits, {
+  defaultValue: props.value,
   passive: true,
 });
 
@@ -37,36 +38,23 @@ const getStorableUrl = (url: string) => {
   return props.autoHandleBaseUrl ? stripBaseUrl(url) : url;
 };
 
-const customRequest = (e: any) => {
-  return new Promise((resolve, reject) => {
-    FilesService.uploadFile({
+const customRequest = async (e: any) => {
+  try {
+    const data = await FilesService.uploadFile({
       file: e.file,
-    })
-      .then((data: any) => {
-        mValue.value = data.base_path;
-        resolve(data);
-      })
-      .catch(reject);
-  });
+    });
+    const processedUrl = getStorableUrl(data.base_path || "");
+    mValue.value = processedUrl;
+    emits("update:value", processedUrl);
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
 };
-
-// const customRequest = async (e: any) => {
-//   try {
-//     const data = await FilesService.uploadFile({
-//       file: e.file,
-//     });
-//     const processedUrl = getStorableUrl(data.base_path || "");
-//     mValue.value = processedUrl;
-//     emits("update:modelValue", processedUrl);
-//   } catch (error) {
-//     console.error("Upload failed:", error);
-//   }
-// };
 
 const handleRemove = (e: Event) => {
   e.stopPropagation();
   mValue.value = "";
-  emits("update:modelValue", "");
+  emits("update:value", "");
 };
 </script>
 <template>

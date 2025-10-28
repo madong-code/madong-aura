@@ -22,7 +22,6 @@ import { $t } from "@/locales";
 const activeName = ref("1");
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event);
   // 关键：点击标签时，更新该标签的loadKey
   const targetKey = tab.props.name;
   settingList.value.forEach((item) => {

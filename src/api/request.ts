@@ -9,7 +9,7 @@ export const getApiBaseUrl = (customValue?: string | null): string => {
             : customValue;
     }
 
-    const envValue = import.meta.env.VITE_GLOB_API_URL;
+    const envValue = import.meta.env.VITE_API_URL;
     if (envValue) {
         return envValue === 'useCurrentDomain'
             ? window.location.protocol + '//' + window.location.host
