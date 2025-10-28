@@ -89,8 +89,12 @@
         </div>
         <!-- 终端 -->
         <div class="btn-box terminal-button" @click="openTerminal">
-          <div class="btn terminal-button" style="font-size: 20px; line-height: 2.2">
-            <Icon icon="ant-design:code-outlined" class="terminal-btn" />
+          <div class="btn terminal-button">
+            <Icon
+              icon="ant-design:code-outlined"
+              class="terminal-btn"
+              style="line-height: 2.3"
+            />
           </div>
         </div>
 
