@@ -1,6 +1,6 @@
 # Madong UI Admin Art Design
 
-基于 Vue 3 + Vite 的现代化管理后台前端框架，专为对接 Madong 4.1+ 版本后端服务设计。采用 Composition API 和 TypeScript 开发，提供响应式布局和实时通信功能。
+基于 Vue 3 + Vite 的现代化管理后台前端框架，专为对接 Madong 5.x 版本后端服务设计。采用 Composition API 和 TypeScript 开发，提供响应式布局和实时通信功能。
 
 ## 功能特性
 
