@@ -2,7 +2,7 @@
 
 ### 1. 目录结构模板
 
-注意：别再增加子目录，如mldong-art-design/src/，这样子的，你增加后，就会导致目录结构混乱，请勿再增加子目录。
+注意：别再增加子目录，如madong-art-design/src/，这样子的，你增加后，就会导致目录结构混乱，请勿再增加子目录。
 
 ```
 src/api/{模块名}/{实体文件名}.ts
@@ -15,8 +15,8 @@ src/views/{模块名}/实体文件名
 
 **命名规范：**
 
-- 数据库表名：使用下划线命名法，如 `sys_user`、`sys_user_role`
-- 模块名：使用表名中下划线前的部分，如 `sys`
+- 数据库表名：使用下划线命名法，如 `system_user`、`system_user_role`
+- 模块名：使用表名中下划线前的部分，如 `system`
 - 实体名：使用表名中下划线后的部分，如 `user`，如果有多个部分则用中横线连接，如 `user-role`
 - 文件名：使用中横线命名法，如 `user-role.ts`
 
@@ -27,17 +27,17 @@ src/views/{模块名}/实体文件名
 3. 字段太多时，备注字段不需要在列表显示
 4. 如果字段太少，表单`colSpan`默认为24，如果字段太多，可以设置colSpan为12示例：
 
-- 表名 `sys_user`
-  - 模块名 `sys`
+- 表名 `system_user`
+  - 模块名 `system`
   - 实体名 `user`
   - 实体小驼峰名 `user`
-  - API 服务文件 `./src/api/sys/user.ts`
+  - API 服务文件 `./src/api/system/user.ts`
   - API 服务类名 `UserService`
-- 表名 `sys_user_role`
-  - 模块名 `sys`
+- 表名 `system_user_role`
+  - 模块名 `system`
   - 实体名 `user-role`
   - 实体小驼峰名 `userRole`
-  - API 服务文件 `./src/api/sys/user-role.ts`
+  - API 服务文件 `./src/api/system/user-role.ts`
   - API 服务类名 `UserRoleService`
 
 ### 2. API 服务模板
@@ -45,54 +45,61 @@ src/views/{模块名}/实体文件名
 创建 `src/api/{模块名}/{实体名}.ts`：
 
 ```typescript
-import request from '@/utils/http'
+import BaseService from '@/api/core/base';
+import request from '@/utils/http';
+import type { User } from './user-model';
 
-export class {EntityName}Service {
-  // 分页查询
-  static page(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/page',
-      params
-    })
-  }
-  // 树形接口，注意，只有id/name/parentId字段的树形接口才需要此方法
-  static tree(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/tree',
-      params
-    })
-  }
 
-  // 添加
-  static save(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/save',
-      params
-    })
-  }
+/**
+ * 模块路径
+ */
+const baseUrl = '/system/user';
 
-  // 修改
-  static update(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/update',
-      params
-    })
-  }
+export const  {EntityName}Service ={
+    //默认包含：添加、删除、修改、导出、详情常规接口
+    ...BaseService<User>({
+      baseUrl,
+      allowedMethods: [],
+      forbiddenMethods: ['export'],
+    }),
 
-  // 删除
-  static remove(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/remove',
-      params
-    })
-  }
+   // 扩展接口 - 锁定用户
+  lock(data: { id: string | number; reason?: string }) {
+    return request.put({ 
+      url: `${baseUrl}/locked`, 
+      data 
+    });
+  },
 
-  // 详情
-  static detail(params: any) {
-    return request.post({
-      url: '/{模块路径}/{实体小驼峰名}/detail',
-      params
-    })
+  // 扩展接口 - 解锁用户
+  unlock(data: { id: string | number }) {
+    return request.put({ 
+      url: `${baseUrl}/unlocked`, 
+      data 
+    });
+  },
+
+  // 扩展接口 - 重置密码
+  resetPassword(data: { id: string | number; newPassword: string }) {
+    return request.put({ 
+      url: `${baseUrl}/reset-password`, 
+      data 
+    });
+  },
+
+  // 扩展接口 - 批量操作
+  batchLock(ids: (string | number)[]) {
+    return request.put({ 
+      url: `${baseUrl}/batch-lock`, 
+      data: { ids } 
+    });
+  },
+
+  batchUnlock(ids: (string | number)[]) {
+    return request.put({ 
+      url: `${baseUrl}/batch-unlock`, 
+      data: { ids } 
+    });
   }
 }
 ```
@@ -131,9 +138,9 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: '{模块名}:{实体名}:save',
+  addAuth: '{模块名}:{实体名}:create',
   // 删除权限码
-  removeAuth: '{模块名}:{实体名}:remove',
+  removeAuth: '{模块名}:{实体名}:delete',
   // 修改权限码
   editAuth: '{模块名}:{实体名}:update',
   // 详情权限码
@@ -246,7 +253,7 @@ export const crudSchema: CrudSchema = {
 
 ```typescript
 {
-  prop: 'm_操作符_字段名', // 如 'm_LIKE_name', 'm_EQ_status'
+  prop: '操作符_字段名', // 如 'LIKE_name', 'EQ_status'
   label: '搜索字段标签',
   component: 'Input', // 搜索组件
   componentProps: {
@@ -328,61 +335,31 @@ export const crudSchema: CrudSchema = {
 
 #### 接口文件
 
-`src/api/sys/post.ts`
+`src/api/system/post.ts`
 
 ```ts
 import request from '@/utils/http'
 
-export class PostService {
-  // 分页查询
-  static page(params: any) {
-    return request.post({
-      url: '/sys/post/page',
-      params
-    })
-  }
+import BaseService from '@/api/core/base';
+import type { PostRow } from './post-model';
 
-  // 添加
-  static save(params: any) {
-    return request.post({
-      url: '/sys/post/save',
-      params
-    })
-  }
+const baseUrl = '/system/post';
 
-  // 修改
-  static update(params: any) {
-    return request.post({
-      url: '/sys/post/update',
-      params
-    })
-  }
+export const PostService = {
+  ...BaseService<PostRow>({ baseUrl }),
+};
 
-  // 删除
-  static remove(params: any) {
-    return request.post({
-      url: '/sys/post/remove',
-      params
-    })
-  }
+export default PostService;
 
-  // 详情
-  static detail(params: any) {
-    return request.post({
-      url: '/sys/post/detail',
-      params
-    })
-  }
-}
 ```
 
 #### 元数据文件
 
-`src/views/sys/post/schemas/index.tsx`
+`src/views/system/post/schemas/index.tsx`
 
 ```tsx
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/sys/post'
+import { PostService } from '@/api/system/post'
 
 // crud配置
 export const crudSchema: CrudSchema = {
@@ -391,13 +368,13 @@ export const crudSchema: CrudSchema = {
   dialogTitle: '岗位',
   crudApi: {
     // 新增接口
-    add: PostService.save,
+    add: PostService.create,
     // 修改接口
     edit: PostService.update,
     // 删除接口
-    remove: PostService.remove,
+    remove: PostService.delete,
     // 详情接口
-    view: PostService.detail
+    view: PostService.get
   },
   // 使用crud
   useCrud: true,
@@ -410,13 +387,13 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'sys:post:save',
+  addAuth: 'system:post:create',
   // 删除权限码
-  removeAuth: 'sys:post:remove',
+  removeAuth: 'system:post:delete',
   // 修改权限码
-  editAuth: 'sys:post:update',
+  editAuth: 'system:post:update',
   // 详情权限码
-  viewAuth: 'sys:post:detail',
+  viewAuth: 'system:post:detail',
   // 表格列定义
   columns: [
     {
@@ -451,7 +428,7 @@ export const crudSchema: CrudSchema = {
   searchFormSchema: {
     schema: [
       {
-        prop: 'm_LIKE_name',
+        prop: 'LIKE_name',
         label: '岗位名称',
         component: 'Input',
         componentProps: {
@@ -461,7 +438,7 @@ export const crudSchema: CrudSchema = {
         colSpan: 6
       },
       {
-        prop: 'm_EQ_enabled',
+        prop: 'EQ_enabled',
         label: '状态',
         component: 'ApiDict',
         componentProps: {
@@ -563,11 +540,11 @@ export const crudSchema: CrudSchema = {
 
 #### 页面入口文件
 
-`src/views/sys/post/schemas/index.tsx`
+`src/views/system/post/schemas/index.tsx`
 
 ```vue
 <template>
-  <div class="sys-post-page art-full-height">
+  <div class="system-post-page art-full-height">
     <BasicCrud />
   </div>
 </template>
@@ -594,69 +571,35 @@ export const crudSchema: CrudSchema = {
 
 #### 接口文件
 
-`src/api/sys/dept.ts`
+`src/api/systen/dept.ts`
 
 ```ts
-import request from '@/utils/http'
+import BaseService from "@/api/core/base";
+import type { DeptRow, DeptTree } from "./dept-model";
+import request from '@/utils/http';
 
-export class DeptService {
-  // 分页查询
-  static page(params: any) {
-    return request.post({
-      url: '/sys/dept/page',
-      params
-    })
-  }
+const baseUrl = '/system/dept';
 
-  // 树形接口
-  static tree(params: any) {
-    return request.post({
-      url: '/sys/dept/tree',
-      params
-    })
-  }
+export const DeptService = {
+  ...BaseService<DeptRow>({ baseUrl }),
 
-  // 添加
-  static save(params: any) {
-    return request.post({
-      url: '/sys/dept/save',
-      params
-    })
-  }
+  getTree(args?: Record<string, any>): Promise<DeptTree[]> {
+    const params = { ...args, format: 'tree' };
+    return request.get<DeptTree[]>({ url: baseUrl, params });
+  },
+};
 
-  // 修改
-  static update(params: any) {
-    return request.post({
-      url: '/sys/dept/update',
-      params
-    })
-  }
+export default DeptService;
 
-  // 删除
-  static remove(params: any) {
-    return request.post({
-      url: '/sys/dept/remove',
-      params
-    })
-  }
-
-  // 详情
-  static detail(params: any) {
-    return request.post({
-      url: '/sys/dept/detail',
-      params
-    })
-  }
-}
 ```
 
 #### 元数据文件
 
-`src/views/sys/dept/schemas/index.tsx`
+`src/views/system/dept/schemas/index.tsx`
 
 ```tsx
 import { CrudSchema } from '@/components/crud'
-import { DeptService } from '@/api/sys/dept'
+import { DeptService } from '@/api/system/dept'
 
 // crud配置
 export const crudSchema: CrudSchema = {
@@ -664,20 +607,20 @@ export const crudSchema: CrudSchema = {
   api: DeptService.tree,
   dialogTitle: '部门',
   crudApi: {
-    add: DeptService.save,
+    add: DeptService.create,
     edit: DeptService.update,
-    remove: DeptService.remove,
-    view: DeptService.detail
+    remove: DeptService.delete,
+    view: DeptService.get
   },
   useCrud: true,
   hasAdd: true,
   hasRemove: true,
   hasEdit: true,
   hasView: true,
-  addAuth: 'sys:dept:save',
-  removeAuth: 'sys:dept:remove',
-  editAuth: 'sys:dept:update',
-  viewAuth: 'sys:dept:detail',
+  addAuth: 'system:dept:create',
+  removeAuth: 'system:dept:delete',
+  editAuth: 'system:dept:update',
+  viewAuth: 'system:dept:detail',
 
   // 禁用搜索表单，因为树形结构是全量数据
   useSearchForm: false,
@@ -685,7 +628,7 @@ export const crudSchema: CrudSchema = {
   // 树形结构配置
   tree: {
     id: 'id',
-    pid: 'parentId',
+    pid: 'pid',
     children: 'children'
   },
 
@@ -741,10 +684,10 @@ export const crudSchema: CrudSchema = {
       },
       {
         label: '父级部门',
-        prop: 'parentId',
+        prop: 'pid',
         component: 'ApiTreeSelect',
         componentProps: {
-          api: '/sys/dept/tree',
+          api: '/system/dept/tree',
           labelField: 'name',
           valueField: 'id',
           // 任意节点可选
@@ -828,7 +771,7 @@ export const crudSchema: CrudSchema = {
         prop: 'leaderIdList',
         component: 'ApiSelect',
         componentProps: {
-          api: '/sys/user/select',
+          api: '/system/user/select',
           placeholder: '请选择负责人',
           multiple: true
         },
@@ -836,10 +779,10 @@ export const crudSchema: CrudSchema = {
       },
       {
         label: '分管领导',
-        prop: 'mainLeaderId',
+        prop: 'main_leader_id',
         component: 'ApiSelect',
         componentProps: {
-          api: '/sys/user/select',
+          api: '/system/user/select',
           placeholder: '请选择分管领导'
         },
         colSpan: 24
@@ -862,7 +805,7 @@ export const crudSchema: CrudSchema = {
 
 #### 页面入口文件
 
-`src/views/sys/dept/schemas/index.tsx`
+`src/views/system/dept/schemas/index.tsx`
 
 ```vue
 <template>
