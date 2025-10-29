@@ -1,6 +1,6 @@
 # Madong UI Admin Art Design
 
-这是一个基于 Vue3 + Vite 的中后台管理系统模板，提供丰富的组件库和完整的权限管理系统。
+基于 Vue 3 + Vite 的现代化管理后台前端框架，专为对接 Madong 4.1+ 版本后端服务设计。采用 Composition API 和 TypeScript 开发，提供响应式布局和实时通信功能。
 
 ## 功能特性
 
@@ -48,16 +48,19 @@
 ## 快速开始
 
 1. 安装依赖
+
 ```bash
 pnpm install
 ```
 
 2. 启动开发服务器
+
 ```bash
 pnpm dev
 ```
 
 3. 构建生产环境包
+
 ```bash
 pnpm build
 ```
