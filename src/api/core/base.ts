@@ -1,6 +1,6 @@
 import request from '@/utils/http'
 
-type Method = 'list' | 'get' | 'create' | 'update' | 'remove' | 'export' | 'changStatus'
+type Method = 'list' | 'get' | 'create' | 'update' | 'patch' | 'remove' | 'delete' | 'export' | 'changStatus'
 
 interface BaseApiOptions {
     baseUrl: string
@@ -52,16 +52,24 @@ function BaseService<T = any>(options: BaseApiOptions) {
             })
         },
 
+        patch(id: string | number, params: Partial<T>): Promise<T> {
+            checkMethod('patch')
+            return request.patch<T>({
+                url: `${baseUrl}/${id}`,
+                params,
+            })
+        },
+
         remove(params?: Record<string, any>): Promise<T> {
             checkMethod('remove')
             return request.del({
-                url: `${baseUrl}/0`,
+                url: `${baseUrl}`,
                 params,
             })
         },
 
         delete(id: string | number, params?: Record<string, any>): Promise<T> {
-            checkMethod('remove')
+            checkMethod('delete')
             return request.del({
                 url: `${baseUrl}/${id}`,
                 params,
@@ -76,10 +84,10 @@ function BaseService<T = any>(options: BaseApiOptions) {
             })
         },
 
-        changStatus(params: Partial<T>): Promise<T> {
+        changStatus(id: string | number, params: Partial<T>): Promise<T> {
             checkMethod('changStatus')
             return request.put<T>({
-                url: `${baseUrl}/change-status`,
+                url: `${baseUrl}/${id}/change-status`,
                 params,
             })
         },

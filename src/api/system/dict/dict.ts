@@ -16,7 +16,7 @@ export const DictService = {
   },
 
   getByDictType(params: any): Promise<DictOptions[]> {
-    return request.get({ url: `${baseUrl}/get-by-dict-type`, params });
+    return request.get({ url: `${baseUrl}/options/get-by-dict-type`, params });
   },
 
   getAllDict(params: any): Promise<any[]> {

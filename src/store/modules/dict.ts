@@ -33,7 +33,7 @@ export const useDictStore = defineStore('dict', {
 
       try {
         const res = await request.get<NewOption[]>({
-          url: '/system/dict/get-by-dict-type',
+          url: '/system/dict/options/get-by-dict-type',
           params: { dict_type: dictType }
         })
 
