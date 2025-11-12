@@ -44,12 +44,35 @@ function BaseService<T = any>(options: BaseApiOptions) {
             })
         },
 
-        update(params: Partial<T>): Promise<T> {
-            checkMethod('update')
-            return request.put<T>({
-                url: baseUrl,
-                params,
-            })
+        // update(params: Partial<T>): Promise<T> {
+        //     checkMethod('update')
+        //     return request.put<T>({
+        //         url: baseUrl,
+        //         params,
+        //     })
+        // },
+        update(id: string | number | Partial<T>, params?: Partial<T>): Promise<T> {
+            checkMethod('update');
+            if (typeof id === 'object' && id !== null) {
+                //@ts-expect-error
+                const { id: extractedId, ...extractedParams } = id;
+                if (extractedId !== undefined) {
+                    return request.put<T>({
+                        url: `${baseUrl}/${extractedId}`,
+                        params: extractedParams,
+                    });
+                } else {
+                    return request.put<T>({
+                        url: baseUrl,
+                        params: id,
+                    });
+                }
+            } else {
+                return request.put<T>({
+                    url: `${baseUrl}/${id}`,
+                    params,
+                });
+            }
         },
 
         patch(id: string | number, params: Partial<T>): Promise<T> {
