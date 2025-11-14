@@ -35,7 +35,7 @@ export const crudSchema: CrudSchema = {
   // 修改权限码
   editAuth: 'system:dict:update',
   // 详情权限码
-  viewAuth: 'system:dict:get',
+  viewAuth: 'system:dict:read',
   // 表格列定义
   columns: [
     {

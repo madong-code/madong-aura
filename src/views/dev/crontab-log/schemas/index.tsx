@@ -35,9 +35,9 @@ export const crudSchema: CrudSchema = {
   // 删除权限码
   removeAuth: 'dev:crontab_log:delete',
   // 修改权限码
-  editAuth: 'dev:crontab_log:edit',
+  editAuth: 'dev:crontab_log:update',
   // 详情权限码
-  viewAuth: 'dev:crontab_log:detail',
+  viewAuth: 'dev:crontab_log:read',
   toolbarConfig: {
     fullscreen: false,
     size: false
@@ -100,7 +100,7 @@ export const crudSchema: CrudSchema = {
               // 鼠标移入事件
               mouseenter: (e: {
                 target: {
-                  getBoundingClientRect: () => { (): any; new (): any; top: number; left: number }
+                  getBoundingClientRect: () => { (): any; new(): any; top: number; left: number }
                   _tooltip: HTMLDivElement
                 }
               }) => {

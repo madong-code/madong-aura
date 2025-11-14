@@ -18,10 +18,10 @@ export const crudSchema: CrudSchema = {
   hasRemove: true,
   hasEdit: true,
   hasView: true,
-  addAuth: 'system:dept:save',
-  removeAuth: 'system:dept:remove',
+  addAuth: 'system:dept:create',
+  removeAuth: 'system:dept:delete',
   editAuth: 'system:dept:update',
-  viewAuth: 'system:dept:detail',
+  viewAuth: 'system:dept:read',
 
   // 禁用搜索表单，因为树形结构是全量数据
   useSearchForm: true,

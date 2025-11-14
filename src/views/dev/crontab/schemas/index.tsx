@@ -35,9 +35,9 @@ export const crudSchema: CrudSchema = {
   // 删除权限码
   removeAuth: 'dev:crontab:delete',
   // 修改权限码
-  editAuth: 'dev:crontab:edit',
+  editAuth: 'dev:crontab:update',
   // 详情权限码
-  viewAuth: 'dev:crontab:detail',
+  viewAuth: 'dev:crontab:read',
   // 表格列定义
   columns: [
     {

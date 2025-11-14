@@ -34,9 +34,9 @@ export const crudSchema: CrudSchema = {
   // 删除权限码
   removeAuth: 'system:logs_login:delete',
   // 修改权限码
-  editAuth: 'system:logs_login:edit',
+  editAuth: 'system:logs_login:update',
   // 详情权限码
-  viewAuth: 'system:logs_login:detail',
+  viewAuth: 'system:logs_login:read',
   // 表格列定义
   columns: [
     {

@@ -30,13 +30,13 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'system:user:save',
+  addAuth: 'system:user:create',
   // 删除权限码
-  removeAuth: 'system:user:remove',
+  removeAuth: 'system:user:delete',
   // 修改权限码
   editAuth: 'system:user:update',
   // 详情权限码
-  viewAuth: 'system:user:detail',
+  viewAuth: 'system:user:read',
   // 表格列定义
   columns: [
     {
@@ -74,14 +74,14 @@ export const crudSchema: CrudSchema = {
             (dept: {
               id: any
               name:
-                | string
-                | number
-                | boolean
-                | VNodeArrayChildren
-                | { [name: string]: unknown; $stable?: boolean }
-                | VNode<RendererNode, RendererElement, { [key: string]: any }>
-                | (() => any)
-                | undefined
+              | string
+              | number
+              | boolean
+              | VNodeArrayChildren
+              | { [name: string]: unknown; $stable?: boolean }
+              | VNode<RendererNode, RendererElement, { [key: string]: any }>
+              | (() => any)
+              | undefined
             }) => h(ElTag, { key: dept.id }, dept.name)
           )
         )

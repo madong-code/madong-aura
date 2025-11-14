@@ -18,10 +18,10 @@ export const crudSchema: CrudSchema = {
   hasRemove: true,
   hasEdit: true,
   hasView: true,
-  addAuth: 'system:dict-item:save',
-  removeAuth: 'system:dict-item:remove',
+  addAuth: 'system:dict-item:create',
+  removeAuth: 'system:dict-item:delete',
   editAuth: 'system:dict-item:update',
-  viewAuth: 'system:dict-item:detail',
+  viewAuth: 'system:dict-item:read',
   columns: [
     {
       type: 'selection'

@@ -35,9 +35,9 @@ export const crudSchema: CrudSchema = {
   // 删除权限码
   removeAuth: 'system:recycle_bin:delete',
   // 修改权限码
-  editAuth: 'system:recycle_bin:edit',
+  editAuth: 'system:recycle_bin:update',
   // 详情权限码
-  viewAuth: 'system:recycle_bin:detail',
+  viewAuth: 'system:recycle_bin:read',
   // 表格列定义
   columns: [
     {

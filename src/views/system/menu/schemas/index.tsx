@@ -34,13 +34,13 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'system:menu:save',
+  addAuth: 'system:menu:create',
   // 删除权限码
-  removeAuth: 'system:menu:remove',
+  removeAuth: 'system:menu:delete',
   // 修改权限码
-  editAuth: 'system:menu:edit',
+  editAuth: 'system:menu:update',
   // 详情权限码
-  viewAuth: 'system:menu:detail',
+  viewAuth: 'system:menu:read',
   rowKey: 'id',
   // 表格列定义
   columns: [
@@ -50,19 +50,19 @@ export const crudSchema: CrudSchema = {
       formatter: (row) => {
         return row.icon
           ? h('span', {}, [
-              h(Icon, {
-                icon: row.icon
-              }),
-              h(
-                'span',
-                {
-                  style: {
-                    paddingLeft: '6px'
-                  }
-                },
-                row.title
-              )
-            ])
+            h(Icon, {
+              icon: row.icon
+            }),
+            h(
+              'span',
+              {
+                style: {
+                  paddingLeft: '6px'
+                }
+              },
+              row.title
+            )
+          ])
           : h('span', {}, row.title)
       },
       minWidth: 200
@@ -112,55 +112,55 @@ export const crudSchema: CrudSchema = {
     width: '60%',
     dialogType: 'drawer'
   },
-  searchFormSchema:{
-    schema:[
+  searchFormSchema: {
+    schema: [
       {
-      component: 'ApiDict',
-      prop: 'EQ_type',
-      label: $t('system.menu.list.query.type'),
-      componentProps: {
-        code: DictEnum.SYS_MENU_TYPE,
-         clearable: true,
-        placeholder:$t('system.menu.list.query.placeholder.type'),
+        component: 'ApiDict',
+        prop: 'EQ_type',
+        label: $t('system.menu.list.query.type'),
+        componentProps: {
+          code: DictEnum.SYS_MENU_TYPE,
+          clearable: true,
+          placeholder: $t('system.menu.list.query.placeholder.type'),
+        },
       },
-    },
-    {
-      component: 'Input',
-      prop: 'LIKE_title',
-      label: $t('system.menu.list.query.title'),
-      componentProps:{
-         clearable: true,
-         placeholder:$t('system.menu.list.query.placeholder.title'),
-      }
-    },
-    {
-      component: 'Input',
-      prop: 'LIKE_code',
-      label: $t('system.menu.list.query.code'),
-      componentProps:{
-         clearable: true,
-         placeholder:$t('system.menu.list.query.placeholder.code'),
-      }
-    },
-    {
-      component: 'Input',
-      prop: 'LIKE_path',
-      label: $t('system.menu.list.query.path'),
-      componentProps:{
-         clearable: true,
-         placeholder:$t('system.menu.list.query.placeholder.path'),
-      }
-    },
-    {
-      component: 'ApiDict',
-      componentProps: {
-         clearable: true,
-        code: DictEnum.SYS_ENABLED_STATUS,
-        placeholder:$t('system.menu.list.query.placeholder.enabled'),
+      {
+        component: 'Input',
+        prop: 'LIKE_title',
+        label: $t('system.menu.list.query.title'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.list.query.placeholder.title'),
+        }
       },
-      prop: 'enabled',
-      label: $t('system.menu.list.query.enabled'),
-    },
+      {
+        component: 'Input',
+        prop: 'LIKE_code',
+        label: $t('system.menu.list.query.code'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.list.query.placeholder.code'),
+        }
+      },
+      {
+        component: 'Input',
+        prop: 'LIKE_path',
+        label: $t('system.menu.list.query.path'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.list.query.placeholder.path'),
+        }
+      },
+      {
+        component: 'ApiDict',
+        componentProps: {
+          clearable: true,
+          code: DictEnum.SYS_ENABLED_STATUS,
+          placeholder: $t('system.menu.list.query.placeholder.enabled'),
+        },
+        prop: 'enabled',
+        label: $t('system.menu.list.query.enabled'),
+      },
 
     ]
   },

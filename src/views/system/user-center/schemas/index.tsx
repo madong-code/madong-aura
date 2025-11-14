@@ -27,9 +27,9 @@ export const crudSchema: CrudSchema = {
   // 删除权限码
   removeAuth: 'system:user_center:delete',
   // 修改权限码
-  editAuth: 'system:user_center:edit',
+  editAuth: 'system:user_center:update',
   // 详情权限码
-  viewAuth: 'system:user_center:detail',
+  viewAuth: 'system:user_center:read',
   // 表格列定义
   columns: [
     // {
