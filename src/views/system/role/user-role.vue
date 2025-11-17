@@ -97,7 +97,7 @@ const [BasicCrud, crudApi] = useCrud({
       label: "移除用户",
       type: "danger",
       icon: "ant-design:delete-outlined",
-      auth: "sys:rbac:removeUserRole",
+      auth: "system:auth:delete_user_role",
       confirm: {
         title: "提示",
         content: "确定删除吗？",
@@ -116,7 +116,7 @@ const [BasicCrud, crudApi] = useCrud({
       type: "danger",
       link: true,
       icon: "ant-design:delete-outlined",
-      auth: "sys:rbac:removeUserRole",
+      auth: "system:auth:remove_user_role",
       confirm: {
         title: "提示",
         content: "确定删除吗？",

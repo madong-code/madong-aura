@@ -15,7 +15,7 @@ const [BasicForm, formApi] = useForm({
   schema: [
     {
       label: "选择角色",
-      prop: "roleIdList",
+      prop: "role_id_list",
       component: "ApiSelect",
       componentProps: {
         api: "/system/role",
@@ -58,14 +58,26 @@ const [Dialog, dialogApi] = useDialog({
     });
   },
 });
+
 defineExpose({
   show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
     record.value = data;
     crudApi.value = getCrudApi();
     dialogApi.open();
+    console.log(data);
     nextTick(() => {
+      // 修改这里：将对象数组转换为ID数组
+      let roleIds = [];
+      if (Array.isArray(data.roles)) {
+        // 如果data.roles是对象数组，提取每个对象的id
+        roleIds = data.roles.map((role: { id: any }) => role.id);
+      } else if (typeof data.roles === "string") {
+        // 保持原有逻辑，兼容字符串格式
+        roleIds = data.roles.split(",") || [];
+      }
+
       formApi.setValues({
-        roleIdList: data.roleIds?.split(",") || [],
+        role_id_list: roleIds,
       });
     });
   },
