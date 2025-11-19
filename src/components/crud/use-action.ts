@@ -29,7 +29,7 @@ export function useAction(
   // 左侧栏工具-下拉菜单，默认有删除按钮
   const dropDownToolbarActions = computed(() => {
     const actions: ActionItem[] = []
-    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasRemove !== false) {
       actions.push({
         label: '批量删除',
         type: 'danger',
