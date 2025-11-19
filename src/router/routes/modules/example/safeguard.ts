@@ -1,7 +1,7 @@
 import { AppRouteRecord } from '@/types/router'
 
 export const safeguardRoutes: AppRouteRecord = {
-  path: '/safeguard',
+  path: '/example-safeguard',
   name: 'example-safeguard',
   meta: {
     title: 'menus.safeguard.title',

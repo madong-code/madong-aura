@@ -1,7 +1,7 @@
 import { AppRouteRecord } from '@/types/router'
 
 export const articleRoutes: AppRouteRecord = {
-  path: '/article',
+  path: '/example-article',
   name: 'example-article',
   meta: {
     title: 'menus.article.title',

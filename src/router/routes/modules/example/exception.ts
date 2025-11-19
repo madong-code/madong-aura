@@ -1,7 +1,7 @@
 import { AppRouteRecord } from '@/types/router'
 
 export const exceptionRoutes: AppRouteRecord = {
-  path: '/exception',
+  path: '/example-exception',
   name: 'example-exception',
   meta: {
     title: 'menus.exception.title',

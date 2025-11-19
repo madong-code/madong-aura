@@ -1,7 +1,7 @@
 import { AppRouteRecord } from '@/types/router'
 
 export const dashboardRoutes: AppRouteRecord = {
-  path: '/dashboard',
+  path: '/example-dashboard',
   name: 'example-dashboard',
   meta: {
     title: 'menus.dashboard.title',

@@ -22,7 +22,7 @@ export const crudSchema: CrudSchema = {
   // 使用crud
   useCrud: true,
   // 是否有新增
-  hasAdd: false,
+  hasAdd: true,
   // 是否有删除
   hasRemove: true,
   // 是否有修改

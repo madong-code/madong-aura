@@ -1,22 +1,22 @@
 export const WEB_LINKS = {
   // Github 主页
-  GITHUB_HOME: 'https://gitee.com/mldong',
+  GITHUB_HOME: 'https://gitee.com/motion-code',
 
   // 项目 Github 主页
-  GITHUB: 'https://gitee.com/mldong/mldong-art-design',
+  GITHUB: 'https://gitee.com/motion-code/madong-ui-admin-art-design',
 
   // 个人博客
-  BLOG: 'https://www.mldong.com',
+  BLOG: 'https://www.madong.tech',
 
   // 项目文档
-  DOCS: 'https://doc.mldong.com/art-design/',
+  DOCS: 'https://madong.tech/doc',
 
   // 项目社区
-  COMMUNITY: 'https://www.mldong.com/',
+  COMMUNITY: 'https://www.madong.tech/',
 
   // 个人 Bilibili 主页
   BILIBILI: 'https://space.bilibili.com/1395438398',
 
   // 项目介绍
-  INTRODUCE: 'https://doc.mldong.com/art-design/'
+  INTRODUCE: 'https://madong.tech/doc'
 }
