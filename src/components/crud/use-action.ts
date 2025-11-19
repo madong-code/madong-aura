@@ -34,7 +34,7 @@ export function useAction(
         label: '批量删除',
         type: 'danger',
         icon: 'ant-design:delete-outlined',
-        auth: 'sys:user:remove',
+        auth: crudSchema.removeAuth,
         ifShow: () => crudMethods.getReadonlyState().selection.length > 0,
         confirm: {
           title: '提示',
