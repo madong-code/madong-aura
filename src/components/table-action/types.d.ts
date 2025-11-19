@@ -25,7 +25,7 @@ export interface ActionItem {
   // 权限编码控制是否显示
   auth?: string
   // 业务控制是否显示
-  ifShow?: ((action: ActionItem) => boolean) | boolean
+  ifShow?: ((action: ActionItem, record: any) => boolean) | boolean
   tooltip?: string | TooltipProps
   // MessageBox.confirm
   confirm?: any

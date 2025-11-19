@@ -67,7 +67,7 @@
       isIfShow = ifShow
     }
     if (ifShow && typeof ifShow === 'function') {
-      isIfShow = ifShow(action)
+      isIfShow = ifShow(action, props.record)
     }
     return isIfShow
   }
