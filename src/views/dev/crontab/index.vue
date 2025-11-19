@@ -26,12 +26,16 @@ const [BasicCrud, crudApi] = useCrud({
       label: "执行",
       type: "primary",
       icon: "ant-design:right-circle-outlined",
+      ifShow: (_action, record) => {
+        return record.enabled === 1 ? true : false;
+      },
       sort: 1020,
       link: true,
       auth: "dev:crontab:execute",
       onClick: async (e: Event, row: any) => {
         await CrontabService.execute(row.id);
         ElMessage.success($t("common.operation_success"));
+        crudApi.refreshUpdate();
       },
     },
     {
@@ -41,9 +45,13 @@ const [BasicCrud, crudApi] = useCrud({
       link: true,
       icon: "ant-design:play-circle-outlined",
       auth: "dev:crontab:start",
+      ifShow: (_action, record) => {
+        return record.enabled === 0 ? true : false;
+      },
       onClick: async (e: Event, row: any) => {
         await CrontabService.start(row.id);
         ElMessage.success($t("common.operation_success"));
+        crudApi.refreshUpdate();
       },
     },
     {
@@ -52,10 +60,14 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: "ant-design:close-circle-outlined",
       link: true,
+      ifShow: (_action, record) => {
+        return record.enabled === 0 ? true : false;
+      },
       auth: "dev:crontab:resume",
       onClick: async (e: Event, row: any) => {
         await CrontabService.resume(row.id);
         ElMessage.success($t("common.operation_success"));
+        crudApi.refreshUpdate();
       },
     },
     {
@@ -64,10 +76,14 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: "ant-design:pause-circle-outlined",
       link: true,
+      ifShow: (_action, record) => {
+        return record.enabled === 1 ? true : false;
+      },
       auth: "dev:crontab:pause",
       onClick: async (e: Event, row: any) => {
         await CrontabService.pause(row.id);
         ElMessage.success($t("common.operation_success"));
+        crudApi.refreshUpdate();
       },
     },
     {

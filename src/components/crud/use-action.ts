@@ -29,12 +29,12 @@ export function useAction(
   // 左侧栏工具-下拉菜单，默认有删除按钮
   const dropDownToolbarActions = computed(() => {
     const actions: ActionItem[] = []
-    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false) {
+    if (crudSchema.useCrud === true && crudSchema.hasAdd !== false && crudSchema.removeAuth) {
       actions.push({
         label: '批量删除',
         type: 'danger',
         icon: 'ant-design:delete-outlined',
-        auth: 'sys:user:remove',
+        auth: crudSchema.removeAuth,
         ifShow: () => crudMethods.getReadonlyState().selection.length > 0,
         confirm: {
           title: '提示',

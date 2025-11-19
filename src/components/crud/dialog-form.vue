@@ -23,6 +23,7 @@ const [DetailForm] = useDetailForm(props.crudSchema.formSchema || {});
 const dialogTitle = computed(() => {
   return props.crudSchema.dialogTitle || "标题";
 });
+
 const [Dialog, dialogApi] = useDialog({
   title: dialogTitle.value,
   // dialogType: 'drawer',
@@ -34,7 +35,7 @@ const [Dialog, dialogApi] = useDialog({
   },
 });
 
-const show = async ({
+const show = ({
   data,
   getCrudApi,
   type = "view",
@@ -58,19 +59,25 @@ const show = async ({
   updateFlag.value = type === "edit";
   record.value = data || {};
   crudApi.value = getCrudApi();
+  dialogApi.open();
   if (type === "view" || type === "edit") {
     const detailApi = props.crudSchema.crudApi?.view;
     const rowKey = props.crudSchema.rowKey || "id";
-    //调整通过id获取详情
-    await detailApi?.(record.value[rowKey]).then((res) => {
+    //调整使用ID获取详情
+    detailApi?.(record.value[rowKey]).then((res) => {
       record.value = {
         ...record.value,
         ...res,
       };
+      nextTick(() => {
+        formApi.setValues(record.value);
+      });
+    });
+  } else {
+    nextTick(() => {
+      formApi.setValues(record.value);
     });
   }
-
-  dialogApi.open();
   const viewButtonText = props.crudSchema.viewButtonText || "详情";
   const editButtonText = props.crudSchema.editButtonText || "编辑";
   const addButtonText = props.crudSchema.addButtonText || "新增";
@@ -91,11 +98,6 @@ const show = async ({
   dialogApi.setState({
     title: title,
   });
-  if (type != "view") {
-    nextTick(() => {
-      formApi.setValues(record.value);
-    });
-  }
 };
 
 // const handleSubmit = () => {
