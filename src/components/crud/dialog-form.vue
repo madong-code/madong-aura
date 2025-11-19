@@ -58,6 +58,7 @@
     updateFlag.value = type === 'edit'
     record.value = data || {}
     crudApi.value = getCrudApi()
+    dialogApi.open()
     if (type === 'view' || type === 'edit') {
       const detailApi = props.crudSchema.crudApi?.view
       const rowKey = props.crudSchema.rowKey || 'id'
@@ -68,9 +69,15 @@
           ...record.value,
           ...res
         }
+        nextTick(() => {
+          formApi.setValues(record.value)
+        })
+      })
+    } else {
+      nextTick(() => {
+        formApi.setValues(record.value)
       })
     }
-    dialogApi.open()
     const viewButtonText = props.crudSchema.viewButtonText || '详情'
     const editButtonText = props.crudSchema.editButtonText || '编辑'
     const addButtonText = props.crudSchema.addButtonText || '新增'
@@ -91,11 +98,6 @@
     dialogApi.setState({
       title: title
     })
-    if (type != 'view') {
-      nextTick(() => {
-        formApi.setValues(record.value)
-      })
-    }
   }
 
   const handleSubmit = () => {
