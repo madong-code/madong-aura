@@ -29,13 +29,13 @@ export const crudSchema: CrudSchema = {
   // 是否有详情
   hasView: true,
   // 新增权限码
-  addAuth: 'dev:gateway_limiter:create',
+  addAuth: 'dev:limiter:create',
   // 删除权限码
-  removeAuth: 'dev:gateway_limiter:delete',
+  removeAuth: 'dev:limiter:delete',
   // 修改权限码
-  editAuth: 'dev:gateway_limiter:update',
+  editAuth: 'dev:limiter:update',
   // 详情权限码
-  viewAuth: 'dev:gateway_limiter:read',
+  viewAuth: 'dev:limiter:read',
   // 表格列定义
   columns: [
     {

@@ -35,7 +35,7 @@ const [BasicCrud, crudApi] = useCrud({
   searchFormSchema: {
     schema: [
       {
-        prop: "LIKE_user_mame",
+        prop: "user_name",
         label: $t("system.user.list.query.user_name"),
         component: "Input",
         componentProps: {
@@ -43,7 +43,7 @@ const [BasicCrud, crudApi] = useCrud({
         },
       },
       {
-        prop: "LIKE_real_name",
+        prop: "real_name",
         label: $t("system.user.list.query.real_name"),
         component: "Input",
         componentProps: {
@@ -51,7 +51,7 @@ const [BasicCrud, crudApi] = useCrud({
         },
       },
       {
-        prop: "LIKE_mobile_phone",
+        prop: "mobile_phone",
         label: $t("system.user.list.query.mobile_phone"),
         component: "Input",
         componentProps: {

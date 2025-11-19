@@ -15,9 +15,9 @@ export const CrontabService = {
    * @param params
    * @returns
    */
-  start(params: Record<string, any>) {
-    return request.post({
-      url: `${baseUrl}/resume`,
+  start(id: string | number, params?: Record<string, any>) {
+    return request.put({
+      url: `${baseUrl}/${id}/resume`,
       params
     })
   },
@@ -27,8 +27,8 @@ export const CrontabService = {
    * @param params
    * @returns
    */
-  resume(params: Record<string, any>) {
-    return request.put({ url: `${baseUrl}/resume`, params })
+  resume(id: string | number, params?: Record<string, any>) {
+    return request.put({ url: `${baseUrl}/${id}/resume`, params })
   },
 
   /**
@@ -36,8 +36,8 @@ export const CrontabService = {
    * @param params
    * @returns
    */
-  pause(params: Record<string, any>) {
-    return request.put({ url: `${baseUrl}/pause`, params })
+  pause(id: string | number, params?: Record<string, any>) {
+    return request.put({ url: `${baseUrl}/${id}/pause`, params })
   },
 
   /**
@@ -45,8 +45,8 @@ export const CrontabService = {
    * @param params
    * @returns
    */
-  execute(params: Record<string, any>) {
-    return request.put({ url: `${baseUrl}/execute`, params })
+  execute(id: string | number, params?: Record<string, any>) {
+    return request.put({ url: `${baseUrl}/${id}/execute`, params })
   }
 }
 

@@ -69,7 +69,8 @@ export const crudSchema: CrudSchema = {
     },
     {
       prop: 'code',
-      label: '唯一编码'
+      label: '唯一编码',
+      width: 200,
     },
     {
       prop: 'type',

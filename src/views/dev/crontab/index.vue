@@ -8,6 +8,8 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import DictItemWrap from "./logs-wrap.vue";
+import { CrontabService } from "@/api/dev/crontab";
+import { $t } from "@/locales";
 const crontabLogsWrapRef = ref();
 
 const [BasicCrud, crudApi] = useCrud({
@@ -23,41 +25,58 @@ const [BasicCrud, crudApi] = useCrud({
     {
       label: "执行",
       type: "primary",
+      icon: "ant-design:right-circle-outlined",
       sort: 1020,
       link: true,
-      auth: "dev:crontab:edit",
-      onClick: () => {},
+      auth: "dev:crontab:execute",
+      onClick: async (e: Event, row: any) => {
+        await CrontabService.execute(row.id);
+        ElMessage.success($t("common.operation_success"));
+      },
     },
     {
       label: "启动",
       type: "primary",
       sort: 1020,
       link: true,
-      auth: "dev:crontab:edit",
-      onClick: () => {},
+      icon: "ant-design:play-circle-outlined",
+      auth: "dev:crontab:start",
+      onClick: async (e: Event, row: any) => {
+        await CrontabService.start(row.id);
+        ElMessage.success($t("common.operation_success"));
+      },
     },
     {
       label: "恢复",
       type: "primary",
       sort: 1020,
+      icon: "ant-design:close-circle-outlined",
       link: true,
-      auth: "dev:crontab:edit",
-      onClick: () => {},
+      auth: "dev:crontab:resume",
+      onClick: async (e: Event, row: any) => {
+        await CrontabService.resume(row.id);
+        ElMessage.success($t("common.operation_success"));
+      },
     },
     {
       label: "停止",
       type: "primary",
       sort: 1020,
+      icon: "ant-design:pause-circle-outlined",
       link: true,
-      auth: "dev:crontab:edit",
-      onClick: () => {},
+      auth: "dev:crontab:pause",
+      onClick: async (e: Event, row: any) => {
+        await CrontabService.pause(row.id);
+        ElMessage.success($t("common.operation_success"));
+      },
     },
     {
       label: "日志",
       type: "primary",
       sort: 1020,
+      icon: "ant-design:info-circle-outlined",
       link: true,
-      auth: "dev:crontab:edit",
+      auth: "dev:crontab:logs",
       dialogRef: crontabLogsWrapRef,
       dialogParams() {
         return {

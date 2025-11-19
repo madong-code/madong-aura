@@ -7,6 +7,7 @@ import { CrontabService } from '@/api/dev/crontab'
 
 // crud配置
 export const crudSchema: CrudSchema = {
+  rowKey: 'id',
   // 接口地址
   api: CrontabService.list,
   dialogTitle: $t('dev.crontab.list.title'),
@@ -149,8 +150,10 @@ export const crudSchema: CrudSchema = {
       {
         prop: 'id',
         label: $t('dev.crontab.form.modal.id'),
-        component: 'Input'
-        // ifShow: false
+        component: 'Input',
+        ifShow: (values: any) => {
+          return false;
+        }
       },
       {
         prop: 'title',
@@ -183,10 +186,10 @@ export const crudSchema: CrudSchema = {
           disabled: (values: any) => {
             return values.id !== undefined && values.id !== '' && values.id !== null
           }
+        },
+        ifShow: (values: any) => {
+          return false
         }
-        // ifShow: (values: any) => {
-        //   return false
-        // }
       },
       {
         prop: 'task_cycle',
