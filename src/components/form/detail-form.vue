@@ -62,8 +62,8 @@
   import { getComponent, hasComponent } from '@/components/view/component-map'
   import { FormItemSchema, FormSchema } from './types'
   import { computed, reactive, ref, watch } from 'vue'
-  import { useChart } from '@/composables/useChart'
   import { get } from 'lodash-es'
+  import { useChart } from '@/hooks'
 
   const props = withDefaults(
     defineProps<{

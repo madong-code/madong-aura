@@ -93,8 +93,6 @@
 </template>
 
 <script setup lang="ts">
-  import { IconTypeEnum } from '@/enums/appEnum'
-  import { extractIconClasses, type IconfontType } from '@/utils/constants'
   import { Icon } from '@/components/icon'
   import { listIcons } from '@iconify/vue'
   import { fetchIconsData } from './icons'
@@ -163,7 +161,7 @@
   // Props 接口定义
   interface Props {
     /** 图标类型 */
-    iconType?: IconTypeEnum
+    iconType?: any
     /** v-model 绑定的图标值 */
     modelValue?: string
     /** 显示文本 */
@@ -184,7 +182,7 @@
 
   // 使用 withDefaults 定义 props
   const props = withDefaults(defineProps<Props>(), {
-    iconType: IconTypeEnum.CLASS_NAME,
+    iconType: '',
     modelValue: '',
     text: '图标选择器',
     width: '200px',
@@ -218,9 +216,8 @@
   })
 
   // 选择图标
-  const selectorIcon = (icon: IconfontType): void => {
-    const iconValue =
-      props.iconType === IconTypeEnum.CLASS_NAME ? icon.className : icon.unicode || ''
+  const selectorIcon = (icon: any): void => {
+    const iconValue = props.iconType === ''
 
     selectValue.value = iconValue
     visible.value = false
@@ -259,7 +256,7 @@
   }
 
   // 计算属性：当前图标类型（用于模板中的判断）
-  const iconType = computed<IconTypeEnum>(() => props.iconType)
+  const iconType = computed<any>(() => props.iconType)
 </script>
 
 <style lang="scss" scoped>

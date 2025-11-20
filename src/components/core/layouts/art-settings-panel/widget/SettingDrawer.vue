@@ -1,6 +1,6 @@
 <template>
   <div class="setting-drawer">
-    <el-drawer
+    <ElDrawer
       size="300px"
       v-model="visible"
       :lock-scroll="true"
@@ -14,7 +14,7 @@
       <div class="drawer-con">
         <slot />
       </div>
-    </el-drawer>
+    </ElDrawer>
   </div>
 </template>
 
@@ -49,11 +49,3 @@
     visible.value = false
   }
 </script>
-
-<style lang="scss" scoped>
-  .drawer-con {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-</style>

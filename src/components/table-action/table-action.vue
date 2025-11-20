@@ -12,8 +12,8 @@
     ElPopconfirm,
     ElSpace
   } from 'element-plus'
-  import { useAuth } from '@/composables/useAuth'
   import { isBoolean, isFunction } from 'lodash-es'
+  import { useAuth } from '@/hooks'
 
   const props = defineProps({
     record: {

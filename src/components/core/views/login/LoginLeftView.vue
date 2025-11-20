@@ -73,9 +73,10 @@
 <script setup lang="ts">
   import AppConfig from '@/config'
   import loginIcon from '@imgs/svg/login_icon.svg'
-  import { themeAnimation } from '@/utils/theme/animation'
+  import { themeAnimation } from '@/utils/ui/animation'
   import { useSystemConfigStore } from '@/store/modules/system-config'
   const systemConfigStore = useSystemConfigStore()
+
   // 定义 props
   defineProps<{
     hideContent?: boolean // 是否隐藏内容，只显示 logo
@@ -89,7 +90,7 @@
   $primary-light-8: var(--el-color-primary-light-8);
   $primary-light-9: var(--el-color-primary-light-9);
   $primary-base: var(--el-color-primary);
-  $main-bg: var(--art-main-bg-color);
+  $main-bg: var(--default-box-color);
 
   // 混合颜色函数
   $bg-mix-light-9: color-mix(in srgb, $primary-light-9 100%, $main-bg);
@@ -115,7 +116,6 @@
         margin-left: 10px;
         font-size: 20px;
         font-weight: 400;
-        color: var(--art-text-gray-900) !important;
       }
     }
 
@@ -144,7 +144,7 @@
       p {
         margin-top: 10px;
         font-size: 14px;
-        color: var(--art-text-gray-600) !important;
+        color: var(--art-gray-600) !important;
       }
     }
 
@@ -487,7 +487,7 @@
       }
     }
 
-    @media only screen and (max-width: $device-notebook) {
+    @media only screen and (width <= 1600px) {
       width: 60vw;
 
       .text-wrap {
@@ -495,7 +495,7 @@
       }
     }
 
-    @media only screen and (max-width: $device-ipad-pro) {
+    @media only screen and (width <= 1180px) {
       width: auto;
       height: auto;
       padding: 0;
@@ -509,10 +509,7 @@
       }
 
       .logo {
-        position: fixed;
-        top: 15px;
-        left: 25px;
-        z-index: 1000;
+        display: none;
       }
     }
   }
@@ -521,7 +518,7 @@
   .dark .login-left-view {
     background-color: color-mix(in srgb, $primary-light-9 60%, #070707);
 
-    @media only screen and (max-width: $device-ipad-pro) {
+    @media only screen and (width <= 1180px) {
       background: transparent;
     }
 

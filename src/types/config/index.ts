@@ -1,5 +1,27 @@
 /**
- * 配置相关类型定义
+ * 配置类型定义模块
+ *
+ * 提供系统配置相关的类型定义
+ *
+ * ## 主要功能
+ *
+ * - 主题设置类型
+ * - 菜单布局类型
+ * - 节日配置类型
+ * - 系统基础配置类型
+ * - 快速入口配置类型
+ * - 顶部栏功能配置类型
+ * - 环境配置类型
+ * - 应用配置类型
+ *
+ * ## 使用场景
+ *
+ * - 系统配置文件类型约束
+ * - 配置项类型定义
+ * - 配置数据验证
+ *
+ * @module types/config/index
+ * @author Art Design Pro Team
  */
 
 import { MenuTypeEnum, SystemThemeEnum } from '@/enums/appEnum'
@@ -7,29 +29,48 @@ import { MenuThemeType, SystemThemeTypes } from '@/types/store'
 
 // 主题设置
 export interface ThemeSetting {
+  /** 主题名称 */
   name: string
+  /** 系统主题类型 */
   theme: SystemThemeEnum
+  /** 主题颜色数组 */
   color: string[]
+  /** 左侧线条颜色 */
   leftLineColor: string
+  /** 右侧线条颜色 */
   rightLineColor: string
+  /** 主题图片 */
   img: string
 }
 
 // 菜单布局
 export interface MenuLayout {
+  /** 布局名称 */
   name: string
+  /** 菜单类型值 */
   value: MenuTypeEnum
+  /** 布局预览图 */
   img: string
+  /** 布局描述 */
   description?: string
 }
 
 // 节日配置
 export interface FestivalConfig {
+  /** 节日日期（单日）或开始日期（日期范围） */
   date: string
+  /** 节日结束日期（可选，用于跨日期节日） */
+  endDate?: string
+  /** 节日名称 */
   name: string
+  /** 烟花图片 */
   image: string
+  /** 滚动文本 */
   scrollText: string
+  /** 是否激活 */
   isActive?: boolean
+  /** 烟花播放次数（可选，默认为 3 次） */
+  count?: number
 }
 
 // 系统基础配置
@@ -46,35 +87,32 @@ export interface SystemBasicConfig {
   copyright?: string
 }
 
-// 快速入口应用项
-export interface FastEnterApplication {
-  /** 应用名称 */
+// 快速入口基础项
+export interface FastEnterBaseItem {
+  /** 名称 */
   name: string
+  /** 是否启用 */
+  enabled?: boolean
+  /** 排序权重 */
+  order?: number
+  /** 路由名称 */
+  routeName?: string
+  /** 外部链接 */
+  link?: string
+}
+
+// 快速入口应用项
+export interface FastEnterApplication extends FastEnterBaseItem {
   /** 应用描述 */
   description: string
   /** 图标代码 */
   icon: string
   /** 图标颜色 */
   iconColor: string
-  /** 跳转路径 */
-  path: string
-  /** 是否启用 */
-  enabled?: boolean
-  /** 排序权重 */
-  order?: number
 }
 
 // 快速链接项
-export interface FastEnterQuickLink {
-  /** 链接名称 */
-  name: string
-  /** 跳转路径 */
-  path: string
-  /** 是否启用 */
-  enabled?: boolean
-  /** 排序权重 */
-  order?: number
-}
+export type FastEnterQuickLink = FastEnterBaseItem
 
 // 快速入口配置
 export interface FastEnterConfig {
@@ -102,12 +140,6 @@ export interface SystemConfig {
   darkMenuStyles: MenuThemeType[]
   // 系统主色调
   systemMainColor: readonly string[]
-  // 系统设置
-  systemSetting: {
-    defaultMenuWidth: number
-    defaultCustomRadius: string
-    defaultTabStyle: string
-  }
   // 快速入口配置
   fastEnter?: FastEnterConfig
   // 顶部栏功能配置

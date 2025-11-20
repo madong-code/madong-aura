@@ -1,5 +1,6 @@
+<!-- 角色管理页面 -->
 <template>
-  <div class="role-page art-full-height">
+  <div class="art-full-height">
     <RoleSearch
       v-show="showSearchBar"
       v-model="searchForm"
@@ -56,13 +57,13 @@
 
 <script setup lang="ts">
   import { ButtonMoreItem } from '@/components/core/forms/art-button-more/index.vue'
-  import { Setting, Edit, Delete } from '@element-plus/icons-vue'
-  import { useTable } from '@/composables/useTable'
+  import { useTable } from '@/hooks/core/useTable'
   import { fetchGetRoleList } from '@/api/system-manage'
   import ArtButtonMore from '@/components/core/forms/art-button-more/index.vue'
   import RoleSearch from './modules/role-search.vue'
   import RoleEditDialog from './modules/role-edit-dialog.vue'
   import RolePermissionDialog from './modules/role-permission-dialog.vue'
+  import { ElTag, ElMessageBox } from 'element-plus'
 
   defineOptions({ name: 'Role' })
 
@@ -160,17 +161,17 @@
                   {
                     key: 'permission',
                     label: '菜单权限',
-                    icon: Setting
+                    icon: 'ri:user-3-line'
                   },
                   {
                     key: 'edit',
                     label: '编辑角色',
-                    icon: Edit
+                    icon: 'ri:edit-2-line'
                   },
                   {
                     key: 'delete',
                     label: '删除角色',
-                    icon: Delete,
+                    icon: 'ri:delete-bin-4-line',
                     color: '#f56c6c'
                   }
                 ],
@@ -239,9 +240,3 @@
       })
   }
 </script>
-
-<style lang="scss" scoped>
-  .role-page {
-    padding-bottom: 15px;
-  }
-</style>

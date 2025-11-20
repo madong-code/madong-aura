@@ -14,13 +14,13 @@
         class="img-cutter"
       >
         <template #choose>
-          <el-button type="primary" plain v-ripple>选择图片</el-button>
+          <ElButton type="primary" plain v-ripple>选择图片</ElButton>
         </template>
         <template #cancel>
-          <el-button type="danger" plain v-ripple>清除</el-button>
+          <ElButton type="danger" plain v-ripple>清除</ElButton>
         </template>
         <template #confirm>
-          <!-- <el-button type="primary" style="margin-left: 10px">确定</el-button> -->
+          <!-- <ElButton type="primary" style="margin-left: 10px">确定</ElButton> -->
           <div></div>
         </template>
       </ImgCutter>
@@ -37,8 +37,8 @@
       >
         <img class="preview-img" :src="temImgPath" alt="预览图" v-if="temImgPath" />
       </div>
-      <el-button class="download-btn" @click="downloadImg" :disabled="!temImgPath" v-ripple
-        >下载图片</el-button
+      <ElButton class="download-btn" @click="downloadImg" :disabled="!temImgPath" v-ripple
+        >下载图片</ElButton
       >
     </div>
   </div>
@@ -268,7 +268,7 @@
 
     .preview-container {
       .preview-box {
-        background-color: #f6f6f6 !important;
+        background-color: var(--art-active-color) !important;
 
         .preview-img {
           width: 100%;

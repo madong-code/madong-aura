@@ -1,7 +1,7 @@
 <!-- 表格搜索栏示例 -->
 <template>
-  <div class="search-bar">
-    <h2 class="title">基础示例（默认收起）</h2>
+  <div class="pb-5">
+    <h2 class="mb-1 text-lg font-medium">基础示例（默认收起）</h2>
     <ArtSearchBar
       ref="searchBarBasicRef"
       v-model="formDataBasic"
@@ -11,7 +11,7 @@
     >
     </ArtSearchBar>
 
-    <h2 class="title m-15">完整示例（默认展开）</h2>
+    <h2 class="mb-1 mt-3.5 text-lg font-medium">完整示例（默认展开）</h2>
     <ArtSearchBar
       ref="searchBarAdvancedRef"
       v-model="formDataAdvanced"
@@ -30,44 +30,74 @@
       </template>
     </ArtSearchBar>
 
-    <div class="code">
+    <div class="art-card p-5 !rounded-lg mt-5">
       <pre><code>{{ formDataAdvanced }}</code></pre>
     </div>
 
-    <div class="button-group">
-      <ElButton @click="getLevelOptions"> 获取用户等级数据 </ElButton>
-      <ElButton @click="advancedValidate"> 校验表单 </ElButton>
-      <ElButton @click="advancedReset"> 重置 </ElButton>
-      <ElButton v-if="showUserName" @click="updateUserName"> 修改用户名 </ElButton>
-      <ElButton v-if="showUserName" @click="deleteUserName"> 删除用户名 </ElButton>
-      <ElButton @click="labelWidthAdvanced = 120"> 修改 label 宽度 </ElButton>
-      <ElButton @click="spanAdvanced = 8"> 设置一行显示的组件数 </ElButton>
-      <ElButton @click="gutterAdvanced = 50"> 修改 gutter </ElButton>
-      <ElButton @click="labelPositionAdvanced = 'left'"> label 左对齐 </ElButton>
-      <ElButton @click="labelPositionAdvanced = 'right'"> label 右对齐 </ElButton>
-      <ElButton @click="labelPositionAdvanced = 'top'"> label 顶部对齐 </ElButton>
+    <div class="mt-3.5">
+      <ElSpace wrap>
+        <ElButton @click="getLevelOptions"> 获取用户等级数据 </ElButton>
+        <ElButton @click="advancedValidate"> 校验表单 </ElButton>
+        <ElButton @click="advancedReset"> 重置 </ElButton>
+        <ElButton v-if="showUserName" @click="updateUserName"> 修改用户名 </ElButton>
+        <ElButton v-if="showUserName" @click="deleteUserName"> 删除用户名 </ElButton>
+        <ElButton @click="labelWidthAdvanced = 120"> 修改 label 宽度 </ElButton>
+        <ElButton @click="spanAdvanced = 8"> 设置一行显示的组件数 </ElButton>
+        <ElButton @click="gutterAdvanced = 50"> 修改 gutter </ElButton>
+        <ElButton @click="labelPositionAdvanced = 'left'"> label 左对齐 </ElButton>
+        <ElButton @click="labelPositionAdvanced = 'right'"> label 右对齐 </ElButton>
+        <ElButton @click="labelPositionAdvanced = 'top'"> label 顶部对齐 </ElButton>
+      </ElSpace>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import ArtIconSelector from '@/components/core/base/art-icon-selector/index.vue'
+  import { ElInput } from 'element-plus'
   import { SearchFormItem } from '@/components/core/forms/art-search-bar/index.vue'
-  import { IconTypeEnum } from '@/enums/appEnum'
 
   interface Emits {
     (e: 'update:modelValue', value: Record<string, any>): void
     (e: 'search', params: Record<string, any>): void
     (e: 'reset'): void
   }
+
+  interface OptionItem {
+    label: string
+    value: string
+    disabled?: boolean
+  }
+
+  interface BasicFormData {
+    name?: string
+    phone?: string
+    level?: string
+    address?: string
+    date?: string
+    daterange?: string[]
+    status?: boolean
+  }
+
+  interface AdvancedFormData extends BasicFormData {
+    slots?: string
+    cascader?: string[]
+    checkboxgroup?: string[]
+    userGender?: string
+    iconSelector?: string
+    systemName?: string
+  }
+
   const emit = defineEmits<Emits>()
 
-  // 表单数据双向绑定
+  const FETCH_DELAY = 500
+
   const searchBarBasicRef = ref()
   const searchBarAdvancedRef = ref()
 
-  // 基础示例表单数据
-  const formDataBasic = ref({
+  /**
+   * 基础示例表单数据
+   */
+  const formDataBasic = ref<BasicFormData>({
     name: undefined,
     phone: undefined,
     level: undefined,
@@ -77,8 +107,10 @@
     status: undefined
   })
 
-  // 完整示例表单数据
-  const formDataAdvanced = ref({
+  /**
+   * 完整示例表单数据
+   */
+  const formDataAdvanced = ref<AdvancedFormData>({
     name: undefined,
     phone: undefined,
     level: undefined,
@@ -94,7 +126,9 @@
     systemName: undefined
   })
 
-  // 完整示例校验规则
+  /**
+   * 完整示例校验规则
+   */
   const rulesAdvanced = {
     name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     phone: [
@@ -111,47 +145,74 @@
   const spanAdvanced = ref(6)
   const gutterAdvanced = ref(12)
 
-  // 动态 options
-  const levelOptions = ref<{ label: string; value: string; disabled?: boolean }[]>([])
+  const levelOptions = ref<OptionItem[]>([])
 
-  // 共享的选项数据
-  const LEVEL_OPTIONS = [
+  /**
+   * 用户等级选项
+   */
+  const LEVEL_OPTIONS: OptionItem[] = [
     { label: '普通用户', value: 'normal' },
     { label: 'VIP用户', value: 'vip' },
     { label: '高级VIP', value: 'svip' },
     { label: '企业用户', value: 'enterprise', disabled: true }
   ]
 
-  const GENDER_OPTIONS = [
+  /**
+   * 性别选项
+   */
+  const GENDER_OPTIONS: OptionItem[] = [
     { label: '男', value: '1' },
     { label: '女', value: '2' }
   ]
 
+  /**
+   * 日期快捷选项
+   */
   const DATE_SHORTCUTS = [
     { text: '今日', value: new Date() },
     { text: '昨日', value: () => new Date(Date.now() - 86400000) },
     { text: '一周前', value: () => new Date(Date.now() - 604800000) }
   ]
 
-  // 模拟接口返回用户等级
-  function fetchLevelOptions(): Promise<typeof levelOptions.value> {
+  /**
+   * 模拟接口获取用户等级数据
+   * @returns 用户等级选项列表
+   */
+  const fetchLevelOptions = (): Promise<OptionItem[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(LEVEL_OPTIONS)
-      }, 500)
+      }, FETCH_DELAY)
     })
   }
 
-  // 获取用户等级数据
-  async function getLevelOptions() {
+  /**
+   * 获取用户等级数据
+   */
+  const getLevelOptions = async (): Promise<void> => {
     levelOptions.value = await fetchLevelOptions()
     if (levelOptions.value.length) {
       ElMessage.success('成功获取到数据')
     }
   }
 
-  // 创建表单项的工厂函数
-  const createFormItem = (config: any) => config
+  /**
+   * 表单项配置类型
+   */
+  interface FormItemConfig {
+    label: string
+    key: string
+    type: string
+    placeholder?: string
+    clearable?: boolean
+    props?: Record<string, any>
+    [key: string]: any
+  }
+
+  /**
+   * 创建表单项的工厂函数
+   */
+  const createFormItem = (config: FormItemConfig) => config
 
   // 基础表单项配置
   const baseFormItems = {
@@ -416,27 +477,20 @@
     {
       label: '渲染组件',
       key: 'iconSelector',
-      type: () => h(ArtIconSelector, { iconType: IconTypeEnum.UNICODE, width: '100%' }),
-      props: { placeholder: '请输入备注', type: 'textarea', rows: 4 }
+      render: () => h(ElInput, { placeholder: '渲染自定义 input' })
     },
     {
       label: '自定义组件',
       key: 'customComponent',
-      type: () =>
+      render: () =>
         h(
           'div',
           {
             style:
-              'color: var(--art-gray-600); border: 1px solid var(--art-border-dashed-color); padding: 0px 15px; border-radius: 6px'
+              'color: var(--art-gray-600); border: 1px solid var(--default-border-dashed); padding: 0px 15px; border-radius: 6px'
           },
           '我是一个自定义组件'
-        ),
-      props: {
-        placeholder: '请输入备注',
-        type: 'textarea',
-        rows: 4,
-        style: { width: '100%' }
-      }
+        )
     },
     {
       label: '复选框',
@@ -555,8 +609,13 @@
     }
   ])
 
-  // 统一的表单处理函数
-  const createFormHandler = (ref: any, formData: any, type: string) => ({
+  /**
+   * 创建统一的表单处理函数
+   * @param ref 表单引用
+   * @param formData 表单数据
+   * @param type 表单类型描述
+   */
+  const createFormHandler = (ref: Ref<any>, formData: Record<string, any>, type: string) => ({
     reset: () => {
       console.log(`重置${type}表单`)
       emit('reset')
@@ -569,25 +628,54 @@
     validate: () => ref.value.validate()
   })
 
-  // 基础表单处理器
+  /**
+   * 基础表单处理器
+   */
   const basicFormHandler = computed(() =>
     createFormHandler(searchBarBasicRef, formDataBasic, '基础')
   )
 
-  // 高级表单处理器
+  /**
+   * 完整表单处理器
+   */
   const advancedFormHandler = computed(() =>
     createFormHandler(searchBarAdvancedRef, formDataAdvanced, '完整')
   )
 
-  // 事件处理函数
+  /**
+   * 处理基础表单重置事件
+   */
   const handleBasicReset = () => basicFormHandler.value.reset()
+
+  /**
+   * 处理基础表单搜索事件
+   */
   const handleBasicSearch = () => basicFormHandler.value.search()
+
+  /**
+   * 处理完整表单重置事件
+   */
   const handleAdvancedReset = () => advancedFormHandler.value.reset()
+
+  /**
+   * 处理完整表单搜索事件
+   */
   const handleAdvancedSearch = () => advancedFormHandler.value.search()
+
+  /**
+   * 校验完整表单
+   */
   const advancedValidate = () => advancedFormHandler.value.validate()
+
+  /**
+   * 重置完整表单
+   */
   const advancedReset = () => searchBarAdvancedRef.value.reset()
 
-  const updateUserName = () => {
+  /**
+   * 更新用户名字段配置
+   */
+  const updateUserName = (): void => {
     userItem.value = {
       ...userItem.value,
       label: '昵称',
@@ -597,37 +685,11 @@
     }
   }
 
-  const deleteUserName = () => {
+  /**
+   * 删除用户名字段
+   */
+  const deleteUserName = (): void => {
     showUserName.value = false
     formDataAdvanced.value.name = undefined
   }
 </script>
-
-<style scoped lang="scss">
-  .search-bar {
-    padding-bottom: 20px;
-
-    .title {
-      margin-bottom: 5px;
-      font-size: 18px;
-      font-weight: 500;
-
-      &.m-15 {
-        margin-top: 15px;
-      }
-    }
-
-    .code {
-      padding: 15px;
-      margin-top: 15px;
-      font-size: 14px;
-      background-color: var(--art-main-bg-color);
-      border: 1px solid var(--art-border-color);
-      border-radius: var(--el-border-radius-base);
-    }
-
-    .button-group {
-      margin-top: 15px;
-    }
-  }
-</style>

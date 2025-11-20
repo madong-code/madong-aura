@@ -4,8 +4,8 @@
 </template>
 
 <script setup lang="ts">
-  import { useChartOps, useChartComponent } from '@/composables/useChart'
-  import type { EChartsOption, BarSeriesOption } from '@/utils/echarts'
+  import { useChartOps, useChartComponent } from '@/hooks/core/useChart'
+  import type { EChartsOption, BarSeriesOption } from '@/plugins/echarts'
   import type { BidirectionalBarChartProps } from '@/types/component/chart'
 
   defineOptions({ name: 'ArtDualBarCompareChart' })
@@ -50,7 +50,7 @@
     borderRadius: number | number[]
     labelPosition: 'top' | 'bottom'
     colorIndex: number
-    formatter?: (params: any) => string
+    formatter?: (params: unknown) => string
   }): BarSeriesOption => {
     const { fontColor } = useChartOps()
     const animationConfig = getAnimationConfig()
@@ -69,7 +69,9 @@
       label: {
         show: props.showDataLabel,
         position: config.labelPosition,
-        formatter: config.formatter || ((params: any) => String(params.value)),
+        formatter:
+          config.formatter ||
+          ((params: unknown) => String((params as Record<string, unknown>).value)),
         color: fontColor,
         fontSize: 12
       },
@@ -173,7 +175,8 @@
             borderRadius: props.negativeBorderRadius,
             labelPosition: 'bottom',
             colorIndex: 1,
-            formatter: (params: any) => String(Math.abs(params.value))
+            formatter: (params: unknown) =>
+              String(Math.abs((params as Record<string, unknown>).value as number))
           }),
           // 正向数据系列
           createSeriesConfig({

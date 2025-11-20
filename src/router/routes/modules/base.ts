@@ -9,36 +9,39 @@ export const routes: AppRouteRecord[] = [
     meta: {
       order: 1,
       title: 'menus.dashboard.title',
-      icon: '&#xe721;'
+      icon: 'ant-design:dashboard-outlined'
       // roles: ['R_SUPER', 'R_ADMIN'] // 角色权限，前端控制模式（只有拥有这些角色的用户才能访问）
     },
     children: [
       {
         path: 'console',
         name: 'Console',
-        component: RoutesAlias.Dashboard,
+        component: '/dashboard/console',
         meta: {
           title: 'menus.dashboard.console',
           keepAlive: false,
-          fixedTab: true
+          fixedTab: true,
+          icon: 'ri:home-smile-2-line'
         }
       },
       {
         path: 'analysis',
         name: 'Analysis',
-        component: RoutesAlias.Analysis,
+        component: '/dashboard/analysis',
         meta: {
           title: 'menus.dashboard.analysis',
-          keepAlive: false
+          keepAlive: false,
+          icon: 'ri:align-item-bottom-line'
         }
       },
       {
         path: 'ecommerce',
         name: 'Ecommerce',
-        component: RoutesAlias.Ecommerce,
+        component: '/dashboard/analysis',
         meta: {
           title: 'menus.dashboard.ecommerce',
-          keepAlive: false
+          keepAlive: false,
+          icon: 'ri:bar-chart-box-line'
         }
       }
     ]

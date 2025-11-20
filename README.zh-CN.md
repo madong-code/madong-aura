@@ -30,6 +30,7 @@ git clone https://gitee.com/mldong/mldong-art-design.git
 cd mldong-art-design
 
 
+<<<<<<< HEAD
 pnpm install
 ```
 
@@ -53,6 +54,10 @@ return defineConfig({
       host: true
     },
 ```
+
+======= [演示地址](https://www.artd.pro) | [官方文档](https://www.artd.pro/docs) | [更新日志](./CHANGELOG.md)
+
+> > > > > > > art/main
 
 - 运行
 
@@ -215,7 +220,6 @@ pnpm build
   - [ArtTable组件二次封装·行操作](https://www.bilibili.com/cheese/play/ep1950880)
   - [ArtTable组件二次封装·小结](https://www.bilibili.com/cheese/play/ep1950881)
 * 第九章·RBAC权限管理
-
   - [RBAC权限管理·合并master代码](https://www.bilibili.com/cheese/play/ep1962030)
   - [RBAC权限管理·使用AI生成岗位管理](https://www.bilibili.com/cheese/play/ep1962031)
   - [RBAC权限管理·岗位管理微调](https://www.bilibili.com/cheese/play/ep1962032)

@@ -148,7 +148,7 @@
     }
   }
 
-  @media screen and (max-width: $device-ipad) {
+  @media screen and (max-width: 800px) {
     .tree-container {
       display: block;
       gap: 0;

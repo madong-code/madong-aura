@@ -28,7 +28,6 @@
           item.realName?.toLowerCase().includes(keywordStr)
       )
     }
-
     // 3. 返回分页结果
     return Promise.resolve({
       recordCount: filteredData.length,
@@ -49,7 +48,7 @@
         // 添加自定义按钮
         {
           auth: 'refresh',
-          icon: '&#xe614;'
+          icon: 'ant-design:reload-outlined'
         }
       ]
     },

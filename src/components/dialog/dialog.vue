@@ -27,11 +27,11 @@
             link
           >
             <template #icon>
-              <Icon :icon="fullscreen ? '&#xe62d;' : '&#xe8ce;'" />
+              <Icon :icon="fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'" />
             </template>
           </ElButton>
           <ElButton class="dialog-header-btn" @click="close" link>
-            <Icon icon="&#xe7dc;" />
+            <Icon icon="ri:close-large-line" />
           </ElButton>
         </div>
       </div>

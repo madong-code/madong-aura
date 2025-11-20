@@ -1,7 +1,11 @@
 <!-- 水印组件 -->
 <template>
-  <div v-if="watermarkVisible" class="layout-watermark" :style="{ zIndex: zIndex }">
-    <el-watermark
+  <div
+    v-if="watermarkVisible"
+    class="fixed left-0 top-0 h-screen w-screen pointer-events-none"
+    :style="{ zIndex: zIndex }"
+  >
+    <ElWatermark
       :content="content"
       :font="{ fontSize: fontSize, color: fontColor }"
       :rotate="rotate"
@@ -9,7 +13,7 @@
       :offset="[offsetX, offsetY]"
     >
       <div style="height: 100vh"></div>
-    </el-watermark>
+    </ElWatermark>
   </div>
 </template>
 
@@ -58,14 +62,3 @@
     zIndex: 3100
   })
 </script>
-
-<style lang="scss" scoped>
-  .layout-watermark {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-  }
-</style>
