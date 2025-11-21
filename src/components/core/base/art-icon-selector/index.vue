@@ -8,21 +8,12 @@
       :class="[size, { 'is-disabled': disabled }, { 'has-icon': selectValue }]"
     >
       <div class="icon">
-        <i
-          :class="`iconfont-sys ${selectValue}`"
-          v-show="props.iconType === IconTypeEnum.CLASS_NAME"
-        ></i>
-        <i
-          class="iconfont-sys"
-          v-html="selectValue"
-          v-show="props.iconType === IconTypeEnum.UNICODE"
-        ></i>
-        <Icon v-show="selectValue?.includes(':')" :icon="selectValue" />
+        <Icon v-show="selectValue" :icon="selectValue" />
       </div>
       <div class="text"> {{ props.text }} </div>
       <div class="arrow">
-        <i class="iconfont-sys arrow-icon">&#xe709;</i>
-        <i class="iconfont-sys clear-icon" @click.stop="clearIcon">&#xe83a;</i>
+        <Icon icon="ant-design:down-outlined" class="arrow-icon" />
+        <Icon icon="ant-design:close-outlined" @click.stop="clearIcon" class="clear-icon" />
       </div>
     </div>
 
@@ -60,23 +51,6 @@
                 <i class="iconfont-sys">
                   <Icon :icon="icon" />
                 </i>
-              </li>
-            </ul>
-          </el-scrollbar>
-        </el-tab-pane>
-        <el-tab-pane label="原内置图标" name="icons">
-          <el-scrollbar height="400px">
-            <ul class="icons-list" v-show="activeName === 'icons'">
-              <li v-for="icon in iconsList" :key="icon.className" @click="selectorIcon(icon)">
-                <i
-                  :class="`iconfont-sys ${icon.className}`"
-                  v-show="iconType === IconTypeEnum.CLASS_NAME"
-                ></i>
-                <i
-                  class="iconfont-sys"
-                  v-html="icon.unicode"
-                  v-show="iconType === IconTypeEnum.UNICODE"
-                ></i>
               </li>
             </ul>
           </el-scrollbar>
@@ -196,10 +170,8 @@
   // 响应式数据
   const selectValue = ref<string>(props.modelValue)
   const visible = ref<boolean>(false)
-  const activeName = ref<string>('icons')
 
   // 图标列表 - 使用计算属性优化性能
-  const iconsList = computed<IconfontType[]>(() => extractIconClasses())
 
   // 监听 modelValue 变化
   watch(
@@ -214,18 +186,6 @@
   watch(searchText, () => {
     iconifyCurrentPage.value = 1
   })
-
-  // 选择图标
-  const selectorIcon = (icon: any): void => {
-    const iconValue = props.iconType === ''
-
-    selectValue.value = iconValue
-    visible.value = false
-
-    // 发射 v-model 更新事件和自定义事件
-    emits('update:modelValue', iconValue)
-    emits('getIcon', iconValue)
-  }
   // 选择图标
   const selectorIconifyIcon = (icon: string): void => {
     selectValue.value = icon
@@ -254,9 +214,6 @@
     emits('update:modelValue', '')
     emits('getIcon', '')
   }
-
-  // 计算属性：当前图标类型（用于模板中的判断）
-  const iconType = computed<any>(() => props.iconType)
 </script>
 
 <style lang="scss" scoped>
@@ -271,8 +228,8 @@
       height: var(--el-component-custom-height);
       padding: 0 15px;
       cursor: pointer;
-      border: 1px solid var(--art-border-dashed-color);
-      border-radius: calc(var(--custom-radius) / 3 + 2px) !important;
+      border: 1px solid #dbdfe9;
+      border-radius: calc(0.75rem / 3 + 2px) !important;
       transition: border 0.3s;
 
       @media (width <= 500px) {
@@ -298,7 +255,7 @@
       }
 
       &:hover {
-        border-color: var(--art-text-gray-400);
+        border-color: #c4cada;
       }
 
       .icon {
