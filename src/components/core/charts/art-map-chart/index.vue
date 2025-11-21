@@ -1,16 +1,16 @@
 <!-- 地图图表 -->
 <template>
-  <div class="art-map-chart" :style="{ height: 'calc(100vh - 120px)' }">
-    <div v-if="isEmpty" class="chart-empty-state">
+  <div class="relative w-full" :style="{ height: 'calc(100vh - 120px)' }">
+    <div v-if="isEmpty" class="h-full flex-cc">
       <ElEmpty description="暂无地图数据" />
     </div>
 
-    <div v-else id="china-map" ref="chinaMapRef" class="china-map" />
+    <div v-else id="china-map" ref="chinaMapRef" class="h-full w-full overflow-hidden rounded-lg" />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { echarts } from '@/utils/echarts'
+  import { echarts } from '@/plugins/echarts'
   import { useSettingStore } from '@/store/modules/setting'
   import chinaMapJson from '@/mock/json/chinaMap.json'
   import type { MapChartProps } from '@/types/component/chart'
@@ -42,12 +42,14 @@
   })
 
   // 根据 geoJson 数据准备地图数据
-  const prepareMapData = (geoJson: any) => {
-    return geoJson.features.map((feature: any) => ({
-      name: feature.properties.name,
+  const prepareMapData = (geoJson: {
+    features: Array<{ properties: Record<string, unknown> }>
+  }) => {
+    return geoJson.features.map((feature) => ({
+      name: feature.properties.name as string,
       value: Math.round(Math.random() * 1000),
-      adcode: feature.properties.adcode,
-      level: feature.properties.level,
+      adcode: feature.properties.adcode as string,
+      level: feature.properties.level as string,
       selected: false
     }))
   }
@@ -61,7 +63,7 @@
   })
 
   // 构造 ECharts 配置项
-  const createChartOption = (mapData: any[]) => {
+  const createChartOption = (mapData: Array<Record<string, unknown>>) => {
     const themeStyles = getThemeStyles()
 
     return {
@@ -74,7 +76,7 @@
         textStyle: {
           color: themeStyles.labelColor
         },
-        formatter: ({ data }: any) => {
+        formatter: ({ data }: { data?: Record<string, unknown> }) => {
           const { name, adcode, level } = data || {}
           return `
             <div style="padding: 8px;">
@@ -213,12 +215,13 @@
   }
 
   // 处理地图点击事件
-  const handleMapClick = (params: any) => {
+  const handleMapClick = (params: Record<string, unknown>) => {
     if (params.componentType === 'series') {
+      const data = params.data as Record<string, unknown> | undefined
       const regionData = {
-        name: params.name,
-        adcode: params.data?.adcode || '',
-        level: params.data?.level || ''
+        name: params.name as string,
+        adcode: (data?.adcode as string) || '',
+        level: (data?.level as string) || ''
       }
 
       console.log(`选中区域: ${params.name}`, params)
@@ -227,7 +230,7 @@
       chartInstance.value?.dispatchAction({
         type: 'select',
         seriesIndex: 0,
-        dataIndex: params.dataIndex
+        dataIndex: params.dataIndex as number
       })
 
       emit('regionClick', regionData)
@@ -286,24 +289,3 @@
     { deep: true }
   )
 </script>
-
-<style lang="scss" scoped>
-  .art-map-chart {
-    position: relative;
-    width: 100%;
-
-    .chart-empty-state {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-
-    .china-map {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      border-radius: 8px;
-    }
-  }
-</style>

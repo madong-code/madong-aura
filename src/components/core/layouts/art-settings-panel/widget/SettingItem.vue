@@ -1,12 +1,12 @@
 <template>
-  <div class="setting-item" :class="{ 'mobile-hide': config.mobileHide }">
-    <span class="label">{{ config.label }}</span>
+  <div class="flex-cb mb-4 last:mb-2" :class="{ 'mobile-hide': config.mobileHide }">
+    <span class="text-sm">{{ config.label }}</span>
 
     <!-- 开关类型 -->
-    <el-switch v-if="config.type === 'switch'" :model-value="modelValue" @change="handleChange" />
+    <ElSwitch v-if="config.type === 'switch'" :model-value="modelValue" @change="handleChange" />
 
     <!-- 数字输入类型 -->
-    <el-input-number
+    <ElInputNumber
       v-else-if="config.type === 'input-number'"
       :model-value="modelValue"
       :min="config.min"
@@ -18,19 +18,19 @@
     />
 
     <!-- 选择器类型 -->
-    <el-select
+    <ElSelect
       v-else-if="config.type === 'select'"
       :model-value="modelValue"
       :style="config.style"
       @change="handleChange"
     >
-      <el-option
+      <ElOption
         v-for="option in normalizedOptions"
         :key="option.value"
         :label="option.label"
         :value="option.value"
       />
-    </el-select>
+    </ElSelect>
   </div>
 </template>
 
@@ -93,20 +93,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .setting-item {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 25px;
-    background: transparent !important;
-
-    .label {
-      font-size: 14px;
-      background: transparent !important;
-    }
-  }
-
   @media screen and (width <= 768px) {
     .mobile-hide {
       display: none !important;

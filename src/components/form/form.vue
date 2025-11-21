@@ -33,7 +33,7 @@
                   "
                   placement="top"
                 >
-                  <Icon class="help-icon" icon="&#xe636;" /> </ElTooltip
+                  <Icon class="help-icon" icon="ant-design:question-circle-outlined" /> </ElTooltip
               ></span>
             </template>
             <!-- 字段插槽优先级最高 -->

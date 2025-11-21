@@ -25,7 +25,7 @@
         <div
           :key="item.auth"
           v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
-          class="btn"
+          class="button active"
           @click="handleToolbarToolClick(item.auth)"
         >
           <i class="iconfont-sys">
@@ -62,7 +62,6 @@
   />
 </template>
 <script setup lang="tsx">
-  import { useTable } from '@/composables/useTable'
   import { useSearchBar } from '@/components/search-bar'
   import { CrudInstance, CrudReadonlyState, CrudSchema } from './types'
   import { viewColumnFormatter } from '../view/component-map'
@@ -72,6 +71,7 @@
   import { useAction } from './use-action'
   import { Icon } from '@/components/icon'
   import { getTreeNodeAndChildrenIds } from '@/utils/tool'
+  import { useTable } from '@/hooks'
   defineOptions({
     inheritAttrs: false
   })
@@ -337,101 +337,22 @@
     emit('register', crudInstanceMethods)
   })
 </script>
-<style lang="scss" scoped>
-  :deep(.table-size-btn-item) {
-    .el-dropdown-menu__item {
-      margin-bottom: 3px !important;
-    }
+<style scoped>
+  @reference '@styles/core/tailwind.css';
 
-    &:last-child {
-      .el-dropdown-menu__item {
-        margin-bottom: 0 !important;
-      }
-    }
-  }
-
-  :deep(.is-selected) {
-    background-color: rgba(var(--art-gray-200-rgb), 0.8) !important;
-  }
-
-  .table-header {
-    display: flex;
-    justify-content: space-between;
-
-    .left {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 0;
-    }
-
-    .right {
-      display: flex;
-      align-items: center;
-
-      .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        margin-left: 10px;
-        color: var(--art-gray-700);
-        cursor: pointer;
-        background-color: rgba(var(--art-gray-200-rgb), 0.8);
-        border-radius: 6px;
-        transition: color 0.3s;
-        transition: all 0.3s;
-
-        i {
-          font-size: 16px;
-          color: var(--art-gray-700);
-          user-select: none;
-        }
-
-        &:hover {
-          background-color: rgba(var(--art-gray-300-rgb), 0.75);
-
-          i {
-            color: var(--art-gray-800);
-          }
-        }
-      }
-    }
-  }
-
-  :deep(.column-option) {
-    display: flex;
-    align-items: center;
-
-    .drag-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 18px;
-      margin-right: 8px;
-      color: var(--art-gray-500);
-      cursor: move;
-
-      i {
-        font-size: 18px;
-      }
-    }
-  }
-
-  @media (max-width: $device-phone) {
-    .table-header {
-      flex-direction: column;
-
-      .right {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 10px;
-
-        .btn {
-          margin-right: 10px;
-          margin-left: 0;
-        }
-      }
-    }
+  .button {
+    @apply ml-2 
+    size-8 
+    flex 
+    items-center 
+    justify-center 
+    cursor-pointer 
+    rounded-md 
+    bg-g-300/55
+    dark:bg-g-300/40
+    text-g-700  
+    hover:bg-g-300 
+    md:ml-0 
+    md:mr-2.5;
   }
 </style>

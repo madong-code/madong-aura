@@ -1,13 +1,13 @@
 <!-- 高级表格能力展示 -->
 <!-- 实际开发中根据需求选择使用哪些功能，可参考功能示例下面的最小化示例进行开发 -->
 <template>
-  <div class="advanced-table-demo">
+  <div class="flex flex-col gap-4 pb-5">
     <!-- 功能介绍卡片 -->
-    <ElCard class="intro-card" shadow="never">
+    <ElCard shadow="never" class="art-card-xs">
       <template #header>
-        <div class="intro-header">
-          <h3>🚀 高级表格完整能力展示</h3>
-          <div class="intro-badges">
+        <div class="flex-wrap gap-3 flex-cb">
+          <h3 class="m-0">高级表格完整能力展示</h3>
+          <div class="flex flex-wrap gap-2">
             <ElTag type="success" effect="light">智能缓存</ElTag>
             <ElTag type="primary" effect="light">防抖搜索</ElTag>
             <ElTag type="warning" effect="light">多种刷新</ElTag>
@@ -15,36 +15,36 @@
           </div>
         </div>
       </template>
-      <div class="intro-content">
-        <p class="intro-text">
+      <div>
+        <p class="m-0 mb-4 leading-[1.6] text-g-700">
           集成搜索、刷新、全屏、大小控制、列显示隐藏、拖拽排序、表格样式控制、并内置 useTable
           组合式函数，提供强大的组合式 API，集成数据获取、智能缓存（LRU算法）、
           多种刷新策略等核心功能，全面提升表格开发效率。
         </p>
 
         <!-- 调试面板 -->
-        <div class="debug-panel" v-if="showDebugPanel">
+        <div class="my-4" v-if="showDebugPanel">
           <ElCollapse v-model="debugActiveNames">
-            <ElCollapseItem name="cache" title="📊 缓存统计与演示">
-              <div class="debug-info">
-                <div class="stat-item">
-                  <span class="label">缓存状态：</span>
+            <ElCollapseItem name="cache" title="缓存统计与演示">
+              <div class="flex flex-col gap-2">
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">缓存状态：</span>
                   <ElTag type="success">已启用</ElTag>
                 </div>
-                <div class="stat-item">
-                  <span class="label">缓存条数：</span>
-                  <span class="value">{{ cacheInfo.total }}</span>
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">缓存条数：</span>
+                  <span class="font-semibold text-theme">{{ cacheInfo.total }}</span>
                 </div>
-                <div class="stat-item">
-                  <span class="label">缓存大小：</span>
-                  <span class="value">{{ cacheInfo.size }}</span>
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">缓存大小：</span>
+                  <span class="font-semibold text-theme">{{ cacheInfo.size }}</span>
                 </div>
-                <div class="stat-item">
-                  <span class="label">命中信息：</span>
-                  <span class="value">{{ cacheInfo.hitRate }}</span>
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">命中信息：</span>
+                  <span class="font-semibold text-theme">{{ cacheInfo.hitRate }}</span>
                 </div>
 
-                <div class="debug-actions">
+                <div class="flex gap-2 mt-2">
                   <ElButton size="small" @click="handleClearCache">清空缓存</ElButton>
                   <ElButton size="small" @click="handleCleanExpiredCache">清理过期缓存</ElButton>
                   <ElButton size="small" @click="handleTestCache">测试缓存</ElButton>
@@ -52,59 +52,61 @@
                 </div>
               </div>
             </ElCollapseItem>
-            <ElCollapseItem name="logs" title="📋 缓存日志">
-              <div class="debug-info">
-                <div class="logs-container">
-                  <div v-if="cacheDebugLogs.length === 0" class="empty-logs">
+            <ElCollapseItem name="logs" title="缓存日志">
+              <div class="flex flex-col gap-2">
+                <div class="max-h-50 overflow-y-auto">
+                  <div v-if="cacheDebugLogs.length === 0" class="p-5 text-center">
                     <ElEmpty description="暂无缓存日志" :image-size="60" />
                   </div>
-                  <div v-else class="log-list">
+                  <div v-else class="flex flex-col gap-1">
                     <div
                       v-for="(log, index) in cacheDebugLogs"
                       :key="index"
-                      class="log-item"
+                      class="p-1.5 px-2 text-xs leading-[1.4] bg-g-200 border-l-1 border-g-400 rounded"
                       :class="{
-                        'log-success': log.includes('✅'),
-                        'log-cache': log.includes('🎯'),
-                        'log-error': log.includes('❌')
+                        'bg-[rgba(103,194,58,0.1)] !border-l-success': log.includes('✅'),
+                        'bg-[rgba(64,158,255,0.1)] !border-l-theme': log.includes('🎯'),
+                        'bg-[rgba(245,108,108,0.1)] !border-l-danger': log.includes('❌')
                       }"
                     >
                       {{ log }}
                     </div>
                   </div>
                 </div>
-                <div class="debug-actions">
+                <div class="flex gap-2 mt-2">
                   <ElButton size="small" @click="cacheDebugLogs = []">清空日志</ElButton>
                 </div>
               </div>
             </ElCollapseItem>
-            <ElCollapseItem name="request" title="🔄 请求状态">
-              <div class="debug-info">
-                <div class="stat-item">
-                  <span class="label">加载状态：</span>
+            <ElCollapseItem name="request" title="请求状态">
+              <div class="flex flex-col gap-2">
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">加载状态：</span>
                   <ElTag :type="loading ? 'warning' : 'success'">
                     {{ loading ? '加载中' : '空闲' }}
                   </ElTag>
                 </div>
-                <div class="stat-item">
-                  <span class="label">数据状态：</span>
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">数据状态：</span>
                   <ElTag :type="hasData ? 'success' : 'info'">
                     {{ hasData ? `${data.length} 条数据` : '无数据' }}
                   </ElTag>
                 </div>
-                <div class="stat-item">
-                  <span class="label">错误状态：</span>
+                <div class="flex-cb">
+                  <span class="font-medium text-g-700">错误状态：</span>
                   <ElTag :type="error ? 'danger' : 'success'">
                     {{ error ? '有错误' : '正常' }}
                   </ElTag>
                 </div>
-                <div class="stat-item request-params">
-                  <span class="label">当前请求参数：</span>
-                  <ElText tag="pre" class="params-display">{{
-                    JSON.stringify(requestParams, null, 2)
-                  }}</ElText>
+                <div class="flex flex-col gap-2">
+                  <span class="font-medium text-g-700">当前请求参数：</span>
+                  <ElText
+                    tag="pre"
+                    class="max-h-50 p-2 overflow-y-auto text-xs bg-g-200 border border-g-400 rounded-md"
+                    >{{ JSON.stringify(requestParams, null, 2) }}</ElText
+                  >
                 </div>
-                <div class="debug-actions">
+                <div class="flex gap-2 mt-2">
                   <ElButton size="small" @click="handleCancelRequest">取消请求</ElButton>
                   <ElButton size="small" @click="handleClearData">清空数据</ElButton>
                 </div>
@@ -114,7 +116,7 @@
         </div>
 
         <!-- 功能开关 -->
-        <div class="feature-toggles">
+        <div class="flex flex-wrap gap-4 mt-4">
           <ElSwitch v-model="showDebugPanel" active-text="调试面板" />
           <ElText type="info" size="small"> 💡 缓存功能已启用，可通过调试面板查看详细信息 </ElText>
         </div>
@@ -137,11 +139,11 @@
     />
 
     <!-- 表格区域 -->
-    <ElCard class="art-table-card" shadow="never" style="margin-top: 0">
+    <ElCard class="flex-1 art-table-card" shadow="never" style="margin-top: 0">
       <template #header>
-        <div class="table-header-wrapper">
-          <h4>用户数据表格</h4>
-          <div class="table-info">
+        <div class="flex-cb">
+          <h4 class="m-0">用户数据表格</h4>
+          <div class="flex gap-2">
             <ElTag v-if="error" type="danger">{{ error.message }}</ElTag>
             <ElTag v-else-if="loading" type="warning">加载中...</ElTag>
             <ElTag v-else type="success">{{ data.length }} 条数据</ElTag>
@@ -159,56 +161,60 @@
         fullClass="art-table-card"
       >
         <template #left>
-          <ElButton type="primary" @click="handleAdd" v-ripple>
-            <ElIcon>
-              <Plus />
-            </ElIcon>
-            新增用户
-          </ElButton>
-
-          <!-- 导出导入功能 -->
-          <ArtExcelExport
-            :data="data as any"
-            :columns="exportColumns as any"
-            filename="用户数据"
-            :auto-index="true"
-            button-text="导出"
-            @export-success="handleExportSuccess"
-          />
-          <ArtExcelImport
-            @import-success="handleImportSuccess"
-            @import-error="handleImportError"
-            style="margin: 0 12px"
-          />
-
-          <ElButton @click="handleClearData" plain v-ripple> 清空数据 </ElButton>
-
-          <ElButton @click="handleBatchDelete" :disabled="selectedRows.length === 0" v-ripple>
-            <ElIcon>
-              <Delete />
-            </ElIcon>
-            批量删除 ({{ selectedRows.length }})
-          </ElButton>
-          <!-- 动态列配置演示按钮 -->
-          <ElDropdown @command="handleColumnCommand" style="margin-left: 10px">
-            <ElButton type="primary" plain>
-              动态更新表格列
-              <ElIcon class="el-icon--right">
-                <ArrowDown />
+          <ElSpace wrap>
+            <ElButton type="primary" @click="handleAdd" v-ripple>
+              <ElIcon>
+                <Plus />
               </ElIcon>
+              新增用户
             </ElButton>
-            <template #dropdown>
-              <ElDropdownMenu>
-                <ElDropdownItem command="addColumn">新增列（备注列）</ElDropdownItem>
-                <ElDropdownItem command="toggleColumn">显示隐藏（手机号列）</ElDropdownItem>
-                <ElDropdownItem command="removeColumn">删除列（状态列）</ElDropdownItem>
-                <ElDropdownItem command="reorderColumns">交换列位置（性别、手机号）</ElDropdownItem>
-                <ElDropdownItem command="updateColumn">更新列（手机号列）</ElDropdownItem>
-                <ElDropdownItem command="batchUpdate">批量更新（性别、手机号）</ElDropdownItem>
-                <ElDropdownItem command="resetColumns" divided>重置所有列配置</ElDropdownItem>
-              </ElDropdownMenu>
-            </template>
-          </ElDropdown>
+
+            <!-- 导出导入功能 -->
+            <ArtExcelExport
+              :data="data as any"
+              :columns="exportColumns as any"
+              filename="用户数据"
+              :auto-index="true"
+              button-text="导出"
+              @export-success="handleExportSuccess"
+            />
+            <ArtExcelImport
+              @import-success="handleImportSuccess"
+              @import-error="handleImportError"
+              style="margin: 0 12px"
+            />
+
+            <ElButton @click="handleClearData" plain v-ripple> 清空数据 </ElButton>
+
+            <ElButton @click="handleBatchDelete" :disabled="selectedRows.length === 0" v-ripple>
+              <ElIcon>
+                <Delete />
+              </ElIcon>
+              批量删除 ({{ selectedRows.length }})
+            </ElButton>
+            <!-- 动态列配置演示按钮 -->
+            <ElDropdown @command="handleColumnCommand" style="margin-left: 10px">
+              <ElButton type="primary" plain>
+                动态更新表格列
+                <ElIcon class="el-icon--right">
+                  <ArrowDown />
+                </ElIcon>
+              </ElButton>
+              <template #dropdown>
+                <ElDropdownMenu>
+                  <ElDropdownItem command="addColumn">新增列（备注列）</ElDropdownItem>
+                  <ElDropdownItem command="toggleColumn">显示隐藏（手机号列）</ElDropdownItem>
+                  <ElDropdownItem command="removeColumn">删除列（状态列）</ElDropdownItem>
+                  <ElDropdownItem command="reorderColumns"
+                    >交换列位置（性别、手机号）</ElDropdownItem
+                  >
+                  <ElDropdownItem command="updateColumn">更新列（手机号列）</ElDropdownItem>
+                  <ElDropdownItem command="batchUpdate">批量更新（性别、手机号）</ElDropdownItem>
+                  <ElDropdownItem command="resetColumns" divided>重置所有列配置</ElDropdownItem>
+                </ElDropdownMenu>
+              </template>
+            </ElDropdown>
+          </ElSpace>
         </template>
       </ArtTableHeader>
 
@@ -229,21 +235,26 @@
       >
         <!-- 用户信息列 -->
         <template #avatar="{ row }">
-          <div class="user-info">
+          <div class="flex gap-3 user-info">
             <ElAvatar :src="row.avatar" :size="40" />
-            <div class="user-details">
-              <p class="user-name">{{ row.userName }}</p>
-              <p class="user-email">{{ row.userEmail }}</p>
+            <div class="flex-1 min-w-0">
+              <p class="m-0 overflow-hidden font-medium text-ellipsis whitespace-nowrap">{{
+                row.userName
+              }}</p>
+              <p
+                class="m-0 mt-1 overflow-hidden text-xs text-g-700 text-ellipsis whitespace-nowrap"
+                >{{ row.userEmail }}</p
+              >
             </div>
           </div>
         </template>
 
         <!-- 自定义用户信息表头 -->
         <template #avatar-header="{ column }">
-          <div style="display: flex; gap: 5px; align-items: center">
+          <div class="flex-c gap-1">
             <span>{{ column.label }}</span>
             <ElTooltip content="包含头像、姓名和邮箱" placement="top">
-              <ElIcon class="help-icon">
+              <ElIcon>
                 <QuestionFilled />
               </ElIcon>
             </ElTooltip>
@@ -264,7 +275,7 @@
 
         <!-- 操作列 -->
         <template #operation="{ row }">
-          <div class="operation-buttons">
+          <div class="flex">
             <ArtButtonTable type="view" :row="row" @click="handleView(row)" />
             <ArtButtonTable type="add" :row="row" @click="handleAdd()" />
             <ArtButtonTable type="edit" :row="row" @click="handleEdit(row)" />
@@ -276,7 +287,7 @@
         <template #userPhone-header="{ column }">
           <ElPopover placement="bottom" :width="200" trigger="hover">
             <template #reference>
-              <div class="custom-header">
+              <div class="inline-block gap-1 text-theme c-p custom-header">
                 <span>{{ column.label }}</span>
                 <ElIcon>
                   <Search />
@@ -301,52 +312,59 @@
     </ElCard>
 
     <!-- 高级功能演示 -->
-    <ElCard class="advanced-features-card" shadow="never">
+    <ElCard shadow="never" class="art-card-xs">
       <template #header>
-        <h4>🚀 高级功能演示</h4>
+        <h4 class="m-0">高级功能演示</h4>
       </template>
-      <div class="feature-demo-section">
+      <div class="flex flex-col gap-6">
         <!-- 事件监听演示 -->
-        <div class="demo-group">
-          <h5>📊 事件监听演示</h5>
-          <div class="demo-buttons">
+        <div class="p-4 bg-g-200 border-full-d rounded-lg">
+          <h5 class="m-0 mb-4 text-sm font-semibold">事件监听演示</h5>
+          <div class="flex flex-wrap gap-2 mb-3 last:mb-0">
             <ElButton @click="toggleEventDemo" :type="eventDemoEnabled ? 'success' : 'primary'">
               {{ eventDemoEnabled ? '关闭' : '开启' }}事件监听
             </ElButton>
             <ElButton @click="clearEventLogs" v-if="eventDemoEnabled">清空日志</ElButton>
           </div>
-          <div v-if="eventDemoEnabled && eventLogs.length > 0" class="event-logs">
-            <div class="log-header">
+          <div
+            v-if="eventDemoEnabled && eventLogs.length > 0"
+            class="p-3 mt-3 bg-g-200 border border-g-400 rounded-md"
+          >
+            <div class="flex-cb mb-2 font-medium text-g-700">
               <span>最近事件日志：</span>
               <ElTag size="small">{{ eventLogs.length }} 条</ElTag>
             </div>
-            <div class="log-list">
-              <div v-for="(log, index) in eventLogs.slice(0, 20)" :key="index" class="log-item">
+            <div class="flex flex-col gap-1 max-h-50 overflow-y-auto">
+              <div
+                v-for="(log, index) in eventLogs.slice(0, 20)"
+                :key="index"
+                class="flex-c gap-2 p-1.5 px-2 text-xs bg-g-300 border-l-1 border-g-400 rounded"
+              >
                 <ElTag :type="getEventType(log.type)" size="small">{{ log.type }}</ElTag>
-                <span class="log-message">{{ log.message }}</span>
-                <span class="log-time">{{ log.time }}</span>
+                <span class="flex-1 text-g-700">{{ log.message }}</span>
+                <span class="text-xs text-g-600">{{ log.time }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- 表格配置演示 -->
-        <div class="demo-group">
-          <h5>⚙️ 表格配置演示</h5>
-          <div class="demo-buttons">
+        <div class="p-4 bg-g-200 border-full-d rounded-lg">
+          <h5 class="m-0 mb-4 text-sm font-semibold">表格配置演示</h5>
+          <div class="flex flex-wrap gap-2 mb-3 last:mb-0">
             <ElSwitch
               v-model="tableConfig.fixedHeight"
               active-text="固定高度 (500px)"
               inactive-text="自适应高度"
-              style="margin-left: 10px"
+              class="ml-2"
             />
           </div>
         </div>
 
         <!-- 自定义功能演示 -->
-        <div class="demo-group">
-          <h5>🎯 自定义功能</h5>
-          <div class="demo-buttons">
+        <div class="p-4 bg-g-200 border-full-d rounded-lg">
+          <h5 class="m-0 mb-4 text-sm font-semibold">自定义功能</h5>
+          <div class="flex flex-wrap gap-2 mb-3 last:mb-0">
             <ElButton @click="handleScrollToTop">滚动到顶部</ElButton>
             <ElButton @click="handleScrollToPosition">滚动到指定位置</ElButton>
             <ElButton @click="handleToggleSelection">切换全选</ElButton>
@@ -357,11 +375,11 @@
     </ElCard>
 
     <!-- 缓存刷新策略演示 -->
-    <ElCard class="refresh-demo-card" shadow="never">
+    <ElCard shadow="never" class="art-card-xs">
       <template #header>
-        <h4>🔄 【缓存】刷新策略演示</h4>
+        <h4 class="m-0">缓存刷新策略演示</h4>
       </template>
-      <div class="refresh-buttons">
+      <div class="flex flex-wrap gap-2 max-md:flex-col">
         <ElButton @click="refreshData" v-ripple>
           <ElIcon>
             <Refresh />
@@ -399,11 +417,20 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, nextTick } from 'vue'
-  import { Plus, Delete, Edit, Search, Refresh, QuestionFilled } from '@element-plus/icons-vue'
-  import { useTable, CacheInvalidationStrategy } from '@/composables/useTable'
+  import {
+    Plus,
+    Delete,
+    Edit,
+    Search,
+    Refresh,
+    QuestionFilled,
+    ArrowDown
+  } from '@element-plus/icons-vue'
+  import { ElMessageBox } from 'element-plus'
+  import { useTable, CacheInvalidationStrategy } from '@/hooks/core/useTable'
   import { fetchGetUserList } from '@/api/system-manage'
   import { ACCOUNT_TABLE_DATA } from '@/mock/temp/formData'
-  import { getColumnKey } from '@/composables/useTableColumns'
+  import { getColumnKey } from '@/hooks/core/useTableColumns'
 
   defineOptions({ name: 'AdvancedTableDemo' })
 
@@ -582,18 +609,21 @@
   //   await fetchData({ name: 'ricky', phone: 19388828388 })
   // })
 
-  // 使用 useTable Hook
+  /**
+   * 使用 useTable Hook 管理表格数据
+   * 提供完整的表格解决方案，包括数据获取、缓存、分页、搜索等功能
+   */
   const {
-    // fetchData, // 手动加载数据的方法，可用于等待其他请求完成后调用，immediate 为 false 时使用
-
     // 数据相关
     data, // 表格数据
     loading, // 加载中状态
     error, // 数据加载错误状态
     hasData, // 是否有数据
+    // isEmpty, // 数据是否为空
 
     // 分页相关
     pagination, // 分页信息
+    // paginationMobile, // 移动端分页配置
     handleSizeChange, // 分页大小变化处理
     handleCurrentChange, // 当前页变化处理
 
@@ -602,13 +632,10 @@
     resetSearchParams, // 重置搜索参数
 
     // 数据操作
+    // fetchData, // 手动加载数据的方法，可用于等待其他请求完成后调用，immediate 为 false 时使用
     getData, // 获取数据
     getDataDebounced, // 获取数据（防抖）
     clearData, // 清空数据
-
-    // 列配置
-    columns, // 表格列配置
-    columnChecks, // 列显示、拖拽配置
 
     // 刷新策略
     refreshData, // 全量刷新：清空所有缓存，重新获取数据（适用于手动刷新按钮）
@@ -631,6 +658,8 @@
     cancelRequest, // 取消当前请求
 
     // 动态列配置方法
+    columns, // 表格列配置
+    columnChecks, // 列显示、拖拽配置
     addColumn, // 新增列
     removeColumn, // 删除列
     updateColumn, // 更新列
@@ -658,13 +687,11 @@
       apiParams: {
         current: 1,
         size: 20,
-        // pageNum: 1, // 自定义分页字段映射， 默认为 current
-        // pageSize: 20, // 自定义分页字段映射， 默认为 size
         ...searchFormState.value
       },
       // 排除 apiParams 中的属性
       excludeParams: ['daterange'],
-      // 自定义分页字段映射，同时需要在 apiParams 中配置字段名
+      // 自定义分页字段映射，未设置时将使用全局配置 tableConfig.ts 中的 paginationKey
       // paginationKey: {
       //   current: 'pageNum',
       //   size: 'pageSize'
@@ -696,7 +723,7 @@
           useSlot: true,
           useHeaderSlot: true,
           sortable: false
-          // checked: false, // 隐藏列
+          // visible: false, // 隐藏列
         },
         {
           prop: 'userGender',
@@ -742,7 +769,7 @@
       dataTransformer: (records) => {
         if (!Array.isArray(records)) return []
 
-        return records.map((item: any, index: number) => ({
+        return records.map((item, index: number) => ({
           ...item,
           avatar: ACCOUNT_TABLE_DATA[index % ACCOUNT_TABLE_DATA.length].avatar,
           department: ['技术部', '产品部', '运营部', '市场部', '设计部'][
@@ -753,7 +780,7 @@
         }))
       }
       // 自定义响应适配器，处理后端特殊的返回格式
-      // responseAdapter: (data: any) => {
+      // responseAdapter: (data) => {
       //   const { list, total, pageNum, pageSize } = data
       //   return {
       //     records: list,
@@ -818,12 +845,28 @@
     logEvent('行点击', `点击了用户: ${row.userName}`)
   }
 
-  const handleHeaderClick = (column: any) => {
+  /**
+   * 表头点击事件处理
+   * @param column 列信息
+   */
+  const handleHeaderClick = (column: { label: string; property: string }) => {
     console.log('表头点击:', column)
     logEvent('表头点击', `点击了 ${column.label} 列表头`)
   }
 
-  const handleSortChange = (sortInfo: any) => {
+  /**
+   * 排序信息类型
+   */
+  interface SortInfo {
+    prop: string
+    order: 'ascending' | 'descending' | null
+  }
+
+  /**
+   * 排序变更事件处理
+   * @param sortInfo 排序信息
+   */
+  const handleSortChange = (sortInfo: SortInfo) => {
     console.log('排序事件:', sortInfo)
     console.log('排序字段:', sortInfo.prop)
     console.log('排序方向:', sortInfo.order)
@@ -998,7 +1041,11 @@
     ElMessage.success(`导出 ${count} 条数据成功`)
   }
 
-  const handleImportSuccess = (data: any[]) => {
+  /**
+   * Excel 导入成功处理
+   * @param data 导入的数据数组
+   */
+  const handleImportSuccess = (data: Record<string, any>[]) => {
     ElMessage.success(`导入 ${data.length} 条数据成功`)
     refreshCreate()
   }
@@ -1060,8 +1107,11 @@
     }, 1000)
   }
 
-  // 添加缓存调试日志
-  const addCacheLog = (message: string) => {
+  /**
+   * 添加缓存调试日志
+   * @param message 日志消息
+   */
+  const addCacheLog = (message: string): void => {
     const timestamp = new Date().toLocaleTimeString()
     cacheDebugLogs.value.unshift(`[${timestamp}] ${message}`)
     if (cacheDebugLogs.value.length > 20) {
@@ -1069,22 +1119,30 @@
     }
   }
 
-  // 更新缓存键列表
-  const updateCacheKeys = (key: string, operation: 'add' | 'remove' = 'add') => {
+  /**
+   * 更新缓存键列表
+   * @param key 缓存键
+   * @param operation 操作类型
+   */
+  const updateCacheKeys = (key: string, operation: 'add' | 'remove' = 'add'): void => {
     if (operation === 'add' && !cacheKeys.value.includes(key)) {
       cacheKeys.value.push(key)
-      addCacheLog(`🔑 新增缓存键: ${getCacheKeySummary(key)}`)
+      addCacheLog(`新增缓存键: ${getCacheKeySummary(key)}`)
     } else if (operation === 'remove') {
       const index = cacheKeys.value.indexOf(key)
       if (index > -1) {
         cacheKeys.value.splice(index, 1)
-        addCacheLog(`🗑️ 移除缓存键: ${getCacheKeySummary(key)}`)
+        addCacheLog(`移除缓存键: ${getCacheKeySummary(key)}`)
       }
     }
   }
 
-  // 获取缓存键摘要
-  const getCacheKeySummary = (key: string) => {
+  /**
+   * 获取缓存键摘要信息
+   * @param key 缓存键
+   * @returns 缓存键摘要
+   */
+  const getCacheKeySummary = (key: string): string => {
     try {
       const params = JSON.parse(key)
       return `页码: ${params.current || 1}, 大小: ${params.size || 20}${params.name ? ', 名称: ' + params.name : ''}${params.status ? ', 状态: ' + params.status : ''}`
@@ -1093,18 +1151,17 @@
     }
   }
 
-  // 强制刷新缓存信息
-  const forceRefreshCacheInfo = () => {
-    // 模拟更新缓存键信息
+  /**
+   * 强制刷新缓存信息
+   */
+  const forceRefreshCacheInfo = (): void => {
     const currentStats = cacheInfo.value
-    addCacheLog(`🔄 缓存信息刷新: ${currentStats.total} 条缓存`)
+    addCacheLog(`缓存信息刷新: ${currentStats.total} 条缓存`)
 
-    // 重置缓存键列表，因为我们无法直接访问缓存内容
     if (currentStats.total === 0) {
       cacheKeys.value = []
     }
 
-    // 触发缓存统计的重新计算
     nextTick(() => {
       console.log('当前缓存统计:', cacheInfo.value)
     })
@@ -1203,335 +1260,29 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .advanced-table-demo {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-bottom: 20px;
-
-    .intro-card {
-      .intro-header {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        justify-content: space-between;
-
-        h3 {
-          margin: 0;
-        }
-
-        .intro-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-      }
-
-      .intro-content {
-        .intro-text {
-          margin: 0 0 16px;
-          line-height: 1.6;
-          color: var(--el-text-color-regular);
-        }
-
-        .debug-panel {
-          margin: 16px 0;
-
-          .debug-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-
-            .stat-item {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-
-              .label {
-                font-weight: 500;
-                color: var(--el-text-color-regular);
-              }
-
-              .value {
-                font-weight: 600;
-                color: var(--el-color-primary);
-              }
-            }
-
-            .debug-actions {
-              display: flex;
-              gap: 8px;
-              margin-top: 8px;
-            }
-          }
-        }
-
-        .feature-toggles {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 16px;
-          margin-top: 16px;
-        }
-      }
-    }
-
-    .art-table-card {
-      flex: 1;
-
-      .table-header-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        h4 {
-          margin: 0;
-        }
-
-        .table-info {
-          display: flex;
-          gap: 8px;
-        }
-      }
-
-      .user-info {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-
-        .el-avatar {
-          flex-shrink: 0;
-          width: 40px !important;
-          height: 40px !important;
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-          }
-        }
-
-        .user-details {
-          flex: 1;
-          min-width: 0;
-
-          .user-name {
-            margin: 0;
-            overflow: hidden;
-            font-weight: 500;
-            color: var(--el-text-color-primary);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-          .user-email {
-            margin: 4px 0 0;
-            overflow: hidden;
-            font-size: 12px;
-            color: var(--el-text-color-regular);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-        }
-      }
-
-      .operation-buttons {
-        display: flex;
-      }
-
-      .custom-header {
-        display: inline-block;
-        gap: 4px;
-        align-items: center;
-        color: var(--el-color-primary);
-        cursor: pointer;
-
-        &:hover {
-          color: var(--el-color-primary-light-3);
-        }
-      }
-    }
-
-    .advanced-features-card {
-      .feature-demo-section {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-
-        .demo-group {
-          padding: 16px;
-          background: var(--el-bg-color-page);
-          border: 1px solid var(--el-border-color-lighter);
-          border-radius: 8px;
-
-          h5 {
-            margin: 0 0 16px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--el-text-color-primary);
-          }
-
-          .demo-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-
-          .config-toggles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 12px;
-
-            .el-switch {
-              --el-switch-on-color: var(--el-color-primary);
-            }
-          }
-
-          .event-logs {
-            padding: 12px;
-            margin-top: 12px;
-            background: var(--el-bg-color-page);
-            border: 1px solid var(--el-border-color-light);
-            border-radius: 6px;
-
-            .log-header {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: 8px;
-              font-weight: 500;
-              color: var(--el-text-color-regular);
-            }
-
-            .log-list {
-              display: flex;
-              flex-direction: column;
-              gap: 4px;
-              max-height: 200px;
-              overflow-y: auto;
-
-              .log-item {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-                padding: 6px 8px;
-                font-size: 12px;
-                background: var(--el-bg-color);
-                border-left: 3px solid var(--el-border-color);
-                border-radius: 4px;
-
-                .log-message {
-                  flex: 1;
-                  color: var(--el-text-color-regular);
-                }
-
-                .log-time {
-                  font-size: 11px;
-                  color: var(--el-text-color-placeholder);
-                }
-              }
-            }
-          }
-
-          .performance-info {
-            margin-top: 12px;
-
-            .el-alert {
-              --el-alert-padding: 12px;
-            }
-          }
-        }
-      }
-    }
-
-    .refresh-demo-card {
-      .refresh-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-    }
+<style scoped>
+  .user-info .el-avatar {
+    flex-shrink: 0;
+    width: 40px !important;
+    height: 40px !important;
   }
 
-  // 响应式设计
-  @media (width <=768px) {
-    .advanced-table-demo {
-      .intro-card .intro-header {
-        flex-direction: column;
-        align-items: flex-start;
-
-        .intro-badges {
-          width: 100%;
-        }
-      }
-
-      .refresh-demo-card .refresh-buttons {
-        flex-direction: column;
-      }
-    }
+  .user-info .el-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 
-  .request-params {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .params-display {
-      max-height: 200px;
-      padding: 8px;
-      overflow-y: auto;
-      font-size: 12px;
-      background: var(--el-bg-color-page);
-      border: 1px solid var(--el-border-color-light);
-      border-radius: 6px;
-    }
+  .custom-header:hover {
+    color: var(--el-color-primary-light-3);
   }
 
-  .logs-container {
-    max-height: 200px;
-    overflow-y: auto;
+  .demo-group .config-toggles .el-switch {
+    --el-switch-on-color: var(--el-color-primary);
+  }
 
-    .empty-logs {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .log-item {
-        padding: 6px 8px;
-        font-size: 12px;
-        line-height: 1.4;
-        background: var(--el-bg-color-page);
-        border-left: 3px solid var(--el-border-color);
-        border-radius: 4px;
-
-        &.log-success {
-          background: rgb(103 194 58 / 10%);
-          border-left-color: var(--el-color-success);
-        }
-
-        &.log-cache {
-          background: rgb(64 158 255 / 10%);
-          border-left-color: var(--el-color-primary);
-        }
-
-        &.log-error {
-          background: rgb(245 108 108 / 10%);
-          border-left-color: var(--el-color-danger);
-        }
-      }
-    }
+  .demo-group .performance-info .el-alert {
+    --el-alert-padding: 12px;
   }
 </style>

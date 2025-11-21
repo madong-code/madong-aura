@@ -1,8 +1,9 @@
-import { AppRouteRecordRaw } from '../utils/utils'
-import { RoutesAlias } from '../routesAlias'
+import { AppRouteRecordRaw } from '@/utils/router'
 
 /**
  * 静态路由配置（不需要权限就能访问的路由）
+ *
+ * 属性说明：
  * isHideTab: true 表示不在标签页中显示
  *
  * 注意事项：
@@ -18,19 +19,19 @@ export const staticRoutes: AppRouteRecordRaw[] = [
   //   meta: { title: 'menus.dashboard.title' }
   // },
   {
-    path: RoutesAlias.Login,
+    path: '/auth/login',
     name: 'Login',
     component: () => import('@views/auth/login/index.vue'),
     meta: { title: 'menus.login.title', isHideTab: true }
   },
   {
-    path: RoutesAlias.Register,
+    path: '/auth/register',
     name: 'Register',
     component: () => import('@views/auth/register/index.vue'),
     meta: { title: 'menus.register.title', isHideTab: true }
   },
   {
-    path: RoutesAlias.ForgetPassword,
+    path: '/auth/forget-password',
     name: 'ForgetPassword',
     component: () => import('@views/auth/forget-password/index.vue'),
     meta: { title: 'menus.forgetPassword.title', isHideTab: true }
@@ -39,19 +40,19 @@ export const staticRoutes: AppRouteRecordRaw[] = [
     path: '/403',
     name: 'Exception403',
     component: () => import('@views/exception/403/index.vue'),
-    meta: { title: '403' }
+    meta: { title: '403', isHideTab: true }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'Exception404',
     component: () => import('@views/exception/404/index.vue'),
-    meta: { title: '404' }
+    meta: { title: '404', isHideTab: true }
   },
   {
     path: '/500',
     name: 'Exception500',
     component: () => import('@views/exception/500/index.vue'),
-    meta: { title: '500' }
+    meta: { title: '500', isHideTab: true }
   },
   {
     path: '/outside',
