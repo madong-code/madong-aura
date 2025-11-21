@@ -139,6 +139,8 @@
   import SidebarSubmenu from './widget/SidebarSubmenu.vue'
   import { useCommon } from '@/hooks/core/useCommon'
   import { useWindowSize, useTimeoutFn } from '@vueuse/core'
+  import { RouteLocationNormalized } from 'vue-router'
+  import { AppRouteRecord } from '@/types'
 
   defineOptions({ name: 'ArtSidebarMenu' })
 
@@ -204,10 +206,51 @@
     }
 
     // 返回当前顶级路径对应的子菜单
-    const currentTopPath = `/${route.path.split('/')[1]}`
-    const currentMenu = allMenus.find((menu) => menu.path === currentTopPath)
-    return currentMenu?.children ?? []
+    // const currentTopPath = `/${route.path.split('/')[1]}`
+    // const currentMenu = allMenus.find((menu) => menu.path === currentTopPath)
+    // return currentMenu?.children ?? []
+    return getCurrentTopLevelChildren(route, allMenus)
   })
+  /**
+   * 递归查找当前路由对应的顶级菜单的子菜单
+   * @param route 当前路由
+   * @param allMenus 所有菜单列表
+   * @returns 顶级菜单的子菜单
+   */
+  const getCurrentTopLevelChildren = (
+    route: RouteLocationNormalized,
+    allMenus: AppRouteRecord[]
+  ): AppRouteRecord[] => {
+    // 如果是顶层菜单（isFirstLevel），直接返回空数组
+    if (route.meta.isFirstLevel) {
+      return []
+    }
+
+    // 查找当前路由的父级菜单项（递归向上查找）
+    const findParentMenu = (menus: AppRouteRecord[], path: string): AppRouteRecord | undefined => {
+      for (const menu of menus) {
+        if (menu.path === path) {
+          return menu
+        }
+        if (menu.children) {
+          const childResult = findParentMenu(menu.children, path)
+          if (childResult) {
+            return childResult
+          }
+        }
+      }
+      return undefined
+    }
+
+    // 获取当前路由的父级菜单路径
+    const parentPath = route.matched[0]?.path || '/'
+
+    // 查找父级菜单
+    const parentMenu = findParentMenu(allMenus, parentPath)
+
+    // 返回父级菜单的子菜单
+    return parentMenu?.children ?? []
+  }
 
   // 双列菜单收起时的滚动条样式
   const scrollbarStyle = computed(() => {
