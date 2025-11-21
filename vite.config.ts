@@ -50,7 +50,7 @@ export default ({ mode }: { mode: string }) => {
       }
     },
     build: {
-      target: 'es2015',
+      target: 'es2022',
       outDir: 'dist',
       chunkSizeWarningLimit: 2000,
       minify: 'terser',
