@@ -12,7 +12,8 @@ mldong-ant-design基于art-design-pro的快速开发框架前端工程
 
 ## 演示地址(apifox云mock版)
 
-- [演示地址-mock版](https://www.mldong.com/?nav=onlinedemo-8)
+- [演示地址-mock-v3版](https://www.mldong.com/?nav=onlinedemo-9)
+- [演示地址-mock-v2版](https://www.mldong.com/?nav=onlinedemo-8)
 
 测试账号: admin/123456
 
@@ -30,7 +31,6 @@ git clone https://gitee.com/mldong/mldong-art-design.git
 cd mldong-art-design
 
 
-<<<<<<< HEAD
 pnpm install
 ```
 
@@ -54,10 +54,6 @@ return defineConfig({
       host: true
     },
 ```
-
-======= [演示地址](https://www.artd.pro) | [官方文档](https://www.artd.pro/docs) | [更新日志](./CHANGELOG.md)
-
-> > > > > > > art/main
 
 - 运行
 
