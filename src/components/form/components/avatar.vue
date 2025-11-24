@@ -44,10 +44,10 @@
     list-type="picture-card"
   >
     <div v-if="mValue" class="m-avatar-wrap">
-      <Icon class="m-avatar-icon-delete" icon="&#xe783;" @click="handleRemove" />
+      <Icon class="m-avatar-icon-delete" icon="ant-design:delete-outlined" @click="handleRemove" />
       <img :src="mValue" width="100%" />
     </div>
-    <Icon v-else icon="&#xe6c6;" />
+    <Icon v-else icon="ant-design:plus-outlined" />
   </Upload>
 </template>
 <style lang="scss" scoped>
