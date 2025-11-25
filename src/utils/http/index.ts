@@ -85,6 +85,7 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse<BaseResponse>) => {
     const { code, msg } = response.data
     if (code === ApiStatus.success) return response
+    if (code === 99990403) handleUnauthorizedError(msg)
     if (code === ApiStatus.unauthorized) handleUnauthorizedError(msg)
     throw createHttpError(msg || $t('httpMsg.requestFailed'), code)
   },
