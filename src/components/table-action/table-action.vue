@@ -270,7 +270,12 @@
       </template>
       <template #dropdown>
         <ElDropdownMenu>
-          <ElDropdownItem v-for="(action, index) in getDropdownList" :key="index" :command="index">
+          <ElDropdownItem
+            :disabled="action.disabled"
+            v-for="(action, index) in getDropdownList"
+            :key="index"
+            :command="index"
+          >
             <Icon v-if="action.icon" :icon="action.icon" />
             <span style="margin-left: 8px">{{ action.label }}</span>
           </ElDropdownItem>
