@@ -74,7 +74,7 @@ pnpm build
 - [配套后端-nodejs版](https://gitee.com/mldong/mldong-koa)
 - [配套后端-GoLang版](https://gitee.com/mldong/mldong-goframe)
 - [配套后端-python-fastapi版](https://gitee.com/mldong/mldong-fastapi)
-- [vben5文档](https://doc.mldong.com/mldong/front-pro/pro-explain.html/)
+- [vben5文档](https://doc.mldong.com/mldong/front-pro/pro-explain.html)
 
 * 第一章·基础篇
   - [环境准备](https://www.bilibili.com/cheese/play/ep1893365)
