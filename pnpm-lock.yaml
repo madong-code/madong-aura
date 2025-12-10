@@ -26,6 +26,9 @@ importers:
       '@vueuse/core':
         specifier: ^13.9.0
         version: 13.9.0(vue@3.5.22(typescript@5.6.3))
+      '@vxe-ui/plugin-render-element':
+        specifier: 4.1.1
+        version: 4.1.1
       '@wangeditor/editor':
         specifier: ^5.1.23
         version: 5.1.23
@@ -89,6 +92,15 @@ importers:
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.22(typescript@5.6.3))
+      vxe-pc-ui:
+        specifier: 4.10.49
+        version: 4.10.49(vue@3.5.22(typescript@5.6.3))
+      vxe-table:
+        specifier: 4.17.27
+        version: 4.17.27(vue@3.5.22(typescript@5.6.3))
+      xe-utils:
+        specifier: 3.8.0
+        version: 3.8.0
       xgplayer:
         specifier: ^3.0.20
         version: 3.0.23(core-js@3.45.1)
@@ -1497,6 +1509,14 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
+  '@vxe-ui/core@4.2.16':
+    resolution: {integrity: sha512-clfS0UcW15I+vWDVv7+D7ifYb1UgG1As3lUPPyROSN01bDiAzbDEoyOg4bLlvjhySN+m4qbSb+SEV6gosbo9yA==}
+    peerDependencies:
+      vue: ^3.2.0
+
+  '@vxe-ui/plugin-render-element@4.1.1':
+    resolution: {integrity: sha512-y+D7UTXdsPe132FsUg0Mjp33B0nqw5Hh4sb7eaSnAK8tS18ZgA8Ya2YlipjBOQOIi5L8bJKBm7Ht8Y+aWSY6xg==}
+
   '@wangeditor/basic-modules@1.1.7':
     resolution: {integrity: sha512-cY9CPkLJaqF05STqfpZKWG4LpxTMeGSIIF1fHvfm/mz+JXatCagjdkbxdikOuKYlxDdeqvOeBmsUBItufDLXZg==}
     peerDependencies:
@@ -2029,6 +2049,9 @@ packages:
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
+
+  dom-zindex@1.0.6:
+    resolution: {integrity: sha512-FKWIhiU96bi3xpP9ewRMgANsoVmMUBnMnmpCT6dPMZOunVYJQmJhSRruoI0XSPoHeIif3kyEuiHbFrOJwEJaEA==}
 
   dom7@3.0.0:
     resolution: {integrity: sha512-oNlcUdHsC4zb7Msx7JN3K0Nro1dzJ48knvBOnDPKJ2GV9wl1i5vydJZUSyOfrkKFDZEud/jBsTk92S/VGSAe/g==}
@@ -4002,6 +4025,12 @@ packages:
       typescript:
         optional: true
 
+  vxe-pc-ui@4.10.49:
+    resolution: {integrity: sha512-wInnGfn0bQJ0CYbR6A8b4Ti1dsyOcE9opTNWAGdjYnjxOrolAiSCugrqHJ0Ybv0W7HDtl6+kA+uoMEjwA3KPkQ==}
+
+  vxe-table@4.17.27:
+    resolution: {integrity: sha512-Ube5P7dmy+4tb+q0J4Udsm/MWbVJ7+mVm3kcnG5ejb7nh6YQfDWlBiFaLlkaV3WcX75YYUbHMpQ1nR75n2DzAA==}
+
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
 
@@ -4053,6 +4082,9 @@ packages:
   wsl-utils@0.1.0:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
+
+  xe-utils@3.8.0:
+    resolution: {integrity: sha512-eziNd3IyxzUBAZByQhNuxcd9UUKN2yqR0w2zjPMtXWzzM3GFg6ztjRH76aSfxIZCco1o53TX3uJ7EY3jNpVo/A==}
 
   xgplayer-subtitles@3.0.23:
     resolution: {integrity: sha512-deGdV75giVzfTTdG9XATmji39NHwKTpEelWt2rRx/RyXGgU2bQFp0Ft7yWaK2Uu8A/WVrP5fpxEAj4MstREMkQ==}
@@ -5616,6 +5648,14 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@vxe-ui/core@4.2.16(vue@3.5.22(typescript@5.6.3))':
+    dependencies:
+      dom-zindex: 1.0.6
+      vue: 3.5.22(typescript@5.6.3)
+      xe-utils: 3.8.0
+
+  '@vxe-ui/plugin-render-element@4.1.1': {}
+
   '@wangeditor/basic-modules@1.1.7(@wangeditor/core@1.1.19(@uppy/core@2.3.4)(@uppy/xhr-upload@2.1.3(@uppy/core@2.3.4))(dom7@3.0.0)(is-hotkey@0.2.0)(lodash.camelcase@4.3.0)(lodash.clonedeep@4.5.0)(lodash.debounce@4.0.8)(lodash.foreach@4.5.0)(lodash.isequal@4.5.0)(lodash.throttle@4.1.1)(lodash.toarray@4.4.0)(nanoid@3.3.11)(slate@0.72.8)(snabbdom@3.6.2))(dom7@3.0.0)(lodash.throttle@4.1.1)(nanoid@3.3.11)(slate@0.72.8)(snabbdom@3.6.2)':
     dependencies:
       '@wangeditor/core': 1.1.19(@uppy/core@2.3.4)(@uppy/xhr-upload@2.1.3(@uppy/core@2.3.4))(dom7@3.0.0)(is-hotkey@0.2.0)(lodash.camelcase@4.3.0)(lodash.clonedeep@4.5.0)(lodash.debounce@4.0.8)(lodash.foreach@4.5.0)(lodash.isequal@4.5.0)(lodash.throttle@4.1.1)(lodash.toarray@4.4.0)(nanoid@3.3.11)(slate@0.72.8)(snabbdom@3.6.2)
@@ -6155,6 +6195,8 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
+
+  dom-zindex@1.0.6: {}
 
   dom7@3.0.0:
     dependencies:
@@ -8122,6 +8164,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
+  vxe-pc-ui@4.10.49(vue@3.5.22(typescript@5.6.3)):
+    dependencies:
+      '@vxe-ui/core': 4.2.16(vue@3.5.22(typescript@5.6.3))
+    transitivePeerDependencies:
+      - vue
+
+  vxe-table@4.17.27(vue@3.5.22(typescript@5.6.3)):
+    dependencies:
+      vxe-pc-ui: 4.10.49(vue@3.5.22(typescript@5.6.3))
+    transitivePeerDependencies:
+      - vue
+
   w3c-keyname@2.2.8: {}
 
   wcwidth@1.0.1:
@@ -8168,6 +8222,8 @@ snapshots:
   wsl-utils@0.1.0:
     dependencies:
       is-wsl: 3.1.0
+
+  xe-utils@3.8.0: {}
 
   xgplayer-subtitles@3.0.23(core-js@3.45.1):
     dependencies:

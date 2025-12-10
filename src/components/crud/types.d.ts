@@ -1,6 +1,8 @@
 import { MyDialogProps } from '../dialog'
 import { FormSchema } from '../form'
 import { ActionItem } from '../table-action'
+import type { VxeColumnProps } from 'vxe-table'
+
 export interface CrudSchema {
   // 行id
   rowKey?: string
@@ -91,6 +93,8 @@ export interface CrudSchema {
   removeAuth?: string
   // 转换表单值的函数，可用于添加隐藏字段、格式化数据等
   transformFormValues?: (values: Record<string, any>, type: 'add' | 'edit') => Record<string, any>
+  // 使用vxe-table
+  useVxeTable?: boolean
 }
 // 表格列配置接口
 export interface CrudColumn<T = any> {
@@ -135,6 +139,8 @@ export interface CrudColumn<T = any> {
   component?: string
   // 列回显组件属性
   componentProps?: Record<string, any>
+  // vxe-table列定义
+  vxeColumn?: VxeColumnProps
 }
 export interface CrudApi {
   add?: (params: any) => Promise<any>
@@ -160,6 +166,8 @@ export interface CrudBaseMethods {
   getReadonlyState: () => CrudReadonlyState
   // 获取art table实例
   getArtTableInstance: () => any
+  // 获取vxe table实例
+  getVxeTableInstance: () => any
   // 通过接口删除行
   removeByApi: (row: any) => void
   // 打开内置新增表单

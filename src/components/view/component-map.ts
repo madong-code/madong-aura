@@ -77,3 +77,23 @@ export function viewColumnFormatter(column: ColumnOption<any>) {
     }
   }
 }
+/**
+ * 注册列渲染器
+ * @param vxeUI vxe-table实例
+ */
+export function registerViewComponentToVxe(vxeUI: any) {
+  // 注册@/components/view/下面所有列渲染器
+  componentMap.forEach((comp, key) => {
+    // 创建一个渲染器
+    vxeUI.renderer.add(key, {
+      // 默认显示模板
+      renderDefault(renderOpts: any, params: any) {
+        const { row, column } = params
+        return h(comp, {
+          ...renderOpts.props,
+          value: get(row, column.field)
+        })
+      }
+    })
+  })
+}

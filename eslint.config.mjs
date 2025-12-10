@@ -40,7 +40,7 @@ export default [
   // 自定义规则
   {
     // 针对所有 JavaScript、TypeScript 和 Vue 文件应用以下配置
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    files: ['**/*.{js,mjs,cjs,ts,vue,tsx}'],
 
     languageOptions: {
       globals: {

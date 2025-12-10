@@ -1,13 +1,96 @@
 <template>
-  <SearchBar
-    v-if="crudSchemaRef.useSearchForm !== false"
-    @reset="handleReset"
-    @submit="handleSearch"
-  />
-  <ElCard class="art-table-card" shadow="never">
-    <!-- 表格头部 -->
-    <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData" :layout="headerLayout">
-      <template #left>
+  <div v-if="crudSchema?.useVxeTable" class="bg-card h-full flex flex-col">
+    <vxe-grid
+      ref="gridRef"
+      :id="crudSchemaRef?.rowKey"
+      :columns="vxeTableColumns"
+      :toolbar-config="{
+        refresh: true, // 刷新
+        print: false, // 打印
+        export: false, // 导出
+        custom: true, // 自定义列
+        zoom: true, // 最大化最小化,
+        slots: {
+          buttons: 'toolbar-left',
+          tools: 'toolbar-right'
+        }
+      }"
+      :keepSource="true"
+      :tree-config="
+        crudSchemaRef.tree
+          ? {
+              childrenField: crudSchemaRef.tree?.children || 'children',
+              rowField: crudSchemaRef.tree?.id || 'id'
+            }
+          : undefined
+      "
+      height="auto"
+      :pager-config="{
+        enabled: crudSchemaRef.tree ? false : true,
+        layouts: [
+          'Total',
+          'Sizes',
+          'Home',
+          'PrevJump',
+          'PrevPage',
+          'Number',
+          'NextPage',
+          'NextJump',
+          'End'
+        ],
+        pageSize: 20,
+        background: true,
+        pageSizes: [10, 20, 30, 50, 100, 200],
+        className: 'mt-2 w-full',
+        size: 'mini' as const,
+        align: 'center'
+    }"
+      :proxy-config="{
+        ajax: {
+          query: ({ page }, formValues) => {
+            return funApi({
+              [tableConfig.paginationKey.current || 'pageNum']: page.currentPage,
+              [tableConfig.paginationKey.size || 'pageSize']: page.pageSize,
+              ...formValues
+            })
+          }
+        },
+        response: {
+          result: ({data}: {data: any}) => {
+             const fields = tableConfig.recordFields || ['rows']
+              for (const field of fields) {
+                if (data[field]) {
+                  return data[field]
+                }
+              }
+              return []
+          },
+          total: ({data}: {data: any}) => {
+             const fields = tableConfig.totalFields || ['recordCount']
+              for (const field of fields) {
+                if (data[field]) {
+                  return data[field]
+                }
+              }
+              return 0
+          },
+          list: ({data}: {data: any}) => {
+            if(crudSchemaRef.tree) return data;
+             const fields = tableConfig.totalFields || ['rows']
+              for (const field of fields) {
+                if (data[field]) {
+                  return data[field]
+                }
+              }
+              return data
+          },
+        }
+      }"
+      @checkboxChange="handleCheckboxChange"
+      @checkboxAll="handleCheckboxAll"
+      v-bind="{ ...$attrs }"
+    >
+      <template #toolbar-left>
         <slot name="toolbar-actions">
           <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
             <template #more>
@@ -21,40 +104,92 @@
           </TableAction>
         </slot>
       </template>
-      <template #tools>
-        <div
-          :key="item.auth"
-          v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
-          class="button active"
-          @click="handleToolbarToolClick(item.auth)"
-        >
-          <i class="iconfont-sys">
-            <Icon :icon="item.icon" />
-          </i>
+      <template #toolbar-right>
+        <div class="pr-[7px]">
+          <button
+            :key="item.auth"
+            :title="item.label"
+            v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
+            class="vxe-button type--button is--circle"
+            @click="handleToolbarToolClick(item.auth)"
+          >
+            <i class="iconfont-sys">
+              <Icon :icon="item.icon" />
+            </i>
+          </button>
         </div>
-      </template>
-      <template #right>
         <slot name="toolbar-tools"></slot>
       </template>
-    </ArtTableHeader>
-    <!-- 表格 -->
-    <ArtTable
-      :rowKey="crudSchemaRef.rowKey ?? 'id'"
-      :loading="loading"
-      :data="crudSchemaRef.data ?? tableData"
-      :columns="columns"
-      :pagination="crudSchemaRef.tree ? undefined : pagination"
-      @pagination:size-change="handleSizeChange"
-      @pagination:current-change="handleCurrentChange"
-      @selection-change="handleSelectionChange"
-      :stripe="true"
-      v-bind="{ ...$attrs }"
-    >
+      <template #form>
+        <slot name="form">
+          <div class="relative" v-if="crudSchemaRef.useSearchForm !== false">
+            <SearchBar class="mb-[12px]" @reset="handleReset" @submit="handleSearch" />
+          </div>
+        </slot>
+      </template>
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName"></slot>
       </template>
-    </ArtTable>
-  </ElCard>
+    </vxe-grid>
+  </div>
+  <template v-else>
+    <SearchBar
+      v-if="crudSchemaRef.useSearchForm !== false"
+      @reset="handleReset"
+      @submit="handleSearch"
+    />
+    <ElCard class="art-table-card" shadow="never">
+      <!-- 表格头部 -->
+      <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData" :layout="headerLayout">
+        <template #left>
+          <slot name="toolbar-actions">
+            <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
+              <template #more>
+                <ElButton>
+                  <template #icon
+                    ><Icon class="icon-more" icon="ant-design:down-outlined"
+                  /></template>
+                  更多操作</ElButton
+                >
+              </template>
+            </TableAction>
+          </slot>
+        </template>
+        <template #tools>
+          <div
+            :key="item.auth"
+            v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
+            class="button active"
+            @click="handleToolbarToolClick(item.auth)"
+          >
+            <i class="iconfont-sys">
+              <Icon :icon="item.icon" />
+            </i>
+          </div>
+        </template>
+        <template #right>
+          <slot name="toolbar-tools"></slot>
+        </template>
+      </ArtTableHeader>
+      <!-- 表格 -->
+      <ArtTable
+        :rowKey="crudSchemaRef.rowKey ?? 'id'"
+        :loading="loading"
+        :data="crudSchemaRef.data ?? tableData"
+        :columns="columns"
+        :pagination="crudSchemaRef.tree ? undefined : pagination"
+        @pagination:size-change="handleSizeChange"
+        @pagination:current-change="handleCurrentChange"
+        @selection-change="handleSelectionChange"
+        :stripe="true"
+        v-bind="{ ...$attrs }"
+      >
+        <template v-for="(_, slotName) in $slots" #[slotName]>
+          <slot :name="slotName"></slot>
+        </template>
+      </ArtTable>
+    </ElCard>
+  </template>
   <DialogForm
     v-bind="{ ...crudSchemaRef.dialogProps }"
     ref="dialogFormRef"
@@ -64,7 +199,6 @@
 <script setup lang="tsx">
   import { useSearchBar } from '@/components/search-bar'
   import { CrudInstance, CrudReadonlyState, CrudSchema } from './types'
-  import { viewColumnFormatter } from '../view/component-map'
   import request from '@/utils/http'
   import { TableAction } from '../table-action'
   import DialogForm from './dialog-form.vue'
@@ -72,6 +206,8 @@
   import { Icon } from '@/components/icon'
   import { getTreeNodeAndChildrenIds } from '@/utils/tool'
   import { useTable } from '@/hooks'
+  import { useColumns } from './use-columns'
+  import { tableConfig } from '@/utils/table/tableConfig'
   defineOptions({
     inheritAttrs: false
   })
@@ -86,6 +222,7 @@
           columns: [],
           api: '',
           useSearchForm: true,
+          useVxeTable: false,
           searchFormSchema: {
             schema: []
           }
@@ -144,48 +281,19 @@
   const tableObject = useTable<any>({
     core: {
       apiFn: funApi.value,
-      immediate: crudSchemaRef.value.immediate ?? true,
+      immediate:
+        (crudSchemaRef.value.immediate ?? true) && crudSchemaRef.value?.useVxeTable !== true,
       apiParams: {
         // 其他搜索参数
       },
       columnsFactory: () => {
-        const columns = (
-          (typeof crudSchemaRef.value.columns === 'function'
-            ? crudSchemaRef.value.columns()
-            : crudSchemaRef.value.columns) || []
-        ).map((column) => {
-          const c = { ...column }
-          viewColumnFormatter(column)
-          c.formatter = column.formatter
-          delete c.component
-          delete c.componentProps
-          return c
-        })
-        // 有操作列配置才添加操作列
-        if (
-          (tableActions.value && tableActions.value.length > 0) ||
-          (dropDownActions.value && dropDownActions.value.length > 0)
-        ) {
-          columns.push({
-            prop: '__ACTION__',
-            label: '操作',
-            width: 220,
-            align: 'center',
-            fixed: 'right', // 固定列
-            formatter: (row: unknown) => {
-              return (
-                <TableAction
-                  onActionItemClick={handleActionItemClick}
-                  record={row}
-                  actions={tableActions.value}
-                  dropDownActions={dropDownActions.value}
-                />
-              )
-            },
-            ...crudSchemaRef.value.tableActionColumn
-          })
-        }
-        return columns
+        const { columns } = useColumns(
+          crudSchemaRef,
+          tableActions,
+          dropDownActions,
+          handleActionItemClick
+        )
+        return columns as any
       }
     }
   })
@@ -203,13 +311,19 @@
   const handleSearch = (values: any) => {
     //Object.assign(searchParams, values)
     emit('submit', values)
-
+    if (crudSchemaRef.value.useVxeTable === true) {
+      gridRef.value?.commitProxy('query', values)
+      return
+    }
     getData(values)
   }
   const handleReset = () => {
     //Object.assign(searchParams, {})
     emit('reset')
-
+    if (crudSchemaRef.value.useVxeTable === true) {
+      gridRef.value?.commitProxy('query', {})
+      return
+    }
     getData({})
   }
   // 删除
@@ -247,7 +361,11 @@
       })
       .then(() => {
         ElMessage.success(`删除${props.crudSchema.dialogTitle}成功`)
-        tableObject.refreshRemove()
+        if (crudSchemaRef.value.useVxeTable === true) {
+          props.crudMethods?.refreshRemove(ids)
+        } else {
+          tableObject.refreshRemove()
+        }
       })
   }
   const handleToolbarToolClick = (key: any) => {
@@ -265,6 +383,9 @@
   const crudInstanceMethods: CrudInstance = {
     async reload(params) {
       const values = await searchBarApi.getValues()
+      if (crudSchemaRef.value.useVxeTable === true) {
+        return await gridRef.value?.commitProxy('query', { ...values, ...params })
+      }
       return getData({
         ...values,
         ...params
@@ -292,6 +413,9 @@
     },
     getArtTableInstance() {
       return tableObject
+    },
+    getVxeTableInstance() {
+      return gridRef.value
     },
     getRowSelection() {
       return multipleSelection.value
@@ -336,6 +460,30 @@
   onMounted(() => {
     emit('register', crudInstanceMethods)
   })
+  // vxe-table部分逻辑
+  const gridRef = ref()
+  const vxeTableColumns = computed<any>(() => {
+    if (crudSchemaRef.value?.useVxeTable === true) {
+      const { columns } = useColumns(
+        crudSchemaRef,
+        tableActions,
+        dropDownActions,
+        handleActionItemClick
+      )
+      return columns
+    }
+    return []
+  })
+  const handleCheckboxChange = () => {
+    const records = gridRef.value.getCheckboxRecords()
+    multipleSelection.value = records
+    readonlyState.selection = records
+  }
+  const handleCheckboxAll = () => {
+    const records = gridRef.value.getCheckboxRecords()
+    multipleSelection.value = records
+    readonlyState.selection = records
+  }
 </script>
 <style scoped>
   @reference '@styles/core/tailwind.css';
