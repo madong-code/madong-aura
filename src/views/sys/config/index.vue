@@ -9,6 +9,7 @@
 
   const [BasicCrud] = useCrud({
     ...crudSchema,
+    useVxeTable: true,
     toolbarActions: [],
     dropDownToolbarActions: [],
     tableActions: [],

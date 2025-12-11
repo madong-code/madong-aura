@@ -41,7 +41,7 @@
         pageSize: 20,
         background: true,
         pageSizes: [10, 20, 30, 50, 100, 200],
-        className: 'mt-2 w-full',
+        className: 'w-full',
         size: 'mini' as const,
         align: 'center'
     }"
@@ -123,7 +123,7 @@
       <template #form>
         <slot name="form">
           <div class="relative" v-if="crudSchemaRef.useSearchForm !== false">
-            <SearchBar class="mb-[12px]" @reset="handleReset" @submit="handleSearch" />
+            <SearchBar @reset="handleReset" @submit="handleSearch" />
           </div>
         </slot>
       </template>
