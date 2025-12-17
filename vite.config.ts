@@ -10,6 +10,7 @@ import ElementPlus from 'unplugin-element-plus/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
+import tailwindcss from '@tailwindcss/vite'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
 export default ({ mode }: { mode: string }) => {
@@ -41,16 +42,14 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         '@views': resolvePath('src/views'),
-        '@imgs': resolvePath('src/assets/img'),
+        '@imgs': resolvePath('src/assets/images'),
         '@icons': resolvePath('src/assets/icons'),
         '@utils': resolvePath('src/utils'),
         '@stores': resolvePath('src/store'),
-        '@plugins': resolvePath('src/plugins'),
         '@styles': resolvePath('src/assets/styles')
       }
     },
     build: {
-      // target: 'es2015',
       target: 'es2022',
       outDir: 'dist',
       chunkSizeWarningLimit: 2000,
@@ -72,19 +71,21 @@ export default ({ mode }: { mode: string }) => {
     plugins: [
       vue(),
       vueJsx(),
+      tailwindcss(),
       // 自动按需导入 API
       AutoImport({
-        imports: ['vue', 'vue-router', '@vueuse/core', 'pinia'],
-        dts: 'src/types/auto-imports.d.ts',
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+        dts: 'src/types/import/auto-imports.d.ts',
+        resolvers: [ElementPlusResolver()],
         eslintrc: {
           enabled: true,
-          filepath: './.auto-import.json'
-        },
-        resolvers: [ElementPlusResolver()]
+          filepath: './.auto-import.json',
+          globalsPropValue: true
+        }
       }),
       // 自动按需导入组件
       Components({
-        dts: 'src/types/components.d.ts',
+        dts: 'src/types/import/components.d.ts',
         resolvers: [ElementPlusResolver()]
       }),
       // 按需定制主题配置
@@ -109,7 +110,7 @@ export default ({ mode }: { mode: string }) => {
       //   filename: 'dist/stats.html' // 分析图生成的文件名及路径
       // }),
     ],
-    // 依赖预构建
+    // 依赖预构建：避免运行时重复请求与转换，提升首次加载速度
     optimizeDeps: {
       include: [
         'echarts/core',
@@ -128,7 +129,8 @@ export default ({ mode }: { mode: string }) => {
         'element-plus/es/components/message/style/index',
         'element-plus/es/components/upload/style/index',
         'element-plus/es/components/button/style/index',
-        'element-plus/es/components/icon/style/index'
+        'element-plus/es/components/icon/style/index',
+        'element-plus/es/components/*/style/index'
       ]
     },
     css: {
@@ -136,9 +138,8 @@ export default ({ mode }: { mode: string }) => {
         // sass variable and mixin
         scss: {
           additionalData: `
-            @use "@styles/el-light.scss" as *; 
-            @use "@styles/variables.scss" as *; 
-            @use "@styles/mixin.scss" as *;
+            @use "@styles/core/el-light.scss" as *; 
+            @use "@styles/core/mixin.scss" as *;
           `
         }
       },

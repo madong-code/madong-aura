@@ -1,40 +1,61 @@
 <template>
-  <div class="page-content user">
-    <div class="content">
-      <div class="left-wrap">
-        <div class="user-wrap box-style">
-          <img class="bg" src="@imgs/user/bg.webp" />
-          <img class="avatar" src="@imgs/user/avatar.webp" />
-          <h2 class="name">{{ userInfo?.user_name || "" }}</h2>
-          <p class="des">{{ userInfo.signed }}</p>
+  <div class="w-full h-full p-0 bg-transparent border-none shadow-none">
+    <div class="relative flex-b mt-2.5 max-md:block max-md:mt-1">
+      <div class="w-112 mr-5 max-md:w-full max-md:mr-0">
+        <div class="art-card-sm relative p-9 pb-6 overflow-hidden text-center">
+          <img
+            class="absolute top-0 left-0 w-full h-50 object-cover"
+            src="@imgs/user/bg.webp"
+          />
+          <img
+            class="relative z-10 w-20 h-20 mt-30 mx-auto object-cover border-2 border-white rounded-full"
+            src="@imgs/user/avatar.webp"
+          />
+          <h2 class="mt-5 text-xl font-normal">{{ userInfo?.user_name || "" }}</h2>
+          <p class="mt-5 text-sm">{{ userInfo.signed || "专注于用户体验跟视觉设计" }}</p>
 
-          <div class="outer-info">
-            <div>
-              <i class="iconfont-sys">&#xe734;</i>
-              <span>{{ userInfo.real_name || "" }}</span>
+          <div class="w-75 mx-auto mt-7.5 text-left">
+            <div class="mt-2.5">
+              <ArtSvgIcon icon="ri:mail-line" class="text-g-700" />
+              <span class="ml-2 text-sm">{{ userInfo.email || "未设置邮箱" }}</span>
             </div>
-            <div>
-              <i class="iconfont-sys">&#xe70d;</i>
-              <span>{{ userInfo.mobile_phone || "" }}</span>
+            <div class="mt-2.5">
+              <ArtSvgIcon icon="ri:phone-line" class="text-g-700" />
+              <span class="ml-2 text-sm">{{
+                userInfo.mobile_phone || "未设置联系电话"
+              }}</span>
             </div>
-            <div>
-              <i class="iconfont-sys">&#xe72e;</i>
-              <span>{{ userInfo.email || "" }}</span>
+            <div class="mt-2.5">
+              <ArtSvgIcon icon="ri:building-2-line" class="text-g-700" />
+              <span class="ml-2 text-sm">{{
+                userInfo?.depts?.name ?? "未分配部门"
+              }}</span>
             </div>
-            <div>
-              <i class="iconfont-sys">&#xe831;</i>
-              <span>{{ userInfo?.depts?.name ?? "未分配部门" }}</span>
+          </div>
+
+          <div class="mt-10">
+            <h3 class="text-sm font-medium">标签</h3>
+            <div class="flex flex-wrap justify-center mt-3.5">
+              <div
+                v-for="item in lableList"
+                :key="item"
+                class="py-1 px-1.5 mr-2.5 mb-2.5 text-xs border border-g-300 rounded"
+              >
+                {{ item }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="right-wrap">
-        <div class="info box-style">
-          <h1 class="title">{{ $t("system.user.profile.base_setting.title") }}</h1>
+      <div class="flex-1 overflow-hidden max-md:w-full max-md:mt-3.5">
+        <div class="art-card-sm">
+          <h1 class="p-4 text-xl font-normal border-b border-g-300">
+            {{ $t("system.user.profile.base_setting.title") }}
+          </h1>
 
           <ElForm
             :model="form"
-            class="form"
+            class="box-border p-5 [&>.el-row_.el-form-item]:w-[calc(50%-10px)] [&>.el-row_.el-input]:w-full [&>.el-row_.el-select]:w-full"
             ref="profileFormRef"
             :rules="profileRules"
             label-width="86px"
@@ -50,7 +71,7 @@
               <ElFormItem
                 :label="$t('system.user.form.modal.sex')"
                 prop="sex"
-                class="right-input"
+                class="ml-5"
               >
                 <ElSelect v-model="form.sex" placeholder="Select" :disabled="!isEdit">
                   <ElOption
@@ -73,7 +94,7 @@
               <ElFormItem
                 :label="$t('system.user.form.modal.email')"
                 prop="email"
-                class="right-input"
+                class="ml-5"
               >
                 <ElInput v-model="form.email" :disabled="!isEdit" />
               </ElFormItem>
@@ -85,6 +106,9 @@
                 prop="mobile_phone"
               >
                 <ElInput v-model="form.mobile_phone" :disabled="!isEdit" />
+              </ElFormItem>
+              <ElFormItem label="地址" prop="address" class="ml-5">
+                <ElInput v-model="form.address" :disabled="!isEdit" />
               </ElFormItem>
             </ElRow>
 
@@ -213,8 +237,14 @@ const form = ref({
   email: "",
   mobile_phone: "",
   signed: "",
-  sex: 0
+  sex: 0,
+  address: "",
 });
+
+  /**
+   * 用户标签列表
+   */
+   const lableList: Array<string> = ['专注设计', '很有想法', '辣~', '大长腿', '川妹子', '海纳百川']
 
 const options= reactive([
   {value:1,label:'男'},
@@ -291,7 +321,8 @@ async function loadProfile() {
       email: resp.email || "",
       mobile_phone: resp.mobile_phone || "",
       signed: resp.signed || "",
-      sex: resp.sex || 0
+      sex: resp.sex || 0,
+      address: resp.address || "",
     };
   } catch (error) {
     console.error("加载用户信息失败:", error);
@@ -465,209 +496,3 @@ onMounted(() => {
   loadProfile();
 });
 </script>
-
-<style lang="scss">
-.user {
-  .icon {
-    width: 1.4em;
-    height: 1.4em;
-    overflow: hidden;
-    vertical-align: -0.15em;
-    fill: currentcolor;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-:deep(.art-table-card) {
-  margin-top: 0px;
-}
-.page-content {
-  width: 100%;
-  height: 100%;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-
-  $box-radius: calc(var(--custom-radius) + 4px);
-
-  .box-style {
-    border: 1px solid var(--art-border-color);
-  }
-
-  .content {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-
-    .left-wrap {
-      width: 450px;
-      margin-right: 25px;
-
-      .user-wrap {
-        position: relative;
-        height: 600px;
-        padding: 35px 40px;
-        overflow: hidden;
-        text-align: center;
-        background: var(--art-main-bg-color);
-        border-radius: $box-radius;
-
-        .bg {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 200px;
-          object-fit: cover;
-        }
-
-        .avatar {
-          position: relative;
-          z-index: 10;
-          width: 80px;
-          height: 80px;
-          margin-top: 120px;
-          object-fit: cover;
-          border: 2px solid #fff;
-          border-radius: 50%;
-        }
-
-        .name {
-          margin-top: 20px;
-          font-size: 22px;
-          font-weight: 400;
-        }
-
-        .des {
-          margin-top: 20px;
-          font-size: 14px;
-        }
-
-        .outer-info {
-          width: 300px;
-          margin: auto;
-          margin-top: 30px;
-          text-align: left;
-
-          > div {
-            margin-top: 10px;
-
-            span {
-              margin-left: 8px;
-              font-size: 14px;
-            }
-          }
-        }
-
-        .lables {
-          margin-top: 40px;
-
-          h3 {
-            font-size: 15px;
-            font-weight: 500;
-          }
-
-          > div {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 15px;
-
-            > div {
-              padding: 3px 6px;
-              margin: 0 10px 10px 0;
-              font-size: 12px;
-              background: var(--art-main-bg-color);
-              border: 1px solid var(--art-border-color);
-              border-radius: 2px;
-            }
-          }
-        }
-      }
-
-      .gallery {
-        margin-top: 25px;
-        border-radius: 10px;
-
-        .item {
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-        }
-      }
-    }
-
-    .right-wrap {
-      flex: 1;
-      overflow: hidden;
-      border-radius: $box-radius;
-
-      .info {
-        background: var(--art-main-bg-color);
-        border-radius: $box-radius;
-
-        .title {
-          padding: 15px 25px;
-          font-size: 20px;
-          font-weight: 400;
-          color: var(--art-text-gray-800);
-          border-bottom: 1px solid var(--art-border-color);
-        }
-
-        .form {
-          box-sizing: border-box;
-          padding: 30px 25px;
-
-          > .el-row {
-            .el-form-item {
-              width: calc(50% - 10px);
-            }
-
-            .el-input,
-            .el-select {
-              width: 100%;
-            }
-          }
-
-          .right-input {
-            margin-left: 20px;
-          }
-
-          .el-form-item-right {
-            display: flex;
-            align-items: center;
-            justify-content: end;
-
-            .el-button {
-              width: 110px !important;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: $device-ipad-vertical) {
-  .page-content {
-    .content {
-      display: block;
-      margin-top: 5px;
-
-      .left-wrap {
-        width: 100%;
-      }
-
-      .right-wrap {
-        width: 100%;
-        margin-top: 15px;
-      }
-    }
-  }
-}
-</style>

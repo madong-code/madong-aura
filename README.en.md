@@ -4,7 +4,7 @@ This is a middle-to-back-end management system template based on Vue3 + Vite, fe
 
 ## Features
 
-- 🎨 Art Design style with modular architecture
+- 🎨 modular architecture
 - 📊 Rich data visualization components
 - 🛡 Comprehensive permission control system
 - 📱 Responsive layout supporting mobile access
@@ -48,16 +48,19 @@ This is a middle-to-back-end management system template based on Vue3 + Vite, fe
 ## Quick Start
 
 1. Install dependencies
+
 ```bash
 pnpm install
 ```
 
 2. Start the development server
+
 ```bash
 pnpm dev
 ```
 
 3. Build for production
+
 ```bash
 pnpm build
 ```

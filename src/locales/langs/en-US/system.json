@@ -92,7 +92,12 @@
         "post_name": "Position",
         "role_name": "Role",
         "remark": "Remark",
-        "login_date": "Last Date"
+        "login_date": "Last Date",
+        "birthday": "Birthday",
+        "tel": "Telephone",
+        "is_locked": "Is Locked",
+        "address": "Address",
+        "signed": "Signature"
       },
       "help": {
         "post_name": "Positions will auto-load after department selection"
@@ -118,6 +123,8 @@
         "mobile_phone": "Mobile",
         "email": "Email",
         "sex": "Gender",
+        "address": "Address",
+        "signed": "Signature",
         "button": {
           "submit": "Update"
         }

@@ -5,9 +5,11 @@ import IcIcons from '@iconify/json/json/ic.json'
 import LogosIcons from '@iconify/json/json/logos.json'
 import LucideIcons from '@iconify/json/json/lucide.json'
 import EP from '@iconify/json/json/ep.json'
+import Ri from '@iconify/json/json/ri.json'
 addCollection(AntDesignIcons)
 addCollection(LucideIcons)
 addCollection(CarbonIcons)
 addCollection(IcIcons as any)
 addCollection(LogosIcons as any)
 addCollection(EP)
+addCollection(Ri)

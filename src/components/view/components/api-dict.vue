@@ -24,10 +24,9 @@
 </template>
 <script lang="ts" setup>
   import { useDictStore } from '@/store/modules/dict'
-  import { useChart } from '@/composables/useChart'
   import { PropType } from 'vue'
   import { ColorType, NewOption } from '@/types/component/dict'
-  import { useAuth } from '@/composables/useAuth'
+  import { useAuth, useChart } from '@/hooks'
   const { hasAuth } = useAuth()
   type SwitchType = {
     // 是否启用

@@ -4,9 +4,9 @@
 </template>
 
 <script setup lang="ts">
-  import { useChartOps, useChartComponent } from '@/composables/useChart'
+  import { useChartOps, useChartComponent } from '@/hooks/core/useChart'
   import { getCssVar } from '@/utils/ui'
-  import { graphic, type EChartsOption } from '@/utils/echarts'
+  import { graphic, type EChartsOption } from '@/plugins/echarts'
   import type { BarChartProps, BarDataItem } from '@/types/component/chart'
 
   defineOptions({ name: 'ArtBarChart' })
@@ -82,7 +82,9 @@
   }
 
   // 获取基础样式配置
-  const getBaseItemStyle = (color: any) => ({
+  const getBaseItemStyle = (
+    color: string | InstanceType<typeof graphic.LinearGradient> | undefined
+  ) => ({
     borderRadius: props.borderRadius,
     color: typeof color === 'string' ? createGradientColor(color) : color
   })

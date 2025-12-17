@@ -17,106 +17,119 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, nextTick } from 'vue'
+  import { computed, nextTick } from 'vue'
   import ArtMenuRight from '@/components/core/others/art-menu-right/index.vue'
   import type { MenuItemType } from '@/components/core/others/art-menu-right/index.vue'
+
+  defineOptions({ name: 'TemplateContextMenu' })
 
   const menuRef = ref<InstanceType<typeof ArtMenuRight>>()
   const lastAction = ref('')
 
-  // 右键菜单选项
+  /**
+   * 右键菜单选项配置
+   */
   const menuItems = computed((): MenuItemType[] => [
     {
       key: 'copy',
       label: '复制',
-      icon: '&#xe7b2;'
+      icon: 'ri:file-copy-line'
     },
     {
       key: 'paste',
       label: '粘贴',
-      icon: '&#xe70b;'
+      icon: 'ri:capsule-line'
     },
     {
       key: 'cut',
       label: '剪切',
-      icon: '&#xe7b8;',
+      icon: 'ri:clipboard-line',
       showLine: true
     },
     {
       key: 'export',
       label: '导出选项',
-      icon: '&#xe78b;',
+      icon: 'ri:export-line',
       children: [
         {
           key: 'exportExcel',
           label: '导出 Excel',
-          icon: '&#xe604;'
+          icon: 'ri:file-excel-2-line'
         },
         {
           key: 'exportPdf',
           label: '导出 PDF',
-          icon: '&#xe89e;'
+          icon: 'ri:file-pdf-2-line'
         }
       ]
     },
     {
       key: 'edit',
       label: '编辑选项',
-      icon: '&#xe706;',
+      icon: 'ri:edit-2-line',
       children: [
         {
           key: 'rename',
-          label: '重命名',
-          icon: '&#xe607;'
+          label: '重命名'
         },
         {
           key: 'duplicate',
-          label: '复制副本',
-          icon: '&#xe608;'
+          label: '复制副本'
         }
       ]
     },
     {
       key: 'share',
       label: '分享',
-      icon: '&#xe73b;',
+      icon: 'ri:share-forward-line',
       showLine: true
     },
     {
       key: 'delete',
       label: '删除',
-      icon: '&#xe850;'
+      icon: 'ri:delete-bin-line'
     },
     {
       key: 'disabled',
       label: '禁用选项',
-      icon: '&#xe619;',
+      icon: 'ri:close-circle-line',
       disabled: true
     }
   ])
 
+  /**
+   * 处理菜单项选择
+   * @param item 选中的菜单项
+   */
   const handleSelect = (item: MenuItemType) => {
     lastAction.value = `${item.label} (${item.key})`
     ElMessage.success(`执行操作: ${item.label}`)
     console.log('选择了菜单项:', item)
   }
 
+  /**
+   * 显示右键菜单
+   * @param e 鼠标事件
+   */
   const showMenu = (e: MouseEvent) => {
-    console.log('触发右键菜单', e)
-    // 确保阻止默认行为
     e.preventDefault()
     e.stopPropagation()
 
-    // 延迟一帧执行，确保事件处理完成
     nextTick(() => {
       menuRef.value?.show(e)
     })
   }
 
+  /**
+   * 菜单显示回调
+   */
   const onMenuShow = () => {
     console.log('菜单显示')
   }
 
+  /**
+   * 菜单隐藏回调
+   */
   const onMenuHide = () => {
     console.log('菜单隐藏')
   }

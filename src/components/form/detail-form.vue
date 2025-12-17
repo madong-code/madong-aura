@@ -26,7 +26,7 @@
                   "
                   placement="top"
                 >
-                  <Icon class="help-icon" icon="&#xe636;" /> </ElTooltip
+                  <Icon class="help-icon" icon="ant-design:question-circle-outlined" /> </ElTooltip
               ></span>
             </template>
             <!-- 字段插槽优先级最高 -->
@@ -62,8 +62,8 @@
   import { getComponent, hasComponent } from '@/components/view/component-map'
   import { FormItemSchema, FormSchema } from './types'
   import { computed, reactive, ref, watch } from 'vue'
-  import { useChart } from '@/composables/useChart'
   import { get } from 'lodash-es'
+  import { useChart } from '@/hooks'
 
   const props = withDefaults(
     defineProps<{

@@ -3,58 +3,57 @@
   <ElPopover
     ref="popoverRef"
     :width="700"
-    trigger="hover"
-    popper-class="fast-enter-popover"
-    :show-arrow="false"
-    placement="bottom-start"
     :offset="0"
+    :show-arrow="false"
+    trigger="hover"
+    placement="bottom-start"
+    popper-class="fast-enter-popover"
     :popper-style="{
-      border: '1px solid var(--art-border-dashed-color)',
+      border: '1px solid var(--default-border)',
       borderRadius: 'calc(var(--custom-radius) / 2 + 4px)'
     }"
   >
     <template #reference>
-      <div class="fast-enter-trigger">
-        <div class="btn">
-          <i class="iconfont-sys">&#xe81a;</i>
-        </div>
+      <div class="flex-c gap-2">
+        <slot />
       </div>
     </template>
 
-    <div class="fast-enter">
-      <div class="apps-section">
-        <div class="apps-grid">
+    <div class="grid grid-cols-[2fr_0.8fr]">
+      <div>
+        <div class="grid grid-cols-2 gap-1.5">
           <!-- 应用列表 -->
           <div
             v-for="application in enabledApplications"
             :key="application.name"
-            class="app-item"
-            @click="handleNavigate(application.path)"
+            class="mr-3 c-p flex-c gap-3 rounded-lg p-2 hover:bg-g-200/70 dark:hover:bg-g-200/90 hover:[&_.app-icon]:!bg-transparent"
+            @click="handleApplicationClick(application)"
           >
-            <div class="app-icon">
-              <i
-                class="iconfont-sys"
-                v-html="application.icon"
+            <div class="app-icon size-12 flex-cc rounded-lg bg-g-200/80 dark:bg-g-300/30">
+              <ArtSvgIcon
+                class="text-xl"
+                :icon="application.icon"
                 :style="{ color: application.iconColor }"
               />
             </div>
-            <div class="app-info">
-              <h3>{{ application.name }}</h3>
-              <p>{{ application.description }}</p>
+            <div>
+              <h3 class="m-0 text-sm font-medium text-g-800">{{ application.name }}</h3>
+              <p class="mt-1 text-xs text-g-600">{{ application.description }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="quick-links">
-        <h3>快速链接</h3>
+      <div class="border-l-d pl-6 pt-2">
+        <h3 class="mb-2.5 text-base font-medium text-g-800">快速链接</h3>
         <ul>
           <li
             v-for="quickLink in enabledQuickLinks"
             :key="quickLink.name"
-            @click="handleNavigate(quickLink.path)"
+            class="c-p py-2 hover:[&_span]:text-theme"
+            @click="handleQuickLinkClick(quickLink)"
           >
-            <span>{{ quickLink.name }}</span>
+            <span class="text-g-600 no-underline">{{ quickLink.name }}</span>
           </li>
         </ul>
       </div>
@@ -63,7 +62,8 @@
 </template>
 
 <script setup lang="ts">
-  import { useFastEnter } from '@/composables/useFastEnter'
+  import { useFastEnter } from '@/hooks/core/useFastEnter'
+  import type { FastEnterApplication, FastEnterQuickLink } from '@/types/config'
 
   defineOptions({ name: 'ArtFastEnter' })
 
@@ -73,18 +73,41 @@
   // 使用快速入口配置
   const { enabledApplications, enabledQuickLinks } = useFastEnter()
 
-  const isExternalLink = (path: string): boolean => path.startsWith('http')
+  /**
+   * 处理导航跳转
+   * @param routeName 路由名称
+   * @param link 外部链接
+   */
+  const handleNavigate = (routeName?: string, link?: string): void => {
+    const targetPath = routeName || link
 
-  const handleNavigate = (path: string): void => {
-    if (isExternalLink(path)) {
-      window.open(path, '_blank')
-    } else {
-      router.push(path)
+    if (!targetPath) {
+      console.warn('导航配置无效：缺少路由名称或链接')
+      return
     }
+
+    if (targetPath.startsWith('http')) {
+      window.open(targetPath, '_blank')
+    } else {
+      router.push({ name: targetPath })
+    }
+
     popoverRef.value?.hide()
   }
-</script>
 
-<style lang="scss" scoped>
-  @use './style';
-</style>
+  /**
+   * 处理应用项点击
+   * @param application 应用配置对象
+   */
+  const handleApplicationClick = (application: FastEnterApplication): void => {
+    handleNavigate(application.routeName, application.link)
+  }
+
+  /**
+   * 处理快速链接点击
+   * @param quickLink 快速链接配置对象
+   */
+  const handleQuickLinkClick = (quickLink: FastEnterQuickLink): void => {
+    handleNavigate(quickLink.routeName, quickLink.link)
+  }
+</script>

@@ -1,11 +1,10 @@
 import { TenantRow } from "#/api/platform/tenant";
-import { BasicUserInfo } from "#/components/core/types";
 import { Dept } from "../dept";
 
 /**
  * 用户
  */
-export interface User extends BasicUserInfo {
+export interface User extends Api.Auth.UserInfo {
     id: string;
     user_name: string;
     real_name: string;
@@ -34,7 +33,8 @@ export interface User extends BasicUserInfo {
     depts?: Dept;
     posts?: Post[];
     roles?: Role[];
-    tenant?:any;
+    tenant?: any;
     login_date?: string;
+    address?: string;
 }
 

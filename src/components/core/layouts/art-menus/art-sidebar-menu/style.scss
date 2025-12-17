@@ -1,13 +1,23 @@
-@use '@styles/variables.scss' as *;
-
 .layout-sidebar {
   display: flex;
   height: 100vh;
   user-select: none;
   scrollbar-width: none;
+  border-right: 1px solid var(--art-card-border);
 
   &.no-border {
     border-right: none !important;
+  }
+
+  // 自定义滚动条宽度
+  :deep(.el-scrollbar__bar.is-vertical) {
+    width: 4px;
+  }
+
+  :deep(.el-scrollbar__thumb) {
+    right: -2px;
+    background-color: #ccc;
+    border-radius: 2px;
   }
 
   .dual-menu-left {
@@ -15,15 +25,12 @@
     width: 80px;
     height: 100%;
     border-right: 1px solid var(--art-card-border) !important;
-
-    // 隐藏滚动条
-    :deep(.el-scrollbar__bar.is-vertical) {
-      display: none;
-    }
+    transition: width 0.25s;
 
     .logo {
       margin: auto;
-      margin-top: 15px;
+      margin-top: 12px;
+      margin-bottom: 3px;
       cursor: pointer;
     }
 
@@ -35,28 +42,35 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          margin: 8px;
           overflow: hidden;
           text-align: center;
           cursor: pointer;
           border-radius: 5px;
 
-          i {
+          .art-svg-icon {
             display: block;
+            margin: 0 auto;
             font-size: 20px;
           }
 
           span {
-            display: block;
+            display: -webkit-box;
             width: 100%;
+            overflow: hidden;
             font-size: 12px;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            -webkit-box-orient: vertical;
           }
 
           &.is-active {
-            background: var(--main-color);
+            background: var(--el-color-primary-light-9);
 
-            i,
+            .art-svg-icon,
             span {
-              color: #fff !important;
+              color: var(--theme-color) !important;
             }
           }
         }
@@ -68,39 +82,58 @@
       right: 0;
       bottom: 15px;
       left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        display: block;
-        align-items: center;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-        line-height: 40px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: all 0.1s;
-
-        &:hover {
-          background-color: var(--art-gray-200);
-        }
-      }
+      margin: auto;
     }
   }
 
   .menu-left {
+    position: relative;
     box-sizing: border-box;
     height: 100vh;
 
-    @media only screen and (max-width: $device-phone) {
+    @media only screen and (width <= 640px) {
       height: 100dvh;
     }
 
     .el-menu {
       height: 100%;
+    }
+
+    &:hover {
+      .dual-menu-collapse-btn {
+        opacity: 1 !important;
+      }
+    }
+
+    .dual-menu-collapse-btn {
+      position: absolute;
+      top: 50%;
+      right: -11px;
+      z-index: 10;
+      width: 11px;
+      height: 50px;
+      cursor: pointer;
+      background-color: var(--default-box-color);
+      border: 1px solid var(--art-card-border);
+      border-radius: 0 15px 15px 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      transform: translateY(-50%);
+
+      &:hover {
+        .art-svg-icon {
+          color: var(--art-gray-800) !important;
+        }
+      }
+
+      .art-svg-icon {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -4px;
+        margin: auto;
+        transition: all 0.3s;
+      }
     }
   }
 
@@ -129,10 +162,8 @@
       font-size: 18px;
 
       &.is-dual-menu-name {
-        right: 0;
-        left: 0;
+        left: 25px;
         margin: auto;
-        text-align: center;
       }
     }
   }
@@ -157,7 +188,7 @@
   }
 }
 
-@media only screen and (max-width: $device-ipad) {
+@media only screen and (width <= 800px) {
   .layout-sidebar {
     width: 0;
 
@@ -197,6 +228,26 @@
       height: 100vh;
       background: rgba($color: #000, $alpha: 50%);
       transition: opacity 0.2s ease-in-out;
+    }
+  }
+}
+
+@media only screen and (width <= 640px) {
+  .layout-sidebar {
+    border-right: 0 !important;
+  }
+}
+
+.dark {
+  .layout-sidebar {
+    border-right: 1px solid rgb(255 255 255 / 13%);
+
+    :deep(.el-scrollbar__thumb) {
+      background-color: #777;
+    }
+
+    .dual-menu-left {
+      border-right: 1px solid rgb(255 255 255 / 9%) !important;
     }
   }
 }

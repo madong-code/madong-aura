@@ -1,44 +1,12 @@
+<!-- 登录页面 -->
 <template>
-  <div class="login">
-    <LoginLeftView></LoginLeftView>
+  <div class="flex w-full h-screen">
+    <LoginLeftView />
 
-    <div class="right-wrap">
-      <div class="top-right-wrap">
-        <div class="btn theme-btn" @click="toggleTheme">
-          <i class="iconfont-sys">
-            {{ isDark ? "&#xe6b5;" : "&#xe725;" }}
-          </i>
-        </div>
-        <ElDropdown @command="changeLanguage" popper-class="langDropDownStyle">
-          <div class="btn language-btn">
-            <i class="iconfont-sys icon-language">&#xe611;</i>
-          </div>
-          <template #dropdown>
-            <ElDropdownMenu>
-              <div
-                v-for="lang in languageOptions"
-                :key="lang.value"
-                class="lang-btn-item"
-              >
-                <ElDropdownItem
-                  :command="lang.value"
-                  :class="{ 'is-selected': locale === lang.value }"
-                >
-                  <span class="menu-txt">{{ lang.label }}</span>
-                  <i v-if="locale === lang.value" class="iconfont-sys icon-check"
-                    >&#xe621;</i
-                  >
-                </ElDropdownItem>
-              </div>
-            </ElDropdownMenu>
-          </template>
-        </ElDropdown>
-      </div>
-      <div class="header">
-        <ArtLogo class="icon" />
-        <h1>{{ systemName }}</h1>
-      </div>
-      <div class="login-wrap">
+    <div class="relative flex-1">
+      <AuthTopBar />
+
+      <div class="auth-right-wrap">
         <div class="form">
           <h3 class="title">{{ $t("login.title") }}</h3>
           <p class="sub-title">{{ $t("login.subTitle") }}</p>
@@ -46,15 +14,12 @@
             ref="formRef"
             :model="formData"
             :rules="rules"
+            :key="formKey"
             @keyup.enter="handleSubmit"
             style="margin-top: 25px"
           >
             <ElFormItem prop="account">
-              <ElSelect
-                v-model="formData.account"
-                @change="setupAccount"
-                class="account-select"
-              >
+              <ElSelect v-model="formData.account" @change="setupAccount">
                 <ElOption
                   v-for="account in accounts"
                   :key="account.key"
@@ -67,56 +32,59 @@
             </ElFormItem>
             <ElFormItem prop="username">
               <ElInput
-                :placeholder="$t('login.placeholder[0]')"
+                class="custom-height"
+                :placeholder="$t('login.placeholder.username')"
                 v-model.trim="formData.username"
               />
             </ElFormItem>
             <ElFormItem prop="password">
               <ElInput
-                :placeholder="$t('login.placeholder[1]')"
+                class="custom-height"
+                :placeholder="$t('login.placeholder.password')"
                 v-model.trim="formData.password"
                 type="password"
-                radius="8px"
                 autocomplete="off"
                 show-password
               />
             </ElFormItem>
-            <div class="drag-verify">
+
+            <!-- 推拽验证 -->
+            <div class="relative pb-5 mt-6">
               <div
-                class="drag-verify-content"
-                :class="{ error: !isPassing && isClickPass }"
+                class="relative z-[2] overflow-hidden select-none rounded-lg border border-transparent tad-300"
+                :class="{ '!border-[#FF4E4F]': !isPassing && isClickPass }"
               >
                 <ArtDragVerify
                   ref="dragVerify"
                   v-model:value="isPassing"
                   :text="$t('login.sliderText')"
-                  textColor="var(--art-gray-800)"
+                  textColor="var(--art-gray-700)"
                   :successText="$t('login.sliderSuccessText')"
                   :progressBarBg="getCssVar('--el-color-primary')"
-                  background="var(--art-gray-200)"
-                  handlerBg="var(--art-main-bg-color)"
+                  :background="isDark ? '#26272F' : '#F1F1F4'"
+                  handlerBg="var(--default-box-color)"
                 />
               </div>
               <p
-                class="error-text"
-                :class="{ 'show-error-text': !isPassing && isClickPass }"
+                class="absolute top-0 z-[1] px-px mt-2 text-xs text-[#f56c6c] tad-300"
+                :class="{ 'translate-y-10': !isPassing && isClickPass }"
               >
-                {{ $t("login.placeholder[2]") }}
+                {{ $t("login.placeholder.slider") }}
               </p>
             </div>
 
-            <div class="forget-password">
+            <div class="flex-cb mt-2 text-sm">
               <ElCheckbox v-model="formData.rememberPassword">{{
                 $t("login.rememberPwd")
               }}</ElCheckbox>
-              <RouterLink :to="RoutesAlias.ForgetPassword">{{
+              <RouterLink class="text-theme" :to="{ name: 'ForgetPassword' }">{{
                 $t("login.forgetPwd")
               }}</RouterLink>
             </div>
 
             <div style="margin-top: 30px">
               <ElButton
-                class="login-btn"
+                class="w-full custom-height"
                 type="primary"
                 @click="handleSubmit"
                 :loading="loading"
@@ -126,13 +94,11 @@
               </ElButton>
             </div>
 
-            <div class="footer">
-              <p>
-                {{ $t("login.noAccount") }}
-                <RouterLink :to="RoutesAlias.Register">{{
-                  $t("login.register")
-                }}</RouterLink>
-              </p>
+            <div class="mt-5 text-sm text-gray-600">
+              <span>{{ $t("login.noAccount") }}</span>
+              <RouterLink class="text-theme" :to="{ name: 'Register' }">{{
+                $t("login.register")
+              }}</RouterLink>
             </div>
           </ElForm>
         </div>
@@ -142,96 +108,104 @@
 </template>
 
 <script setup lang="ts">
-import AppConfig from "@/config";
-import { RoutesAlias } from "@/router/routesAlias";
-import { ElNotification, ElMessage } from "element-plus";
-import { useUserStore } from "@/store/modules/user";
-import { getCssVar } from "@/utils/ui";
-import { languageOptions } from "@/locales";
-import { LanguageEnum, SystemThemeEnum } from "@/enums/appEnum";
-import { useI18n } from "vue-i18n";
-import { HttpError } from "@/utils/http/error";
-defineOptions({ name: "Login" });
+import AppConfig from '@/config'
+import { useUserStore } from '@/store/modules/user'
+import { getCssVar } from '@/utils/ui'
+import { useI18n } from 'vue-i18n'
+import { HttpError } from '@/utils/http/error'
+import { UserService } from '@/api/system/user'
+import { ElNotification, type FormInstance, type FormRules } from 'element-plus'
+import { useSettingStore } from '@/store/modules/setting'
+import JSEncrypt from 'jsencrypt'
+import { AuthService } from '@/api/system/auth'
+import { DictService } from '@/api/core/dict-api'
+import { useDictStore } from '@/store/modules/dict'
+
 const dictStore = useDictStore();
 
-const { t } = useI18n();
-import { useSettingStore } from "@/store/modules/setting";
-import type { FormInstance, FormRules } from "element-plus";
-import { useSystemConfigStore } from "@/store/modules/system-config";
-const systemConfigStore = useSystemConfigStore();
-const systemInfo = computed(() => systemConfigStore.config);
-type AccountKey = "super" | "admin" | "user";
+
+defineOptions({ name: 'Login' })
+const fetchLogin = UserService
+const settingStore = useSettingStore()
+const { isDark } = storeToRefs(settingStore)
+const { t, locale } = useI18n()
+const formKey = ref(0)
+
+// 监听语言切换，重置表单
+watch(locale, () => {
+  formKey.value++
+})
+
+type AccountKey = 'super' | 'admin' | 'user'
 
 export interface Account {
-  key: AccountKey;
-  label: string;
-  userName: string;
-  password: string;
-  roles: string[];
+  key: AccountKey
+  label: string
+  userName: string
+  password: string
+  roles: string[]
 }
 
 const accounts = computed<Account[]>(() => [
   {
-    key: "super",
-    label: t("login.roles.super"),
-    userName: "superAdmin",
-    password: "123456",
-    roles: ["R_SUPER"],
+    key: 'super',
+    label: t('login.roles.super'),
+    userName: 'superAdmin',
+    password: '123456',
+    roles: ['R_SUPER']
   },
   {
-    key: "admin",
-    label: t("login.roles.admin"),
-    userName: "admin",
-    password: "123456",
-    roles: ["R_ADMIN"],
+    key: 'admin',
+    label: t('login.roles.admin'),
+    userName: 'admin',
+    password: '123456',
+    roles: ['R_ADMIN']
   },
   {
-    key: "user",
-    label: t("login.roles.user"),
-    userName: "test",
-    password: "123456",
-    roles: ["R_USER"],
-  },
-]);
+    key: 'user',
+    label: t('login.roles.user'),
+    userName: 'test',
+    password: '123456',
+    roles: ['R_USER']
+  }
+])
 
-const settingStore = useSettingStore();
-const { isDark, systemThemeType } = storeToRefs(settingStore);
+const dragVerify = ref()
 
-const dragVerify = ref();
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+const isPassing = ref(false)
+const isClickPass = ref(false)
 
-const userStore = useUserStore();
-const router = useRouter();
-const isPassing = ref(false);
-const isClickPass = ref(false);
-
-const systemName = AppConfig.systemInfo.name;
-const formRef = ref<FormInstance>();
+const systemName = AppConfig.systemInfo.name
+const formRef = ref<FormInstance>()
 
 const formData = reactive({
-  account: "",
-  username: "",
-  password: "",
-  rememberPassword: true,
-});
+  account: '',
+  username: '',
+  password: '',
+  rememberPassword: true
+})
 
 const rules = computed<FormRules>(() => ({
-  username: [{ required: true, message: t("login.placeholder[0]"), trigger: "blur" }],
-  password: [{ required: true, message: t("login.placeholder[1]"), trigger: "blur" }],
-}));
+  username: [{ required: true, message: t('login.placeholder.username'), trigger: 'blur' }],
+  password: [{ required: true, message: t('login.placeholder.password'), trigger: 'blur' }]
+}))
 
-const loading = ref(false);
+const loading = ref(false)
 
 onMounted(() => {
-  setupAccount("super");
-});
+  setupAccount('super')
+})
 
 // 设置账号
 const setupAccount = (key: AccountKey) => {
-  const selectedAccount = accounts.value.find((account: Account) => account.key === key);
-  formData.account = key;
-  formData.username = selectedAccount?.userName ?? "";
-  formData.password = selectedAccount?.password ?? "";
-};
+  const selectedAccount = accounts.value.find((account: Account) => account.key === key)
+  formData.account = key
+  formData.username = selectedAccount?.userName ?? ''
+  formData.password = selectedAccount?.password ?? ''
+}
 
 // 登录
 const handleSubmit = async () => {
@@ -303,47 +277,33 @@ const handleSubmit = async () => {
   }
 };
 
+
+
 // 重置拖拽验证
 const resetDragVerify = () => {
-  dragVerify.value.reset();
-};
+  dragVerify.value.reset()
+}
 
 // 登录成功提示
 const showLoginSuccessNotice = () => {
   setTimeout(() => {
     ElNotification({
-      title: t("login.success.title"),
-      type: "success",
+      title: t('login.success.title'),
+      type: 'success',
       duration: 2500,
       zIndex: 10000,
-      message: `${t("login.success.message")}, ${systemInfo.value?.title || systemName}!`,
-    });
-  }, 150);
-};
-
-// 切换语言
-const { locale } = useI18n();
-
-const changeLanguage = (lang: LanguageEnum) => {
-  if (locale.value === lang) return;
-  locale.value = lang;
-  userStore.setLanguage(lang);
-};
-
-// 切换主题
-import { useTheme } from "@/composables/useTheme";
-import { UserService } from "@/api/system/user";
-import { useDictStore } from "@/store/modules/dict";
-import { DictService } from "@/api/system/dict";
-import { JSEncrypt } from "jsencrypt";
-import { AuthService } from "@/api/system/auth";
-
-const toggleTheme = () => {
-  let { LIGHT, DARK } = SystemThemeEnum;
-  useTheme().switchThemeStyles(systemThemeType.value === LIGHT ? DARK : LIGHT);
-};
+      message: `${t('login.success.message')}, ${systemName}!`
+    })
+  }, 1000)
+}
 </script>
 
+<style scoped>
+@import "./style.css";
+</style>
+
 <style lang="scss" scoped>
-@use './index';
+:deep(.el-select__wrapper) {
+  height: 40px !important;
+}
 </style>

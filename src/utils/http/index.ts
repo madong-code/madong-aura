@@ -1,8 +1,25 @@
+/**
+ * HTTP 请求封装模块
+ * 基于 Axios 封装的 HTTP 请求工具，提供统一的请求/响应处理
+ *
+ * ## 主要功能
+ *
+ * - 请求/响应拦截器（自动添加 Token、统一错误处理）
+ * - 401 未授权自动登出（带防抖机制）
+ * - 请求失败自动重试（可配置）
+ * - 统一的成功/错误消息提示
+ * - 支持 GET/POST/PUT/DELETE 等常用方法
+ *
+ * @module utils/http
+ * @author Art Design Pro Team
+ */
+
 import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { useUserStore } from '@/store/modules/user'
 import { ApiStatus } from './status'
 import { HttpError, handleError, showError, showSuccess } from './error'
 import { $t } from '@/locales'
+import { BaseResponse } from '@/types'
 
 /** 请求配置常量 */
 const REQUEST_TIMEOUT = 15000
@@ -65,9 +82,10 @@ axiosInstance.interceptors.request.use(
 
 /** 响应拦截器 */
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse<Http.BaseResponse>) => {
+  (response: AxiosResponse<BaseResponse>) => {
     const { code, msg } = response.data
     if (code === ApiStatus.success) return response
+    if (code === 99990403) handleUnauthorizedError(msg)
     if (code === ApiStatus.unauthorized) handleUnauthorizedError(msg)
     throw createHttpError(msg || $t('httpMsg.requestFailed'), code)
   },
@@ -158,7 +176,7 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
   }
 
   try {
-    const res = await axiosInstance.request<Http.BaseResponse<T>>(config)
+    const res = await axiosInstance.request<BaseResponse<T>>(config)
 
     // 显示成功消息
     if (config.showSuccessMessage && res.data.msg) {
@@ -186,11 +204,11 @@ const api = {
   put<T>(config: ExtendedAxiosRequestConfig) {
     return retryRequest<T>({ ...config, method: 'PUT' })
   },
-  del<T>(config: ExtendedAxiosRequestConfig) {
-    return retryRequest<T>({ ...config, method: 'DELETE' })
-  },
   patch<T>(config: ExtendedAxiosRequestConfig) {
     return retryRequest<T>({ ...config, method: 'PATCH' })
+  },
+  del<T>(config: ExtendedAxiosRequestConfig) {
+    return retryRequest<T>({ ...config, method: 'DELETE' })
   },
   request<T>(config: ExtendedAxiosRequestConfig): Promise<T> {
     return retryRequest<T>({ ...config })

@@ -138,7 +138,7 @@ export interface CrudColumn<T = any> {
 }
 export interface CrudApi {
   add?: (params: any) => Promise<any>
-  edit?: (id: any, params?: any) => Promise<any>
+  edit?: (params: any) => Promise<any>
   remove?: (params: any) => Promise<any>
   view?: (params: any) => Promise<any>
 }

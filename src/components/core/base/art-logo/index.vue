@@ -1,7 +1,7 @@
 <!-- 系统logo -->
 <template>
   <div class="art-logo">
-    <img :style="logoStyle" :src="systemInfo.logo || '@imgs/common/logo.webp'" alt="logo" />
+    <img :style="logoStyle" :src="logo" class="w-full h-full" />
   </div>
 </template>
 
@@ -13,23 +13,11 @@
     /** logo 大小 */
     size?: number | string
   }
-
+  import defaultLogo from '@imgs/common/logo.webp'
   const props = withDefaults(defineProps<Props>(), {
     size: 36
   })
   const systemInfo = computed(() => systemConfigStore.config)
+  const logo = computed(() => systemInfo.value.logo || defaultLogo)
   const logoStyle = computed(() => ({ width: `${props.size}px` }))
 </script>
-
-<style lang="scss" scoped>
-  .art-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-</style>

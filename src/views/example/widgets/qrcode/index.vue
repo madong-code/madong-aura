@@ -1,15 +1,22 @@
 <template>
   <div class="page-content">
     <ElRow :gutter="20">
-      <ElCol :span="6" v-for="preset in qrcodePresets" :key="preset.title">
-        <ElCard class="qrcode-card" shadow="never">
+      <ElCol
+        :span="6"
+        :md="12"
+        :sm="12"
+        :xs="24"
+        v-for="preset in qrcodePresets"
+        :key="preset.title"
+      >
+        <ElCard class="mb-5" shadow="never">
           <template #header>
-            <div class="card-header">
-              <span>{{ preset.title }}</span>
+            <div>
+              <span class="text-base font-bold">{{ preset.title }}</span>
             </div>
           </template>
 
-          <div class="qrcode-preview">
+          <div class="flex-cc p-5 rounded">
             <QrcodeVue :value="qrValue" v-bind="preset.config" />
           </div>
         </ElCard>
@@ -20,14 +27,19 @@
 
 <script setup lang="ts">
   import QrcodeVue from 'qrcode.vue'
-  import { ref, reactive, watch } from 'vue'
   import type { Level, RenderAs, ImageSettings } from 'qrcode.vue'
 
-  // 二维码内容
+  defineOptions({ name: 'WidgetsQrcode' })
+
+  /**
+   * 二维码内容
+   */
   const qrValue = ref('https://www.artd.pro')
   const isShowLogo = ref(false)
 
-  // 预设二维码样式配置
+  /**
+   * 预设二维码样式配置
+   */
   const qrcodePresets = [
     {
       title: '渲染成 svg 标签',
@@ -81,7 +93,9 @@
     }
   ]
 
-  // 二维码配置
+  /**
+   * 二维码配置
+   */
   const qrcodeConfig = reactive({
     size: 160,
     level: 'H' as Level,
@@ -97,7 +111,10 @@
     } as ImageSettings
   })
 
-  // 监听是否显示 logo
+  /**
+   * 监听是否显示 logo
+   * 根据状态动态设置二维码中心的 logo 图片
+   */
   watch(isShowLogo, (val) => {
     if (!val) {
       qrcodeConfig.imageSettings = {} as ImageSettings
@@ -111,26 +128,3 @@
     }
   })
 </script>
-
-<style lang="scss" scoped>
-  .page-content {
-    padding: 20px;
-
-    .qrcode-card {
-      margin-bottom: 20px;
-
-      .card-header {
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      .qrcode-preview {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        border-radius: 4px;
-      }
-    }
-  }
-</style>

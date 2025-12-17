@@ -94,7 +94,12 @@
         "role_name": "角色名称",
         "login_date": "上次登录时间",
         "avatar": "头像",
-        "remark": "备注"
+        "remark": "备注",
+        "birthday": "生日",
+        "tel": "电话",
+        "is_locked": "是否锁定",
+        "address": "地址",
+        "signed": "签名"
       },
       "help": {
         "post_name": "选择部门后, 将自动加载该部门下所有的岗位"
@@ -120,6 +125,8 @@
         "mobile_phone": "手机",
         "email": "邮箱",
         "sex": "性别",
+        "address": "地址",
+        "signed": "签名",
         "button": {
           "submit": "更新"
         }
