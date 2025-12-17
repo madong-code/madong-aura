@@ -4,19 +4,16 @@
   </div>
 </template>
 <script setup lang="tsx">
-  import { useCrud } from '@/components/crud'
-  import { crudSchema } from './schemas'
+import { useCrud } from "@/components/crud";
+import { crudSchema } from "./schemas";
 
-  const [BasicCrud] = useCrud({
-    ...crudSchema,
-    // 左侧工具栏
-    toolbarActions: [],
-    // 左侧栏工具-下拉菜单
-    dropDownToolbarActions: [],
-    // 表格行操作
-    tableActions: [],
-    // 表格行操作-下拉菜单
-    dropDownActions: []
-  })
+const [BasicCrud] = useCrud({
+  ...crudSchema,
+  useVxeTable: true,
+  toolbarActions: [],
+  dropDownToolbarActions: [],
+  tableActions: [],
+  dropDownActions: [],
+});
 </script>
 <style lang="scss" scoped></style>

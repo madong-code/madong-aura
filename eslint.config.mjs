@@ -40,7 +40,7 @@ export default [
   // 自定义规则
   {
     // 针对所有 JavaScript、TypeScript 和 Vue 文件应用以下配置
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    files: ['**/*.{js,mjs,cjs,ts,vue,tsx}'],
 
     languageOptions: {
       globals: {
@@ -57,7 +57,8 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off', // 禁用 any 检查
       'vue/multi-word-component-names': 'off', // 禁用对 Vue 组件名称的多词要求检查
       'no-multiple-empty-lines': ['warn', { max: 1 }], // 不允许多个空行
-      'no-unexpected-multiline': 'error' // 禁止空余的多行
+      'no-unexpected-multiline': 'error', // 禁止空余的多行
+      'no-mixed-spaces-and-tabs': 'off' // 禁用空格和 tab 混合缩进
     }
   },
   // vue 规则

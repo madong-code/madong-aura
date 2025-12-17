@@ -46,25 +46,62 @@ export function useCrud(crudSchema: CrudSchema) {
     getArtTableInstance() {
       return crudRef.value?.getArtTableInstance()
     },
+    getVxeTableInstance() {
+      return crudRef.value?.getVxeTableInstance()
+    },
     // 刷新策略
     /** 全量刷新：清空所有缓存，重新获取数据（适用于手动刷新按钮） */
     refreshData() {
+      if (crudSchema.useVxeTable) {
+        return this.getVxeTableInstance()?.commitProxy('reload', {})
+      }
       return this.getArtTableInstance()?.refreshData()
     },
     /** 轻量刷新：仅清空当前搜索条件的缓存，保持分页状态（适用于定时刷新） */
     refreshSoft() {
+      if (crudSchema.useVxeTable) {
+        return this.getVxeTableInstance()?.commitProxy('query', {})
+      }
       return this.getArtTableInstance()?.refreshSoft()
     },
     /** 新增后刷新：回到第一页并清空分页缓存（适用于新增数据后） */
     refreshCreate() {
+      if (crudSchema.useVxeTable) {
+        return this.getVxeTableInstance()?.commitProxy('reload', {})
+      }
       return this.getArtTableInstance()?.refreshCreate()
     },
     /** 更新后刷新：保持当前页，仅清空当前搜索缓存（适用于更新数据后） */
     refreshUpdate() {
+      if (crudSchema.useVxeTable) {
+        return this.getVxeTableInstance()?.commitProxy('query', {})
+      }
       return this.getArtTableInstance()?.refreshUpdate()
     },
     /** 删除后刷新：智能处理页码，避免空页面（适用于删除数据后） */
     refreshRemove() {
+      if (crudSchema.useVxeTable) {
+        const gridApi = this.getVxeTableInstance()
+        const records = gridApi.getCheckboxRecords()
+        if (
+          gridApi.getTableData()?.fullData?.length === 1 ||
+          gridApi.getTableData()?.fullData?.length === records.length
+        ) {
+          const { pager }: any = gridApi.getProxyInfo()
+          if (pager.currentPage > 1) {
+            pager.currentPage = pager.currentPage - 1
+            return this.getVxeTableInstance()?.commitProxy('query', {})
+          } else {
+            if (pager.total >= gridApi.getTableData()?.fullData?.length) {
+              return this.getVxeTableInstance()?.commitProxy('query', {})
+            } else {
+              return this.getVxeTableInstance()?.commitProxy('reload', {})
+            }
+          }
+        } else {
+          return this.getVxeTableInstance()?.commitProxy('query', {})
+        }
+      }
       return this.getArtTableInstance()?.refreshRemove()
     },
     // 打开内置新增表单
