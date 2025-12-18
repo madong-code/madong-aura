@@ -27,7 +27,7 @@ const props = defineProps({
   action: {
     // 上传的地址
     type: String,
-    default: `${import.meta.env.VITE_API_URL}/sys/fileInfo/upload`,
+    default: `${import.meta.env.VITE_API_URL}/system/fileInfo/upload`,
   },
   headers: {
     // 上传请求的 headers
@@ -354,11 +354,15 @@ onMounted(() => {
     @remove="handleRemove"
   >
     <template #default>
-      <Icon v-if="listType === 'picture-card'" :size="24" icon="&#xe6c6;" />
+      <Icon
+        v-if="listType === 'picture-card'"
+        :size="24"
+        icon="ant-design:plus-outlined"
+      />
       <ElButton v-else :loading="isUploading">
         {{ isUploading ? "上传中..." : "上传文件" }}
         <template #icon>
-          <Icon icon="&#xe6c6;" />
+          <Icon icon="ant-design:cloud-upload-outlined" />
         </template>
       </ElButton>
     </template>
