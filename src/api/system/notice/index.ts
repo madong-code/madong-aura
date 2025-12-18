@@ -8,7 +8,7 @@ export const NoticeService = {
     ...BaseService<NoticeRow>({ baseUrl }),
 
     publish(data: any) {
-        return request.put({ url: `${baseUrl}/publish`, data });
+        return request.post({ url: `${baseUrl}/publish`, data });
     },
 };
 
