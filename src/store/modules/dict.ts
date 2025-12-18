@@ -32,9 +32,9 @@ export const useDictStore = defineStore('dict', {
       this.loadingMap.set(dictType, true)
 
       try {
-        const res = await request.post<NewOption[]>({
-          url: '/sys/dict/getByDictType',
-          params: { dictType }
+        const res = await request.get<NewOption[]>({
+          url: '/system/dict/options/get-by-dict-type',
+          params: { dict_type: dictType }
         })
 
         const data = res || []

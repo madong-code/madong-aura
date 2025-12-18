@@ -7,26 +7,24 @@
  */
 export const WEB_LINKS = {
   // Github 主页
-  GITHUB_HOME: 'https://gitee.com/mldong',
+  GITHUB_HOME: 'https://gitee.com/liu_guan_qing',
 
   // 项目 Github 主页
-  GITHUB: 'https://gitee.com/mldong/mldong-art-design',
+  GITHUB: 'https://gitee.com/motion-code/madong-ui-admin-art-design',
 
   // 个人博客
-  BLOG: 'https://www.mldong.com',
+  BLOG: 'https://madong.tech/',
 
   // 项目文档
-  DOCS: 'https://doc.mldong.com/art-design/',
+  DOCS: 'https://madong.tech/doc/madong-ui-art',
 
-  // v2.6.1版本
-  OldVersion: 'https://www.artd.pro/v2/',
 
   // 项目社区
-  COMMUNITY: 'https://www.mldong.com/',
+  COMMUNITY: 'https://madong.tech/',
 
   // 个人 Bilibili 主页
-  BILIBILI: 'https://space.bilibili.com/1395438398',
+  BILIBILI: '',
 
   // 项目介绍
-  INTRODUCE: 'https://doc.mldong.com/art-design/'
+  INTRODUCE: 'https://madong.tech/doc/madong-ui-art'
 }
