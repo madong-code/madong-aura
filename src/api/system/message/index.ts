@@ -12,7 +12,7 @@ export const MessageService = {
             id: params,
             status: 'read',
         };
-        return request.put({ url: `${baseUrl}/update-read`, data });
+        return request.put({ url: `${baseUrl}/${params}/update-read`, data });
     },
 
     emptyMessage(params: string | string[]) {

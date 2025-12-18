@@ -65,6 +65,7 @@
     "@wangeditor/editor-for-vue": "next",
     "axios": "^1.12.2",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.19",
     "echarts": "^6.0.0",
     "element-plus": "^2.11.2",
     "file-saver": "^2.0.5",
