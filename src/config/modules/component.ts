@@ -68,7 +68,15 @@ export const globalComponentsConfig: GlobalComponentConfig[] = [
       () => import('@/components/core/others/art-watermark/index.vue')
     ),
     enabled: true
-  }
+  },
+  {
+    name: '终端命令',
+    key: 'terminal-command',
+    component: defineAsyncComponent(
+      () => import('@/components/terminal/index.vue')
+    ),
+    enabled: true
+  },
 ]
 
 /**

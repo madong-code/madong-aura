@@ -37,6 +37,7 @@
  * - openSearchDialog: 打开搜索对话框
  * - openChat: 打开聊天窗口
  * - openLockScreen: 打开锁屏
+ * - openTerminalCommand: 打开终端命令对话框-扩展
  *
  * @module utils/sys/mittBus
  * @author Art Design Pro Team
@@ -55,6 +56,8 @@ type Events = {
   openChat: void
   // 打开锁屏事件 - 无参数
   openLockScreen: void
+  // 打开终端命令对话框事件 - 无参数
+  openTerminalCommand: void
 }
 
 // 创建类型安全的事件总线实例

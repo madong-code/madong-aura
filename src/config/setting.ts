@@ -84,7 +84,9 @@ export const SETTING_DEFAULT_CONFIG = {
   /** 容器宽度 */
   containerWidth: ContainerWidthEnum.FULL,
   /** 节日日期 */
-  festivalDate: ''
+  festivalDate: '',
+  /** 是否显示终端 */
+  showTerminal: true
 }
 
 /**

@@ -88,6 +88,8 @@ export const useSettingStore = defineStore(
     const showFestivalText = ref(SETTING_DEFAULT_CONFIG.showFestivalText)
     /** 是否显示水印 */
     const watermarkVisible = ref(SETTING_DEFAULT_CONFIG.watermarkVisible)
+    /** 是否显示终端 */
+    const showTerminal = ref(SETTING_DEFAULT_CONFIG.showTerminal)
 
     // 功能设置
     /** 是否自动关闭 */
@@ -392,6 +394,7 @@ export const useSettingStore = defineStore(
       showWorkTab,
       showLanguage,
       showNprogress,
+      showTerminal,//扩展功能：是否显示终端
       colorWeak,
       showSettingGuide,
       pageTransition,

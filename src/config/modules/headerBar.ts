@@ -57,7 +57,11 @@ export const headerBarConfig: HeaderBarFeatureConfig = {
   themeToggle: {
     enabled: true,
     description: '主题切换功能（明暗主题）'
-  }
+  },
+  terminal: {
+    enabled: true,
+    description: '终端功能，提供命令行操作'
+  },
 }
 
 export default headerBarConfig
