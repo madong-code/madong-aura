@@ -18,7 +18,7 @@ const props = defineProps({
 });
 
 const [BasicCrud] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 查询参数处理
   beforeFetch(params: any) {
     return {

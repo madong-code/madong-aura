@@ -10,7 +10,7 @@ import { $t } from "@/locales";
 import { FilesService } from "@/api/system/files";
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 左侧工具栏
   toolbarActions: [
     {

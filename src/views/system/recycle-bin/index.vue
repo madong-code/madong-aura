@@ -11,7 +11,7 @@ import { FilesService } from "@/api/system/files";
 import { RecycleBinRow, RecycleBinService } from "@/api/system/recycle-bin";
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 左侧工具栏
   toolbarActions: [
     {

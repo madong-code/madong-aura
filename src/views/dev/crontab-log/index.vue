@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const [BasicCrud] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   beforeFetch(params) {
     return {
       ...params,

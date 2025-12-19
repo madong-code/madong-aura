@@ -8,7 +8,7 @@ import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 
 const [BasicCrud] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 左侧工具栏
   toolbarActions: [],
   // 左侧栏工具-下拉菜单

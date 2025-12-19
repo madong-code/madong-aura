@@ -13,7 +13,7 @@ import UserRole from "./user-role.vue";
 const authMenuRef = ref();
 const userRoleRef = ref();
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   tableActionColumn: {
     width: 320,
   },

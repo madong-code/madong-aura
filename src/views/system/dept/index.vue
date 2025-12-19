@@ -9,7 +9,7 @@ import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 
 const [BasicCrud] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   beforeFetch: (params: any) => {
     return { ...params, format: "table_tree" };
   },

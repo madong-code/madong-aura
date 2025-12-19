@@ -14,7 +14,7 @@ const grantRoleRef = ref();
 const deptIdList = ref([]);
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // beforeFetch: (params: any) => {
   //   return { ...params};
   // },

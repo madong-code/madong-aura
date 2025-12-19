@@ -11,7 +11,7 @@ import InterfaceForm from "./initerface-list.vue";
 
 const interfaceRef = ref();
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   beforeFetch: (params: any) => {
     return { ...params, format: "table_tree", page: 1, limit: 9999 };
   },

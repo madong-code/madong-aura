@@ -13,7 +13,7 @@ import { $t } from "@/locales";
 const crontabLogsWrapRef = ref();
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 左侧工具栏
   toolbarActions: [],
   // 左侧栏工具-下拉菜单

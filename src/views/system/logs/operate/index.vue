@@ -8,8 +8,8 @@ import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 
 const [BasicCrud] = useCrud({
-  ...crudSchema,
-  useVxeTable: true,
+  ...crudSchema(),
+  useVxeTable: false,
   toolbarActions: [],
   dropDownToolbarActions: [],
   tableActions: [],

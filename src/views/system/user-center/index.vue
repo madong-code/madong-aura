@@ -445,7 +445,7 @@ const handlePwdEdit = async () => {
 
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema,
+  ...crudSchema(),
   // 左侧工具栏
   toolbarActions: [
     {
