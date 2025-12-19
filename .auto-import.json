@@ -5,6 +5,7 @@
     "ComputedRef": true,
     "DirectiveBinding": true,
     "EffectScope": true,
+    "ElButton": true,
     "ElLoading": true,
     "ElMessage": true,
     "ExtractDefaultPropTypes": true,
