@@ -97,7 +97,6 @@ export const localRoutes: AppRouteRecord[] = [
       keepAlive: false,
     },
   },
-
   //示例模块路由
   routeModules
 ]
