@@ -29,10 +29,10 @@ export default ({ mode }: { mode: string }) => {
     server: {
       port: Number(VITE_PORT),
       proxy: {
-        '/api': {
+        '/adminapi': {
           target: VITE_API_PROXY_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/adminapi/, '/adminapi')
         }
       },
       host: true

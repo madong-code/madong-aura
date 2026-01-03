@@ -1,11 +1,9 @@
 // 模块分类数据
 export const moduleCategories = [
-    { key: 'all', label: '全部' },
-    { key: 'full-app', label: '完整应用' },
-    { key: 'backend', label: '后端管理功能' },
-    { key: 'infrastructure', label: '基础设施' },
-    { key: 'single-page', label: '后台单页' },
-    { key: 'other', label: '其他' }
+    { key: 'installed', label: '已安装' },
+    { key: 'un_installed', label: '未安装' },
+    { key: 'purchased', label: '已购买' },
+    { key: 'updatable', label: '可更新' },
 ]
 
 // 模块列表数据
