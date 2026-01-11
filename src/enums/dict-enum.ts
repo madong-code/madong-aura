@@ -4,31 +4,31 @@
  */
 export const DictEnum = {
   // 基础数据类 
-  SYS_LOCKED_STATUS: 'app.core.enum.system.LockedStatus',
-  SYS_ENABLED_STATUS: 'app.core.enum.system.EnabledStatus',
-  SYS_YES_NO: 'app.core.enum.system.YesNoStatus',
-  SYS_SEX: 'app.core.enum.system.Sex',
+  SYS_LOCKED_STATUS: 'system.LockedStatus',
+  SYS_ENABLED_STATUS: 'system.EnabledStatus',
+  SYS_YES_NO: 'system.YesNoStatus',
+  SYS_SEX: 'system.Sex',
 
 
   //数据字典
-  SYS_DICT_DATA_TYPE: 'app.core.enum.system.DictDataType',
+  SYS_DICT_DATA_TYPE: 'system.DictDataType',
   SYS_DICT_GROUP_CODE: 'sys_dict_group_code',
 
   // 菜单权限类 
-  SYS_MENU_TYPE: 'app.core.enum.system.MenuType',
-  SYS_MENU_OPEN_TYPE: 'app.core.enum.system.MenuOpenType',
-  SYS_REQUEST_MODE: 'app.core.enum.system.RequestMethod',
+  SYS_MENU_TYPE: 'system.MenuType',
+  SYS_MENU_OPEN_TYPE: 'system.MenuOpenType',
+  SYS_REQUEST_MODE: 'system.RequestMethod',
 
   // 用户角色类 
-  SYS_USER_ADMIN_TYPE: 'app.core.enum.system.UserAdminType',
-  SYS_ROLE_TYPE: 'app.core.enum.system.RoleType',
-  SYS_DATA_PERMISSION: 'app.core.enum.system.DataPermission',
+  SYS_USER_ADMIN_TYPE: 'system.UserAdminType',
+  SYS_ROLE_TYPE: 'system.RoleType',
+  SYS_DATA_PERMISSION: 'system.DataPermission',
 
   // 定时任务类 
-  SYS_MONITOR_CRONTAB_MODE: 'app.core.enum.system.TaskScheduleMode',//执行模式
-  SYS_MONITOR_CRONTAB_TYPE: 'app.core.enum.system.TaskScheduleType',//任务类型
-  SYS_MONITOR_CRONTAB_CYCLE: 'app.core.enum.system.TaskScheduleCycle',//任务规则
-  SYS_MONITOR_CRONTAB_WEEK: 'app.core.enum.system.Week',
+  SYS_MONITOR_CRONTAB_MODE: 'system.TaskScheduleMode',//执行模式
+  SYS_MONITOR_CRONTAB_TYPE: 'system.TaskScheduleType',//任务类型
+  SYS_MONITOR_CRONTAB_CYCLE: 'system.TaskScheduleCycle',//任务规则
+  SYS_MONITOR_CRONTAB_WEEK: 'system.Week',
 
   // 服务器监控类 
   SYS_MONITOR_SERVER_CPU: 'monitor_server_cpu',

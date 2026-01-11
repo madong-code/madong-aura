@@ -3,6 +3,7 @@ import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
 import { DictEnum } from '@/enums'
 import { $t } from '@/locales'
+import { m } from 'vue-router/dist/router-CWoNjPRp.mjs'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -78,7 +79,7 @@ export const crudSchema = (): CrudSchema => {
         label: '菜单类型',
         component: 'ApiDict',
         componentProps: {
-          code: 'sys_menu_type'
+          code: DictEnum.SYS_MENU_TYPE,
         }
       },
       {
@@ -206,7 +207,7 @@ export const crudSchema = (): CrudSchema => {
           componentProps: {
             placeholder: '请选择所属上级',
             clearable: true,
-            // 任意节点可选
+            // 任意节点可选 
             checkStrictly: true,
             api: '/system/menu',
             params: { format: 'tree' },
