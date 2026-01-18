@@ -3,8 +3,8 @@ import { defineStore } from 'pinia';
 
 import { timestampFormat, uuid } from '@/utils';
 import { $t } from '@/locales';
-import { Terminal, TerminalService } from '@/api/dev/terminal';
-import { taskStatus } from '@/enums/terminal-enum';
+import { Terminal, TerminalService } from '@/app/api/dev/terminal';
+import { taskStatus } from '@/app/enums/terminal-enum';
 import { ElNotification } from 'element-plus';
 
 

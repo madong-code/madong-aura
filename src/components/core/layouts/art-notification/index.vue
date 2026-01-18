@@ -114,13 +114,13 @@ import { useI18n } from 'vue-i18n'
 import { useNotifyStore } from "@/store/modules/notify";
 
 // 导入头像图片
-import avatar1 from '@/assets/images/avatar/avatar1.webp'
-import avatar2 from '@/assets/images/avatar/avatar2.webp'
-import avatar3 from '@/assets/images/avatar/avatar3.webp'
-import avatar4 from '@/assets/images/avatar/avatar4.webp'
-import avatar5 from '@/assets/images/avatar/avatar5.webp'
-import avatar6 from '@/assets/images/avatar/avatar6.webp'
-import MessageService from '@/api/system/message';
+import avatar1 from '@/app/assets/images/avatar/avatar1.webp'
+import avatar2 from '@/app/assets/images/avatar/avatar2.webp'
+import avatar3 from '@/app/assets/images/avatar/avatar3.webp'
+import avatar4 from '@/app/assets/images/avatar/avatar4.webp'
+import avatar5 from '@/app/assets/images/avatar/avatar5.webp'
+import avatar6 from '@/app/assets/images/avatar/avatar6.webp'
+import MessageService from '@/app/api/system/message';
 
 defineOptions({ name: 'ArtNotification' })
 const router = useRouter();

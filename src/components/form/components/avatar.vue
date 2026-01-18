@@ -2,7 +2,7 @@
 import { useVModel } from "@vueuse/core";
 import { ElUpload as Upload } from "element-plus";
 
-import { FilesService } from "@/api/system/files";
+import { FilesService } from "@/app/api/system/files";
 import { Icon } from "@/components/icon";
 import { fullUrl, stripBaseUrl } from "@/utils";
 

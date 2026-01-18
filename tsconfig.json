@@ -14,13 +14,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@views/*": ["src/views/*"],
-      "@imgs/*": ["src/assets/images/*"],
-      "@icons/*": ["src/assets/icons/*"],
+      "@views/*": ["src/app/views/*"],
+      "@imgs/*": ["src/app/assets/images/*"],
+      "@icons/*": ["src/app/assets/icons/*"],
       "@utils/*": ["src/utils/*"],
       "@stores/*": ["src/store/*"],
       "@plugins/*": ["src/plugins/*"],
-      "@styles/*": ["src/assets/styles/*"]
+      "@features/*": ["src/features/*"],
+      "@styles/*": ["src/app/assets/styles/*"]
     }
   },
   "include": ["src/**/*", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

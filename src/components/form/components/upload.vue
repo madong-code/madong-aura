@@ -5,7 +5,7 @@ import { computed, onMounted, ref, useAttrs, watch } from "vue";
 
 import { ElMessage as message, ElUpload as Upload } from "element-plus";
 
-import { FilesService } from "@/api/system/files";
+import { FilesService } from "@/app/api/system/files";
 import { Icon } from "@/components/icon";
 import { useUserStore } from "@/store/modules/user";
 import { omit } from "lodash-es";

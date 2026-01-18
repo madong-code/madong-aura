@@ -33,7 +33,7 @@
  */
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { LanguageEnum } from '@/enums/appEnum'
+import { LanguageEnum } from '@/app/enums/appEnum'
 import { router } from '@/router'
 import { useSettingStore } from './setting'
 import { useWorktabStore } from './worktab'

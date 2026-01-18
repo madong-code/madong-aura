@@ -206,7 +206,7 @@
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useFullscreen, useWindowSize } from "@vueuse/core";
-import { LanguageEnum, MenuTypeEnum } from "@/enums/appEnum";
+import { LanguageEnum, MenuTypeEnum } from "@/app/enums/appEnum";
 import { useSettingStore } from "@/store/modules/setting";
 import { useUserStore } from "@/store/modules/user";
 import { useMenuStore } from "@/store/modules/menu";

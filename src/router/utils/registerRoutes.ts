@@ -10,9 +10,14 @@ import { h } from 'vue'
 import { useMenuStore } from '@/store/modules/menu'
 
 /**
- * 动态导入 views 目录下所有 .vue 组件
+ * 动态导入 app/views 目录下所有 .vue 组件
  */
-const modules: Record<string, () => Promise<any>> = import.meta.glob('../../views/**/*.vue')
+const appModules: Record<string, () => Promise<any>> = import.meta.glob('../../app/views/**/*.vue')
+
+/**
+ * 动态导入 features 模块下所有 .vue 组件
+ */
+const featuresModules: Record<string, () => Promise<any>> = import.meta.glob('../../features/**/views/**/*.vue')
 
 /**
  * 注册异步路由
@@ -122,12 +127,21 @@ function getComponentPathString(component: any): string {
 }
 
 /**
- * 根据组件路径动态加载组件
- * @param componentPath 组件路径（不包含 ../../views 前缀和 .vue 后缀）
+ * 从 meta 中获取模块名
+ */
+function getModuleNameFromMeta(meta: any): string | null {
+  // 支持多种字段名：module、feature、featuresModule
+  return meta?.module || meta?.feature || meta?.featuresModule || null
+}
+
+/**
+ * 根据组件路径和模块信息动态加载组件
+ * @param componentPath 组件路径（不包含前缀和 .vue 后缀）
  * @param routeName 当前路由名称（用于错误提示）
+ * @param meta 路由元数据（包含模块信息）
  * @returns 组件加载函数
  */
-function loadComponent(componentPath: string, routeName: string): () => Promise<any> {
+function loadComponent(componentPath: string, routeName: string, meta: any): () => Promise<any> {
   // 如果路径为空，直接返回一个空的组件
   if (componentPath === '') {
     return () =>
@@ -138,12 +152,28 @@ function loadComponent(componentPath: string, routeName: string): () => Promise<
       })
   }
 
+  // 从 meta 中获取模块名
+  const moduleName = getModuleNameFromMeta(meta)
+
+  // 如果有模块名且不是 app，从模块的 views 目录加载
+  if (moduleName && moduleName !== 'app') {
+    return loadFeaturesComponent(componentPath, moduleName, routeName)
+  }
+
+  // 默认从 app/views 目录加载
+  return loadAppComponent(componentPath, routeName)
+}
+
+/**
+ * 从 app/views 目录加载组件
+ */
+function loadAppComponent(componentPath: string, routeName: string): () => Promise<any> {
   // 构建可能的路径
-  const fullPath = `../../views${componentPath}.vue`
-  const fullPathWithIndex = `../../views${componentPath}/index.vue`
+  const fullPath = `../../app/views${componentPath}.vue`
+  const fullPathWithIndex = `../../app/views${componentPath}/index.vue`
 
   // 先尝试直接路径，再尝试添加/index的路径
-  const module = modules[fullPath] || modules[fullPathWithIndex]
+  const module = appModules[fullPath] || appModules[fullPathWithIndex]
 
   if (!module) {
     console.error(
@@ -155,6 +185,28 @@ function loadComponent(componentPath: string, routeName: string): () => Promise<
           return h('div', `组件未找到: ${routeName}`)
         }
       })
+  }
+
+  return module
+}
+
+/**
+ * 从 features 模块的 views 目录加载组件
+ */
+function loadFeaturesComponent(componentPath: string, moduleName: string, routeName: string): () => Promise<any> {
+  // 构建可能的路径
+  const fullPath = `../../features/${moduleName}/views${componentPath}.vue`
+  const fullPathWithIndex = `../../features/${moduleName}/views${componentPath}/index.vue`
+
+  // 先尝试直接路径，再尝试添加/index的路径
+  const module = featuresModules[fullPath] || featuresModules[fullPathWithIndex]
+
+  if (!module) {
+    console.error(
+      `[路由错误] 未找到模块 ${moduleName} 的组件：${routeName}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
+    )
+    // 如果模块中找不到，尝试从 app/views 目录加载
+    return loadAppComponent(componentPath, routeName)
   }
 
   return module
@@ -194,7 +246,7 @@ function convertRouteComponent(
   } else if (isFirstLevel) {
     handleLayoutRoute(converted, route, component as string)
   } else {
-    handleNormalRoute(converted, component as string, String(route.name))
+    handleNormalRoute(converted, component as string, String(route.name), route.meta)
   }
 
   // 递归时增加深度
@@ -215,8 +267,8 @@ function handleIframeRoute(
   iframeRoutes: AppRouteRecord[],
   depth: number
 ): void {
-  const LAYOUT_VIEW = () => import('@/views/layout/index.vue')
-  const IFRAME_VIEW = () => import('@/views/outside/Iframe.vue')
+  const LAYOUT_VIEW = () => import('@/app/views/layout/index.vue')
+  const IFRAME_VIEW = () => import('@/app/views/outside/Iframe.vue')
 
   if (depth === 0) {
     // 顶级 iframe：用 Layout 包裹
@@ -247,7 +299,7 @@ function handleLayoutRoute(
   route: AppRouteRecord,
   component: string | undefined
 ): void {
-  converted.component = () => import('@/views/layout/index.vue')
+  converted.component = () => import('@/app/views/layout/index.vue')
   converted.path = `/${(route.path?.split('/')[1] || '').trim()}`
   converted.name = ''
   route.meta.isFirstLevel = true
@@ -255,7 +307,7 @@ function handleLayoutRoute(
   converted.children = [
     {
       ...route,
-      component: loadComponent(component as string, String(route.name))
+      component: loadComponent(component as string, String(route.name), route.meta)
     } as ConvertedRoute
   ]
 }
@@ -266,12 +318,13 @@ function handleLayoutRoute(
 function handleNormalRoute(
   converted: ConvertedRoute,
   component: string | undefined,
-  routeName: string
+  routeName: string,
+  meta: any
 ): void {
   if (component) {
     const aliasComponent = RoutesAlias[
       component as keyof typeof RoutesAlias
     ] as unknown as RouteRecordRaw['component']
-    converted.component = aliasComponent || loadComponent(component as string, routeName)
+    converted.component = aliasComponent || loadComponent(component as string, routeName, meta)
   }
 }

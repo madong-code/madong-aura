@@ -23,7 +23,7 @@
  * @author Art Design Pro Team
  */
 
-import { MenuThemeEnum, SystemThemeEnum } from '@/enums/appEnum'
+import { MenuThemeEnum, SystemThemeEnum } from '@/app/enums/appEnum'
 import { LocationQueryRaw } from 'vue-router'
 
 // 系统主题样式（light | dark）

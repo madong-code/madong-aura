@@ -42,11 +42,13 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         '@views': resolvePath('src/views'),
-        '@imgs': resolvePath('src/assets/images'),
-        '@icons': resolvePath('src/assets/icons'),
+        '@imgs': resolvePath('src/app/assets/images'),
+        '@icons': resolvePath('src/app/assets/icons'),
         '@utils': resolvePath('src/utils'),
         '@stores': resolvePath('src/store'),
-        '@styles': resolvePath('src/assets/styles')
+        '@plugins': resolvePath('src/plugins'),
+        '@features': resolvePath('src/features'),
+        '@styles': resolvePath('src/styles')
       }
     },
     build: {

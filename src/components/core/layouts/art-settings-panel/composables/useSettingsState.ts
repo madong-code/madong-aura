@@ -1,5 +1,5 @@
 import { useSettingStore } from '@/store/modules/setting'
-import { MenuThemeEnum, MenuTypeEnum } from '@/enums/appEnum'
+import { MenuThemeEnum, MenuTypeEnum } from '@/app/enums/appEnum'
 
 /**
  * 设置状态管理
