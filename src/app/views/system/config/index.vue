@@ -35,7 +35,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 const settingList = ref([
   {
     component: defineAsyncComponent(
-      () => import("@/views/system/config/modules/site-setting.vue")
+      () => import("@/app/views/system/config/modules/site-setting.vue")
     ),
     key: "1",
     name: $t("system.config.site.title"),
@@ -43,7 +43,7 @@ const settingList = ref([
   },
   {
     component: defineAsyncComponent(
-      () => import("@/views/system/config/modules/upload-setting.vue")
+      () => import("@/app/views/system/config/modules/upload-setting.vue")
     ),
     key: "2",
     name: $t("system.config.upload.title"),
@@ -51,7 +51,7 @@ const settingList = ref([
   },
   {
     component: defineAsyncComponent(
-      () => import("@/views/system/config/modules/email-setting.vue")
+      () => import("@/app/views/system/config/modules/email-setting.vue")
     ),
     key: "3",
     name: $t("system.config.email.title"),
@@ -59,7 +59,7 @@ const settingList = ref([
   },
   {
     component: defineAsyncComponent(
-      () => import("@/views/system/config/modules/sms-setting.vue")
+      () => import("@/app/views/system/config/modules/sms-setting.vue")
     ),
     key: "4",
     name: $t("system.config.sms.title"),
