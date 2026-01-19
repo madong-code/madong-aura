@@ -7,20 +7,34 @@ import { StorageKeyManager } from '@/utils/storage/storage-key-manager'
 
 const storageKeyManager = new StorageKeyManager()
 
-// 语言映射配置
-const langMap: Record<string, { value: LanguageEnum; label: string }> = {
-  'zh-CN': { value: LanguageEnum.ZH, label: '简体中文' },
-  'en-US': { value: LanguageEnum.EN, label: 'English' },
+// 语言映射配置 - 只包含两个主要语言，对应前端选择
+const langMap: Record<string, {
+  value: LanguageEnum;
+  label: string;
+  dir: string; // 对应的目录名称
+}> = {
+  'zh-CN': { value: LanguageEnum.ZH, label: '简体中文', dir: 'zh-CN' },
+  'en-US': { value: LanguageEnum.EN, label: 'English', dir: 'en-US' },
+}
+
+// 目录映射配置 - 用于处理不同大小写的目录名称
+const dirMap: Record<string, string> = {
+  'zh-cn': 'zh-CN',
+  'cn': 'zh-CN',
+  'zh': 'zh-CN',
+  'en-us': 'en-US',
+  'en': 'en-US',
 }
 
 // 定义直接合并到语言根节点的文件名（不带后缀）
 const rootFiles = ['en', 'zh'];
 
-// 导入语言模块
-const langModules = import.meta.glob('./langs/*/**/*.json', { eager: true })
-const effectsLangModules = import.meta.glob('./effects/langs/*/**/*.json', { eager: true })
+// 导入语言模块 - 按照优先级顺序，统一使用lang目录
+const rootLangModules = import.meta.glob('./lang/**/*.json', { eager: true })
+const appLangModules = import.meta.glob('../app/**/lang/**/*.json', { eager: true })
+const featuresLangModules = import.meta.glob('../features/**/lang/**/*.json', { eager: true })
 
-// 初始化消息对象
+// 初始化对象
 const messages: Record<LanguageEnum, Record<string, any>> = {
   [LanguageEnum.ZH]: {},
   [LanguageEnum.EN]: {}
@@ -52,21 +66,73 @@ function toNestedObject(flatObj: Record<string, any>): Record<string, any> {
 }
 
 /**
+ * 标准化语言目录名称
+ * @param langDir - 原始语言目录名称
+ * @returns 标准化的语言目录名称
+ */
+function normalizeLangDir(langDir: string): string {
+  const lowerDir = langDir.toLowerCase()
+  return dirMap[lowerDir] || langDir
+}
+
+/**
  * 合并语言模块到消息对象
  * @param modules - 语言模块集合
+ * @param priority - 优先级标识，用于控制合并顺序
  */
-function mergeLangModules(modules: Record<string, any>): void {
-  for (const path in modules) {
-    // 匹配路径格式: ./langs/<langDir>/<fileName>.json 或 ./effects/langs/<langDir>/<fileName>.json
-    const match = path.match(/\.\/(?:effects\/)?langs\/([^\/]+)\/([^\/]+)\.json$/)
-    if (!match) continue
+function mergeLangModules(modules: Record<string, any>, priority: number): void {
+  let loadedCount = 0
 
-    const [, langDir, fileNameWithExt] = match
-    const fileName = fileNameWithExt.replace('.json', '')
-    const langInfo = langMap[langDir]
+  for (const path in modules) {
+    // 匹配不同的路径格式
+    let match: RegExpMatchArray | null = null
+    let moduleType = ''
+
+    // 根目录语言包
+    if (path.startsWith('./lang/')) {
+      match = path.match(/\.\/lang\/([^\/]+)\/([^\/]+)\.json$/)
+      moduleType = 'root'
+    }
+    // app 目录语言包 - 修复路径匹配规则
+    else if (path.includes('/app/')) {
+      match = path.match(/\.\.\/app\/(?:[^\/]+\/)*lang\/([^\/]+)\/([^\/]+)\.json$/)
+      moduleType = 'app'
+    }
+    // features 目录语言包
+    else if (path.includes('/features/')) {
+      match = path.match(/\.\.\/features\/([^\/]+)\/lang\/([^\/]+)\/([^\/]+)\.json$/)
+      moduleType = 'features'
+    }
+
+    if (!match) {
+      console.warn(`[LanguageLoader] 无法识别的语言包路径: ${path}`)
+      continue
+    }
+
+    let langDir: string, fileName: string, moduleName: string = ''
+
+    if (moduleType === 'root') {
+      [, langDir, fileName] = match
+    } else if (moduleType === 'app') {
+      // app目录的特殊处理：lang目录可能在app根目录下，也可能在子目录中
+      [, langDir, fileName] = match
+      // 提取模块名称（如果有的话）
+      const moduleMatch = path.match(/\.\.\/app\/([^\/]+)\/lang\//)
+      moduleName = moduleMatch ? moduleMatch[1] : 'app'
+    } else {
+      [, moduleName, langDir, fileName] = match
+    }
+
+    // 标准化语言目录名称
+    const normalizedLangDir = normalizeLangDir(langDir)
+    const fileNameWithoutExt = fileName.replace('.json', '')
+    const langInfo = langMap[normalizedLangDir]
 
     // 跳过无效语言目录
-    if (!langInfo) continue
+    if (!langInfo) {
+      console.warn(`[LanguageLoader] 跳过无效语言目录: ${langDir} (标准化: ${normalizedLangDir})`)
+      continue
+    }
 
     // 获取模块内容
     const moduleContent = modules[path].default || modules[path]
@@ -77,22 +143,37 @@ function mergeLangModules(modules: Record<string, any>): void {
     if (!messages[langValue]) messages[langValue] = {}
 
     // 处理不同类型的文件
-    if (rootFiles.includes(fileName) || fileNameWithExt === `${langDir}.json`) {
-      // 直接合并到语言根节点
+    if (rootFiles.includes(fileNameWithoutExt) || fileName === `${langDir}.json` || fileNameWithoutExt === normalizedLangDir) {
+      // 直接合并到语言根节点（没有文件命名的key直接语言实现）
       merge(messages[langValue], nestedObj)
+      console.log(`[LanguageLoader] 直接合并到语言根节点: ${moduleType} -> ${moduleName || 'root'} -> ${langDir} -> ${fileName}`)
     } else {
       // 使用文件名作为命名空间包裹一层
-      const wrappedObj = { [fileName]: nestedObj }
+      const wrappedObj = { [fileNameWithoutExt]: nestedObj }
       merge(messages[langValue], wrappedObj)
+      console.log(`[LanguageLoader] 使用命名空间包裹: ${moduleType} -> ${moduleName || 'root'} -> ${langDir} -> ${fileName}`)
     }
+
+    loadedCount++
   }
+
+  console.log(`[LanguageLoader] ${priority === 1 ? '根目录' : priority === 2 ? 'app目录' : 'features目录'}语言包加载完成，共加载 ${loadedCount} 个文件`)
 }
 
-// 合并语言模块
-mergeLangModules(langModules)
-mergeLangModules(effectsLangModules)
+// 按照优先级顺序合并语言模块
+// 1. 根目录语言包 (最高优先级)
+console.log('[LanguageLoader] 开始加载根目录语言包...')
+mergeLangModules(rootLangModules, 1)
 
-// 导出语言选项
+// 2. app 目录语言包 (中等优先级)
+console.log('[LanguageLoader] 开始加载 app 语言包...')
+mergeLangModules(appLangModules, 2)
+
+// 3. features 目录语言包 (最低优先级)
+console.log('[LanguageLoader] 开始加载 features 语言包...')
+mergeLangModules(featuresLangModules, 3)
+
+// 导出语言选项 - 只包含两个主要语言
 export const languageOptions = Object.values(langMap).map(({ value, label }) => ({
   value,
   label
