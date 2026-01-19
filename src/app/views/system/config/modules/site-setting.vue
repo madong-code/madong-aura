@@ -11,7 +11,7 @@ import { DictEnum } from "@/app/enums";
 import { $t } from "@/locales";
 import { ElButton } from "element-plus";
 import { convertStringNumbers, transformData } from "../schemas";
-import { ConfigService } from "@/api/system/config";
+import { ConfigService } from "@/app/api/system/config";
 import { request } from "http";
 
 const labelPosition = ref<"left" | "right" | "top">("right");

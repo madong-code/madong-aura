@@ -14,7 +14,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@views/*": ["src/app/views/*"],
+      "@app-views/*": ["src/app/views/*"],
+      "@views/*": ["src/views/*"],
       "@imgs/*": ["src/app/assets/images/*"],
       "@icons/*": ["src/app/assets/icons/*"],
       "@utils/*": ["src/utils/*"],

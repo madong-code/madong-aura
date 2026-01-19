@@ -7,7 +7,7 @@
 <script setup lang="tsx">
 import { useCrud } from "@/components/crud";
 import { getRelativeTime } from "@/utils/tool";
-import { UserService } from "@/api/system/user";
+import { UserService } from "@/app/api/system/user";
 import { ElTag } from "element-plus";
 import OnlineUserDetail from "./online-user-detail.vue";
 const dataSource = ref<any>([]);

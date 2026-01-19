@@ -7,7 +7,7 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import { $t } from "@/locales";
-import { FilesService } from "@/api/system/files";
+import { FilesService } from "@/app/api/system/files";
 
 const [BasicCrud, crudApi] = useCrud({
   ...crudSchema(),

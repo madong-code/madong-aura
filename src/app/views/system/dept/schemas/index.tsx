@@ -1,5 +1,5 @@
 import { CrudSchema } from '@/components/crud'
-import { DeptService } from '@/api/system/dept'
+import { DeptService } from '@/app/api/system/dept'
 import { DictEnum } from '@/app/enums'
 import { $t } from '@/locales'
 

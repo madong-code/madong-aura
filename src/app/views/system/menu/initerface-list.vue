@@ -79,8 +79,8 @@
   </Dialog>
 </template>
 <script setup lang="tsx">
-import { MenuService } from "@/api/system/menu";
-import { HttpMethod, RuleService,type RouteRow } from "@/api/system/rule";
+import { MenuService } from "@/app/api/system/menu";
+import { HttpMethod, RuleService,type RouteRow } from "@/app/api/system/rule";
 import { CrudMethods } from "@/components/crud";
 import { useDialog } from "@/components/dialog";
 import { $t } from '@/locales'

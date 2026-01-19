@@ -1,4 +1,4 @@
-import BaseService from "@/api/core/base";
+import BaseService from "@/app/api/core/base";
 import type { ModuleRow } from "./model";
 import request from '@/utils/http';
 

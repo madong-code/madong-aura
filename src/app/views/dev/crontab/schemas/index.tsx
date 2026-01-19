@@ -3,7 +3,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { CrontabService } from '@/api/dev/crontab'
+import { CrontabService } from '@/app/api/dev/crontab'
 
 // crud配置 - 函数方式
 export const crudSchema = (): CrudSchema => {

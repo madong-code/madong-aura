@@ -1,10 +1,10 @@
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/system/post'
+import { PostService } from '@/app/api/system/post'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { DeptService } from '@/api/system/dept'
+import { DeptService } from '@/app/api/system/dept'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {

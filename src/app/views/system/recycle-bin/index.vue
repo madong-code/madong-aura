@@ -7,8 +7,8 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import { $t } from "@/locales";
-import { FilesService } from "@/api/system/files";
-import { RecycleBinRow, RecycleBinService } from "@/api/system/recycle-bin";
+import { FilesService } from "@/app/api/system/files";
+import { RecycleBinRow, RecycleBinService } from "@/app/api/system/recycle-bin";
 
 const [BasicCrud, crudApi] = useCrud({
   ...crudSchema(),

@@ -1,7 +1,7 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
-import { } from '@/api/dev/gateway'
-import { RecycleBinService } from '@/api/system/recycle-bin'
+import { } from '@/app/api/dev/gateway'
+import { RecycleBinService } from '@/app/api/system/recycle-bin'
 import { DictEnum } from '@/app/enums'
 
 

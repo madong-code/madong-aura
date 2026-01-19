@@ -45,7 +45,7 @@ src/views/{模块名}/实体文件名
 创建 `src/api/{模块名}/{实体名}.ts`：
 
 ```typescript
-import BaseService from '@/api/core/base';
+import BaseService from '@/app/api/core/base';
 import request from '@/utils/http';
 import type { User } from './user-model';
 
@@ -110,7 +110,7 @@ export const  {EntityName}Service ={
 
 ```typescript
 import { CrudSchema } from '@/components/crud'
-import { {EntityName}Service } from '@/api/{模块名}/{实体名}'
+import { {EntityName}Service } from '@/app/api/{模块名}/{实体名}'
 
 // crud配置
 export const crudSchema: CrudSchema = {
@@ -340,7 +340,7 @@ export const crudSchema: CrudSchema = {
 ```ts
 import request from '@/utils/http'
 
-import BaseService from '@/api/core/base';
+import BaseService from '@/app/api/core/base';
 import type { PostRow } from './post-model';
 
 const baseUrl = '/system/post';
@@ -359,7 +359,7 @@ export default PostService;
 
 ```tsx
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/api/system/post'
+import { PostService } from '@/app/api/system/post'
 
 // crud配置
 export const crudSchema: CrudSchema = {
@@ -574,7 +574,7 @@ export const crudSchema: CrudSchema = {
 `src/api/systen/dept.ts`
 
 ```ts
-import BaseService from "@/api/core/base";
+import BaseService from "@/app/api/core/base";
 import type { DeptRow, DeptTree } from "./dept-model";
 import request from '@/utils/http';
 
@@ -599,7 +599,7 @@ export default DeptService;
 
 ```tsx
 import { CrudSchema } from '@/components/crud'
-import { DeptService } from '@/api/system/dept'
+import { DeptService } from '@/app/api/system/dept'
 
 // crud配置
 export const crudSchema: CrudSchema = {

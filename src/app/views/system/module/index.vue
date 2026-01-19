@@ -23,7 +23,7 @@ import { ref, computed, onMounted } from "vue";
 
 import { moduleCategories } from "./store";
 import { TableHeader, ModuleList, ModuleDetail } from "./components";
-import ModulesService from "@/api/system/module";
+import ModulesService from "@/app/api/system/module";
 
 // 状态管理
 const searchKeyword = ref("");

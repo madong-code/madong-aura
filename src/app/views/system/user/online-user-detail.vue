@@ -14,7 +14,7 @@ import { useDialog } from "@/components/dialog";
 const record = ref();
 import { useCrud } from "@/components/crud";
 import { getRelativeTime } from "@/utils/tool";
-import { UserService } from "@/api/system/user";
+import { UserService } from "@/app/api/system/user";
 const dataSource = ref<any>([]);
 const handlePage = (params: any) => {
   const { pageNum, pageSize, keywords } = params;

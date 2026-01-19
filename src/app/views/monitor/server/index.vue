@@ -218,7 +218,7 @@
 </template>
 
 <script setup>
-import { ServerService } from "@/api/monitor/server";
+import { ServerService } from "@/app/api/monitor/server";
 import { ref, onMounted } from "vue";
 
 // 响应式数据

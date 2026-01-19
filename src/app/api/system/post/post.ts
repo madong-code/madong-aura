@@ -1,4 +1,4 @@
-import BaseService from '@/api/core/base';
+import BaseService from '@/app/api/core/base';
 import type { PostRow } from './post-model';
 
 const baseUrl = '/system/post';

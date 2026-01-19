@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-import { ConfigService } from "@/api/system/config";
+import { ConfigService } from "@/app/api/system/config";
 import { useDialog } from "@/components/dialog";
 import { useForm } from "@/components/form";
 import { $t } from "@/locales";

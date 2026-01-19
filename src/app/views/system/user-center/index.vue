@@ -209,9 +209,9 @@
 
 <script setup lang="ts">
 
-import { AuthService } from "@/api/system/auth";
-import ProfileService from "@/api/system/profile";
-import { UserService } from "@/api/system/user";
+import { AuthService } from "@/app/api/system/auth";
+import ProfileService from "@/app/api/system/profile";
+import { UserService } from "@/app/api/system/user";
 import { useCrud } from "@/components/crud";
 import { $t } from "@/locales";
 import { useUserStore } from "@/store/modules/user";

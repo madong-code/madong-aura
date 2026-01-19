@@ -3,7 +3,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { GatewayBlacklistService } from '@/api/dev/gateway'
+import { GatewayBlacklistService } from '@/app/api/dev/gateway'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {

@@ -8,7 +8,7 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import DictItemWrap from "./logs-wrap.vue";
-import { CrontabService } from "@/api/dev/crontab";
+import { CrontabService } from "@/app/api/dev/crontab";
 import { $t } from "@/locales";
 const crontabLogsWrapRef = ref();
 

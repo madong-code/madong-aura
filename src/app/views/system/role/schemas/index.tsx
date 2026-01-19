@@ -1,4 +1,4 @@
-import { RoleService } from '@/api/system/role'
+import { RoleService } from '@/app/api/system/role'
 import { CrudSchema } from '@/components/crud'
 import { DictEnum } from '@/app/enums'
 import { $t } from '@/locales'

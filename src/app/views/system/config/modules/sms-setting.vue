@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-import { ConfigService } from "@/api/system/config";
+import { ConfigService } from "@/app/api/system/config";
 import { useForm } from "@/components/form";
 import { DictEnum } from "@/app/enums";
 import { $t } from "@/locales";

@@ -58,7 +58,7 @@
 <script setup>
 import { ref, onMounted, reactive, onBeforeUnmount, computed } from "vue";
 import * as echarts from "echarts";
-import { RedisService } from "@/api/monitor/redis";
+import { RedisService } from "@/app/api/monitor/redis";
 
 // 响应式数据
 const redisData = ref({

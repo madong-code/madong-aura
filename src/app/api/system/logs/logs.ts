@@ -1,4 +1,4 @@
-import BaseService from '@/api/core/base';
+import BaseService from '@/app/api/core/base';
 import type { LoginRecordRow, OperateRecordRow } from './logs-model';
 
 const loginBaseUrl = '/system/logs/login';

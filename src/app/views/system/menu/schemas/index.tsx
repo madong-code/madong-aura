@@ -1,4 +1,4 @@
-import { MenuService } from '@/api/system/menu'
+import { MenuService } from '@/app/api/system/menu'
 import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
 import { DictEnum } from '@/app/enums'

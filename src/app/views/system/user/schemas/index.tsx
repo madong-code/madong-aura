@@ -1,5 +1,5 @@
 import { CrudSchema } from '@/components/crud'
-import { UserService } from '@/api/system/user'
+import { UserService } from '@/app/api/system/user'
 import { $t } from '@/locales'
 import { RendererElement, RendererNode, VNodeArrayChildren } from 'vue'
 import { DictEnum } from '@/app/enums'

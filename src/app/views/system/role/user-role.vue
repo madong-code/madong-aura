@@ -5,7 +5,7 @@
 <script setup lang="tsx">
 import { useDialog } from "@/components/dialog";
 import { CrudReadonlyState, useCrud } from "@/components/crud";
-import { AuthService } from "@/api/system/auth";
+import { AuthService } from "@/app/api/system/auth";
 import AddUser from "./add-user.vue";
 import { $t } from "@/locales";
 const record = ref<any>({});

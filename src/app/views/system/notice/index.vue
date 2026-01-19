@@ -7,7 +7,7 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import { $t } from "@/locales";
-import NoticeService, { NoticeRow } from "@/api/system/notice";
+import NoticeService, { NoticeRow } from "@/app/api/system/notice";
 
 // 定义onActionClick函数
 const onActionClick = ({ code, row }: { code: string; row: any }) => {};

@@ -50,11 +50,11 @@
 <script setup lang="tsx">
 import { useDialog } from "@/components/dialog";
 import { CrudMethods } from "@/components/crud";
-import { MenuService } from "@/api/system/menu";
-import { AuthService } from "@/api/system/auth";
+import { MenuService } from "@/app/api/system/menu";
+import { AuthService } from "@/app/api/system/auth";
 import { getTreeLeafNodeIds } from "@/utils/tool";
 import { Icon } from "@/components/icon";
-import { UserService } from "@/api/system/user";
+import { UserService } from "@/app/api/system/user";
 const record = ref<any>({});
 const crudApi = ref<CrudMethods>();
 const treeData = ref<any>([]);

@@ -1,7 +1,7 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
-import NoticeService from '@/api/system/notice'
+import NoticeService from '@/app/api/system/notice'
 
 // crud配置
 export const crudSchema = (onActionClick?: Function): CrudSchema => {

@@ -1,8 +1,8 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
-import { } from '@/api/dev/gateway'
-import { LoginLogService } from '@/api/system/logs'
+import { } from '@/app/api/dev/gateway'
+import { LoginLogService } from '@/app/api/system/logs'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {

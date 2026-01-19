@@ -1,4 +1,4 @@
-import BaseService from '@/api/core/base';
+import BaseService from '@/app/api/core/base';
 import request from '@/utils/http';
 import type { RecycleBinRow } from './recycle-bin-model';
 

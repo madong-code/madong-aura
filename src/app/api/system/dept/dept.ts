@@ -1,4 +1,4 @@
-import BaseService from "@/api/core/base";
+import BaseService from "@/app/api/core/base";
 import type { DeptRow, DeptTree } from "./dept-model";
 import request from '@/utils/http';
 

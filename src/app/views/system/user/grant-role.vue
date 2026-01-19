@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserService } from "@/api/system/user";
+import { UserService } from "@/app/api/system/user";
 import { CrudMethods } from "@/components/crud";
 import { useDialog } from "@/components/dialog";
 import { useForm } from "@/components/form";

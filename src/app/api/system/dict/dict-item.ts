@@ -1,4 +1,4 @@
-import BaseService from "@/api/core/base";
+import BaseService from "@/app/api/core/base";
 import type { DictItemRow } from "./dict-item-model";
 
 const baseUrl = '/system/dict-item';

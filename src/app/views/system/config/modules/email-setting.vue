@@ -2,7 +2,7 @@
 import { useForm } from "@/components/form";
 import { $t } from "@/locales";
 import { transformData } from "../schemas";
-import { ConfigService } from "@/api/system/config";
+import { ConfigService } from "@/app/api/system/config";
 
 const fieldLink = {
   Host: $t("system.config.email.Host"),

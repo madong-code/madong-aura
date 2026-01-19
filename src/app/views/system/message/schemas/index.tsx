@@ -1,5 +1,5 @@
 import { CrudSchema } from '@/components/crud'
-import { MessageService } from '@/api/system/message'
+import { MessageService } from '@/app/api/system/message'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 

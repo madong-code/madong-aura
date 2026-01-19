@@ -3,7 +3,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { CrontabLogService } from '@/api/dev/crontab'
+import { CrontabLogService } from '@/app/api/dev/crontab'
 import { h } from 'vue'
 
 // crud配置

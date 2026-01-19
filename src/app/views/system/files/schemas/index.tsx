@@ -1,7 +1,7 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
-import { } from '@/api/dev/gateway'
-import { FilesService } from '@/api/system/files'
+import { } from '@/app/api/dev/gateway'
+import { FilesService } from '@/app/api/system/files'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {

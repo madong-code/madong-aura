@@ -1,7 +1,7 @@
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { CrudSchema } from '@/components/crud'
-import { GatewayLimiterService } from '@/api/dev/gateway'
+import { GatewayLimiterService } from '@/app/api/dev/gateway'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {

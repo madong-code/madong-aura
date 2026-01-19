@@ -7,8 +7,8 @@
 import { useDialog } from "@/components/dialog";
 import { CrudMethods } from "@/components/crud";
 import Detail from "./detail.vue";
-import type { MessageRow } from "@/api/system/message";
-import { MessageService } from "@/api/system/message";
+import type { MessageRow } from "@/app/api/system/message";
+import { MessageService } from "@/app/api/system/message";
 import { dayjs } from "element-plus";
 
 const crudApi = ref<CrudMethods>();
