@@ -1,6 +1,9 @@
 import { AppRouteRecord } from '@/types'
 import { AppRouteRecordRaw } from '@/utils/router'
-import { routeModules } from '../modules'
+import { FeatureRouteManager } from '../core/FeatureRouteManager'
+
+// 创建功能模块路由管理器实例
+const featureRouteManager = new FeatureRouteManager()
 
 /**
  * 静态路由配置（不需要权限就能访问的路由）
@@ -75,6 +78,8 @@ export const staticRoutes: AppRouteRecordRaw[] = [
 
 
 
+
+
 /**
  *
  * 后端路由模式-静态路由配置（不需要权限就能访问的路由并显示左侧菜单）
@@ -97,6 +102,8 @@ export const localRoutes: AppRouteRecord[] = [
       keepAlive: false,
     },
   },
-  //示例模块路由
-  routeModules
+  // 自动扫描的功能模块-静态路由
+  ...featureRouteManager.getFeatureRoutes()
 ]
+
+

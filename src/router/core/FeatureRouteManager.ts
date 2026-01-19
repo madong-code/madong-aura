@@ -1,0 +1,78 @@
+/**
+ * 功能模块路由管理器
+ * 
+ * 统一管理功能模块路由的扫描和注册
+ * 
+ * @module router/core/FeatureRouteManager
+ * @author Art Design Pro Team
+ */
+
+import type { AppRouteRecord } from '@/types/router'
+import { FeatureModuleScanner } from './FeatureModuleScanner'
+
+export class FeatureRouteManager {
+    private scanner = new FeatureModuleScanner()
+    private cachedRoutes: AppRouteRecord[] | null = null
+
+    /**
+     * 获取所有功能模块路由（懒加载）
+     */
+    getFeatureRoutes(): AppRouteRecord[] {
+        if (this.cachedRoutes) {
+            return this.cachedRoutes
+        }
+
+        console.log('[FeatureRouteManager] 开始扫描功能模块路由...')
+        this.cachedRoutes = this.scanner.getFeatureRoutes()
+
+        if (this.cachedRoutes.length > 0) {
+            console.log(`[FeatureRouteManager] 成功加载 ${this.cachedRoutes.length} 个功能模块路由`)
+            this.cachedRoutes.forEach((route, index) => {
+                console.log(`[${index + 1}] ${route.name || '未命名'} - ${route.path}`)
+            })
+        } else {
+            console.warn('[FeatureRouteManager] 未找到任何功能模块路由')
+        }
+
+        return this.cachedRoutes
+    }
+
+    /**
+     * 清空缓存，强制重新扫描
+     */
+    clearCache(): void {
+        this.cachedRoutes = null
+        console.log('[FeatureRouteManager] 缓存已清空')
+    }
+
+    /**
+     * 检查是否有功能模块路由
+     */
+    hasFeatureRoutes(): boolean {
+        return this.getFeatureRoutes().length > 0
+    }
+
+    /**
+     * 获取功能模块路由统计信息
+     */
+    getStats(): { total: number; modules: string[] } {
+        const routes = this.getFeatureRoutes()
+        const modules = routes.map(route => route.name?.toString() || route.path || '未知模块')
+
+        return {
+            total: routes.length,
+            modules
+        }
+    }
+
+    /**
+     * 获取功能模块路由详情
+     */
+    getRouteDetails(): Array<{ name: string; path: string; children: number }> {
+        return this.getFeatureRoutes().map(route => ({
+            name: route.name?.toString() || '未命名',
+            path: route.path || '未定义',
+            children: Array.isArray(route.children) ? route.children.length : 0
+        }))
+    }
+}
