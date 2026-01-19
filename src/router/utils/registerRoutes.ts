@@ -12,12 +12,12 @@ import { useMenuStore } from '@/store/modules/menu'
 /**
  * 动态导入 app/views 目录下所有 .vue 组件
  */
-const appModules: Record<string, () => Promise<any>> = import.meta.glob('../../app/views/**/*.vue')
+const appModules: Record<string, () => Promise<any>> = import.meta.glob('@/app/views/**/*.vue', { eager: false })
 
 /**
  * 动态导入 features 模块下所有 .vue 组件
  */
-const featuresModules: Record<string, () => Promise<any>> = import.meta.glob('../../features/**/views/**/*.vue')
+const featuresModules: Record<string, () => Promise<any>> = import.meta.glob('@/features/**/views/**/*.vue', { eager: false })
 
 /**
  * 注册异步路由
@@ -135,6 +135,19 @@ function getModuleNameFromMeta(meta: any): string | null {
 }
 
 /**
+ * 验证组件路径格式
+ */
+function validateComponentPath(componentPath: string): boolean {
+  if (!componentPath) return false
+  // 检查路径是否以斜杠开头
+  if (!componentPath.startsWith('/')) {
+    console.warn(`[路由警告] 组件路径应该以斜杠开头: ${componentPath}`)
+    return false
+  }
+  return true
+}
+
+/**
  * 根据组件路径和模块信息动态加载组件
  * @param componentPath 组件路径（不包含前缀和 .vue 后缀）
  * @param routeName 当前路由名称（用于错误提示）
@@ -150,6 +163,13 @@ function loadComponent(componentPath: string, routeName: string, meta: any): () 
           return h('div', {})
         }
       })
+  }
+
+
+
+  // 验证组件路径格式
+  if (!validateComponentPath(componentPath)) {
+    console.warn(`[路由警告] 组件路径格式不正确: ${routeName} - ${componentPath}`)
   }
 
   // 从 meta 中获取模块名
@@ -169,8 +189,8 @@ function loadComponent(componentPath: string, routeName: string, meta: any): () 
  */
 function loadAppComponent(componentPath: string, routeName: string): () => Promise<any> {
   // 构建可能的路径
-  const fullPath = `../../app/views${componentPath}.vue`
-  const fullPathWithIndex = `../../app/views${componentPath}/index.vue`
+  const fullPath = `@/app/views${componentPath}.vue`
+  const fullPathWithIndex = `@/app/views${componentPath}/index.vue`
 
   // 先尝试直接路径，再尝试添加/index的路径
   const module = appModules[fullPath] || appModules[fullPathWithIndex]
@@ -194,9 +214,17 @@ function loadAppComponent(componentPath: string, routeName: string): () => Promi
  * 从 features 模块的 views 目录加载组件
  */
 function loadFeaturesComponent(componentPath: string, moduleName: string, routeName: string): () => Promise<any> {
+  // 验证模块名格式
+  if (!moduleName || typeof moduleName !== 'string') {
+    console.error(`[路由错误] 模块名格式不正确: ${moduleName}，路由: ${routeName}`)
+    return loadAppComponent(componentPath, routeName)
+  }
+
   // 构建可能的路径
-  const fullPath = `../../features/${moduleName}/views${componentPath}.vue`
-  const fullPathWithIndex = `../../features/${moduleName}/views${componentPath}/index.vue`
+  const fullPath = `@/features/${moduleName}/views${componentPath}.vue`
+  const fullPathWithIndex = `@/features/${moduleName}/views${componentPath}/index.vue`
+
+  console.log(`[路由调试] 尝试加载模块 ${moduleName} 的组件：${routeName}，路径: ${fullPath} 和 ${fullPathWithIndex}`)
 
   // 先尝试直接路径，再尝试添加/index的路径
   const module = featuresModules[fullPath] || featuresModules[fullPathWithIndex]
@@ -209,6 +237,7 @@ function loadFeaturesComponent(componentPath: string, moduleName: string, routeN
     return loadAppComponent(componentPath, routeName)
   }
 
+  console.log(`[路由调试] 成功加载模块 ${moduleName} 的组件：${routeName}`)
   return module
 }
 
@@ -258,6 +287,7 @@ function convertRouteComponent(
 
   return converted
 }
+
 /**
  * 处理 iframe 类型路由
  */
@@ -267,8 +297,9 @@ function handleIframeRoute(
   iframeRoutes: AppRouteRecord[],
   depth: number
 ): void {
-  const LAYOUT_VIEW = () => import('@/app/views/layout/index.vue')
-  const IFRAME_VIEW = () => import('@/app/views/outside/Iframe.vue')
+  const LAYOUT_VIEW = () => import('@/layout/index.vue')
+  const IFRAME_VIEW = () => import('@/layout/outside/index.vue')
+
 
   if (depth === 0) {
     // 顶级 iframe：用 Layout 包裹

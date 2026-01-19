@@ -61,7 +61,7 @@ export const staticRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/outside',
-    component: () => import('@/app/views/layout/index.vue'),
+    component: () => import('@/layout/index.vue'),
     name: 'Outside',
     meta: { title: 'menus.outside.title' },
     children: [
@@ -69,7 +69,7 @@ export const staticRoutes: AppRouteRecordRaw[] = [
       {
         path: '/outside/iframe/:path',
         name: 'Iframe',
-        component: () => import('@/app/views/outside/Iframe.vue'),
+        component: () => import('@/layout/outside/index.vue'),
         meta: { title: 'iframe' }
       }
     ]
@@ -97,6 +97,7 @@ export const localRoutes: AppRouteRecord[] = [
     name: "system:user-center",
     component: "/system/user-center/index",
     meta: {
+      module: "app", // 添加模块信息，指定从 app 模块加载
       isHide: true,//不显示在菜单列表
       title: "个人中心",
       keepAlive: false,
@@ -105,5 +106,6 @@ export const localRoutes: AppRouteRecord[] = [
   // 自动扫描的功能模块-静态路由
   ...featureRouteManager.getFeatureRoutes()
 ]
+
 
 
