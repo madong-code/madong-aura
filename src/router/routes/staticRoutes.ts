@@ -73,7 +73,7 @@ export const staticRoutes: AppRouteRecordRaw[] = [
         meta: { title: 'iframe' }
       }
     ]
-  }
+  },
 ]
 
 
@@ -101,6 +101,15 @@ export const localRoutes: AppRouteRecord[] = [
       isHide: true,//不显示在菜单列表
       title: "个人中心",
       keepAlive: false,
+    },
+  },
+  {
+    path: '/code/generator/:id?',
+    name: 'CodeGenerator',
+    component: '/tools/code/generator',
+    meta: {
+      title: '代码生成器',
+      isHide: true,
     },
   },
   // 自动扫描的功能模块-静态路由

@@ -86,6 +86,9 @@ importers:
       save:
         specifier: ^2.9.0
         version: 2.9.0
+      sortablejs:
+        specifier: ^1.15.6
+        version: 1.15.6
       tailwindcss:
         specifier: ^4.1.14
         version: 4.1.18
@@ -132,6 +135,9 @@ importers:
       '@types/node':
         specifier: ^24.0.5
         version: 24.10.9
+      '@types/sortablejs':
+        specifier: ^1.15.9
+        version: 1.15.9
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.3.0
         version: 8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.6.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.6.3)
@@ -3625,6 +3631,9 @@ packages:
   snabbdom@3.6.3:
     resolution: {integrity: sha512-W2lHLLw2qR2Vv0DcMmcxXqcfdBaIcoN+y/86SmHv8fn4DazEQSH6KN3TjZcWvwujW56OHiiirsbHWZb4vx/0fg==}
     engines: {node: '>=12.17.0'}
+
+  sortablejs@1.15.6:
+    resolution: {integrity: sha512-aNfiuwMEpfBM/CN6LY0ibyhxPfPbyFeBTYJKCvzkJ2GkUpazIt3H+QIPAMHwqQ7tMKaHz1Qj+rJJCqljnf4p3A==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -7808,6 +7817,8 @@ snapshots:
       is-fullwidth-code-point: 5.1.0
 
   snabbdom@3.6.3: {}
+
+  sortablejs@1.15.6: {}
 
   source-map-js@1.2.1: {}
 
