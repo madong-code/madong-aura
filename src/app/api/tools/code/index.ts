@@ -32,9 +32,9 @@ export const GeneratorCodeService = {
             params,
         })
     },
-    generateCodeToProject: (id: number | string, params?: any) => {
+    deploy: (id: number | string, params?: any) => {
         return request.put({
-            url: `${baseUrl}/${id}/generate-code-to-project`,
+            url: `${baseUrl}/${id}/deploy`,
             params,
         })
     },

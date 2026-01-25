@@ -168,7 +168,7 @@ const detectLanguage = (fileName: string): void => {
 
   switch (extension) {
     case "vue":
-      language.value = "vue";
+      language.value = "html";
       break;
     case "php":
       language.value = "php";

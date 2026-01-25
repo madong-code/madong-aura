@@ -72,14 +72,14 @@ const [BasicCrud, crudApi] = useCrud({
       }),
     },
     {
-      label: "同步代码",
+      label: "部署",
       type: "primary",
       sort: 1020,
       icon: "ri:refresh-line",
       link: true,
-      auth: "dev:crontab:resume",
+      auth: "generate:code:deploy",
       onClick: async (e: Event, row: any) => {
-        await generateCodeToProject(row.id);
+        await GeneratorCodeService.deploy(row.id);
         crudApi.refreshUpdate();
       },
     },
@@ -89,7 +89,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: "ri:download-line",
       link: true,
-      auth: "dev:crontab:pause",
+      auth: "generate:code:download",
       onClick: async (e: Event, row: any) => {
         download(row.id);
       },
