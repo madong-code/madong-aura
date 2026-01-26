@@ -100,24 +100,14 @@ const [BasicCrud, crudApi] = useCrud({
 /**
  * 代码下载
  */
-const download = async (ids: number | string) => {
-  const response = await GeneratorCodeService.download({
-    ids: ids.toString().split(","),
-  });
+const download = async (id: number | string) => {
+  const response = await GeneratorCodeService.download(id);
   if (response) {
-    downloadFile(response, "code.zip");
+    downloadFile(response, "codegen.zip");
     ElMessage.success("代码生成成功，开始下载");
   } else {
     ElMessage.error("文件下载失败");
   }
-};
-
-/**
- * 生成代码到项目
- */
-const generateCodeToProject = async (id: number | string) => {
-  await GeneratorCodeService.generateCodeToProject(id);
-  ElMessage.success("代码同步成功");
 };
 </script>
 <style lang="scss" scoped></style>

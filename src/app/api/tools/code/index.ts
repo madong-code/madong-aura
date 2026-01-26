@@ -24,14 +24,15 @@ export const GeneratorCodeService = {
             url: `${baseUrl}/${id}/preview`,
         })
     },
-    download: (params?: any) => {
-        return request.post({
-            url: `${baseUrl}/download`,
+    download: (id: string | number, params?: any) => {
+        return request.get({
+            url: `${baseUrl}/${id}/download`,
             responseType: 'blob',
             timeout: 20 * 1000,
             params,
         })
     },
+
     deploy: (id: number | string, params?: any) => {
         return request.put({
             url: `${baseUrl}/${id}/deploy`,

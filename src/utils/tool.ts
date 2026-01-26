@@ -234,31 +234,66 @@ const padStart = (str: string, maxLength: number, fillString = ' ') => {
  * @param res 响应数据
  * @param downName 下载文件名
  */
-export function downloadFile(res: any, downName: string = '') {
-  const aLink = document.createElement('a')
-  let fileName = downName
-  let blob = res //第三方请求返回blob对象
+// export function downloadFile(res: any, downName: string = '') {
+//   const aLink = document.createElement('a')
+//   let fileName = downName
+//   let blob = res //第三方请求返回blob对象
 
-  //通过后端接口返回
-  if (res.headers && res.data) {
+//   //通过后端接口返回
+//   if (res.headers && res.data) {
+//     blob = new Blob([res.data], {
+//       type: res.headers['content-type'].replace(';charset=utf8', '')
+//     })
+//     if (!downName) {
+//       const contentDisposition = decodeURI(res.headers['content-disposition'])
+//       const result = contentDisposition.match(/filename="(.+)/gi)
+//       fileName = result?.[0].replace(/filename="(.+)/gi, '') || ''
+//       fileName = fileName.replace('"', '')
+//     }
+//   }
+
+//   aLink.href = URL.createObjectURL(blob)
+//   // 设置下载文件名称
+//   aLink.setAttribute('download', fileName)
+//   document.body.appendChild(aLink)
+//   aLink.click()
+//   document.body.removeChild(aLink)
+//   URL.revokeObjectURL(aLink.href)
+// }
+
+export function downloadFile(res: any, downName: string = '') {
+  const aLink = document.createElement('a');
+  let fileName = downName;
+  let blob = res;
+
+  // 处理 axios 响应（包含 data 字段的 blob）
+  if (res && res.data instanceof Blob) {
+    blob = res.data;
+  }
+  // 处理包含 data 字段的响应
+  else if (res && res.data) {
     blob = new Blob([res.data], {
-      type: res.headers['content-type'].replace(';charset=utf8', '')
-    })
-    if (!downName) {
-      const contentDisposition = decodeURI(res.headers['content-disposition'])
-      const result = contentDisposition.match(/filename="(.+)/gi)
-      fileName = result?.[0].replace(/filename="(.+)/gi, '') || ''
-      fileName = fileName.replace('"', '')
+      type: res.headers?.['content-type']?.replace(';charset=utf8', '') || 'application/octet-stream'
+    });
+    if (!downName && res.headers && res.headers['content-disposition']) {
+      const contentDisposition = decodeURI(res.headers['content-disposition']);
+      const result = contentDisposition.match(/filename="(.+)/gi);
+      fileName = result?.[0].replace(/filename="(.+)/gi, '') || '';
+      fileName = fileName.replace('"', '');
     }
   }
 
-  aLink.href = URL.createObjectURL(blob)
-  // 设置下载文件名称
-  aLink.setAttribute('download', fileName)
-  document.body.appendChild(aLink)
-  aLink.click()
-  document.body.removeChild(aLink)
-  URL.revokeObjectURL(aLink.href)
+  // 确保 blob 是有效的
+  if (!blob || !(blob instanceof Blob)) {
+    console.error('无效的文件数据:', blob);
+    ElMessage.error('下载失败');
+    return;
+  }
+
+  aLink.href = URL.createObjectURL(blob);
+  aLink.setAttribute('download', fileName || 'download');
+  document.body.appendChild(aLink);
+  aLink.click();
+  document.body.removeChild(aLink);
+  URL.revokeObjectURL(aLink.href);
 }
-
-
