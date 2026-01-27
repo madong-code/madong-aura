@@ -83,6 +83,7 @@ axiosInstance.interceptors.request.use(
 /** 响应拦截器 */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse<BaseResponse>) => {
+    if (response.config.responseType === 'blob') return response
     const { code, msg } = response.data
     if (code === ApiStatus.success) return response
     if (code === 99990403) handleUnauthorizedError(msg)
@@ -182,6 +183,8 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
     if (config.showSuccessMessage && res.data.msg) {
       showSuccess(res.data.msg)
     }
+
+    if (config.responseType === 'blob') return res.data as T
 
     return res.data.data as T
   } catch (error) {
