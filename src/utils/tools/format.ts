@@ -27,6 +27,27 @@ export function removeHtmlTags(str: string = ''): string {
     return str.replace(/<[^>]*>/g, '')
 }
 
+// 格式化 ISO 8601 日期字符串
+export function formatISODate(
+  isoDate: string,
+  options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  },
+  timeZone: string = 'Asia/Shanghai'
+): string {
+  const date = new Date(isoDate);
+  return new Intl.DateTimeFormat('zh-CN', {
+    ...options,
+    timeZone
+  }).format(date);
+}
+
 
 
 

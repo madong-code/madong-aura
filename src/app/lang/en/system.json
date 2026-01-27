@@ -253,7 +253,13 @@
         "remark": "Remark"
       },
       "data_scope": {
-        "title": "Data Permissions"
+        "title": "Data Permissions",
+        "role_code": "Role Code",
+        "role_name": "Role Name",
+        "data_permission": "Data Permissions",
+        "dept_list": "Department List",
+        "assign_permission": "Assign Permissions",
+        "assign_success": "Assignment successful"
       },
       "help": {},
       "placeholder": {

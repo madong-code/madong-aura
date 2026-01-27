@@ -261,7 +261,13 @@
         }
       },
       "data_scope": {
-        "title": "数据权限"
+        "title": "数据权限",
+        "role_code": "角色代码",
+        "role_name": "角色名称",
+        "data_permission": "数据权限",
+        "dept_list": "部门列表",
+        "assign_permission": "分配权限",
+        "assign_success": "分配成功"
       },
       "help": {}
     },
