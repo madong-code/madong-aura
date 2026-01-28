@@ -1,7 +1,7 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
-import { } from '@/app/api/dev/gateway'
+import { } from '@/app/api/gateway'
 import { OperateLogService } from '@/app/api/system/logs'
 
 // crud配置

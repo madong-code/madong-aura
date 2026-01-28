@@ -3,7 +3,15 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { GatewayBlacklistService } from '@/app/api/dev/gateway'
+import { GatewayBlacklistService } from '@/app/api/gateway'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import { formatISODate } from '@/utils/tools/format'
+
+// 初始化 dayjs 插件
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -44,11 +52,11 @@ export const crudSchema = (): CrudSchema => {
       {
         type: 'selection'
       },
-      // {
-      //   prop: 'priority',
-      //   label: $t('dev.blacklist.list.table.columns.priority'),
-      //   width: 60,
-      // },
+      {
+        prop: 'priority',
+        label: $t('dev.blacklist.list.table.columns.priority'),
+        width: 80,
+      },
       {
         prop: 'name',
         label: $t('dev.blacklist.list.table.columns.name'),
@@ -61,11 +69,11 @@ export const crudSchema = (): CrudSchema => {
         align: 'left',
         minWidth: 150
       },
-      // {
-      //   prop: 'match_type',
-      //   label: $t('dev.blacklist.list.table.columns.match_type'),
-      //   width: 110,
-      // },
+      {
+        prop: 'match_type',
+        label: $t('dev.blacklist.list.table.columns.match_type'),
+        width: 120,
+      },
       {
         prop: 'methods',
         label: $t('dev.blacklist.list.table.columns.methods'),
@@ -95,19 +103,37 @@ export const crudSchema = (): CrudSchema => {
         prop: 'start_date',
         label: $t('dev.blacklist.list.table.columns.start_date'),
         align: 'left',
-        minWidth: 100
+        minWidth: 180,
+        formatter: (row: any) => {
+          if (!row.start_date) return '-';
+          // 处理时间戳格式
+          const dateValue = typeof row.start_date === 'number' ? new Date(row.start_date * 1000) : row.start_date;
+          return formatISODate(dateValue);
+        }
       },
       {
         prop: 'end_date',
         label: $t('dev.blacklist.list.table.columns.end_date'),
         align: 'left',
-        minWidth: 100
+        minWidth: 180,
+        formatter: (row: any) => {
+          if (!row.end_date) return '-';
+          // 处理时间戳格式
+          const dateValue = typeof row.end_date === 'number' ? new Date(row.end_date * 1000) : row.end_date;
+          return formatISODate(dateValue);
+        }
       },
       {
-        prop: 'created_date',
+        prop: 'created_at',
         label: $t('dev.blacklist.list.table.columns.created_date'),
         align: 'left',
-        minWidth: 100
+        minWidth: 180,
+        formatter: (row: any) => {
+          if (!row.created_at) return '-';
+          // 处理时间戳格式
+          const dateValue = typeof row.created_at === 'number' ? new Date(row.created_at * 1000) : row.created_at;
+          return formatISODate(dateValue);
+        }
       }
     ],
     // 搜索表单定义
@@ -175,81 +201,128 @@ export const crudSchema = (): CrudSchema => {
           ifDetail: false
         },
         {
-          prop: 'name',
-          label: $t('dev.blacklist.form.modal.name'),
-          component: 'Input',
-          componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.name'),
-            clearable: true
-          },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.name') }]
+        prop: 'name',
+        label: $t('dev.blacklist.form.modal.name'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.placeholder.name'),
+          clearable: true
         },
-        {
-          prop: 'match_type',
-          label: $t('dev.blacklist.form.modal.match_type'),
-          component: 'Select',
-          defaultValue: 1,
-          componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.match_type'),
-            clearable: true,
-            options: [
-              { label: 'ip', value: 1 },
-              { label: '全局', value: 0 }
-            ]
-          },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.match_type') }]
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.name') }]
+      },
+      {
+        prop: 'match_type',
+        label: $t('dev.blacklist.form.modal.match_type'),
+        component: 'Select',
+        defaultValue: 'exact',
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.placeholder.match_type'),
+          clearable: true,
+          options: [
+            { label: '精确匹配', value: 'exact' },
+            { label: '通配符匹配', value: 'wildcard' },
+            { label: '正则表达式匹配', value: 'regex' }
+          ]
         },
-        {
-          prop: 'ip',
-          label: $t('dev.blacklist.form.modal.ip'),
-          component: 'Input',
-          componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.ip'),
-            clearable: true
-          },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.ip') }]
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.match_type') }]
+      },
+      {
+        prop: 'priority',
+        label: $t('dev.blacklist.form.modal.priority'),
+        component: 'Input',
+        defaultValue: 100,
+        componentProps: {
+          type: 'number',
+          placeholder: $t('dev.blacklist.form.modal.placeholder.priority'),
+          clearable: true
         },
-        {
-          prop: 'methods',
-          label: $t('dev.blacklist.form.modal.methods'),
-          component: 'ApiDict',
-          componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.methods'),
-            code: DictEnum.SYS_REQUEST_MODE
-          },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.methods') }]
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.priority') }]
+      },
+      {
+        prop: 'ip',
+        label: $t('dev.blacklist.form.modal.ip'),
+        component: 'Input',
+        componentProps: {
+          placeholder: '留空表示不限 IP',
+          clearable: true
         },
-        {
-          prop: 'path',
-          label: $t('dev.blacklist.form.modal.path'),
-          component: 'Input',
-          componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.path'),
-            clearable: true
-          },
-          rules: [{ required: true, message: '' }]
+        rules: []
+      },
+      {
+        prop: 'methods',
+        label: $t('dev.blacklist.form.modal.methods'),
+        component: 'ApiDict',
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.methods'),
+          code: DictEnum.SYS_REQUEST_MODE
         },
-        {
-          prop: 'enabled',
-          label: $t('dev.blacklist.form.modal.enabled'),
-          component: 'ApiDict',
-          defaultValue: 1,
-          componentProps: {
-            renderType: 'RadioGroup',
-            code: DictEnum.SYS_ENABLED_STATUS,
-            isBtn: true
-          }
+        rules: [{ required: true, message: $t('dev.blacklist.form.modal.methods') }]
+      },
+      {
+        prop: 'path',
+        label: $t('dev.blacklist.form.modal.path'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.blacklist.form.modal.placeholder.path'),
+          clearable: true
         },
-        {
-          prop: 'message',
-          label: $t('dev.blacklist.form.modal.message'),
-          component: 'Input',
-          componentProps: {
-            type: 'textarea',
-            rows: 4,
-            placeholder: $t('dev.blacklist.form.modal.placeholder.message')
-          }
+        rules: [{ required: true, message: '' }]
+      },
+      {
+        prop: 'start_date',
+        label: $t('dev.blacklist.form.modal.start_time'),
+        component: 'DatePicker',
+        componentProps: {
+          type: 'datetime',
+          placeholder: $t('dev.blacklist.form.modal.placeholder.start_time'),
+          clearable: true,
+          format: 'YYYY-MM-DD HH:mm:ss',
+          valueFormat: 'YYYY-MM-DD HH:mm:ss'
         }
+      },
+      {
+        prop: 'end_date',
+        label: $t('dev.blacklist.form.modal.end_time'),
+        component: 'DatePicker',
+        componentProps: {
+          type: 'datetime',
+          placeholder: $t('dev.blacklist.form.modal.placeholder.end_time'),
+          clearable: true,
+          format: 'YYYY-MM-DD HH:mm:ss',
+          valueFormat: 'YYYY-MM-DD HH:mm:ss'
+        }
+      },
+      {
+        prop: 'enabled',
+        label: $t('dev.blacklist.form.modal.enabled'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          isBtn: true
+        }
+      },
+      {
+        prop: 'message',
+        label: $t('dev.blacklist.form.modal.message'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 4,
+          placeholder: $t('dev.blacklist.form.modal.placeholder.message')
+        }
+      },
+      {
+        prop: 'remark',
+        label: $t('dev.blacklist.form.modal.remark'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 4,
+          placeholder: $t('dev.blacklist.form.modal.placeholder.remark')
+        }
+      }
       ]
     }
   }

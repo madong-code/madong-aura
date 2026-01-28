@@ -1,7 +1,8 @@
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { CrudSchema } from '@/components/crud'
-import { GatewayLimiterService } from '@/app/api/dev/gateway'
+import { GatewayLimiterService } from '@/app/api/gateway'
+import { formatISODate } from '@/utils/tools/format'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -61,6 +62,7 @@ export const crudSchema = (): CrudSchema => {
       {
         prop: 'methods',
         label: $t('dev.limiter.list.table.columns.methods'),
+        component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_REQUEST_MODE
         },
@@ -147,95 +149,122 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '120px',
       schema: [
         {
-          prop: 'name',
-          label: $t('dev.limiter.form.modal.name'),
-          component: 'Input',
-          componentProps: {
-            placeholder: $t('dev.limiter.form.modal.placeholder.name'),
-            clearable: true
-          },
-          rules: []
+        prop: 'name',
+        label: $t('dev.limiter.form.modal.name'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.placeholder.name'),
+          clearable: true
         },
-        {
-          prop: 'match_type',
-          label: $t('dev.limiter.form.modal.match_type'),
-          component: 'Select',
-          defaultValue: 1,
-          componentProps: {
-            placeholder: $t('dev.limiter.form.modal.placeholder.match_type'),
-            clearable: true,
-            options: [
-              { label: 'ip', value: 1 },
-              { label: '全局', value: 0 }
-            ]
-          },
-          rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.match_type') }]
+        rules: []
+      },
+      {
+        prop: 'match_type',
+        label: $t('dev.limiter.form.modal.match_type'),
+        component: 'Select',
+        defaultValue: 'exact',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.placeholder.match_type'),
+          clearable: true,
+          options: [
+            { label: '精确匹配', value: 'exact' },
+            { label: '通配符匹配', value: 'wildcard' },
+            { label: '正则表达式匹配', value: 'regex' }
+          ]
         },
-        {
-          prop: 'methods',
-          label: $t('dev.limiter.form.modal.methods'),
-          component: 'ApiDict',
-          componentProps: {
-            placeholder: $t('dev.limiter.form.modal.methods'),
-            code: DictEnum.SYS_REQUEST_MODE
-          },
-          rules: []
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.match_type') }]
+      },
+      {
+        prop: 'limit_type',
+        label: $t('dev.limiter.form.modal.limit_type'),
+        component: 'Select',
+        defaultValue: 'ip',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.placeholder.limit_type'),
+          clearable: true,
+          options: [
+            { label: 'IP限流', value: 'ip' },
+            { label: '用户限流', value: 'user' }
+          ]
         },
-        {
-          prop: 'path',
-          label: $t('dev.limiter.form.modal.path'),
-          component: 'Input',
-          componentProps: {
-            placeholder: $t('dev.limiter.form.modal.placeholder.path'),
-            clearable: true
-          },
-          rules: []
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.limit_type') }]
+      },
+      {
+        prop: 'methods',
+        label: $t('dev.limiter.form.modal.methods'),
+        component: 'ApiDict',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.methods'),
+          code: DictEnum.SYS_REQUEST_MODE
         },
-        {
-          prop: 'limit_value',
-          label: $t('dev.limiter.form.modal.limit_value'),
-          component: 'Input',
-          componentProps: {
-            type: 'number',
-            placeholder: $t('dev.limiter.form.modal.placeholder.limit_value')
-          },
-          rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.limit_value') }]
+        rules: []
+      },
+      {
+        prop: 'path',
+        label: $t('dev.limiter.form.modal.path'),
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('dev.limiter.form.modal.placeholder.path'),
+          clearable: true
         },
-        {
-          prop: 'period',
-          defaultValue: 1,
-          label: $t('dev.limiter.form.modal.period'),
-          component: 'Input',
-          componentProps: {
-            min: 1,
-            max: 60,
-            type: 'number',
-            placeholder: $t('dev.limiter.form.modal.placeholder.period')
-          },
-          rules: []
+        rules: []
+      },
+      {
+        prop: 'limit_value',
+        label: $t('dev.limiter.form.modal.limit_value'),
+        component: 'Input',
+        componentProps: {
+          type: 'number',
+          placeholder: $t('dev.limiter.form.modal.placeholder.limit_value')
         },
-        {
-          prop: 'enabled',
-          label: $t('dev.limiter.form.modal.enabled'),
-          component: 'ApiDict',
-          defaultValue: 1,
-          componentProps: {
-            renderType: 'RadioGroup',
-            code: DictEnum.SYS_ENABLED_STATUS,
-            isBtn: true
-          },
-          rules: []
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.limit_value') }]
+      },
+      {
+        prop: 'period',
+        defaultValue: 1,
+        label: $t('dev.limiter.form.modal.period'),
+        component: 'Input',
+        componentProps: {
+          min: 1,
+          max: 60,
+          type: 'number',
+          placeholder: $t('dev.limiter.form.modal.placeholder.period')
         },
-        {
-          prop: 'message',
-          label: $t('dev.limiter.form.modal.message'),
-          component: 'Input',
-          componentProps: {
-            type: 'textarea',
-            rows: 4,
-            placeholder: $t('dev.limiter.form.modal.placeholder.message')
-          }
+        rules: []
+      },
+      {
+        prop: 'ttl',
+        label: $t('dev.limiter.form.modal.ttl'),
+        component: 'Input',
+        defaultValue: 60,
+        componentProps: {
+          type: 'number',
+          placeholder: $t('dev.limiter.form.modal.placeholder.ttl')
+        },
+        rules: [{ required: true, message: $t('dev.limiter.form.modal.placeholder.ttl') }]
+      },
+      {
+        prop: 'enabled',
+        label: $t('dev.limiter.form.modal.enabled'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          isBtn: true
+        },
+        rules: []
+      },
+      {
+        prop: 'message',
+        label: $t('dev.limiter.form.modal.message'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 4,
+          placeholder: $t('dev.limiter.form.modal.placeholder.message')
         }
+      }
       ]
     }
   }

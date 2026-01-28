@@ -1,6 +1,6 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
-import { } from '@/app/api/dev/gateway'
+import { } from '@/app/api/gateway'
 import { FilesService } from '@/app/api/system/files'
 
 // crud配置

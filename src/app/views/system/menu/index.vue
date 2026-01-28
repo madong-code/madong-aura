@@ -23,23 +23,23 @@ const [BasicCrud, crudApi] = useCrud({
   tableActions: [],
   // 表格行操作-下拉菜单
   dropDownActions: [
-    {
-      label: "选择权限",
-      type: "primary",
-      sort: 1020,
-      link: true,
-      icon: "ant-design:safety-certificate-filled",
-      auth: "system:auth:save_role_menu",
-      dialogRef: interfaceRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
-      },
-    },
+    // {
+    //   label: "选择权限",
+    //   type: "primary",
+    //   sort: 1020,
+    //   link: true,
+    //   icon: "ant-design:safety-certificate-filled",
+    //   auth: "system:auth:save_role_menu",
+    //   dialogRef: interfaceRef,
+    //   dialogParams(record) {
+    //     return {
+    //       data: record,
+    //       getCrudApi() {
+    //         return crudApi;
+    //       },
+    //     };
+    //   },
+    // },
   ],
 });
 </script>

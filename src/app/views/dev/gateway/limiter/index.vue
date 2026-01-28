@@ -1,5 +1,5 @@
 <template>
-  <div class="sys-post-page art-full-height">
+  <div class="gateway-limiter-page art-full-height">
     <BasicCrud />
   </div>
 </template>

@@ -894,6 +894,7 @@
           "code": "Permission Code",
           "path": "Route Path",
           "component": "Component",
+          "sort": "Sort",
           "enabled": "Status",
           "remark": "",
           "created_date": "Created Date",
@@ -969,12 +970,43 @@
           "icon": "Select icon",
           "link_url": "Enter link URL"
         }
+      },
+      "placeholder": {
+        "type": "Select menu type",
+        "pid": "Select parent menu",
+        "app": "Select app",
+        "title": "Enter menu title",
+        "code": "Enter permission code",
+        "sort": "Enter sort order",
+        "path": "Enter route/API path",
+        "component": "Enter component path",
+        "open_type": "Select open type",
+        "icon": "Select icon",
+        "link_url": "Enter link URL",
+        "enabled": "Select status",
+        "is_show": "Select visibility",
+        "is_sync": "Select synchronization",
+        "is_cache": "Select caching"
+      },
+      "help": {
+        "path": "Please enter a valid route address or API path",
+        "link_url": "Please enter a valid link URL"
       }
     },
     "api": {
-      "title": "Permissions List",
+      "title": "Select Interface",
       "search": "Search",
-      "sync": "Sync"
+      "sync": "Sync",
+      "tips": {
+        "1": "1.Interfaces can be selected multiple times and added repeatedly;",
+        "2": "2.Developers should add route definitions according to backend routing rules;",
+        "3": "3.After adding, you can select the corresponding interface here;"
+      },
+      "routeInfo": {
+        "name": "Interface Name",
+        "method": "Interface Method",
+        "path": "Interface Path"
+      }
     },
     "message": {
       "success": "Success",

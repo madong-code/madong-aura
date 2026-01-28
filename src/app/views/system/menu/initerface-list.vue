@@ -1,14 +1,15 @@
 <template>
   <Dialog>
     <div style="padding: 20px">
-      <p>1.接口可多选，可重复添加；</p>
-      <p>2.开发者按照后端路由规则进行添加路由定义；</p>
-      <p>3.添加后即可在此选择对应的接口；</p>
+      <p>{{ $t("system.menu.api.tips.1") }}</p>
+      <p>{{ $t("system.menu.api.tips.2") }}</p>
+      <p>{{ $t("system.menu.api.tips.3") }}</p>
       <div class="button-row">
         <Input
           class="mt-2"
           style="width: 250px; margin-right: 2px"
           v-model:value="keyword"
+          placeholder="{{ $t('search.placeholder') }}"
         ></Input>
         <ElButton class="ml-2" type="primary" @click="handleSearch">{{
           $t("system.menu.api.search")
@@ -56,17 +57,17 @@
               >
                 <div class="route-info">
                   <p>
-                    <strong>接口名称：</strong>
+                    <strong>{{ $t("system.menu.api.routeInfo.name") }}：</strong>
                     <span>{{ item.name }}</span>
                   </p>
                   <p>
-                    <strong>接口方式：</strong>
+                    <strong>{{ $t("system.menu.api.routeInfo.method") }}：</strong>
                     <span>
                       {{ item.method }}
                     </span>
                   </p>
                   <p>
-                    <strong>接口地址：</strong>
+                    <strong>{{ $t("system.menu.api.routeInfo.path") }}：</strong>
                     <span>{{ item.path }}</span>
                   </p>
                 </div>
@@ -254,7 +255,7 @@ const mergePropertiesToRoutes = (routes: any, propertiesToMerge: any): RouteRow[
 
 
 const [Dialog, dialogApi] = useDialog({
-  title: "选择权限",
+  title: $t("system.menu.api.title"),
   width: "70%",
   modal: true,
   draggable: true,

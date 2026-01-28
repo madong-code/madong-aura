@@ -161,6 +161,7 @@
       })
     }
   }
+  console.log(props)
   // 注册表单实例
   onMounted(() => {
     emit('register', formInstanceMethods)

@@ -339,5 +339,119 @@
     "zebra": "斑马纹",
     "border": "边框",
     "headerBackground": "表头背景"
+  },
+  "dev": {
+    "blacklist": {
+      "list": {
+        "title": "限访名单",
+        "table": {
+          "columns": {
+            "name": "名称",
+            "ip": "IP地址",
+            "match_type": "匹配类型",
+            "methods": "请求方法",
+            "path": "请求路径",
+            "priority": "优先级",
+            "start_date": "开始时间",
+            "end_date": "结束时间",
+            "created_date": "创建时间"
+          }
+        },
+        "query": {
+          "name": "规则名称",
+          "ip": "IP地址",
+          "path": "请求路径",
+          "enabled": "状态",
+          "placeholder": {
+            "name": "请输入规则名称",
+            "ip": "请输入IP地址",
+            "path": "请输入请求路径",
+            "enabled": "请选择状态"
+          }
+        }
+      },
+      "form": {
+        "modal": {
+          "id": "ID",
+          "name": "规则名称",
+          "ip": "IP地址",
+          "match_type": "匹配类型",
+          "methods": "请求方法",
+          "path": "请求路径",
+          "priority": "优先级",
+          "start_time": "开始时间",
+          "end_time": "结束时间",
+          "enabled": "是否启用",
+          "message": "提示信息",
+          "remark": "备注",
+          "placeholder": {
+            "name": "请输入规则名称",
+            "ip": "请输入IP地址",
+            "match_type": "请选择匹配类型",
+            "methods": "请选择请求方法",
+            "path": "请输入请求路径",
+            "priority": "请输入优先级",
+            "start_time": "请选择开始时间",
+            "end_time": "请选择结束时间",
+            "message": "请输入提示信息",
+            "remark": "请输入备注信息"
+          }
+        }
+      }
+    },
+    "limiter": {
+      "list": {
+        "title": "限流规则",
+        "table": {
+          "columns": {
+            "name": "规则名称",
+            "match_type": "匹配类型",
+            "methods": "请求方法",
+            "path": "请求路径",
+            "priority": "优先级",
+            "enabled": "状态",
+            "limit_type": "限制类型",
+            "limit_value": "限制值",
+            "period": "限制周期",
+            "ttl": "缓存时间"
+          }
+        },
+        "query": {
+          "name": "规则名称",
+          "path": "请求路径",
+          "enabled": "状态",
+          "placeholder": {
+            "name": "请输入规则名称",
+            "path": "请输入请求路径",
+            "enabled": "请选择状态"
+          }
+        }
+      },
+      "form": {
+        "modal": {
+          "name": "规则名称",
+          "match_type": "匹配类型",
+          "methods": "请求方法",
+          "path": "请求路径",
+          "limit_type": "限制类型",
+          "limit_value": "限制值",
+          "period": "限制周期",
+          "ttl": "缓存时间",
+          "enabled": "是否启用",
+          "message": "提示信息",
+          "placeholder": {
+            "name": "请输入规则名称",
+            "match_type": "请选择匹配类型",
+            "methods": "请选择请求方法",
+            "path": "请输入请求路径",
+            "limit_type": "请选择限制类型",
+            "limit_value": "请输入限制值",
+            "period": "请输入限制周期",
+            "ttl": "请输入缓存时间",
+            "message": "请输入提示信息"
+          }
+        }
+      }
+    }
   }
 }

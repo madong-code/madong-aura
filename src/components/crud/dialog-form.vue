@@ -62,9 +62,7 @@ const show = ({
   if (type === "view" || type === "edit") {
     const detailApi = props.crudSchema.crudApi?.view;
     const rowKey = props.crudSchema.rowKey || "id";
-    detailApi?.({
-      [rowKey]: record.value[rowKey],
-    }).then((res) => {
+    detailApi?.(record.value[rowKey]).then((res) => {
       record.value = {
         ...record.value,
         ...res,
