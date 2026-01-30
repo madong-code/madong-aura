@@ -1,32 +1,3 @@
-/**
- * 构建配置数据
- * @param data
- * @param skipFields
- * @param extraFields
- */
-export const transformData = function (
-  data: { [s: string]: unknown } | ArrayLike<unknown>,
-  skipFields: string[] = [],
-  allowedKeys: string[] = [], // 添加允许的键集合
-  extraFields: Record<string, string> = {},
-  filedlink: Record<string, string> = {}
-) {
-  return Object.entries(data)
-    .filter(
-      ([key]) =>
-        !skipFields.includes(key) && (allowedKeys.length === 0 || allowedKeys.includes(key)) // 过滤跳过字段和不在允许集合中的字段
-    )
-    .map(([key, value]) => {
-      const transformedObject = {
-        code: key,
-        content: value !== undefined ? value : '',
-        name: filedlink[key]
-      }
-
-      Object.assign(transformedObject, extraFields)
-      return transformedObject
-    })
-}
 
 /**
  * 返回模板字段
