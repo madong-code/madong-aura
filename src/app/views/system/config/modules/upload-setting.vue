@@ -103,7 +103,7 @@ const handleSetting = async () => {
  * 获取表单数据
  */
 const retrieveData = async () => {
-  const record = (await ConfigService.get({ group_code: "basic_upload_setting" })) as any;
+  const record = (await ConfigService.getByCode("upload")) as any;
   await formApi.setValues({ ...record });
 };
 

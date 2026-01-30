@@ -166,7 +166,7 @@ async function onSubmit() {
  * 获取表单数据
  */
 const retrieveData = async () => {
-  const record = (await ConfigService.get({ group_code: "site_setting" })) as any;
+  const record = (await ConfigService.getByCode("site_setting")) as any;
 
   await formApi.setValues({ ...convertStringNumbers(record) });
 };

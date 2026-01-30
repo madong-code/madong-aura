@@ -165,7 +165,7 @@ function onSubmit() {
  * 获取表单数据
  */
 const retrieveData = async () => {
-  const record = (await ConfigService.get({ group_code: "email_setting" })) as any;
+  const record = (await ConfigService.getByCode("email")) as any;
   await formApi.setValues({ ...record });
 };
 
