@@ -1,6 +1,6 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
-import { } from '@/app/api/gateway'
+import { } from '@/app/api/setting/gateway'
 import { dayjs } from 'element-plus'
 import ProfileService from '@/app/api/system/profile'
 

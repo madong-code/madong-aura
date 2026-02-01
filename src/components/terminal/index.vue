@@ -8,11 +8,7 @@
       draggable
     >
       <!-- 终端滚动区域 -->
-      <ElScrollbar
-        ref="terminalScrollbarRef"
-        :max-height="400"
-        class="terminal-scrollbar"
-      >
+      <ElScrollbar ref="terminalScrollbarRef" :max-height="400" class="terminal-scrollbar">
         <!-- 演示环境禁用警告 -->
         <ElAlert
           class="terminal-warning-alert"
@@ -37,30 +33,26 @@
               <div>
                 <!-- 任务状态标签 -->
                 <el-tag :type="getTaskStatus(item.status)['statusType']">{{
-                  getTaskStatus(item.status)["statusText"]
+                  getTaskStatus(item.status)['statusText']
                 }}</el-tag>
                 <!-- 失败时阻止后续任务标签 -->
                 <el-tag
                   class="block-on-failure-tag"
                   v-if="
-                    (item.status == taskStatus.Failed ||
-                      item.status == taskStatus.Unknown) &&
+                    (item.status == taskStatus.Failed || item.status == taskStatus.Unknown) &&
                     item.blockOnFailure
                   "
                   type="warning"
                 >
-                  {{ $t("dev.terminal.block_on_failure") }}
+                  {{ $t('dev.terminal.block_on_failure') }}
                 </el-tag>
                 <!-- 执行时请勿刷新浏览器标签 -->
                 <el-tag
                   class="block-on-failure-tag"
-                  v-if="
-                    item.status == taskStatus.Connecting ||
-                    item.status == taskStatus.Executing
-                  "
+                  v-if="item.status == taskStatus.Connecting || item.status == taskStatus.Executing"
                   type="danger"
                 >
-                  {{ $t("dev.terminal.not_refresh_browser") }}
+                  {{ $t('dev.terminal.not_refresh_browser') }}
                 </el-tag>
                 <!-- 命令文本 -->
                 <span class="command">{{ item.command }}</span>
@@ -69,10 +61,7 @@
                   <!-- 重试按钮 -->
                   <ElButton
                     :title="$t('Retry')"
-                    v-if="
-                      item.status == taskStatus.Failed ||
-                      item.status == taskStatus.Unknown
-                    "
+                    v-if="item.status == taskStatus.Failed || item.status == taskStatus.Unknown"
                     size="small"
                     v-blur
                     type="warning"
@@ -96,14 +85,11 @@
               <template v-if="item.status != taskStatus.Waiting">
                 <!-- 消息展开/折叠切换 -->
                 <div
-                  v-if="
-                    item.status != taskStatus.Connecting &&
-                    item.status != taskStatus.Executing
-                  "
+                  v-if="item.status != taskStatus.Connecting && item.status != taskStatus.Executing"
                   @click="terminal.setTaskShowMessage(idx)"
                   class="toggle-message-display"
                 >
-                  <span>{{ $t("dev.terminal.actions.command_run_log") }}</span>
+                  <span>{{ $t('dev.terminal.actions.command_run_log') }}</span>
                   <Icon
                     :icon="item.showMessage ? 'ep:arrow-up' : 'ep:arrow-down'"
                     size="16"
@@ -120,12 +106,9 @@
                   class="exec-message"
                   :class="'exec-message-' + item.uuid"
                 >
-                  <pre
-                    v-for="(msg, index) in item.message"
-                    :key="index"
-                    class="message-item"
-                    >{{ msg }}</pre
-                  >
+                  <pre v-for="(msg, index) in item.message" :key="index" class="message-item">{{
+                    msg
+                  }}</pre>
                 </div>
               </template>
             </ElCard>
@@ -138,15 +121,11 @@
       <!-- 终端操作按钮组 -->
       <div class="terminal-buttons">
         <!-- 测试按钮 -->
-        <ElButton
-          class="terminal-menu-item"
-          v-blur
-          @click="addTerminalTask('test', true, false)"
-        >
+        <ElButton class="terminal-menu-item" v-blur @click="addTerminalTask('test', true, false)">
           <template #icon>
             <Icon icon="ant-design:code-outlined" style="font-size: 18px" />
           </template>
-          {{ $t("dev.terminal.actions.test") }}
+          {{ $t('dev.terminal.actions.test') }}
         </ElButton>
         <!-- 安装依赖下拉菜单 -->
         <ElDropdown class="terminal-menu-item">
@@ -154,7 +133,7 @@
             <template #icon>
               <Icon icon="ant-design:download-outlined" style="font-size: 20px" />
             </template>
-            {{ $t("dev.terminal.actions.install.title") }}
+            {{ $t('dev.terminal.actions.install.title') }}
           </ElButton>
           <template #dropdown>
             <ElDropdownMenu>
@@ -177,25 +156,21 @@
           <template #icon>
             <Icon icon="ant-design:tag-outlined" style="font-size: 20px" />
           </template>
-          {{ $t("dev.terminal.actions.republish") }}</ElButton
+          {{ $t('dev.terminal.actions.republish') }}</ElButton
         >
         <!-- 清空成功任务按钮 -->
         <ElButton class="terminal-menu-item" v-blur @click="terminal.clearSuccessTask()">
           <template #icon>
             <Icon icon="ant-design:clear-outlined" style="font-size: 20px" />
           </template>
-          {{ $t("dev.terminal.actions.empty_task") }}
+          {{ $t('dev.terminal.actions.empty_task') }}
         </ElButton>
         <!-- 设置按钮 -->
-        <ElButton
-          class="terminal-menu-item"
-          v-blur
-          @click="terminal.toggleConfigDialog()"
-        >
+        <ElButton class="terminal-menu-item" v-blur @click="terminal.toggleConfigDialog()">
           <template #icon>
             <Icon icon="ant-design:setting-outlined" style="font-size: 20px" />
           </template>
-          {{ $t("dev.terminal.actions.setting") }}
+          {{ $t('dev.terminal.actions.setting') }}
         </ElButton>
       </div>
     </ElDialog>
@@ -216,7 +191,7 @@
           <template #icon>
             <Icon icon="ant-design:rollback-outlined" style="font-size: 20px" />
           </template>
-          {{ $t("dev.terminal.actions.return_terminal") }}</ElButton
+          {{ $t('dev.terminal.actions.return_terminal') }}</ElButton
         >
       </div>
     </ElDialog>
@@ -224,402 +199,399 @@
 </template>
 
 <script setup lang="ts">
-import { ElAlert, ElMessageBox, ElScrollbar } from "element-plus";
-import { nextTick, onMounted, reactive, useTemplateRef } from "vue";
-import { TerminalService } from "@/app/api/dev/terminal";
-import { DictEnum, taskStatus } from "@/app/enums/index";
-import { useTerminalStore } from "@/store/modules/terminal";
-import { $t } from "@/locales";
-import { RefreshRight, Delete } from "@element-plus/icons-vue";
-import { useForm } from "../form";
-import { mittBus } from "@/utils";
+  import { ElAlert, ElMessageBox, ElScrollbar } from 'element-plus'
+  import { nextTick, onMounted, reactive, useTemplateRef } from 'vue'
+  import { TerminalService } from '@/app/api/tools/terminal'
+  import { DictEnum, taskStatus } from '@/app/enums/index'
+  import { useTerminalStore } from '@/store/modules/terminal'
+  import { $t } from '@/locales'
+  import { RefreshRight, Delete } from '@element-plus/icons-vue'
+  import { useForm } from '../form'
+  import { mittBus } from '@/utils'
 
-// 组件名称定义
-defineOptions({ name: "terminal-command" });
+  // 组件名称定义
+  defineOptions({ name: 'terminal-command' })
 
-// 源类型定义
-type SourceType = "npm" | "composer";
+  // 源类型定义
+  type SourceType = 'npm' | 'composer'
 
-// 终端状态管理
-const terminal = useTerminalStore();
-// 终端滚动条引用
-const terminalScrollbarRef = useTemplateRef("terminalScrollbarRef");
+  // 终端状态管理
+  const terminal = useTerminalStore()
+  // 终端滚动条引用
+  const terminalScrollbarRef = useTemplateRef('terminalScrollbarRef')
 
-// 组件状态
-const state = reactive({
-  registryLoading: false, // 源加载状态
-  registryLoadingType: "npm", // 源加载类型
-  packageManagerLoading: false, // 包管理器加载状态
-});
+  // 组件状态
+  const state = reactive({
+    registryLoading: false, // 源加载状态
+    registryLoadingType: 'npm', // 源加载类型
+    packageManagerLoading: false // 包管理器加载状态
+  })
 
-/**
- * 配置表单
- */
-const [ConfigForm, formApi] = useForm({
-  labelWidth: "120px",
-  schema: [
-    {
-      component: "Select",
-      prop: "npm_registry",
-      defaultValue: "npm",
-      label: $t("dev.terminal.form.npm_registry"),
-      componentProps: {
-        placeholder: $t("dev.terminal.form.placeholder.npm_registry"),
-        clearable: true,
-        options: [
-          { label: "NPM", value: "npm" },
-          { label: "Taobao", value: "taobao" },
-          { label: "Tencent", value: "tencent" },
-          { label: "未知", value: "unknown" },
-        ],
-        onChange: (value: any) => {
-          changeRegistry(value, "npm");
-        },
+  /**
+   * 配置表单
+   */
+  const [ConfigForm, formApi] = useForm({
+    labelWidth: '120px',
+    schema: [
+      {
+        component: 'Select',
+        prop: 'npm_registry',
+        defaultValue: 'npm',
+        label: $t('dev.terminal.form.npm_registry'),
+        componentProps: {
+          placeholder: $t('dev.terminal.form.placeholder.npm_registry'),
+          clearable: true,
+          options: [
+            { label: 'NPM', value: 'npm' },
+            { label: 'Taobao', value: 'taobao' },
+            { label: 'Tencent', value: 'tencent' },
+            { label: '未知', value: 'unknown' }
+          ],
+          onChange: (value: any) => {
+            changeRegistry(value, 'npm')
+          }
+        }
       },
-    },
-    {
-      component: "Select",
-      prop: "composer_registry",
-      defaultValue: "composer",
-      label: $t("dev.terminal.form.composer_registry"),
-      componentProps: {
-        placeholder: $t("dev.terminal.form.placeholder.composer_registry"),
-        clearable: true,
-        options: [
-          { label: "Composer", value: "composer" },
-          { label: "Huawei", value: "huawei" },
-          { label: "Aliyun", value: "aliyun" },
-          { label: "Tencent", value: "tencent" },
-        ],
-        onChange: (value: any) => {
-          changeRegistry(value, "composer");
-        },
+      {
+        component: 'Select',
+        prop: 'composer_registry',
+        defaultValue: 'composer',
+        label: $t('dev.terminal.form.composer_registry'),
+        componentProps: {
+          placeholder: $t('dev.terminal.form.placeholder.composer_registry'),
+          clearable: true,
+          options: [
+            { label: 'Composer', value: 'composer' },
+            { label: 'Huawei', value: 'huawei' },
+            { label: 'Aliyun', value: 'aliyun' },
+            { label: 'Tencent', value: 'tencent' }
+          ],
+          onChange: (value: any) => {
+            changeRegistry(value, 'composer')
+          }
+        }
       },
-    },
-    {
-      component: "Select",
-      prop: "package_manager",
-      label: $t("dev.terminal.form.package_manager"),
-      defaultValue: "pnpm",
-      componentProps: {
-        placeholder: $t("dev.terminal.form.placeholder.package_manager"),
-        clearable: true,
-        options: [
-          { label: "NPM", value: "npm" },
-          { label: "PNPM", value: "pnpm" },
-          { label: "YARN", value: "yarn" },
-        ],
-        onChange: (value: any) => {
-          changePackageManager(value);
-        },
+      {
+        component: 'Select',
+        prop: 'package_manager',
+        label: $t('dev.terminal.form.package_manager'),
+        defaultValue: 'pnpm',
+        componentProps: {
+          placeholder: $t('dev.terminal.form.placeholder.package_manager'),
+          clearable: true,
+          options: [
+            { label: 'NPM', value: 'npm' },
+            { label: 'PNPM', value: 'pnpm' },
+            { label: 'YARN', value: 'yarn' }
+          ],
+          onChange: (value: any) => {
+            changePackageManager(value)
+          }
+        }
       },
-    },
-    {
-      prop: "automatic_cleanup_task",
-      label: $t("dev.terminal.form.automatic_cleanup_task"),
-      component: "ApiDict",
-      defaultValue: 1,
-      componentProps: {
-        renderType: "RadioGroup",
-        code: DictEnum.SYS_YES_NO,
-        isBtn: true,
-        onChange: (value: any) => {
-          //调用接口
-          console.log(value);
-        },
-      },
-    },
-  ],
-});
+      {
+        prop: 'automatic_cleanup_task',
+        label: $t('dev.terminal.form.automatic_cleanup_task'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_YES_NO,
+          isBtn: true,
+          onChange: (value: any) => {
+            //调用接口
+            console.log(value)
+          }
+        }
+      }
+    ]
+  })
 
-/**
- * 获取任务状态文本和类型
- * @param status 任务状态代码
- * @returns 包含状态文本和类型的对象
- */
-const getTaskStatus = (status: number) => {
-  const statusMap: Record<number, { statusText: string; statusType: any }> = {
-    [taskStatus.Waiting]: {
-      statusText: $t("dev.terminal.status.waiting"),
-      statusType: "info",
-    },
-    [taskStatus.Connecting]: {
-      statusText: $t("dev.terminal.status.connecting"),
-      statusType: "warning",
-    },
-    [taskStatus.Executing]: {
-      statusText: $t("dev.terminal.status.executing"),
-      statusType: "warning",
-    },
-    [taskStatus.Success]: {
-      statusText: $t("dev.terminal.status.success"),
-      statusType: "success",
-    },
-    [taskStatus.Failed]: {
-      statusText: $t("dev.terminal.status.failed"),
-      statusType: "danger",
-    },
-    [taskStatus.Unknown]: {
-      statusText: $t("dev.terminal.status.unknown"),
-      statusType: "danger",
-    },
-  };
-
-  return (
-    statusMap[status] || {
-      statusText: $t("dev.terminal.status.unknown"),
-      statusType: "danger",
+  /**
+   * 获取任务状态文本和类型
+   * @param status 任务状态代码
+   * @returns 包含状态文本和类型的对象
+   */
+  const getTaskStatus = (status: number) => {
+    const statusMap: Record<number, { statusText: string; statusType: any }> = {
+      [taskStatus.Waiting]: {
+        statusText: $t('dev.terminal.status.waiting'),
+        statusType: 'info'
+      },
+      [taskStatus.Connecting]: {
+        statusText: $t('dev.terminal.status.connecting'),
+        statusType: 'warning'
+      },
+      [taskStatus.Executing]: {
+        statusText: $t('dev.terminal.status.executing'),
+        statusType: 'warning'
+      },
+      [taskStatus.Success]: {
+        statusText: $t('dev.terminal.status.success'),
+        statusType: 'success'
+      },
+      [taskStatus.Failed]: {
+        statusText: $t('dev.terminal.status.failed'),
+        statusType: 'danger'
+      },
+      [taskStatus.Unknown]: {
+        statusText: $t('dev.terminal.status.unknown'),
+        statusType: 'danger'
+      }
     }
-  );
-};
 
-/**
- * 添加终端任务
- * @param command 命令名称
- * @param pm 是否使用包管理器
- * @param blockOnFailure 失败时是否阻止后续任务
- * @param extend 扩展参数
- * @param callback 回调函数
- */
-const addTerminalTask = (
-  command: string,
-  pm: boolean,
-  blockOnFailure = true,
-  extend = "",
-  callback: Function = () => {}
-) => {
-  if (pm) {
-    terminal.addTaskPM(command, blockOnFailure, extend, callback);
-  } else {
-    terminal.addTask(command, blockOnFailure, extend, callback);
+    return (
+      statusMap[status] || {
+        statusText: $t('dev.terminal.status.unknown'),
+        statusType: 'danger'
+      }
+    )
   }
 
-  // 任务列表滚动条滚动到底部
-  nextTick(() => {
-    if (terminalScrollbarRef.value && terminalScrollbarRef.value.wrapRef) {
-      terminalScrollbarRef.value.setScrollTop(
-        terminalScrollbarRef.value.wrapRef.scrollHeight
-      );
+  /**
+   * 添加终端任务
+   * @param command 命令名称
+   * @param pm 是否使用包管理器
+   * @param blockOnFailure 失败时是否阻止后续任务
+   * @param extend 扩展参数
+   * @param callback 回调函数
+   */
+  const addTerminalTask = (
+    command: string,
+    pm: boolean,
+    blockOnFailure = true,
+    extend = '',
+    callback: Function = () => {}
+  ) => {
+    if (pm) {
+      terminal.addTaskPM(command, blockOnFailure, extend, callback)
+    } else {
+      terminal.addTask(command, blockOnFailure, extend, callback)
     }
-  });
-};
 
-/**
- * 重新发布构建
- */
-const buildPackaging = () => {
-  ElMessageBox.confirm(
-    $t("dev.terminal.form.confirm.packaging_build"),
-    $t("dev.terminal.form.confirm.title"),
-    {
-      type: "warning",
-    }
-  ).then(() => {
-    addTerminalTask("cmdr-build", true, true, "");
-  });
-};
-
-/**
- * 更改包管理
- * @param val 包管理器名称
- */
-const changePackageManager = (val: string) => {
-  state.packageManagerLoading = true;
-  TerminalService.config({ manager: val })
-    .then((res: any) => {
-      if (res.code == 0) {
-        terminal.changePackageManager(val);
+    // 任务列表滚动条滚动到底部
+    nextTick(() => {
+      if (terminalScrollbarRef.value && terminalScrollbarRef.value.wrapRef) {
+        terminalScrollbarRef.value.setScrollTop(terminalScrollbarRef.value.wrapRef.scrollHeight)
       }
     })
-    .finally(() => {
-      state.packageManagerLoading = false;
-    });
-};
+  }
 
-/**
- * 更改源
- * @param val 源名称
- * @param type 源类型
- */
-const changeRegistry = (val: string, type: SourceType) => {
-  const field = type == "npm" ? "npm_registry" : "composer_registry";
-  const oldVal =
-    type == "npm" ? terminal.state.npmRegistry : terminal.state.composerRegistry;
-  terminal.changeRegistry(val, type);
-  state.registryLoading = true;
-  state.registryLoadingType = type;
-  terminal.addTask(`set-${type}-registry.${val}`, false, "", (res: taskStatus) => {
-    state.registryLoading = false;
-    if (res == taskStatus.Failed || res == taskStatus.Unknown) {
-      ElMessageBox.confirm(
-        $t("dev.terminal.form.confirm.source_command"),
-        $t("dev.terminal.form.confirm.title"),
-        {
-          showCancelButton: false,
-          type: "warning",
+  /**
+   * 重新发布构建
+   */
+  const buildPackaging = () => {
+    ElMessageBox.confirm(
+      $t('dev.terminal.form.confirm.packaging_build'),
+      $t('dev.terminal.form.confirm.title'),
+      {
+        type: 'warning'
+      }
+    ).then(() => {
+      addTerminalTask('cmdr-build', true, true, '')
+    })
+  }
+
+  /**
+   * 更改包管理
+   * @param val 包管理器名称
+   */
+  const changePackageManager = (val: string) => {
+    state.packageManagerLoading = true
+    TerminalService.config({ manager: val })
+      .then((res: any) => {
+        if (res.code == 0) {
+          terminal.changePackageManager(val)
         }
-      ).then(() => {
-        terminal.changeRegistry(oldVal, type);
-        const field = type == "npm" ? "npm_registry" : "composer_registry";
-        formApi.setValues({ field: oldVal });
-      });
-    }
-  });
-};
+      })
+      .finally(() => {
+        state.packageManagerLoading = false
+      })
+  }
 
-/**
- * 打开终端
- */
-const openTerminal = (): void => {
-  terminal.state.show = true;
-  console.log("打开终端");
-};
+  /**
+   * 更改源
+   * @param val 源名称
+   * @param type 源类型
+   */
+  const changeRegistry = (val: string, type: SourceType) => {
+    const field = type == 'npm' ? 'npm_registry' : 'composer_registry'
+    const oldVal = type == 'npm' ? terminal.state.npmRegistry : terminal.state.composerRegistry
+    terminal.changeRegistry(val, type)
+    state.registryLoading = true
+    state.registryLoadingType = type
+    terminal.addTask(`set-${type}-registry.${val}`, false, '', (res: taskStatus) => {
+      state.registryLoading = false
+      if (res == taskStatus.Failed || res == taskStatus.Unknown) {
+        ElMessageBox.confirm(
+          $t('dev.terminal.form.confirm.source_command'),
+          $t('dev.terminal.form.confirm.title'),
+          {
+            showCancelButton: false,
+            type: 'warning'
+          }
+        ).then(() => {
+          terminal.changeRegistry(oldVal, type)
+          const field = type == 'npm' ? 'npm_registry' : 'composer_registry'
+          formApi.setValues({ field: oldVal })
+        })
+      }
+    })
+  }
 
-/**
- * 关闭终端
- */
-const closeTerminal = (): void => {
-  terminal.state.show = false;
-  console.log("关闭终端");
-};
+  /**
+   * 打开终端
+   */
+  const openTerminal = (): void => {
+    terminal.state.show = true
+    console.log('打开终端')
+  }
 
-// 组件挂载时初始化
-onMounted(() => {
-  terminal.init();
-  // 注册打开终端事件监听
-  mittBus.on("openTerminalCommand", openTerminal);
-});
+  /**
+   * 关闭终端
+   */
+  const closeTerminal = (): void => {
+    terminal.state.show = false
+    console.log('关闭终端')
+  }
 
-// 组件卸载时清理
-onUnmounted(() => {
-  // 移除打开终端事件监听
-  mittBus.off("openTerminalCommand", closeTerminal);
-});
+  // 组件挂载时初始化
+  onMounted(() => {
+    terminal.init()
+    // 注册打开终端事件监听
+    mittBus.on('openTerminalCommand', openTerminal)
+  })
+
+  // 组件卸载时清理
+  onUnmounted(() => {
+    // 移除打开终端事件监听
+    mittBus.off('openTerminalCommand', closeTerminal)
+  })
 </script>
 <style scoped lang="scss">
-// 终端对话框样式
-:deep(.terminal-dialog) {
-  --el-dialog-padding-primary: 15px 15px 0 15px;
-  .el-dialog__body {
-    margin-top: 15px;
-  }
-}
-
-// 终端警告提示样式
-.terminal-warning-alert {
-  margin: 0 0 20px 0;
-}
-
-// 终端时间线样式
-.terminal-timeline {
-  padding: 0 15px;
-}
-
-// 命令文本样式
-.command {
-  font-size: var(--el-font-size-large);
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-// 执行消息显示区域样式
-.exec-message {
-  color: var(--ba-bg-color-overlay);
-  font-size: 12px;
-  line-height: 16px;
-  padding: 6px;
-  background-color: #424251;
-  margin-top: 10px;
-  min-height: 30px;
-  max-height: 200px;
-  overflow: auto;
-
-  // 滚动条样式（WebKit浏览器）
-  &::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #c8c9cc;
-    border-radius: 4px;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-  }
-  &::-webkit-scrollbar-track {
-    background: var(--ba-bg-color);
-  }
-  &:hover {
-    &::-webkit-scrollbar-thumb:hover {
-      background: #909399;
+  // 终端对话框样式
+  :deep(.terminal-dialog) {
+    --el-dialog-padding-primary: 15px 15px 0 15px;
+    .el-dialog__body {
+      margin-top: 15px;
     }
   }
-}
 
-// Firefox滚动条样式
-@supports not (selector(::-webkit-scrollbar)) {
+  // 终端警告提示样式
+  .terminal-warning-alert {
+    margin: 0 0 20px 0;
+  }
+
+  // 终端时间线样式
+  .terminal-timeline {
+    padding: 0 15px;
+  }
+
+  // 命令文本样式
+  .command {
+    font-size: var(--el-font-size-large);
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+  // 执行消息显示区域样式
   .exec-message {
-    scrollbar-width: thin;
-    scrollbar-color: #c8c9cc #eaeaea;
+    color: var(--ba-bg-color-overlay);
+    font-size: 12px;
+    line-height: 16px;
+    padding: 6px;
+    background-color: #424251;
+    margin-top: 10px;
+    min-height: 30px;
+    max-height: 200px;
+    overflow: auto;
+
+    // 滚动条样式（WebKit浏览器）
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #c8c9cc;
+      border-radius: 4px;
+      box-shadow: none;
+      -webkit-box-shadow: none;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--ba-bg-color);
+    }
+    &:hover {
+      &::-webkit-scrollbar-thumb:hover {
+        background: #909399;
+      }
+    }
   }
-}
 
-// 消息展开/折叠切换样式
-.toggle-message-display {
-  padding-top: 10px;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
+  // Firefox滚动条样式
+  @supports not (selector(::-webkit-scrollbar)) {
+    .exec-message {
+      scrollbar-width: thin;
+      scrollbar-color: #c8c9cc #eaeaea;
+    }
+  }
 
-// 任务操作按钮样式
-.task-opt {
-  display: none;
-  float: right;
-}
+  // 消息展开/折叠切换样式
+  .toggle-message-display {
+    padding-top: 10px;
+    font-size: 13px;
+    color: var(--el-text-color-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
 
-// 任务项悬停显示操作按钮
-.task-item.task-status-0:hover,
-.task-item.task-status-3:hover,
-.task-item.task-status-4:hover,
-.task-item.task-status-5:hover {
+  // 任务操作按钮样式
   .task-opt {
-    display: inline;
+    display: none;
+    float: right;
   }
-}
 
-// 失败时阻止后续任务标签样式
-.block-on-failure-tag {
-  margin-left: 10px;
-}
+  // 任务项悬停显示操作按钮
+  .task-item.task-status-0:hover,
+  .task-item.task-status-3:hover,
+  .task-item.task-status-4:hover,
+  .task-item.task-status-5:hover {
+    .task-opt {
+      display: inline;
+    }
+  }
 
-// 终端菜单项样式
-.terminal-menu-item {
-  margin-bottom: 12px;
-}
+  // 失败时阻止后续任务标签样式
+  .block-on-failure-tag {
+    margin-left: 10px;
+  }
 
-// 终端菜单项间距
-.terminal-menu-item + .terminal-menu-item {
-  margin-left: 12px;
-  margin-bottom: 12px;
-}
+  // 终端菜单项样式
+  .terminal-menu-item {
+    margin-bottom: 12px;
+  }
 
-// 终端按钮组布局
-.terminal-buttons {
-  display: block;
-  width: fit-content;
-  margin: 0 auto;
-  padding-top: 12px;
-}
+  // 终端菜单项间距
+  .terminal-menu-item + .terminal-menu-item {
+    margin-left: 12px;
+    margin-bottom: 12px;
+  }
 
-// 配置按钮组布局
-.config-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-top: 20px;
-  padding-right: 20px;
-}
+  // 终端按钮组布局
+  .terminal-buttons {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    padding-top: 12px;
+  }
+
+  // 配置按钮组布局
+  .config-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 20px;
+    padding-right: 20px;
+  }
 </style>
