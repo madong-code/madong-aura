@@ -1,0 +1,97 @@
+{
+  "list": {
+    "title": "角色管理",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "name": "角色",
+        "code": "角色代码",
+        "role_name": "角色名称",
+        "is_super_admin": "是否超级管理员",
+        "role_type": "角色类型",
+        "data_scope": "数据权限",
+        "sort": "排序",
+        "enabled": "状态",
+        "remark": "备注",
+        "created_date": "创建时间",
+        "operation": "操作",
+        "actions": {
+          "edit": "修改",
+          "user": "分配用户",
+          "data_scope": "数据权限",
+          "delete": {
+            "label": "删除",
+            "title": "删除确认",
+            "confirm": "是否确认删除?"
+          },
+          "status": {
+            "disabled": "禁用",
+            "enabled": "启用",
+            "confirm": "你要将 {name}的状态切换为 【{status}】吗？",
+            "title": "切换状态"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "新增",
+        "delete": {
+          "label": "删除",
+          "title": "删除确认",
+          "confirm": "确认删除选中的{length}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "code": "角色代码",
+      "name": "角色名称",
+      "enabled": "角色状态",
+      "created_date": "日期",
+      "placeholder": {
+        "code": "请输入角色代码",
+        "name": "请输入角色名称",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "code": "角色代码",
+      "name": "角色名称",
+      "is_super_admin": "是否超级管理员",
+      "role_type": "角色类型",
+      "data_scope": "数据权限",
+      "sort": "排序",
+      "enabled": "状态",
+      "permissions": "权限",
+      "dept_list": "部门列表",
+      "remark": "备注",
+      "placeholder": {
+        "code": "请输入角色标识",
+        "name": "请输入角色名称",
+        "role_type": "请选择角色类型",
+        "remark": "请输入备注"
+      }
+    },
+    "data_scope": {
+      "title": "数据权限",
+      "role_code": "角色代码",
+      "role_name": "角色名称",
+      "data_permission": "数据权限",
+      "dept_list": "部门列表",
+      "assign_permission": "分配权限",
+      "assign_success": "分配成功"
+    },
+    "help": {}
+  },
+  "assign_user": {
+    "title": "分配用户",
+    "append_title": "添加用户"
+  },
+  "message": {
+    "success": "成功",
+    "error": "失败",
+    "delete": "删除成功",
+    "operate": "操作成功"
+  }
+}

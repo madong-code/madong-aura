@@ -12,7 +12,7 @@ export const crudSchema = (): CrudSchema => {
     rowKey: 'id',
     // 接口地址
     api: GeneratorCodeService.list,
-    dialogTitle: $t('tools.code.title'),
+    dialogTitle: $t('tools.generator.code.title'),
     crudApi: {
       // 新增接口
       add: GeneratorCodeService.create,
@@ -48,13 +48,13 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'table_name',
-        label: $t('tools.code.list.table_name'),
+        label: $t('tools.generator.code.list.table_name'),
         align: 'left',
         minWidth: 100
       },
       {
         prop: 'plugin_name',
-        label: $t('tools.code.list.plugin_name'),
+        label: $t('tools.generator.code.list.plugin_name'),
         align: 'center',
         minWidth: 100,
         formatter: (row: Recordable) => {
@@ -63,17 +63,17 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'table_content',
-        label: $t('tools.code.list.table_content'),
+        label: $t('tools.generator.code.list.table_content'),
       },
       {
         prop: 'created_date',
         align: 'left',
-        label: $t('tools.code.list.created_date')
+        label: $t('tools.generator.code.list.created_date')
       },
       {
         prop: 'updated_date',
         align: 'left',
-        label: $t('tools.code.list.updated_date')
+        label: $t('tools.generator.code.list.updated_date')
       },
     ],
 
@@ -84,28 +84,28 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'ApiSelect',
           prop: 'EQ_featrues_name',
-          label: $t('tools.code.list.query.features_name'),
+          label: $t('tools.generator.code.list.query.features_name'),
           componentProps: {
             // api: '/tools/code/features',
-            placeholder: $t('tools.code.list.query.placeholder_features_name'),
+            placeholder: $t('tools.generator.code.list.query.placeholder_features_name'),
             clearable: true
           }
         },
         {
           component: 'Input',
           prop: 'LIKE_table_name',
-          label: $t('tools.code.list.query.table_name'),
+          label: $t('tools.generator.code.list.query.table_name'),
           componentProps: {
-            placeholder: $t('tools.code.list.query.placeholder_table_name'),
+            placeholder: $t('tools.generator.code.list.query.placeholder_table_name'),
             clearable: true
           }
         },
         // {
         //   component: 'Input',
         //   prop: 'LIKE_name',
-        //   label: $t('tools.code.list.query.name'),
+        //   label: $t('tools.generator.code.list.query.name'),
         //   componentProps: {
-        //     placeholder: $t('tools.code.list.query.placeholder'),
+        //     placeholder: $t('tools.generator.code.list.query.placeholder'),
         //     clearable: true
         //   }
         // },

@@ -1,0 +1,59 @@
+{
+  "list": {
+    "title": "Recycle Bin Management",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "data": "Data",
+        "table_name": "Data Table",
+        "table_prefix": "Table Prefix",
+        "enabled": "Status",
+        "ip": "IP",
+        "operate_by": "",
+        "created_date": "Creation Date",
+        "updated_date": "Update Date",
+        "operation": "Operation",
+        "actions": {
+          "detail": "Details",
+          "recover": "Recover",
+          "delete": {
+            "label": "Delete",
+            "title": "Warm Reminder",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "table_name": "Data Table",
+      "enabled": "Status",
+      "placeholder": {
+        "table_name": "Please enter data table name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "data": "Recycled Data",
+      "table_name": "Data Table",
+      "table_prefix": "Table Prefix",
+      "enabled": "Recover",
+      "ip": "IP",
+      "operate_name": "Operator",
+      "created_date": "Deletion Time"
+    }
+  },
+  "message": {
+    "success": "Success",
+    "error": "Failed"
+  }
+}

@@ -14,11 +14,31 @@ export class FeatureRouteManager {
     private scanner = new FeatureModuleScanner()
     private cachedRoutes: AppRouteRecord[] | null = null
 
+    constructor() {
+        // 开发环境下添加热更新支持
+        if (import.meta.env.DEV && import.meta.hot) {
+            this.setupHMR()
+        }
+    }
+
+    /**
+     * 设置热更新支持
+     */
+    private setupHMR(): void {
+        if (import.meta.hot) {
+            // 监听路由配置文件变化
+            import.meta.hot.on('vite:beforeUpdate', () => {
+                // 清空缓存，确保下次获取时重新扫描
+                this.clearCache()
+            })
+        }
+    }
+
     /**
      * 获取所有功能模块路由（懒加载）
      */
     getFeatureRoutes(): AppRouteRecord[] {
-        if (this.cachedRoutes) {
+        if (this.cachedRoutes && !import.meta.env.DEV) {
             return this.cachedRoutes
         }
 
@@ -28,7 +48,8 @@ export class FeatureRouteManager {
         if (this.cachedRoutes.length > 0) {
             console.log(`[FeatureRouteManager] 成功加载 ${this.cachedRoutes.length} 个功能模块路由`)
             this.cachedRoutes.forEach((route, index) => {
-                console.log(`[${index + 1}] ${route.name || '未命名'} - ${route.path}`)
+               //@ts-ignore
+               console.log(`[${index + 1}] ${route?.name || '未命名'} - ${route.path}`)
             })
         } else {
             console.warn('[FeatureRouteManager] 未找到任何功能模块路由')

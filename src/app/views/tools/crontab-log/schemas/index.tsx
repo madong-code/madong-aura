@@ -3,7 +3,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { CrontabLogService } from '@/app/api/tools/task'
+import { CrontabLogService } from '@/app/api/tools/crontab'
 import { h } from 'vue'
 
 // crud配置
@@ -11,7 +11,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: CrontabLogService.list,
-    dialogTitle: $t('dev.crontab_log.list.title'),
+    dialogTitle: $t('tools.crontab.log.list.title'),
     crudApi: {
       // 新增接口
       add: CrontabLogService.create,
@@ -33,13 +33,13 @@ export const crudSchema = (): CrudSchema => {
     // 是否有详情
     hasView: false,
     // 新增权限码
-    addAuth: 'dev:crontab_log:create',
+    addAuth: 'crontab:log:create',
     // 删除权限码
-    removeAuth: 'dev:crontab_log:delete',
+    removeAuth: 'crontab:log:delete',
     // 修改权限码
-    editAuth: 'dev:crontab_log:update',
+    editAuth: 'crontab:log:update',
     // 详情权限码
-    viewAuth: 'dev:crontab_log:read',
+    viewAuth: 'crontab:log:read',
     toolbarConfig: {
       fullscreen: false,
       size: false
@@ -51,17 +51,17 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'target',
-        label: $t('dev.crontab_log.list.table.columns.target'),
+        label: $t('tools.crontab.log.list.table.columns.target'),
         width: 170
       },
       {
         prop: 'running_time',
-        label: $t('dev.crontab_log.list.table.columns.running_time')
+        label: $t('tools.crontab.log.list.table.columns.running_time')
       },
 
       {
         prop: 'return_code',
-        label: $t('dev.crontab_log.list.table.columns.return_code'),
+        label: $t('tools.crontab.log.list.table.columns.return_code'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_OPERATION_RESULT
@@ -69,7 +69,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'log',
-        label: $t('dev.crontab_log.list.table.columns.log'),
+        label: $t('tools.crontab.log.list.table.columns.log'),
         minWidth: 200,
         formatter(row) {
           // 日志内容
@@ -152,7 +152,7 @@ export const crudSchema = (): CrudSchema => {
       {
         prop: 'created_date',
         minWidth: 140,
-        label: $t('dev.crontab_log.list.table.columns.created_date')
+        label: $t('tools.crontab.log.list.table.columns.created_date')
       }
     ],
     // 搜索表单定义
@@ -162,9 +162,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_target',
-          label: $t('dev.crontab_log.list.query.target'),
+          label: $t('tools.crontab.log.list.query.target'),
           componentProps: {
-            placeholder: $t('dev.crontab_log.list.query.placeholder.target'),
+            placeholder: $t('tools.crontab.log.list.query.placeholder.target'),
             clearable: true
           },
           colSpan: 6
@@ -172,9 +172,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           prop: 'return_code',
-          label: $t('dev.crontab_log.list.query.return_code'),
+          label: $t('tools.crontab.log.list.query.return_code'),
           componentProps: {
-            placeholder: $t('dev.crontab_log.list.query.placeholder.return_code'),
+            placeholder: $t('tools.crontab.log.list.query.placeholder.return_code'),
             code: DictEnum.SYS_OPERATION_RESULT,
             clearable: true
           },

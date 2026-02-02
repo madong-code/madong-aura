@@ -5,7 +5,7 @@ import type { User } from './user-model';
 /**
  * 公共接口
  */
-const baseUrl = '/system/user';
+const baseUrl = '/system/admin';
 
 export const UserService = {
   ...BaseService<User>({

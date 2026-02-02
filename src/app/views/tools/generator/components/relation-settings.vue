@@ -2,12 +2,12 @@
   <div class="relation-settings">
     <div class="relation-form">
       <el-button type="primary" @click="addEvent(null, -1)">
-        {{ $t("tools.code.relation.add_relation") }}
+        {{ $t("tools.generator.code.relation.add_relation") }}
       </el-button>
     </div>
 
     <el-table :data="localData" border style="width: 100%">
-      <el-table-column prop="type" :label="$t('tools.code.relation.type')" width="120">
+      <el-table-column prop="type" :label="$t('tools.generator.code.relation.type')" width="120">
         <template #default="scope">
           <el-tag :type="getRelationTypeTag(scope.row.type)">
             {{ getRelationTypeText(scope.row.type) }}
@@ -16,26 +16,26 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        :label="$t('tools.code.relation.method_name')"
+        :label="$t('tools.generator.code.relation.method_name')"
         width="150"
       />
-      <el-table-column prop="app" :label="$t('tools.code.relation.app')" width="120" />
+      <el-table-column prop="app" :label="$t('tools.generator.code.relation.app')" width="120" />
       <el-table-column
         prop="model"
-        :label="$t('tools.code.relation.model')"
+        :label="$t('tools.generator.code.relation.model')"
         width="150"
       />
       <el-table-column
         prop="local_key"
-        :label="$t('tools.code.relation.local_key')"
+        :label="$t('tools.generator.code.relation.local_key')"
         width="120"
       />
       <el-table-column
         prop="foreign_key"
-        :label="$t('tools.code.relation.foreign_key')"
+        :label="$t('tools.generator.code.relation.foreign_key')"
       />
       <el-table-column
-        :label="$t('tools.code.relation.operation')"
+        :label="$t('tools.generator.code.relation.operation')"
         width="150"
         fixed="right"
       >
@@ -55,8 +55,8 @@
       v-model="dialogVisible"
       :title="
         isEdit
-          ? $t('tools.code.relation.edit_relation')
-          : $t('tools.code.relation.add_relation')
+          ? $t('tools.generator.code.relation.edit_relation')
+          : $t('tools.generator.code.relation.add_relation')
       "
       width="600px"
       :before-close="handleClose"
@@ -67,10 +67,10 @@
         :rules="relationRules"
         label-width="100px"
       >
-        <el-form-item :label="$t('tools.code.relation.type')" prop="type">
+        <el-form-item :label="$t('tools.generator.code.relation.type')" prop="type">
           <el-select
             v-model="relationForm.type"
-            :placeholder="$t('tools.code.relation.type_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.type_placeholder')"
             style="width: 100%"
           >
             <el-option
@@ -81,34 +81,34 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('tools.code.relation.method_name')" prop="name">
+        <el-form-item :label="$t('tools.generator.code.relation.method_name')" prop="name">
           <el-input
             v-model="relationForm.name"
-            :placeholder="$t('tools.code.relation.method_name_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.method_name_placeholder')"
           />
         </el-form-item>
-        <el-form-item :label="$t('tools.code.relation.app')" prop="app">
+        <el-form-item :label="$t('tools.generator.code.relation.app')" prop="app">
           <el-input
             v-model="relationForm.app"
-            :placeholder="$t('tools.code.relation.plugin_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.plugin_placeholder')"
           />
         </el-form-item>
-        <el-form-item :label="$t('tools.code.relation.model')" prop="model">
+        <el-form-item :label="$t('tools.generator.code.relation.model')" prop="model">
           <el-input
             v-model="relationForm.model"
-            :placeholder="$t('tools.code.relation.model_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.model_placeholder')"
           />
         </el-form-item>
-        <el-form-item :label="$t('tools.code.relation.local_key')" prop="local_key">
+        <el-form-item :label="$t('tools.generator.code.relation.local_key')" prop="local_key">
           <el-input
             v-model="relationForm.local_key"
-            :placeholder="$t('tools.code.relation.local_key_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.local_key_placeholder')"
           />
         </el-form-item>
-        <el-form-item :label="$t('tools.code.relation.foreign_key')" prop="foreign_key">
+        <el-form-item :label="$t('tools.generator.code.relation.foreign_key')" prop="foreign_key">
           <el-input
             v-model="relationForm.foreign_key"
-            :placeholder="$t('tools.code.relation.foreign_key_placeholder')"
+            :placeholder="$t('tools.generator.code.relation.foreign_key_placeholder')"
           />
         </el-form-item>
       </el-form>
@@ -180,35 +180,35 @@ const relationRules = {
   type: [
     {
       required: true,
-      message: () => $t("tools.code.relation.type_required"),
+      message: () => $t("tools.generator.code.relation.type_required"),
       trigger: "change",
     },
   ],
   name: [
     {
       required: true,
-      message: () => $t("tools.code.relation.method_name_required"),
+      message: () => $t("tools.generator.code.relation.method_name_required"),
       trigger: "blur",
     },
   ],
   model: [
     {
       required: true,
-      message: () => $t("tools.code.relation.model_required"),
+      message: () => $t("tools.generator.code.relation.model_required"),
       trigger: "blur",
     },
   ],
   local_key: [
     {
       required: true,
-      message: () => $t("tools.code.relation.local_key_required"),
+      message: () => $t("tools.generator.code.relation.local_key_required"),
       trigger: "blur",
     },
   ],
   foreign_key: [
     {
       required: true,
-      message: () => $t("tools.code.relation.foreign_key_required"),
+      message: () => $t("tools.generator.code.relation.foreign_key_required"),
       trigger: "blur",
     },
   ],
@@ -218,15 +218,15 @@ const relationRules = {
 const relationTypeOptions = computed(() => [
   {
     value: "one_to_one",
-    label: $t("tools.code.relation.type_options.one_to_one"),
+    label: $t("tools.generator.code.relation.type_options.one_to_one"),
   },
   {
     value: "one_to_many",
-    label: $t("tools.code.relation.type_options.one_to_many"),
+    label: $t("tools.generator.code.relation.type_options.one_to_many"),
   },
   {
     value: "many_to_many",
-    label: $t("tools.code.relation.type_options.many_to_many"),
+    label: $t("tools.generator.code.relation.type_options.many_to_many"),
   },
 ]);
 
@@ -264,7 +264,7 @@ const deleteEvent = (index: number) => {
     return;
   }
 
-  ElMessageBox.confirm($t("tools.code.relation.delete_confirm"), $t("common.tip"), {
+  ElMessageBox.confirm($t("tools.generator.code.relation.delete_confirm"), $t("common.tip"), {
     confirmButtonText: $t("common.confirm"),
     cancelButtonText: $t("common.cancel"),
     type: "warning",
@@ -342,9 +342,9 @@ const getRelationTypeTag = (type: string) => {
 // 获取关联类型文本（使用多语言）
 const getRelationTypeText = (type: string) => {
   const textMap: Record<string, string> = {
-    one_to_one: $t("tools.code.relation.one_to_one"),
-    one_to_many: $t("tools.code.relation.one_to_many"),
-    many_to_many: $t("tools.code.relation.many_to_many"),
+    one_to_one: $t("tools.generator.code.relation.one_to_one"),
+    one_to_many: $t("tools.generator.code.relation.one_to_many"),
+    many_to_many: $t("tools.generator.code.relation.many_to_many"),
   };
   return textMap[type] || type;
 };
@@ -371,7 +371,7 @@ const validateForm = () => {
     if (isValid) {
       resolve(true);
     } else {
-      ElMessage.warning($t("tools.code.relation.incomplete_setting"));
+      ElMessage.warning($t("tools.generator.code.relation.incomplete_setting"));
       reject(new Error("关联关系设置不完整"));
     }
   });

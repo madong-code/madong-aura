@@ -8,7 +8,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: LoginLogService.list,
-    dialogTitle: $t('system.login_logs.list.title'),
+    dialogTitle: $t('logs.login.list.title'),
     crudApi: {
       // 新增接口
       add: LoginLogService.create,
@@ -45,11 +45,11 @@ export const crudSchema = (): CrudSchema => {
 
       {
         prop: 'user_name',
-        label: $t('system.login_logs.list.table.columns.user_name')
+        label: $t('logs.login.list.table.columns.user_name')
       },
       {
         prop: 'status',
-        label: $t('system.login_logs.list.table.columns.status'),
+        label: $t('logs.login.list.table.columns.status'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_OPERATION_RESULT
@@ -57,23 +57,23 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'os',
-        label: $t('system.login_logs.list.table.columns.os')
+        label: $t('logs.login.list.table.columns.os')
       },
       {
         prop: 'browser',
-        label: $t('system.login_logs.list.table.columns.browser')
+        label: $t('logs.login.list.table.columns.browser')
       },
       {
         prop: 'ip',
-        label: $t('system.login_logs.list.table.columns.ip')
+        label: $t('logs.login.list.table.columns.ip')
       },
       {
         prop: 'ip_location',
-        label: $t('system.login_logs.list.table.columns.ip_location')
+        label: $t('logs.login.list.table.columns.ip_location')
       },
       {
         prop: 'created_date',
-        label: $t('system.login_logs.list.table.columns.login_date'),
+        label: $t('logs.login.list.table.columns.login_date'),
         width: 170
       }
     ],
@@ -84,9 +84,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_user_name',
-          label: $t('system.login_logs.list.query.user_name'),
+          label: $t('logs.login.list.query.user_name'),
           componentProps: {
-            placeholder: $t('system.login_logs.list.query.placeholder.user_name'),
+            placeholder: $t('logs.login.list.query.placeholder.user_name'),
             clearable: true
           },
           colSpan: 6
@@ -94,9 +94,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_ip',
-          label: $t('system.login_logs.list.query.ip'),
+          label: $t('logs.login.list.query.ip'),
           componentProps: {
-            placeholder: $t('system.login_logs.list.query.placeholder.ip'),
+            placeholder: $t('logs.login.list.query.placeholder.ip'),
             clearable: true
           },
           colSpan: 6
@@ -104,9 +104,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           prop: 'status',
-          label: $t('system.login_logs.list.query.status'),
+          label: $t('logs.login.list.query.status'),
           componentProps: {
-            placeholder: $t('system.login_logs.list.query.placeholder.status'),
+            placeholder: $t('logs.login.list.query.placeholder.status'),
             clearable: true,
             code: DictEnum.SYS_OPERATION_RESULT
           },
@@ -115,7 +115,7 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'DatePicker',
           prop: 'BETWEEN_created_at',
-          label: $t('system.login_logs.list.query.created_date'),
+          label: $t('logs.login.list.query.created_date'),
           colSpan: 6,
           componentProps: {
             type: 'daterange'
@@ -139,7 +139,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'user_name',
-          label: $t('system.login_logs.list.table.columns.user_name'),
+          label: $t('logs.login.list.table.columns.user_name'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -148,7 +148,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'status',
-          label: $t('system.login_logs.list.table.columns.status'),
+          label: $t('logs.login.list.table.columns.status'),
           component: 'ApiDict',
           componentProps: {
             placeholder: '',
@@ -157,7 +157,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'os',
-          label: $t('system.login_logs.list.table.columns.os'),
+          label: $t('logs.login.list.table.columns.os'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -166,7 +166,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'browser',
-          label: $t('system.login_logs.list.table.columns.browser'),
+          label: $t('logs.login.list.table.columns.browser'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -175,7 +175,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'ip',
-          label: $t('system.login_logs.list.table.columns.ip'),
+          label: $t('logs.login.list.table.columns.ip'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -184,7 +184,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'ip_location',
-          label: $t('system.login_logs.list.table.columns.ip_location'),
+          label: $t('logs.login.list.table.columns.ip_location'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -193,7 +193,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'created_date',
-          label: $t('system.login_logs.list.table.columns.login_date'),
+          label: $t('logs.login.list.table.columns.login_date'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -202,7 +202,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'remark',
-          label: $t('system.login_logs.list.table.columns.remark'),
+          label: $t('logs.login.list.table.columns.remark'),
           component: 'Input',
           componentProps: {
             type: 'textarea',

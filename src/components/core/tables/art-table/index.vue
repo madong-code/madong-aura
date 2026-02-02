@@ -7,7 +7,7 @@
     <ElTable
       ref="elTableRef"
       v-loading="!!loading"
-      v-bind="{ ...$attrs, ...props, height, stripe, border, size, headerCellStyle }"
+      v-bind="{ ...$attrs, ...props, height, stripe, border, size, tableLayout: props.tableLayout || 'fixed', headerCellStyle }"
     >
       <template v-for="col in columns" :key="col.prop || col.type">
         <!-- 渲染全局序号列 -->
@@ -137,6 +137,8 @@
     emptyText?: string
     /** 是否开启 ArtTableHeader，解决表格高度自适应问题 */
     showTableHeader?: boolean
+    /** 表格布局方式 */
+    tableLayout?: 'fixed' | 'auto'
   }
 
   const props = withDefaults(defineProps<ArtTableProps>(), {
@@ -146,6 +148,7 @@
     stripe: undefined,
     border: undefined,
     size: undefined,
+    tableLayout: 'fixed',
     emptyHeight: '100%',
     emptyText: '暂无数据',
     showTableHeader: true

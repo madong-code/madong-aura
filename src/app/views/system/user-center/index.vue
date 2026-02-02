@@ -50,7 +50,7 @@
       <div class="flex-1 overflow-hidden max-md:w-full max-md:mt-3.5">
         <div class="art-card-sm">
           <h1 class="p-4 text-xl font-normal border-b border-g-300">
-            {{ $t("system.user.profile.base_setting.title") }}
+            {{ $t("system.user.center.base_setting.title") }}
           </h1>
 
           <ElForm
@@ -139,7 +139,7 @@
         </div>
 
         <div class="info box-style" style="margin-top: 20px">
-          <h1 class="title">{{ $t("system.user.profile.secure_setting.title") }}</h1>
+          <h1 class="title">{{ $t("system.user.center.secure_setting.title") }}</h1>
 
           <ElForm
             :model="pwdForm"
@@ -150,7 +150,7 @@
             label-position="top"
           >
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.old_password')"
+              :label="$t('system.user.center.secure_setting.old_password')"
               prop="password"
             >
               <ElInput
@@ -162,7 +162,7 @@
             </ElFormItem>
 
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.new_password')"
+              :label="$t('system.user.center.secure_setting.new_password')"
               prop="new_password"
             >
               <ElInput
@@ -174,7 +174,7 @@
             </ElFormItem>
 
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.confirm_password')"
+              :label="$t('system.user.center.secure_setting.confirm_password')"
               prop="confirm_password"
             >
               <ElInput
@@ -199,7 +199,7 @@
         </div>
 
         <div class="info box-style" style="margin-top: 20px; margin-bottom: 20px">
-          <h1 class="title">{{ $t("system.user.profile.online_device.table.title") }}</h1>
+          <h1 class="title">{{ $t("system.user.center.online_device.table.title") }}</h1>
           <BasicCrud style="min-height: 300px" />
         </div>
       </div>
@@ -468,7 +468,7 @@ const [BasicCrud, crudApi] = useCrud({
   // 表格行操作
   tableActions: [
     {
-      label: $t('system.user.profile.online_device.table.columns.actions.force_offline.label'),
+      label: $t('system.user.center.online_device.table.columns.actions.force_offline.label'),
       type: "danger",
       sort: 1020,
       link: true,

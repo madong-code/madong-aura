@@ -1,0 +1,60 @@
+{
+  "title": "Personal Center",
+  "base_setting": {
+    "title": "Basic Settings",
+    "real_name": "Nickname",
+    "mobile_phone": "Phone",
+    "email": "Email",
+    "sex": "Gender",
+    "address": "Address",
+    "signed": "Signature",
+    "button": {
+      "submit": "Update"
+    }
+  },
+  "secure_setting": {
+    "title": "Security Settings",
+    "old_password": "Old Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "placeholder": {
+      "old_password": "Please enter user password",
+      "new_password": "Please enter new password",
+      "confirm_password": "Please enter confirm password"
+    },
+    "rules": {
+      "min_password": "Password length cannot be less than {0} characters",
+      "max_password": "Password length cannot exceed {0} characters",
+      "differ_password": "Two passwords are inconsistent",
+      "degree_password": "Old and new passwords cannot be the same"
+    },
+    "button": {
+      "submit": "Change Password"
+    }
+  },
+  "online_device": {
+    "title": "Online Devices",
+    "query": {
+      "ipaddr": "IP Address",
+      "user_name": "User Account"
+    },
+    "table": {
+      "title": "My Online Devices",
+      "columns": {
+        "user_name": "Login Account",
+        "ip": "IP Address",
+        "ip_location": "Login Address",
+        "browser": "Browser",
+        "os": "System",
+        "login_time": "Login Time",
+        "operation": "Operation",
+        "actions": {
+          "force_offline": {
+            "label": "Force Offline",
+            "confirm": "Confirm to force offline {0}?"
+          }
+        }
+      }
+    }
+  }
+}

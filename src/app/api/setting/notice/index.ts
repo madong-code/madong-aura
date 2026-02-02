@@ -1,0 +1,16 @@
+import BaseService from "@/app/api/core/base";
+import type { NoticeRow } from "./model";
+import request from '@/utils/http';
+
+const baseUrl = '/notice';
+
+export const NoticeService = {
+    ...BaseService<NoticeRow>({ baseUrl }),
+
+    publish(data: any) {
+        return request.post({ url: `${baseUrl}/publish`, data });
+    },
+};
+
+export type * from './model';
+export default NoticeService;

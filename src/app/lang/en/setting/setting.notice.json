@@ -1,0 +1,70 @@
+{
+    "list": {
+        "title": "Notice Announcement",
+        "table": {
+            "columns": {
+                "id": "ID",
+                "type": "Type",
+                "title": "Title",
+                "content": "Content",
+                "sort": "Sort",
+                "enabled": "Status",
+                "created_dept": "Department",
+                "remark": "",
+                "created_date": "Creation Date",
+                "updated_date": "Update Date",
+                "operation": "Operation",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": {
+                        "label": "Delete",
+                        "title": "Warm Reminder",
+                        "confirm": "Are you sure you want to delete?"
+                    },
+                    "publish": {
+                        "label": "Push",
+                        "title": "Warm Reminder",
+                        "confirm": "Are you sure you want to push the announcement [{0}]?"
+                    }
+                }
+            },
+            "toolbar": {
+                "create": "Add",
+                "delete": {
+                    "label": "Delete",
+                    "title": "Warm Reminder",
+                    "confirm": "Are you sure you want to delete the selected {0} records?"
+                }
+            }
+        },
+        "query": {
+            "type": "Type",
+            "title": "Title",
+            "placeholder": {
+                "type": "Please select type",
+                "title": "Please enter title"
+            }
+        }
+    },
+    "form": {
+        "modal": {
+            "id": "ID",
+            "type": "Type",
+            "title": "Title",
+            "content": "Content",
+            "sort": "Sort",
+            "enabled": "Status",
+            "remark": "",
+            "placeholder": {
+                "type": "Please select type",
+                "title": "Please enter title",
+                "sort": "Please enter sort",
+                "content": "Please fill in content"
+            }
+        }
+    },
+    "message": {
+        "success": "Success",
+        "error": "Failed"
+    }
+}

@@ -33,7 +33,7 @@
   const schema = [
     {
       prop: 'site_open',
-      label: $t('system.config.site.open'),
+      label: $t('setting.config.site.open'),
       component: 'ApiDict',
       defaultValue: 1,
       componentProps: {
@@ -44,10 +44,10 @@
     },
     {
       prop: 'site_url',
-      label: $t('system.config.site.url'),
+      label: $t('setting.config.site.url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.url'),
+        placeholder: $t('setting.config.site.placeholder.url'),
         clearable: true,
         style: { width: '40%' }
       },
@@ -55,10 +55,10 @@
     },
     {
       prop: 'site_name',
-      label: $t('system.config.site.name'),
+      label: $t('setting.config.site.name'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.name'),
+        placeholder: $t('setting.config.site.placeholder.name'),
         clearable: true,
         style: { width: '40%' }
       },
@@ -67,68 +67,68 @@
     },
     {
       prop: 'site_logo',
-      label: $t('system.config.site.logo'),
+      label: $t('setting.config.site.logo'),
       component: 'Avatar',
       componentProps: {}
     },
     {
       prop: 'site_network_security',
-      label: $t('system.config.site.network_security'),
+      label: $t('setting.config.site.network_security'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.network_security'),
+        placeholder: $t('setting.config.site.placeholder.network_security'),
         clearable: true,
         style: { width: '40%' }
       }
     },
     {
       prop: 'site_keywords',
-      label: $t('system.config.site.keywords'),
+      label: $t('setting.config.site.keywords'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.keywords'),
+        placeholder: $t('setting.config.site.placeholder.keywords'),
         clearable: true,
         style: { width: '40%' }
       },
-      rules: [{ request: true, message: $t('system.config.site.placeholder.keywords') }]
+      rules: [{ request: true, message: $t('setting.config.site.placeholder.keywords') }]
     },
 
     {
       prop: 'site_record_no',
-      label: $t('system.config.site.record_no'),
+      label: $t('setting.config.site.record_no'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.record_no'),
+        placeholder: $t('setting.config.site.placeholder.record_no'),
         clearable: true,
         style: { width: '40%' }
       }
     },
     {
       prop: 'site_icp_url',
-      label: $t('system.config.site.icp_url'),
+      label: $t('setting.config.site.icp_url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.icp_url'),
+        placeholder: $t('setting.config.site.placeholder.icp_url'),
         clearable: true,
         style: { width: '40%' }
       }
     },
     {
       prop: 'site_network_security_url',
-      label: $t('system.config.site.network_security_url'),
+      label: $t('setting.config.site.network_security_url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.network_security_url'),
+        placeholder: $t('setting.config.site.placeholder.network_security_url'),
         clearable: true,
         style: { width: '40%' }
       }
     },
     {
       prop: 'site_description',
-      label: $t('system.config.site.description'),
+      label: $t('setting.config.site.description'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('system.config.site.placeholder.description'),
+        placeholder: $t('setting.config.site.placeholder.description'),
         clearable: true,
         style: { width: '40%' },
         type: 'textarea',

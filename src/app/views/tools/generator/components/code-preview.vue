@@ -36,7 +36,7 @@
               <template #icon>
                 <ArtSvgIcon icon="ri:file-copy-line" />
               </template>
-              {{ $t('tools.code.preview.copy_button') }}
+              {{ $t('tools.generator.code.preview.copy_button') }}
             </el-button>
           </el-scrollbar>
         </div>
@@ -99,7 +99,7 @@
       }
     } catch (error) {
       console.error('获取预览数据失败:', error)
-      ElMessage.error($t('tools.code.preview.fetch_error'))
+      ElMessage.error($t('tools.generator.code.preview.fetch_error'))
     } finally {
       codeLoading.value = false
     }
@@ -199,15 +199,15 @@
   const handleCopyCode = async (codeContent: string): Promise<void> => {
     try {
       await copy(codeContent)
-      ElMessage.success($t('tools.code.preview.copy_success'))
+      ElMessage.success($t('tools.generator.code.preview.copy_success'))
     } catch {
-      ElMessage.error($t('tools.code.preview.copy_error'))
+      ElMessage.error($t('tools.generator.code.preview.copy_error'))
     }
   }
 
   // 对话框组件
   const [Dialog, dialogApi] = useDialog({
-    title: $t('tools.code.preview.dialog_title'),
+    title: $t('tools.generator.code.preview.dialog_title'),
     width: '75%',
     dialogType: 'drawer',
     draggable: true,

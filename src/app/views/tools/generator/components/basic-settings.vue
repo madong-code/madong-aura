@@ -1,31 +1,31 @@
 <template>
   <div class="basic-settings">
     <el-form :model="formData" label-width="90px" style="max-width: 450px">
-      <el-form-item :label="$t('tools.code.basic.table_name')">
+      <el-form-item :label="$t('tools.generator.code.basic.table_name')">
         <el-input
           v-model.trim="formData.table_name"
           disabled
-          :placeholder="$t('tools.code.basic.table_name_placeholder')"
+          :placeholder="$t('tools.generator.code.basic.table_name_placeholder')"
           class="input-width"
           maxlength="64"
         >
         </el-input>
       </el-form-item>
-      <el-form-item :label="$t('tools.code.basic.description')">
+      <el-form-item :label="$t('tools.generator.code.basic.description')">
         <el-input
           v-model.trim="formData.table_content"
           clearable
-          :placeholder="$t('tools.code.basic.description_placeholder')"
+          :placeholder="$t('tools.generator.code.basic.description_placeholder')"
           class="input-width"
           maxlength="64"
           @blur="handleDataChange"
           @input="handleDataChange"
         />
       </el-form-item>
-      <el-form-item :label="$t('tools.code.basic.plugin')">
+      <el-form-item :label="$t('tools.generator.code.basic.plugin')">
         <el-select
           class="input-width"
-          :placeholder="$t('tools.code.basic.plugin_placeholder')"
+          :placeholder="$t('tools.generator.code.basic.plugin_placeholder')"
           v-model="formData.plugin_name"
           filterable
           remote
@@ -41,39 +41,39 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('tools.code.basic.module_name')">
+      <el-form-item :label="$t('tools.generator.code.basic.module_name')">
         <div>
           <el-input
             v-model.trim="formData.module_name"
             clearable
-            :placeholder="$t('tools.code.basic.module_name_placeholder')"
+            :placeholder="$t('tools.generator.code.basic.module_name_placeholder')"
             class="input-width"
             @blur="handleModuleNameBlur"
             @input="handleDataChange"
           />
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t('tools.code.basic.module_tip_1') }}
+            {{ $t('tools.generator.code.basic.module_tip_1') }}
           </p>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t('tools.code.basic.module_tip_2') }}
+            {{ $t('tools.generator.code.basic.module_tip_2') }}
           </p>
         </div>
       </el-form-item>
-      <el-form-item :label="$t('tools.code.basic.class_name')">
+      <el-form-item :label="$t('tools.generator.code.basic.class_name')">
         <div>
           <el-input
             v-model.trim="formData.class_name"
             clearable
-            :placeholder="$t('tools.code.basic.class_name_placeholder')"
+            :placeholder="$t('tools.generator.code.basic.class_name_placeholder')"
             class="input-width"
             @blur="handleClassNameBlur"
             @input="handleDataChange"
           />
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t('tools.code.basic.class_tip_1') }}
+            {{ $t('tools.generator.code.basic.class_tip_1') }}
           </p>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t('tools.code.basic.class_tip_2') }}
+            {{ $t('tools.generator.code.basic.class_tip_2') }}
           </p>
         </div>
       </el-form-item>

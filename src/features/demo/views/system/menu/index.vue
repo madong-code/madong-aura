@@ -55,7 +55,7 @@
   import { useTableColumns } from '@/hooks/core/useTableColumns'
   import type { AppRouteRecord } from '@/types/router'
   import MenuDialog from './modules/menu-dialog.vue'
-  import { fetchGetMenuList } from '@/app/api/system-manage'
+  import { fetchGetMenuList } from '@/features/demo/api/system-manage'
   import { ElTag, ElMessageBox } from 'element-plus'
 
   defineOptions({ name: 'Menus' })

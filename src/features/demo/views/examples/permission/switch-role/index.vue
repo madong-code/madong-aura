@@ -101,7 +101,7 @@
 import { computed, ref } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { useI18n } from "vue-i18n";
-import { fetchLogin, fetchGetUserInfo } from "@/app/api/auth";
+import { fetchLogin, fetchGetUserInfo } from "@/features/demo/api/auth";
 
 defineOptions({ name: "PermissionSwitchRole" });
 

@@ -19,7 +19,7 @@
 
   const parentCrudApi = ref<CrudMethods>()
   const [Dialog, dialogApi] = useDialog({
-    title: $t('tools.code.import_table.title'),
+    title: $t('tools.generator.code.import_table.title'),
     width: '60%',
     dialogType: 'drawer',
     draggable: true,
@@ -29,7 +29,7 @@
     onConfirm: async () => {
       const selection = crudApi.getRowSelection()
       if (selection.length === 0) {
-        ElMessage.warning($t('tools.code.import_table.no_selection'))
+        ElMessage.warning($t('tools.generator.code.import_table.no_selection'))
         return
       }
 
@@ -54,10 +54,10 @@
       schema: [
         {
           prop: 'name',
-          label: $t('tools.code.import_table.table_name'),
+          label: $t('tools.generator.code.import_table.table_name'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('tools.code.import_table.search_placeholder')
+            placeholder: $t('tools.generator.code.import_table.search_placeholder')
           },
           colSpan: 8
         }
@@ -69,23 +69,23 @@
       },
       {
         prop: 'name',
-        label: $t('tools.code.import_table.table_name')
+        label: $t('tools.generator.code.import_table.table_name')
       },
       {
         prop: 'comment',
-        label: $t('tools.code.import_table.table_comment')
+        label: $t('tools.generator.code.import_table.table_comment')
       },
       {
         prop: 'engine',
-        label: $t('tools.code.import_table.engine')
+        label: $t('tools.generator.code.import_table.engine')
       },
       {
         prop: 'collation',
-        label: $t('tools.code.import_table.charset')
+        label: $t('tools.generator.code.import_table.charset')
       },
       {
         prop: 'created_date',
-        label: $t('tools.code.import_table.create_time')
+        label: $t('tools.generator.code.import_table.create_time')
       }
     ]
   })

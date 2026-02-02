@@ -49,7 +49,7 @@
         auth: 'dev:crontab:execute',
         onClick: async (e: Event, row: any) => {
           router.push({
-            path: '/code/generator',
+            path: '/generator/code',
             query: {
               id: row.id
             }

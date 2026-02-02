@@ -8,7 +8,7 @@
   import { useCrud } from '@/components/crud'
   import { crudSchema } from './schemas'
   import DictItemWrap from './logs-wrap.vue'
-  import { CrontabService } from '@/app/api/tools/task'
+  import { CrontabService } from '@/app/api/tools/crontab'
   import { $t } from '@/locales'
   const crontabLogsWrapRef = ref()
 
@@ -31,7 +31,7 @@
         },
         sort: 1020,
         link: true,
-        auth: 'dev:crontab:execute',
+        auth: 'crontab:task:execute',
         onClick: async (e: Event, row: any) => {
           await CrontabService.execute(row.id)
           ElMessage.success($t('common.operation_success'))
@@ -44,7 +44,7 @@
         sort: 1020,
         link: true,
         icon: 'ant-design:play-circle-outlined',
-        auth: 'dev:crontab:start',
+        auth: 'crontab:task:start',
         ifShow: (_action, record) => {
           return record.enabled === 0 ? true : false
         },
@@ -63,7 +63,7 @@
         ifShow: (_action, record) => {
           return record.enabled === 0 ? true : false
         },
-        auth: 'dev:crontab:resume',
+        auth: 'crontab:task:resume',
         onClick: async (e: Event, row: any) => {
           await CrontabService.resume(row.id)
           ElMessage.success($t('common.operation_success'))
@@ -79,7 +79,7 @@
         ifShow: (_action, record) => {
           return record.enabled === 1 ? true : false
         },
-        auth: 'dev:crontab:pause',
+        auth: 'crontab:task:pause',
         onClick: async (e: Event, row: any) => {
           await CrontabService.pause(row.id)
           ElMessage.success($t('common.operation_success'))
@@ -92,7 +92,7 @@
         sort: 1020,
         icon: 'ant-design:info-circle-outlined',
         link: true,
-        auth: 'dev:crontab:logs',
+        auth: 'crontab:task:logs',
         dialogRef: crontabLogsWrapRef,
         dialogParams() {
           return {

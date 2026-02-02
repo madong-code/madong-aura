@@ -1,0 +1,45 @@
+{
+  "list": {
+    "title": "Execution Logs",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "crontab_id": "Task ID",
+        "target": "Call Target",
+        "log": "Execution Log",
+        "return_code": "Running Status",
+        "running_time": "Execution Time",
+        "created_date": "Creation Time",
+        "operation": "Operation",
+        "actions": {
+          "delete": {
+            "label": "Delete",
+            "title": "Delete Confirmation",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "empty": {
+          "label": "Clear",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to clear all records?"
+        },
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "target": "Call Target",
+      "return_code": "Execution Status",
+      "placeholder": {
+        "target": "Please enter call target",
+        "return_code": "Please select execution status"
+      }
+    }
+  },
+  "form": {}
+}

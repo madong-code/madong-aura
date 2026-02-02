@@ -1,0 +1,91 @@
+{
+    "list": {
+        "title": "Rate Limiting Rules",
+        "table": {
+            "columns": {
+                "id": "ID",
+                "name": "Rule Name",
+                "enabled": "Status",
+                "priority": "Priority",
+                "match_type": "Match Type",
+                "conditions": "Match Conditions",
+                "methods": "HTTP Methods",
+                "path": "Request Path",
+                "limit_type": "Limit Type",
+                "limit_value": "Limit Value",
+                "period": "Statistical Period(seconds)",
+                "ttl": "Validity Period(seconds)",
+                "message": "Prompt Message",
+                "created_date": "Creation Time",
+                "operation": "Operation",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": {
+                        "label": "Delete",
+                        "title": "Delete Confirmation",
+                        "confirm": "Are you sure you want to delete?"
+                    },
+                    "status": {
+                        "disabled": "Disable",
+                        "enabled": "Enable",
+                        "confirm": "Do you want to change the status of {0} to [{1}]?",
+                        "title": "Change Status"
+                    }
+                }
+            },
+            "toolbar": {
+                "create": "Add",
+                "delete": {
+                    "label": "Delete",
+                    "title": "Delete Confirmation",
+                    "confirm": "Are you sure you want to delete the selected {0} records?"
+                }
+            }
+        },
+        "query": {
+            "name": "Rule Name",
+            "enabled": "Status",
+            "priority": "Priority",
+            "methods": "HTTP Methods",
+            "path": "Request Path",
+            "placeholder": {
+                "name": "Please enter rule name",
+                "enabled": "Please select status",
+                "priority": "Please select priority",
+                "methods": "Please select HTTP methods",
+                "path": "Please enter request path"
+            }
+        }
+    },
+    "form": {
+        "modal": {
+            "id": "ID",
+            "name": "Rule Name",
+            "enabled": "Status",
+            "priority": "Priority",
+            "match_type": "Match Type",
+            "conditions": "Match Conditions",
+            "methods": "HTTP Methods",
+            "path": "Request Path",
+            "limit_type": "Limit Type",
+            "limit_value": "Limit Value",
+            "period": "Statistical Period(seconds)",
+            "ttl": "Validity Period(seconds)",
+            "message": "Prompt Message",
+            "remark": "Remark",
+            "placeholder": {
+                "name": "Please enter rule name",
+                "priority": "Please select priority",
+                "match_type": "Please enter match type",
+                "conditions": "Please enter match conditions",
+                "methods": "Please select HTTP methods",
+                "path": "Please enter request path",
+                "limit_type": "Please select limit type",
+                "limit_value": "Please enter limit value",
+                "period": "Please enter statistical period(seconds)",
+                "ttl": "Please enter validity period(seconds)",
+                "message": "Please enter prompt message"
+            }
+        }
+    }
+}

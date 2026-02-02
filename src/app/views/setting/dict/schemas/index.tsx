@@ -30,13 +30,13 @@ export const crudSchema = (): CrudSchema => {
     // 是否有详情
     hasView: true,
     // 新增权限码
-    addAuth: 'system:dict:create',
+    addAuth: 'dict:dict:create',
     // 删除权限码
-    removeAuth: 'system:dict:delete',
+    removeAuth: 'dict:dict:delete',
     // 修改权限码
-    editAuth: 'system:dict:update',
+    editAuth: 'dict:dict:update',
     // 详情权限码
-    viewAuth: 'system:dict:read',
+    viewAuth: 'dict:dict:read',
     // 表格列定义
     columns: [
       {
@@ -44,7 +44,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'group_code',
-        label: $t('system.dict.list.table.columns.group_code'),
+        label: $t('setting.dict.list.table.columns.group_code'),
         component: 'ApiDict',
         minWidth: 200,
         componentProps: {
@@ -53,17 +53,17 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'name',
-        label: $t('system.dict.list.table.columns.name'),
+        label: $t('setting.dict.list.table.columns.name'),
         minWidth: 200
       },
       {
         prop: 'code',
-        label: $t('system.dict.list.table.columns.code'),
+        label: $t('setting.dict.list.table.columns.code'),
         minWidth: 200
       },
       {
         prop: 'data_type',
-        label: $t('system.dict.list.table.columns.data_type'),
+        label: $t('setting.dict.list.table.columns.data_type'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_DICT_DATA_TYPE
@@ -72,12 +72,12 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'sort',
-        label: $t('system.dict.list.table.columns.sort'),
+        label: $t('setting.dict.list.table.columns.sort'),
         minWidth: 100
       },
       {
         prop: 'enabled',
-        label: $t('system.dict.list.table.columns.enabled'),
+        label: $t('setting.dict.list.table.columns.enabled'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_ENABLED_STATUS
@@ -89,45 +89,45 @@ export const crudSchema = (): CrudSchema => {
     searchFormSchema: {
       schema: [
         {
-          label: $t('system.dict.list.query.group_code'),
+          label: $t('setting.dict.list.query.group_code'),
           prop: 'IN_groupCode',
           component: 'ApiDict',
           componentProps: {
             code: DictEnum.SYS_DICT_GROUP_CODE,
             clearable: true,
-            placeholder: $t('system.dict.list.query.placeholder.group_code'),
+            placeholder: $t('setting.dict.list.query.placeholder.group_code'),
             multiple: true
           },
           colSpan: 6
         },
         {
           prop: 'LIKE_name',
-          label: $t('system.dict.list.query.name'),
+          label: $t('setting.dict.list.query.name'),
           component: 'Input',
           componentProps: {
             clearable: true,
-            placeholder: $t('system.dict.list.query.placeholder.name')
+            placeholder: $t('setting.dict.list.query.placeholder.name')
           },
           colSpan: 6
         },
         {
           prop: 'LIKE_code',
-          label: $t('system.dict.list.query.code'),
+          label: $t('setting.dict.list.query.code'),
           component: 'Input',
           componentProps: {
             clearable: true,
-            placeholder: $t('system.dict.list.query.placeholder.code')
+            placeholder: $t('setting.dict.list.query.placeholder.code')
           },
           colSpan: 6
         },
         {
-          label: $t('system.dict.list.query.enabled'),
+          label: $t('setting.dict.list.query.enabled'),
           prop: 'IN_enabled',
           component: 'ApiDict',
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
-            placeholder: $t('system.dict.list.query.placeholder.enabled')
+            placeholder: $t('setting.dict.list.query.placeholder.enabled')
           },
           colSpan: 6
         }
@@ -143,7 +143,7 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '100px',
       schema: [
         {
-          label: $t('system.dict.form.modal.id'),
+          label: $t('setting.dict.form.modal.id'),
           prop: 'id',
           component: 'Input',
           colSpan: 24,
@@ -151,7 +151,7 @@ export const crudSchema = (): CrudSchema => {
           ifDetail: false
         },
         {
-          label: $t('system.dict.form.modal.group_code'),
+          label: $t('setting.dict.form.modal.group_code'),
           prop: 'group_code',
           component: 'ApiDict',
           componentProps: {
@@ -160,44 +160,44 @@ export const crudSchema = (): CrudSchema => {
           rules: [
             {
               required: true,
-              message: $t('system.dict.form.modal.placeholder.group_code')
+              message: $t('setting.dict.form.modal.placeholder.group_code')
             }
           ],
           colSpan: 24
         },
         {
-          label: $t('system.dict.form.modal.name'),
+          label: $t('setting.dict.form.modal.name'),
           prop: 'name',
           component: 'Input',
           rules: [
             {
               required: true,
-              message: $t('system.dict.form.modal.placeholder.name')
+              message: $t('setting.dict.form.modal.placeholder.name')
             }
           ],
           componentProps: {
-            placeholder: $t('system.dict.form.modal.placeholder.name')
+            placeholder: $t('setting.dict.form.modal.placeholder.name')
           },
           colSpan: 24
         },
         {
-          label: $t('system.dict.form.modal.code'),
+          label: $t('setting.dict.form.modal.code'),
           prop: 'code',
           component: 'Input',
           rules: [
             {
               required: true,
-              message: $t('system.dict.form.modal.placeholder.code')
+              message: $t('setting.dict.form.modal.placeholder.code')
             }
           ],
           componentProps: {
-            placeholder: $t('system.dict.form.modal.placeholder.code')
+            placeholder: $t('setting.dict.form.modal.placeholder.code')
           },
           colSpan: 24
         },
 
         {
-          label: $t('system.dict.form.modal.data_type'),
+          label: $t('setting.dict.form.modal.data_type'),
           prop: 'data_type',
           component: 'ApiDict',
           defaultValue: 1,
@@ -210,7 +210,7 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         },
         {
-          label: $t('system.dict.form.modal.enabled'),
+          label: $t('setting.dict.form.modal.enabled'),
           prop: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
@@ -223,7 +223,7 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         },
         {
-          label: $t('system.dict.form.modal.sort'),
+          label: $t('setting.dict.form.modal.sort'),
           prop: 'sort',
           component: 'InputNumber',
           defaultValue: 0,
@@ -231,13 +231,13 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         },
         {
-          label: $t('system.dict.form.modal.remark'),
+          label: $t('setting.dict.form.modal.remark'),
           prop: 'remark',
           component: 'Input',
           componentProps: {
             type: 'textarea',
             rows: 4,
-            placeholder: $t('system.dict.form.modal.placeholder.remark')
+            placeholder: $t('setting.dict.form.modal.placeholder.remark')
           },
           colSpan: 24
         }

@@ -104,9 +104,9 @@ export const localRoutes: AppRouteRecord[] = [
     },
   },
   {
-    path: '/code/generator/:id?',
+    path: '/generator/code/:id?',
     name: 'CodeGenerator',
-    component: '/tools/code/generator',
+    component: '/tools/generator/generator',
     meta: {
       title: '代码生成器',
       isHide: true,

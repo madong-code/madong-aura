@@ -3,7 +3,7 @@
     <!-- 终端主对话框 -->
     <ElDialog
       v-model="terminal.state.show"
-      :title="$t('dev.terminal.title')"
+      :title="$t('tools.terminal.title')"
       class="terminal-dialog"
       draggable
     >
@@ -44,7 +44,7 @@
                   "
                   type="warning"
                 >
-                  {{ $t('dev.terminal.block_on_failure') }}
+                  {{ $t('tools.terminal.block_on_failure') }}
                 </el-tag>
                 <!-- 执行时请勿刷新浏览器标签 -->
                 <el-tag
@@ -52,7 +52,7 @@
                   v-if="item.status == taskStatus.Connecting || item.status == taskStatus.Executing"
                   type="danger"
                 >
-                  {{ $t('dev.terminal.not_refresh_browser') }}
+                  {{ $t('tools.terminal.not_refresh_browser') }}
                 </el-tag>
                 <!-- 命令文本 -->
                 <span class="command">{{ item.command }}</span>
@@ -89,7 +89,7 @@
                   @click="terminal.setTaskShowMessage(idx)"
                   class="toggle-message-display"
                 >
-                  <span>{{ $t('dev.terminal.actions.command_run_log') }}</span>
+                  <span>{{ $t('tools.terminal.actions.command_run_log') }}</span>
                   <Icon
                     :icon="item.showMessage ? 'ep:arrow-up' : 'ep:arrow-down'"
                     size="16"
@@ -115,7 +115,7 @@
           </ElTimelineItem>
         </ElTimeline>
         <!-- 空任务提示 -->
-        <ElEmpty v-else :image-size="80" :description="$t('dev.terminal.empty')" />
+        <ElEmpty v-else :image-size="80" :description="$t('tools.terminal.empty')" />
       </ElScrollbar>
 
       <!-- 终端操作按钮组 -->
@@ -125,7 +125,7 @@
           <template #icon>
             <Icon icon="ant-design:code-outlined" style="font-size: 18px" />
           </template>
-          {{ $t('dev.terminal.actions.test') }}
+          {{ $t('tools.terminal.actions.test') }}
         </ElButton>
         <!-- 安装依赖下拉菜单 -->
         <ElDropdown class="terminal-menu-item">
@@ -133,7 +133,7 @@
             <template #icon>
               <Icon icon="ant-design:download-outlined" style="font-size: 20px" />
             </template>
-            {{ $t('dev.terminal.actions.install.title') }}
+            {{ $t('tools.terminal.actions.install.title') }}
           </ElButton>
           <template #dropdown>
             <ElDropdownMenu>
@@ -156,21 +156,21 @@
           <template #icon>
             <Icon icon="ant-design:tag-outlined" style="font-size: 20px" />
           </template>
-          {{ $t('dev.terminal.actions.republish') }}</ElButton
+          {{ $t('tools.terminal.actions.republish') }}</ElButton
         >
         <!-- 清空成功任务按钮 -->
         <ElButton class="terminal-menu-item" v-blur @click="terminal.clearSuccessTask()">
           <template #icon>
             <Icon icon="ant-design:clear-outlined" style="font-size: 20px" />
           </template>
-          {{ $t('dev.terminal.actions.empty_task') }}
+          {{ $t('tools.terminal.actions.empty_task') }}
         </ElButton>
         <!-- 设置按钮 -->
         <ElButton class="terminal-menu-item" v-blur @click="terminal.toggleConfigDialog()">
           <template #icon>
             <Icon icon="ant-design:setting-outlined" style="font-size: 20px" />
           </template>
-          {{ $t('dev.terminal.actions.setting') }}
+          {{ $t('tools.terminal.actions.setting') }}
         </ElButton>
       </div>
     </ElDialog>
@@ -180,7 +180,7 @@
       @close="terminal.toggleConfigDialog(false)"
       :model-value="terminal.state.showConfig"
       class="terminal-dialog"
-      :title="$t('dev.terminal.form.title')"
+      :title="$t('tools.terminal.form.title')"
       draggable
     >
       <!-- 配置表单 -->
@@ -191,7 +191,7 @@
           <template #icon>
             <Icon icon="ant-design:rollback-outlined" style="font-size: 20px" />
           </template>
-          {{ $t('dev.terminal.actions.return_terminal') }}</ElButton
+          {{ $t('tools.terminal.actions.return_terminal') }}</ElButton
         >
       </div>
     </ElDialog>
@@ -237,9 +237,9 @@
         component: 'Select',
         prop: 'npm_registry',
         defaultValue: 'npm',
-        label: $t('dev.terminal.form.npm_registry'),
+        label: $t('tools.terminal.form.npm_registry'),
         componentProps: {
-          placeholder: $t('dev.terminal.form.placeholder.npm_registry'),
+          placeholder: $t('tools.terminal.form.placeholder.npm_registry'),
           clearable: true,
           options: [
             { label: 'NPM', value: 'npm' },
@@ -256,9 +256,9 @@
         component: 'Select',
         prop: 'composer_registry',
         defaultValue: 'composer',
-        label: $t('dev.terminal.form.composer_registry'),
+        label: $t('tools.terminal.form.composer_registry'),
         componentProps: {
-          placeholder: $t('dev.terminal.form.placeholder.composer_registry'),
+          placeholder: $t('tools.terminal.form.placeholder.composer_registry'),
           clearable: true,
           options: [
             { label: 'Composer', value: 'composer' },
@@ -274,10 +274,10 @@
       {
         component: 'Select',
         prop: 'package_manager',
-        label: $t('dev.terminal.form.package_manager'),
+        label: $t('tools.terminal.form.package_manager'),
         defaultValue: 'pnpm',
         componentProps: {
-          placeholder: $t('dev.terminal.form.placeholder.package_manager'),
+          placeholder: $t('tools.terminal.form.placeholder.package_manager'),
           clearable: true,
           options: [
             { label: 'NPM', value: 'npm' },
@@ -291,7 +291,7 @@
       },
       {
         prop: 'automatic_cleanup_task',
-        label: $t('dev.terminal.form.automatic_cleanup_task'),
+        label: $t('tools.terminal.form.automatic_cleanup_task'),
         component: 'ApiDict',
         defaultValue: 1,
         componentProps: {
@@ -315,34 +315,34 @@
   const getTaskStatus = (status: number) => {
     const statusMap: Record<number, { statusText: string; statusType: any }> = {
       [taskStatus.Waiting]: {
-        statusText: $t('dev.terminal.status.waiting'),
+        statusText: $t('tools.terminal.status.waiting'),
         statusType: 'info'
       },
       [taskStatus.Connecting]: {
-        statusText: $t('dev.terminal.status.connecting'),
+        statusText: $t('tools.terminal.status.connecting'),
         statusType: 'warning'
       },
       [taskStatus.Executing]: {
-        statusText: $t('dev.terminal.status.executing'),
+        statusText: $t('tools.terminal.status.executing'),
         statusType: 'warning'
       },
       [taskStatus.Success]: {
-        statusText: $t('dev.terminal.status.success'),
+        statusText: $t('tools.terminal.status.success'),
         statusType: 'success'
       },
       [taskStatus.Failed]: {
-        statusText: $t('dev.terminal.status.failed'),
+        statusText: $t('tools.terminal.status.failed'),
         statusType: 'danger'
       },
       [taskStatus.Unknown]: {
-        statusText: $t('dev.terminal.status.unknown'),
+        statusText: $t('tools.terminal.status.unknown'),
         statusType: 'danger'
       }
     }
 
     return (
       statusMap[status] || {
-        statusText: $t('dev.terminal.status.unknown'),
+        statusText: $t('tools.terminal.status.unknown'),
         statusType: 'danger'
       }
     )
@@ -382,8 +382,8 @@
    */
   const buildPackaging = () => {
     ElMessageBox.confirm(
-      $t('dev.terminal.form.confirm.packaging_build'),
-      $t('dev.terminal.form.confirm.title'),
+      $t('tools.terminal.form.confirm.packaging_build'),
+      $t('tools.terminal.form.confirm.title'),
       {
         type: 'warning'
       }
@@ -424,8 +424,8 @@
       state.registryLoading = false
       if (res == taskStatus.Failed || res == taskStatus.Unknown) {
         ElMessageBox.confirm(
-          $t('dev.terminal.form.confirm.source_command'),
-          $t('dev.terminal.form.confirm.title'),
+          $t('tools.terminal.form.confirm.source_command'),
+          $t('tools.terminal.form.confirm.title'),
           {
             showCancelButton: false,
             type: 'warning'

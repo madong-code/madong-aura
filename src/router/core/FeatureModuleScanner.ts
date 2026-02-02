@@ -14,6 +14,25 @@ import { RouteValidator } from './RouteValidator'
 export class FeatureModuleScanner {
     private validator = new RouteValidator()
 
+    constructor() {
+        // 开发环境下添加热更新支持
+        if (import.meta.env.DEV && import.meta.hot) {
+            this.setupHMR()
+        }
+    }
+
+    /**
+     * 设置热更新支持
+     */
+    private setupHMR(): void {
+        if (import.meta.hot) {
+            // 监听路由配置文件变化
+            import.meta.hot.on('vite:beforeUpdate', () => {
+                console.log('[FeatureModuleScanner] 检测到文件变化，准备重新扫描路由...')
+            })
+        }
+    }
+
     /**
      * 扫描 features 目录并生成路由配置
      */
@@ -39,6 +58,7 @@ export class FeatureModuleScanner {
 
                         // 开发环境下输出成功信息
                         if (import.meta.env.DEV) {
+                            //@ts-ignore
                             console.log(`[FeatureModuleScanner] 成功添加路由: ${routes.name || routes.path}`)
                         }
                     }

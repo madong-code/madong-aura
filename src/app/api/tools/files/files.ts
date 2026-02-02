@@ -2,7 +2,7 @@ import BaseService from '@/app/api/core/base';
 import request from '@/utils/http';
 import type { FilesRow } from './files-model';
 
-const baseUrl = '/system/files';
+const baseUrl = '/files';
 
 export const FilesService = {
   ...BaseService<FilesRow>({ baseUrl }),

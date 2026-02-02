@@ -10,7 +10,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: RecycleBinService.list,
-    dialogTitle: $t('system.recycle_bin.list.title'),
+    dialogTitle: $t('tools.recycle.list.title'),
     crudApi: {
       // 新增接口
       add: RecycleBinService.create,
@@ -32,13 +32,13 @@ export const crudSchema = (): CrudSchema => {
     // 是否有详情
     hasView: true,
     // 新增权限码
-    addAuth: 'system:recycle_bin:create',
+    addAuth: 'system:recycle:create',
     // 删除权限码
-    removeAuth: 'system:recycle_bin:delete',
+    removeAuth: 'system:recycle:delete',
     // 修改权限码
-    editAuth: 'system:recycle_bin:update',
+    editAuth: 'system:recycle:update',
     // 详情权限码
-    viewAuth: 'system:recycle_bin:read',
+    viewAuth: 'system:recycle:read',
     // 表格列定义
     columns: [
       {
@@ -47,12 +47,12 @@ export const crudSchema = (): CrudSchema => {
 
       {
         prop: 'table_name',
-        label: $t('system.recycle_bin.list.table.columns.table_name'),
+        label: $t('tools.recycle.list.table.columns.table_name'),
         align: 'center'
       },
       {
         prop: 'data',
-        label: $t('system.recycle_bin.list.table.columns.data'),
+        label: $t('tools.recycle.list.table.columns.data'),
         formatter(row) {
           const jsonString = JSON.stringify(row.data, null, 2);
           return jsonString;
@@ -61,7 +61,7 @@ export const crudSchema = (): CrudSchema => {
       { prop: 'ip', label: 'IP' },
       {
         prop: 'enabled',
-        label: $t('system.recycle_bin.list.table.columns.enabled'),
+        label: $t('tools.recycle.list.table.columns.enabled'),
         width: 90,
         componentProps: {
           code: DictEnum.SYS_ENABLED_STATUS
@@ -69,7 +69,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'created_date',
-        label: $t('system.recycle_bin.list.table.columns.created_date'),
+        label: $t('tools.recycle.list.table.columns.created_date'),
         width: 150
       }
     ],
@@ -80,9 +80,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_table_name',
-          label: $t('system.recycle_bin.list.query.table_name'),
+          label: $t('tools.recycle.list.query.table_name'),
           componentProps: {
-            placeholder: $t('system.recycle_bin.list.query.placeholder.table_name'),
+            placeholder: $t('tools.recycle.list.query.placeholder.table_name'),
             allowClear: true,
           },
         },
@@ -97,9 +97,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           prop: 'EQ_enabled',
-          label: $t('system.recycle_bin.list.query.enabled'),
+          label: $t('tools.recycle.list.query.enabled'),
           componentProps: {
-            placeholder: $t('system.recycle_bin.list.query.placeholder.enabled'),
+            placeholder: $t('tools.recycle.list.query.placeholder.enabled'),
             code: DictEnum.SYS_YES_NO,
           },
         }
@@ -121,7 +121,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'table_name',
-          label: $t('system.recycle_bin.form.modal.table_name'),
+          label: $t('tools.recycle.form.modal.table_name'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -130,7 +130,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'operate_name',
-          label: $t('system.recycle_bin.form.modal.operate_name'),
+          label: $t('tools.recycle.form.modal.operate_name'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -139,7 +139,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'ip',
-          label: $t('system.recycle_bin.form.modal.ip'),
+          label: $t('tools.recycle.form.modal.ip'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -148,7 +148,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'created_date',
-          label: $t('system.recycle_bin.form.modal.created_date'),
+          label: $t('tools.recycle.form.modal.created_date'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -157,7 +157,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'enabled',
-          label: $t('system.recycle_bin.form.modal.enabled'),
+          label: $t('tools.recycle.form.modal.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -167,7 +167,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'data',
-          label: $t('system.recycle_bin.form.modal.data'),
+          label: $t('tools.recycle.form.modal.data'),
           component: 'input',
           componentProps: {
             type: 'textarea',

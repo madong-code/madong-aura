@@ -19,34 +19,34 @@ export const crudSchema = (): CrudSchema => {
     hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'system:dict-item:create',
-    removeAuth: 'system:dict-item:delete',
-    editAuth: 'system:dict-item:update',
-    viewAuth: 'system:dict-item:read',
+    addAuth: 'dict:item:create',
+    removeAuth: 'dict:item:delete',
+    editAuth: 'dict:item:update',
+    viewAuth: 'dict:item:read',
     columns: [
       {
         type: 'selection'
       },
       {
         prop: 'code',
-        label: $t('system.dict_item.list.table.columns.code'),
+        label: $t('setting.dict.item.list.table.columns.code'),
         minWidth: 150
       },
       {
         prop: 'label',
-        label: $t('system.dict_item.list.table.columns.label')
+        label: $t('setting.dict.item.list.table.columns.label')
       },
       {
         prop: 'value',
-        label: $t('system.dict_item.list.table.columns.value')
+        label: $t('setting.dict.item.list.table.columns.value')
       },
       {
         prop: 'sort',
-        label: $t('system.dict_item.list.table.columns.sort')
+        label: $t('setting.dict.item.list.table.columns.sort')
       },
       {
         prop: 'enabled',
-        label: $t('system.dict_item.list.table.columns.enabled'),
+        label: $t('setting.dict.item.list.table.columns.enabled'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_ENABLED_STATUS,
@@ -59,21 +59,21 @@ export const crudSchema = (): CrudSchema => {
         {
           prop: 'LIKE_label',
           labelWidth: '90px',
-          label: $t('system.dict_item.list.query.label'),
+          label: $t('setting.dict.item.list.query.label'),
           component: 'Input',
           componentProps: {
             clearable: true,
-            placeholder: $t('system.dict_item.list.query.placeholder.label')
+            placeholder: $t('setting.dict.item.list.query.placeholder.label')
           },
           colSpan: 8
         },
         {
           prop: 'LIKE_value',
-          label: $t('system.dict_item.list.query.value'),
+          label: $t('setting.dict.item.list.query.value'),
           component: 'Input',
           componentProps: {
             clearable: true,
-            placeholder: $t('system.dict_item.list.query.placeholder.value')
+            placeholder: $t('setting.dict.item.list.query.placeholder.value')
           },
           colSpan: 8
         }
@@ -87,7 +87,7 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '100px',
       schema: [
         {
-          label: $t('system.dict_item.form.modal.id'),
+          label: $t('setting.dict.item.form.modal.id'),
           prop: 'id',
           component: 'Input',
           colSpan: 24,
@@ -95,7 +95,7 @@ export const crudSchema = (): CrudSchema => {
           ifDetail: false
         },
         {
-          label: $t('system.dict_item.form.modal.id'),
+          label: $t('setting.dict.item.form.modal.id'),
           prop: 'dict_id',
           component: 'Input',
           colSpan: 24,
@@ -103,7 +103,7 @@ export const crudSchema = (): CrudSchema => {
           ifDetail: false
         },
         {
-          label: $t('system.dict_item.form.modal.code'),
+          label: $t('setting.dict.item.form.modal.code'),
           prop: 'code',
           component: 'Input',
           componentProps: {
@@ -116,24 +116,24 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'color',
-          label: $t('system.dict_item.form.modal.color')
+          label: $t('setting.dict.item.form.modal.color')
         },
         {
           prop: 'label',
-          label: $t('system.dict_item.form.modal.label'),
+          label: $t('setting.dict.item.form.modal.label'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('system.dict_item.form.modal.placeholder.label'),
+            placeholder: $t('setting.dict.item.form.modal.placeholder.label'),
             allowClear: true
           },
           rules: []
         },
         {
           prop: 'value',
-          label: $t('system.dict_item.form.modal.value'),
+          label: $t('setting.dict.item.form.modal.value'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('system.dict_item.form.modal.placeholder.value'),
+            placeholder: $t('setting.dict.item.form.modal.placeholder.value'),
             allowClear: true
           },
           colSpan: 24,
@@ -141,15 +141,15 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'other_class',
-          label: $t('system.dict_item.form.modal.other_class'),
+          label: $t('setting.dict.item.form.modal.other_class'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('system.dict_item.form.modal.placeholder.other_class')
+            placeholder: $t('setting.dict.item.form.modal.placeholder.other_class')
           }
         },
         {
           prop: 'enabled',
-          label: $t('system.dict_item.form.modal.enabled'),
+          label: $t('setting.dict.item.form.modal.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -160,11 +160,11 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'sort',
-          label: $t('system.dict_item.form.modal.sort'),
+          label: $t('setting.dict.item.form.modal.sort'),
           component: 'InputNumber',
           defaultValue: 0,
           componentProps: {
-            placeholder: $t('system.dict_item.form.modal.placeholder.sort'),
+            placeholder: $t('setting.dict.item.form.modal.placeholder.sort'),
             allowClear: true,
             min: 0
           },
@@ -172,10 +172,10 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'remark',
-          label: $t('system.dict_item.form.modal.remark'),
+          label: $t('setting.dict.item.form.modal.remark'),
           component: 'Textarea',
           componentProps: {
-            placeholder: $t('system.dict_item.form.modal.placeholder.remark'),
+            placeholder: $t('setting.dict.item.form.modal.placeholder.remark'),
             type: 'textarea',
             rows: 4
           },

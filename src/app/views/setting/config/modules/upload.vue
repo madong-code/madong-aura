@@ -20,7 +20,7 @@
     schema: [
       {
         prop: 'mode',
-        label: $t('system.config.upload.mode'),
+        label: $t('setting.config.upload.mode'),
         component: 'ApiDict',
         defaultValue: 'local',
         componentProps: {
@@ -36,7 +36,7 @@
           style: { width: '50%' }
         },
         prop: 'single_limit',
-        label: $t('system.config.upload.single_limit')
+        label: $t('setting.config.upload.single_limit')
       },
       {
         component: 'Input',
@@ -45,7 +45,7 @@
           style: { width: '50%' }
         },
         prop: 'total_limit',
-        label: $t('system.config.upload.total_limit')
+        label: $t('setting.config.upload.total_limit')
       },
       {
         component: 'Input',
@@ -54,7 +54,7 @@
           style: { width: '50%' }
         },
         prop: 'nums',
-        label: $t('system.config.upload.nums')
+        label: $t('setting.config.upload.nums')
       },
       {
         component: 'Input',
@@ -63,7 +63,7 @@
           style: { width: '50%' }
         },
         prop: 'exclude',
-        label: $t('system.config.upload.exclude')
+        label: $t('setting.config.upload.exclude')
       }
     ]
   })

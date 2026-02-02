@@ -11,7 +11,7 @@ import { Icon } from '@/components/icon';
     >
       <el-table-column
         align="center"
-        :label="$t('tools.code.field.operation')"
+        :label="$t('tools.generator.code.field.operation')"
         width="80"
       >
         <template #default>
@@ -19,31 +19,31 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.column_name')"
+        :label="$t('tools.generator.code.field.column_name')"
         prop="column_name"
         min-width="130px"
         sortable="custom"
       />
       <el-table-column
-        :label="$t('tools.code.field.column_comment')"
+        :label="$t('tools.generator.code.field.column_comment')"
         prop=""
         min-width="220px"
       >
         <template #default="{ row, $index }">
           <el-input
             v-model.trim="row.column_comment"
-            :placeholder="$t('tools.code.field.placeholder.column_comment')"
+            :placeholder="$t('tools.generator.code.field.placeholder.column_comment')"
             @blur="handleDataChange"
           />
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.column_type')"
+        :label="$t('tools.generator.code.field.column_type')"
         prop="column_type"
         width="100px"
       />
       <el-table-column
-        :label="$t('tools.code.field.primary_key')"
+        :label="$t('tools.generator.code.field.primary_key')"
         prop=""
         align="center"
         width="65px"
@@ -58,7 +58,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.required')"
+        :label="$t('tools.generator.code.field.required')"
         prop=""
         align="center"
         width="65px"
@@ -73,7 +73,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.insert')"
+        :label="$t('tools.generator.code.field.insert')"
         prop=""
         align="center"
         width="65px"
@@ -88,7 +88,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.update')"
+        :label="$t('tools.generator.code.field.update')"
         prop=""
         align="center"
         width="65px"
@@ -103,7 +103,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.lists')"
+        :label="$t('tools.generator.code.field.lists')"
         prop=""
         align="center"
         width="65px"
@@ -118,7 +118,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.search')"
+        :label="$t('tools.generator.code.field.search')"
         prop=""
         align="center"
         width="65px"
@@ -133,7 +133,7 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.search_method')"
+        :label="$t('tools.generator.code.field.search_method')"
         prop=""
         min-width="170px"
       >
@@ -141,7 +141,7 @@ import { Icon } from '@/components/icon';
           <div class="flex items-center">
             <el-select
               v-if="row.is_search"
-              :placeholder="$t('tools.code.field.placeholder.select')"
+              :placeholder="$t('tools.generator.code.field.placeholder.select')"
               v-model="row.query_type"
               @change="handleDataChange"
             >
@@ -156,14 +156,14 @@ import { Icon } from '@/components/icon';
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.form_type')"
+        :label="$t('tools.generator.code.field.form_type')"
         prop=""
         min-width="225px"
       >
         <template #default="{ row, $index }">
           <el-select
             class="w-[146px]"
-            :placeholder="$t('tools.code.field.placeholder.select')"
+            :placeholder="$t('tools.generator.code.field.placeholder.select')"
             v-model="row.view_type"
             @change="handleViewTypeChange(row, $index)"
           >
@@ -180,7 +180,7 @@ import { Icon } from '@/components/icon';
             type="primary"
             link
             @click="handleViewTypeSetup(row, $index)"
-            >{{ $t("tools.code.field.placeholder.setup") }}</el-button
+            >{{ $t("tools.generator.code.field.placeholder.setup") }}</el-button
           >
           <el-button
             class="ml-[10px]"
@@ -188,12 +188,12 @@ import { Icon } from '@/components/icon';
             type="primary"
             link
             @click="handleValidatorSetup(row, $index)"
-            >{{ $t("tools.code.field.placeholder.setup") }}</el-button
+            >{{ $t("tools.generator.code.field.placeholder.setup") }}</el-button
           >
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('tools.code.field.validation_type')"
+        :label="$t('tools.generator.code.field.validation_type')"
         prop=""
         min-width="260px"
       >
@@ -201,7 +201,7 @@ import { Icon } from '@/components/icon';
           <div class="flex items-center">
             <el-select
               class="w-[196px]"
-              :placeholder="$t('tools.code.field.placeholder.select')"
+              :placeholder="$t('tools.generator.code.field.placeholder.select')"
               v-model="row.validate_type"
               @change="handleValidatorSetup(row, $index)"
               :disabled="!['input', 'textarea'].includes(row.view_type)"
@@ -210,17 +210,17 @@ import { Icon } from '@/components/icon';
                 <el-option
                   v-if="item.value === 'max'"
                   :value="item.value"
-                  :label="$t('tools.code.field.validation.max')"
+                  :label="$t('tools.generator.code.field.validation.max')"
                 />
                 <el-option
                   v-else-if="item.value === 'min'"
                   :value="item.value"
-                  :label="$t('tools.code.field.validation.min')"
+                  :label="$t('tools.generator.code.field.validation.min')"
                 />
                 <el-option
                   v-else-if="item.value === 'between'"
                   :value="item.value"
-                  :label="$t('tools.code.field.validation.between')"
+                  :label="$t('tools.generator.code.field.validation.between')"
                 />
                 <el-option v-else :label="item.label" :value="item.value" />
               </template>
@@ -231,7 +231,7 @@ import { Icon } from '@/components/icon';
               type="primary"
               link
               @click="handleValidatorSetup(row, $index)"
-              >{{ $t("tools.code.field.placeholder.setup") }}</el-button
+              >{{ $t("tools.generator.code.field.placeholder.setup") }}</el-button
             >
           </div>
         </template>

@@ -7,11 +7,11 @@ export const AuthService = {
     ...BaseService<any>({ baseUrl }),
 
     getPublicKey() {
-        return request.get({ url: `${baseUrl}/public-key` });
+        return request.get({ url: `/login/auth/public-key` });
     },
 
     login(params: any) {
-        return request.post({ url: '/system/login', params });
+        return request.post({ url: '/login/login', params });
     },
 
     userInfo() {
@@ -61,8 +61,9 @@ export const AuthService = {
     getUserPermission() {
         return request.get({ url: `${baseUrl}/user-permissions`, params: { format: 'art' } });
     },
-    getUserMenus() {
-        return request.get({ url: `${baseUrl}/user-menus` });
+    fetchGetMenuList() {
+        // 获取用户菜单列表-返回前端路由格式
+        return request.get({ url: `${baseUrl}/user-menus` ,params: { format: 'art' } });
     }
 
 };

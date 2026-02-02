@@ -6,10 +6,10 @@
   import { convertStringNumbers } from '../schemas'
 
   const fieldLink = {
-    access_key_id: $t('system.config.sms.access_key_id'),
-    access_key_secret: $t('system.config.sms.access_key_secret'),
-    enable: $t('system.config.sms.enable'),
-    sign_name: $t('system.config.sms.sign_name')
+    access_key_id: $t('setting.config.sms.access_key_id'),
+    access_key_secret: $t('setting.config.sms.access_key_secret'),
+    enable: $t('setting.config.sms.enable'),
+    sign_name: $t('setting.config.sms.sign_name')
   }
 
   const [BaseForm, formApi] = useForm({
@@ -19,39 +19,39 @@
     schema: [
       {
         prop: 'access_key_id',
-        label: $t('system.config.sms.access_key_id'),
+        label: $t('setting.config.sms.access_key_id'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.sms.placeholder.access_key_id'),
+          placeholder: $t('setting.config.sms.placeholder.access_key_id'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.sms.placeholder.access_key_id')
+            message: $t('setting.config.sms.placeholder.access_key_id')
           }
         ]
       },
       {
         prop: 'access_key_secret',
-        label: $t('system.config.sms.access_key_secret'),
+        label: $t('setting.config.sms.access_key_secret'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.sms.placeholder.access_key_secret'),
+          placeholder: $t('setting.config.sms.placeholder.access_key_secret'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.sms.placeholder.access_key_secret')
+            message: $t('setting.config.sms.placeholder.access_key_secret')
           }
         ]
       },
       {
         prop: 'enable',
-        label: $t('system.config.sms.enable'),
+        label: $t('setting.config.sms.enable'),
         component: 'ApiDict',
         defaultValue: 1,
         componentProps: {
@@ -67,13 +67,13 @@
       },
       {
         prop: 'sign_name',
-        label: $t('system.config.sms.sign_name'),
+        label: $t('setting.config.sms.sign_name'),
         component: 'Input',
         componentProps: {
           type: 'textarea',
           // style: { width: "50%" },
           rows: 7,
-          placeholder: $t('system.config.sms.placeholder.sign_name'),
+          placeholder: $t('setting.config.sms.placeholder.sign_name'),
           allowClear: true
         }
       }

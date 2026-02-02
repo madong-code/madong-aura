@@ -13,7 +13,7 @@ import type {
 } from './model'
 import request from '@/utils/http'
 
-const baseUrl = '/modules'
+const baseUrl = '/plugin'
 
 /**
  * 功能模块API服务

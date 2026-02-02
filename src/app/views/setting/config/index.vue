@@ -33,7 +33,7 @@
         defineAsyncComponent(() => import('@/app/views/setting/config/modules/site.vue'))
       ),
       key: '1',
-      name: $t('system.config.site.title'),
+      name: $t('setting.config.site.title'),
       loadKey: 0
     },
     {
@@ -41,7 +41,7 @@
         defineAsyncComponent(() => import('@/app/views/setting/config/modules/upload.vue'))
       ),
       key: '2',
-      name: $t('system.config.upload.title'),
+      name: $t('setting.config.upload.title'),
       loadKey: 0
     },
     {
@@ -49,7 +49,7 @@
         defineAsyncComponent(() => import('@/app/views/setting/config/modules/email.vue'))
       ),
       key: '3',
-      name: $t('system.config.email.title'),
+      name: $t('setting.config.email.title'),
       loadKey: 0
     },
     {
@@ -57,7 +57,7 @@
         defineAsyncComponent(() => import('@/app/views/setting/config/modules/sms.vue'))
       ),
       key: '4',
-      name: $t('system.config.sms.title'),
+      name: $t('setting.config.sms.title'),
       loadKey: 0
     }
   ])

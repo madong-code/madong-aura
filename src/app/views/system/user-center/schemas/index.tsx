@@ -10,7 +10,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: ProfileService.onlineDevice,
-    dialogTitle: $t("system.user.profile.online_device.table.title"),
+    dialogTitle: $t("system.user.center.online_device.table.title"),
     crudApi: {
     },
     // 使用crud
@@ -38,27 +38,27 @@ export const crudSchema = (): CrudSchema => {
       // },
 
       {
-        label: $t('system.user.profile.online_device.table.columns.user_name'),
+        label: $t('system.user.center.online_device.table.columns.user_name'),
         prop: 'user_name',
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.ip'),
+        label: $t('system.user.center.online_device.table.columns.ip'),
         prop: 'ip',
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.ip_location'),
+        label: $t('system.user.center.online_device.table.columns.ip_location'),
         prop: 'ip_location',
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.browser'),
+        label: $t('system.user.center.online_device.table.columns.browser'),
         prop: 'browser'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.os'),
+        label: $t('system.user.center.online_device.table.columns.os'),
         prop: 'os',
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.login_time'),
+        label: $t('system.user.center.online_device.table.columns.login_time'),
         prop: 'login_time',
         width: 170,
         formatter: ({ cellValue }) => {

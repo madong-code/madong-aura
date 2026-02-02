@@ -7,26 +7,26 @@
       ref="formRef"
       :rules="rules"
     >
-      <el-form-item :label="$t('tools.code.config.delete_type')">
+      <el-form-item :label="$t('tools.generator.code.config.delete_type')">
         <div>
           <el-radio-group v-model="configData.is_delete" @change="handleDeleteTypeChange">
-            <el-radio :label="0">{{ $t("tools.code.config.physical_delete") }}</el-radio>
-            <el-radio :label="1">{{ $t("tools.code.config.soft_delete") }}</el-radio>
+            <el-radio :label="0">{{ $t("tools.generator.code.config.physical_delete") }}</el-radio>
+            <el-radio :label="1">{{ $t("tools.generator.code.config.soft_delete") }}</el-radio>
           </el-radio-group>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.delete_type_tip") }}
+            {{ $t("tools.generator.code.config.delete_type_tip") }}
           </p>
         </div>
       </el-form-item>
       <el-form-item
         prop="delete_column_name"
-        :label="$t('tools.code.config.delete_field')"
+        :label="$t('tools.generator.code.config.delete_field')"
         v-if="configData.is_delete"
       >
         <div>
           <el-select
             class="input-width"
-            :placeholder="$t('tools.code.config.placeholder.select')"
+            :placeholder="$t('tools.generator.code.config.placeholder.select')"
             v-model="configData.delete_column_name"
           >
             <el-option
@@ -37,30 +37,30 @@
             />
           </el-select>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.delete_field_tip") }}
+            {{ $t("tools.generator.code.config.delete_field_tip") }}
           </p>
         </div>
       </el-form-item>
 
-      <el-form-item :label="$t('tools.code.config.edit_mode')">
+      <el-form-item :label="$t('tools.generator.code.config.edit_mode')">
         <div>
           <el-radio-group
             v-model="configData.edit_type"
-            :placeholder="$t('tools.code.config.placeholder.select_edit_mode')"
+            :placeholder="$t('tools.generator.code.config.placeholder.select_edit_mode')"
           >
-            <el-radio :label="1">{{ $t("tools.code.config.dialog") }}</el-radio>
-            <el-radio :label="2">{{ $t("tools.code.config.drawer") }}</el-radio>
+            <el-radio :label="1">{{ $t("tools.generator.code.config.dialog") }}</el-radio>
+            <el-radio :label="2">{{ $t("tools.generator.code.config.drawer") }}</el-radio>
           </el-radio-group>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.edit_mode_tip") }}
+            {{ $t("tools.generator.code.config.edit_mode_tip") }}
           </p>
         </div>
       </el-form-item>
-      <el-form-item :label="$t('tools.code.config.sort_field')">
+      <el-form-item :label="$t('tools.generator.code.config.sort_field')">
         <div>
           <el-select
             class="input-width"
-            :placeholder="$t('tools.code.config.placeholder.enter_sort_field')"
+            :placeholder="$t('tools.generator.code.config.placeholder.enter_sort_field')"
             v-model="configData.order_column_name"
             clearable
           >
@@ -72,29 +72,29 @@
             />
           </el-select>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.sort_field_tip") }}
+            {{ $t("tools.generator.code.config.sort_field_tip") }}
           </p>
         </div>
       </el-form-item>
       <el-form-item
-        :label="$t('tools.code.config.sort_order')"
+        :label="$t('tools.generator.code.config.sort_order')"
         v-if="configData.order_column_name"
       >
         <div>
           <el-select
             class="input-width"
-            :placeholder="$t('tools.code.config.placeholder.select_sort_order')"
+            :placeholder="$t('tools.generator.code.config.placeholder.select_sort_order')"
             v-model="configData.order_type"
           >
-            <el-option :label="$t('tools.code.config.asc')" :value="1" />
-            <el-option :label="$t('tools.code.config.desc')" :value="2" />
+            <el-option :label="$t('tools.generator.code.config.asc')" :value="1" />
+            <el-option :label="$t('tools.generator.code.config.desc')" :value="2" />
           </el-select>
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.sort_order_tip") }}
+            {{ $t("tools.generator.code.config.sort_order_tip") }}
           </p>
         </div>
       </el-form-item>
-      <el-form-item :label="$t('tools.code.config.parent_menu')">
+      <el-form-item :label="$t('tools.generator.code.config.parent_menu')">
         <div>
           <el-tree-select
             class="input-width"
@@ -121,7 +121,7 @@
             :remote-method="loadSysMenuList"
           />
           <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">
-            {{ $t("tools.code.config.parent_menu_tip") }}
+            {{ $t("tools.generator.code.config.parent_menu_tip") }}
           </p>
         </div>
       </el-form-item>

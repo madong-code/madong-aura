@@ -9,7 +9,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: OperateLogService.list,
-    dialogTitle: $t('system.operate_logs.list.title'),
+    dialogTitle: $t('logs.operate.list.title'),
     crudApi: {
       // 新增接口
       add: OperateLogService.create,
@@ -31,13 +31,13 @@ export const crudSchema = (): CrudSchema => {
     // 是否有详情
     hasView: true,
     // 新增权限码
-    addAuth: 'system:logs_operate:create',
+    addAuth: 'logs.operate:create',
     // 删除权限码
-    removeAuth: 'system:logs_operate:delete',
+    removeAuth: 'logs.operate:delete',
     // 修改权限码
-    editAuth: 'system:logs_operate:update',
+    editAuth: 'logs.operate:update',
     // 详情权限码
-    viewAuth: 'system:logs_operate:read',
+    viewAuth: 'logs.operate:read',
     // 表格列定义
     columns: [
       {
@@ -46,42 +46,42 @@ export const crudSchema = (): CrudSchema => {
 
       {
         prop: 'name',
-        label: $t('system.operate_logs.list.table.columns.name'),
+        label: $t('logs.operate.list.table.columns.name'),
         align: 'left',
         width: 90,
 
       },
       {
         prop: 'app',
-        label: $t('system.operate_logs.list.table.columns.app'),
+        label: $t('logs.operate.list.table.columns.app'),
         width: 60
       },
       {
         prop: 'ip',
-        label: $t('system.operate_logs.list.table.columns.ip'),
+        label: $t('logs.operate.list.table.columns.ip'),
         width: 110
       },
       {
         prop: 'ip_location',
-        label: $t('system.operate_logs.list.table.columns.ip_location')
+        label: $t('logs.operate.list.table.columns.ip_location')
       },
       {
         prop: 'os',
-        label: $t('system.operate_logs.list.table.columns.os')
+        label: $t('logs.operate.list.table.columns.os')
       },
       {
         prop: 'browser',
-        label: $t('system.operate_logs.list.table.columns.browser')
+        label: $t('logs.operate.list.table.columns.browser')
       },
       {
         prop: 'url',
-        label: $t('system.operate_logs.list.table.columns.url'),
+        label: $t('logs.operate.list.table.columns.url'),
         align: 'left',
         minWidth: 170
       },
       {
         prop: 'param',
-        label: $t('system.operate_logs.list.table.columns.param'),
+        label: $t('logs.operate.list.table.columns.param'),
         minWidth: 170,
         formatter: (row: any) => {
           const jsonString = JSON.stringify(row.param, null, 2);
@@ -90,7 +90,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'created_date',
-        label: $t('system.operate_logs.list.table.columns.created_date'),
+        label: $t('logs.operate.list.table.columns.created_date'),
         width: 170
       },
     ],
@@ -101,9 +101,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_user_name',
-          label: $t('system.operate_logs.list.query.user_name'),
+          label: $t('logs.operate.list.query.user_name'),
           componentProps: {
-            placeholder: $t('system.operate_logs.list.query.placeholder.user_name'),
+            placeholder: $t('logs.operate.list.query.placeholder.user_name'),
             clearable: true
           },
           colSpan: 6
@@ -111,9 +111,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_ip',
-          label: $t('system.operate_logs.list.query.ip'),
+          label: $t('logs.operate.list.query.ip'),
           componentProps: {
-            placeholder: $t('system.operate_logs.list.query.placeholder.ip'),
+            placeholder: $t('logs.operate.list.query.placeholder.ip'),
             clearable: true
           },
           colSpan: 6
@@ -121,9 +121,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_url',
-          label: $t('system.operate_logs.list.query.url'),
+          label: $t('logs.operate.list.query.url'),
           componentProps: {
-            placeholder: $t('system.operate_logs.list.query.placeholder.url'),
+            placeholder: $t('logs.operate.list.query.placeholder.url'),
             clearable: true
           },
           colSpan: 6
@@ -131,7 +131,7 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'DatePicker',
           prop: 'BETWEEN_created_at',
-          label: $t('system.operate_logs.list.query.created_date'),
+          label: $t('logs.operate.list.query.created_date'),
           componentProps: {
             type: 'daterange'
           },
@@ -155,7 +155,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'app',
-          label: $t('system.operate_logs.form.app'),
+          label: $t('logs.operate.form.app'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -164,7 +164,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'ip',
-          label: $t('system.operate_logs.form.ip'),
+          label: $t('logs.operate.form.ip'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -173,7 +173,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'class_name',
-          label: $t('system.operate_logs.form.class_name'),
+          label: $t('logs.operate.form.class_name'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -182,7 +182,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'method',
-          label: $t('system.operate_logs.form.method'),
+          label: $t('logs.operate.form.method'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -191,7 +191,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'action',
-          label: $t('system.operate_logs.form.action'),
+          label: $t('logs.operate.form.action'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -200,7 +200,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'created_date',
-          label: $t('system.operate_logs.form.created_date'),
+          label: $t('logs.operate.form.created_date'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -209,7 +209,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'user_name',
-          label: $t('system.operate_logs.form.user_name'),
+          label: $t('logs.operate.form.user_name'),
           component: 'Input',
           componentProps: {
             placeholder: '',
@@ -218,7 +218,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'param',
-          label: $t('system.operate_logs.form.param'),
+          label: $t('logs.operate.form.param'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
@@ -236,7 +236,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'result',
-          label: $t('system.operate_logs.form.result'),
+          label: $t('logs.operate.form.result'),
           component: 'Input',
           componentProps: {
             type: 'textarea',

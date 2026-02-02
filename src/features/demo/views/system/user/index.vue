@@ -53,7 +53,7 @@
 import ArtButtonTable from "@/components/core/forms/art-button-table/index.vue";
 import { ACCOUNT_TABLE_DATA } from "@/features/demo/mock/temp/formData";
 import { useTable } from "@/hooks/core/useTable";
-import { fetchGetUserList } from "@/app/api/system-manage";
+import { fetchGetUserList } from "@/features/demo/api/system-manage";
 import UserSearch from "./modules/user-search.vue";
 import UserDialog from "./modules/user-dialog.vue";
 import { ElTag, ElMessageBox, ElImage } from "element-plus";

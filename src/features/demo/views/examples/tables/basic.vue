@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
   import { useTable } from '@/hooks/core/useTable'
-  import { fetchGetUserList } from '@/app/api/system-manage'
+  import { fetchGetUserList } from '@features/demo/api/system-manage'
 
   defineOptions({ name: 'UserMixedUsageExample' })
 

@@ -120,7 +120,7 @@
   import avatar4 from '@/app/assets/images/avatar/avatar4.webp'
   import avatar5 from '@/app/assets/images/avatar/avatar5.webp'
   import avatar6 from '@/app/assets/images/avatar/avatar6.webp'
-  import MessageService from '@/app/api/network/message'
+  import MessageService from '@/app/api/setting/message'
 
   defineOptions({ name: 'ArtNotification' })
   const router = useRouter()

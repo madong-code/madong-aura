@@ -4,14 +4,14 @@
   import { ConfigService } from '@/app/api/setting/config'
 
   const fieldLink = {
-    Host: $t('system.config.email.Host'),
-    Port: $t('system.config.email.Port'),
-    Username: $t('system.config.email.Username'),
-    Password: $t('system.config.email.Password'),
-    SMTPSecure: $t('system.config.email.SMTPSecure'),
-    From: $t('system.config.email.From'),
-    FromName: $t('system.config.email.FromName'),
-    email: $t('system.config.email.test')
+    Host: $t('setting.config.email.Host'),
+    Port: $t('setting.config.email.Port'),
+    Username: $t('setting.config.email.Username'),
+    Password: $t('setting.config.email.Password'),
+    SMTPSecure: $t('setting.config.email.SMTPSecure'),
+    From: $t('setting.config.email.From'),
+    FromName: $t('setting.config.email.FromName'),
+    email: $t('setting.config.email.test')
   }
 
   const [BasicForm, formApi] = useForm({
@@ -21,70 +21,70 @@
     schema: [
       {
         prop: 'Host',
-        label: $t('system.config.email.Host'),
+        label: $t('setting.config.email.Host'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.Host'),
+          placeholder: $t('setting.config.email.placeholder.Host'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.Host')
+            message: $t('setting.config.email.placeholder.Host')
           }
         ]
       },
       {
         prop: 'Port',
-        label: $t('system.config.email.Port'),
+        label: $t('setting.config.email.Port'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.Port'),
+          placeholder: $t('setting.config.email.placeholder.Port'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.Port')
+            message: $t('setting.config.email.placeholder.Port')
           }
         ]
       },
       {
         prop: 'Username',
-        label: $t('system.config.email.Username'),
+        label: $t('setting.config.email.Username'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.Username'),
+          placeholder: $t('setting.config.email.placeholder.Username'),
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.Username')
+            message: $t('setting.config.email.placeholder.Username')
           }
         ]
       },
       {
         prop: 'Password',
-        label: $t('system.config.email.Password'),
+        label: $t('setting.config.email.Password'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.Password'),
+          placeholder: $t('setting.config.email.placeholder.Password'),
           style: { width: '40%' },
           allowClear: true
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.Password')
+            message: $t('setting.config.email.placeholder.Password')
           }
         ]
       },
       {
         prop: 'SMTPSecure',
-        label: $t('system.config.email.SMTPSecure'),
+        label: $t('setting.config.email.SMTPSecure'),
         component: 'RadioGroup',
         defaultValue: 'ssl',
         componentProps: {
@@ -108,33 +108,33 @@
 
       {
         prop: 'From',
-        label: $t('system.config.email.From'),
+        label: $t('setting.config.email.From'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.From'),
+          placeholder: $t('setting.config.email.placeholder.From'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.From')
+            message: $t('setting.config.email.placeholder.From')
           }
         ]
       },
       {
         prop: 'FromName',
-        label: $t('system.config.email.FromName'),
+        label: $t('setting.config.email.FromName'),
         component: 'Input',
         componentProps: {
-          placeholder: $t('system.config.email.placeholder.FromName'),
+          placeholder: $t('setting.config.email.placeholder.FromName'),
           allowClear: true,
           style: { width: '40%' }
         },
         rules: [
           {
             required: true,
-            message: $t('system.config.email.placeholder.FromName')
+            message: $t('setting.config.email.placeholder.FromName')
           }
         ]
       }

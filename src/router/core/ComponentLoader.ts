@@ -26,9 +26,9 @@ interface PerformanceStats {
 }
 
 export class ComponentLoader {
-  private appViewsModules: Record<string, () => Promise<any>>
-  private featuresModules: Record<string, () => Promise<any>>
-  private layoutModules: Record<string, () => Promise<any>>
+  private appViewsModules: Record<string, () => Promise<any>> = {}
+  private featuresModules: Record<string, () => Promise<any>> = {}
+  private layoutModules: Record<string, () => Promise<any>> = {}
 
   // 组件缓存
   private componentCache: Map<string, CacheItem> = new Map()
@@ -45,20 +45,54 @@ export class ComponentLoader {
   private cacheConfig = {
     maxSize: 100, // 最大缓存数量
     ttl: 5 * 60 * 1000, // 缓存有效期 5分钟
-    enableStats: import.meta.env.DEV // 开发环境启用统计
+    enableStats: import.meta.env.DEV, // 开发环境启用统计
+    enabled: !import.meta.env.DEV // 开发环境禁用缓存
   }
 
   constructor() {
+    // 初始化模块映射
+    this.refreshModulesMap()
+
+    // 生产环境下定期清理过期缓存
+    if (!import.meta.env.DEV) {
+      setInterval(() => this.cleanupExpiredCache(), 60 * 1000) // 每分钟清理一次
+    }
+
+    // 开发环境下添加热更新支持
+    if (import.meta.env.DEV && import.meta.hot) {
+      this.setupHMR()
+    }
+  }
+
+  /**
+   * 刷新模块映射
+   */
+  private refreshModulesMap(): void {
     // 动态导入 app/views 目录下所有 .vue 组件
     this.appViewsModules = import.meta.glob('../../app/views/**/*.vue')
     // 动态导入 features 模块下所有 .vue 组件
     this.featuresModules = import.meta.glob('../../features/**/views/**/*.vue')
     // 动态导入 layout 目录下所有 .vue 组件
     this.layoutModules = import.meta.glob('../../layout/**/*.vue')
+  }
 
-    // 开发环境下定期清理过期缓存
-    if (import.meta.env.DEV) {
-      setInterval(() => this.cleanupExpiredCache(), 60 * 1000) // 每分钟清理一次
+  /**
+   * 设置热更新支持
+   */
+  private setupHMR(): void {
+    if (import.meta.hot) {
+      // 监听组件文件变化
+      import.meta.hot.on('vite:beforeUpdate', () => {
+        // 刷新模块映射，确保能够捕获到文件变化
+        this.refreshModulesMap()
+        // 清除缓存，确保下次加载时使用新的模块
+        this.clearCache()
+      })
+
+      // 监听错误事件，防止热更新失败导致页面崩溃
+      import.meta.hot.on('vite:error', (error) => {
+        console.warn('[ComponentLoader] 热更新错误:', error)
+      })
     }
   }
 
@@ -76,13 +110,15 @@ export class ComponentLoader {
     // 性能监控开始时间
     const startTime = this.cacheConfig.enableStats ? performance.now() : 0
 
-    // 检查缓存
-    const cachedItem = this.getFromCache(cacheKey)
-    if (cachedItem) {
-      if (this.cacheConfig.enableStats) {
-        this.recordPerformance(true, performance.now() - startTime)
+    // 检查缓存（仅在缓存启用时）
+    if (this.cacheConfig.enabled) {
+      const cachedItem = this.getFromCache(cacheKey)
+      if (cachedItem) {
+        if (this.cacheConfig.enableStats) {
+          this.recordPerformance(true, performance.now() - startTime)
+        }
+        return cachedItem
       }
-      return cachedItem
     }
 
     // 只在开发环境下输出日志
@@ -105,8 +141,10 @@ export class ComponentLoader {
       componentLoader = this.loadAppComponent(componentPath)
     }
 
-    // 缓存组件加载器
-    this.addToCache(cacheKey, componentLoader)
+    // 缓存组件加载器（仅在缓存启用时）
+    if (this.cacheConfig.enabled) {
+      this.addToCache(cacheKey, componentLoader)
+    }
 
     if (this.cacheConfig.enableStats) {
       this.recordPerformance(false, performance.now() - startTime)
@@ -267,17 +305,26 @@ export class ComponentLoader {
   // ... existing code (保持原有的私有方法不变) ...
 
   /**
+   * 标准化路径格式
+   */
+  private normalizePath(path: string): string {
+    // 确保路径以/开头，并且没有连续的斜杠
+    return '/' + path.replace(/^\/*|\/*$/g, '').replace(/\/+\//g, '/')
+  }
+
+  /**
    * 检查是否为布局组件路径
    */
   private isLayoutComponent(componentPath: string): boolean {
+    const normalizedPath = this.normalizePath(componentPath)
     const layoutPaths = [
       '/layout', '/outside', '/default',
       RoutesAlias.Layout, RoutesAlias.Outside
-    ]
+    ].map(path => this.normalizePath(path))
+
     return layoutPaths.some(path =>
-      componentPath.startsWith(path) ||
-      componentPath === path ||
-      componentPath.includes(path.replace('/', ''))
+      normalizedPath === path ||
+      normalizedPath.startsWith(path + '/')
     )
   }
 
@@ -287,22 +334,33 @@ export class ComponentLoader {
   private loadLayoutComponent(componentPath: string): () => Promise<any> {
     // 处理路由别名映射
     const mappedPath = this.mapRoutesAlias(componentPath)
+    const normalizedPath = this.normalizePath(mappedPath)
 
     // 构建可能的布局路径
-    const fullPath = `../../layout${mappedPath}.vue`
-    const fullPathWithIndex = `../../layout${mappedPath}/index.vue`
+    const fullPath = `../../layout${normalizedPath}.vue`
+    const fullPathWithIndex = `../../layout${normalizedPath}/index.vue`
 
     // 先尝试直接路径，再尝试添加/index的路径
     const module = this.layoutModules[fullPath] || this.layoutModules[fullPathWithIndex]
 
     if (!module) {
       console.error(
-        `[ComponentLoader] 未找到布局组件: ${componentPath}，映射路径: ${mappedPath}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
+        `[ComponentLoader] 未找到布局组件: ${componentPath}，映射路径: ${normalizedPath}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
       )
       return this.createErrorComponent(componentPath)
     }
 
-    return module
+    // 包装模块加载函数，添加错误处理
+    return () => {
+      return module().catch(error => {
+        console.error(`[ComponentLoader] 加载布局组件失败: ${componentPath}`, error)
+        return {
+          render() {
+            return h('div', { class: 'route-error' }, `布局组件加载失败: ${componentPath}`)
+          }
+        }
+      })
+    }
   }
 
   /**
@@ -324,9 +382,11 @@ export class ComponentLoader {
    * 从 app/views 目录加载组件
    */
   private loadAppComponent(componentPath: string): () => Promise<any> {
+    const normalizedPath = this.normalizePath(componentPath)
+    
     // 构建可能的路径
-    const fullPath = `../../app/views${componentPath}.vue`
-    const fullPathWithIndex = `../../app/views${componentPath}/index.vue`
+    const fullPath = `../../app/views${normalizedPath}.vue`
+    const fullPathWithIndex = `../../app/views${normalizedPath}/index.vue`
 
     // 先尝试直接路径，再尝试添加/index的路径
     const module = this.appViewsModules[fullPath] || this.appViewsModules[fullPathWithIndex]
@@ -338,16 +398,28 @@ export class ComponentLoader {
       return this.createErrorComponent(componentPath)
     }
 
-    return module
+    // 包装模块加载函数，添加错误处理
+    return () => {
+      return module().catch(error => {
+        console.error(`[ComponentLoader] 加载组件失败: ${componentPath}`, error)
+        return {
+          render() {
+            return h('div', { class: 'route-error' }, `组件加载失败: ${componentPath}`)
+          }
+        }
+      })
+    }
   }
 
   /**
    * 从 features 模块的 views 目录加载组件
    */
   private loadFeaturesComponent(componentPath: string, moduleName: string): () => Promise<any> {
+    const normalizedPath = this.normalizePath(componentPath)
+    
     // 构建可能的路径
-    const fullPath = `../../features/${moduleName}/views${componentPath}.vue`
-    const fullPathWithIndex = `../../features/${moduleName}/views${componentPath}/index.vue`
+    const fullPath = `../../features/${moduleName}/views${normalizedPath}.vue`
+    const fullPathWithIndex = `../../features/${moduleName}/views${normalizedPath}/index.vue`
 
     // 先尝试直接路径，再尝试添加/index的路径
     const module = this.featuresModules[fullPath] || this.featuresModules[fullPathWithIndex]
@@ -360,21 +432,49 @@ export class ComponentLoader {
       return this.loadAppComponent(componentPath)
     }
 
-    return module
+    // 包装模块加载函数，添加错误处理
+    return () => {
+      return module().catch(error => {
+        console.error(`[ComponentLoader] 加载模块 ${moduleName} 的组件失败: ${componentPath}`, error)
+        return {
+          render() {
+            return h('div', { class: 'route-error' }, `模块 ${moduleName} 的组件加载失败: ${componentPath}`)
+          }
+        }
+      })
+    }
   }
 
   /**
    * 加载默认布局组件
    */
   loadLayout(): () => Promise<any> {
-    return () => import('@/layout/index.vue')
+    return () => {
+      return import('@/layout/index.vue').catch(error => {
+        console.error('[ComponentLoader] 加载默认布局组件失败', error)
+        return {
+          render() {
+            return h('div', { class: 'route-error' }, '默认布局组件加载失败')
+          }
+        }
+      })
+    }
   }
 
   /**
    * 加载 iframe 组件
    */
   loadIframe(): () => Promise<any> {
-    return () => import('@/layout/outside/index.vue')
+    return () => {
+      return import('@/layout/outside/index.vue').catch(error => {
+        console.error('[ComponentLoader] 加载 iframe 组件失败', error)
+        return {
+          render() {
+            return h('div', { class: 'route-error' }, 'iframe 组件加载失败')
+          }
+        }
+      })
+    }
   }
 
   /**

@@ -18,7 +18,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: GatewayBlacklistService.list,
-    dialogTitle: $t('dev.blacklist.list.title'),
+    dialogTitle: $t('setting.gateway.blacklist.list.title'),
     crudApi: {
       // 新增接口
       add: GatewayBlacklistService.create,
@@ -40,13 +40,13 @@ export const crudSchema = (): CrudSchema => {
     // 是否有详情
     hasView: true,
     // 新增权限码
-    addAuth: 'dev:blacklist:create',
+    addAuth: 'gateway:blacklist:create',
     // 删除权限码
-    removeAuth: 'dev:blacklist:delete',
+    removeAuth: 'gateway:blacklist:delete',
     // 修改权限码
-    editAuth: 'dev:blacklist:update',
+    editAuth: 'gateway:blacklist:update',
     // 详情权限码
-    viewAuth: 'dev:blacklist:read',
+    viewAuth: 'gateway:blacklist:read',
     // 表格列定义
     columns: [
       {
@@ -54,29 +54,29 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'priority',
-        label: $t('dev.blacklist.list.table.columns.priority'),
+        label: $t('setting.gateway.blacklist.list.table.columns.priority'),
         width: 80,
       },
       {
         prop: 'name',
-        label: $t('dev.blacklist.list.table.columns.name'),
+        label: $t('setting.gateway.blacklist.list.table.columns.name'),
         align: 'left',
         minWidth: 150
       },
       {
         prop: 'ip',
-        label: $t('dev.blacklist.list.table.columns.ip'),
+        label: $t('setting.gateway.blacklist.list.table.columns.ip'),
         align: 'left',
         minWidth: 150
       },
       {
         prop: 'match_type',
-        label: $t('dev.blacklist.list.table.columns.match_type'),
+        label: $t('setting.gateway.blacklist.list.table.columns.match_type'),
         width: 120,
       },
       {
         prop: 'methods',
-        label: $t('dev.blacklist.list.table.columns.methods'),
+        label: $t('setting.gateway.blacklist.list.table.columns.methods'),
         component: 'ApiDict',
         componentProps: {
           code: DictEnum.SYS_REQUEST_MODE
@@ -85,7 +85,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'path',
-        label: $t('dev.blacklist.list.table.columns.path'),
+        label: $t('setting.gateway.blacklist.list.table.columns.path'),
         align: 'left',
         minWidth: 100
       },
@@ -101,7 +101,7 @@ export const crudSchema = (): CrudSchema => {
 
       {
         prop: 'start_date',
-        label: $t('dev.blacklist.list.table.columns.start_date'),
+        label: $t('setting.gateway.blacklist.list.table.columns.start_date'),
         align: 'left',
         minWidth: 180,
         formatter: (row: any) => {
@@ -113,7 +113,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'end_date',
-        label: $t('dev.blacklist.list.table.columns.end_date'),
+        label: $t('setting.gateway.blacklist.list.table.columns.end_date'),
         align: 'left',
         minWidth: 180,
         formatter: (row: any) => {
@@ -125,7 +125,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'created_at',
-        label: $t('dev.blacklist.list.table.columns.created_date'),
+        label: $t('setting.gateway.blacklist.list.table.columns.created_date'),
         align: 'left',
         minWidth: 180,
         formatter: (row: any) => {
@@ -143,9 +143,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_name',
-          label: $t('dev.blacklist.list.query.name'),
+          label: $t('setting.gateway.blacklist.list.query.name'),
           componentProps: {
-            placeholder: $t('dev.blacklist.list.query.placeholder.name'),
+            placeholder: $t('setting.gateway.blacklist.list.query.placeholder.name'),
             clearable: true
           },
           colSpan: 6
@@ -153,9 +153,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'LIKE_ip',
-          label: $t('dev.blacklist.list.query.ip'),
+          label: $t('setting.gateway.blacklist.list.query.ip'),
           componentProps: {
-            placeholder: $t('dev.blacklist.list.query.placeholder.ip'),
+            placeholder: $t('setting.gateway.blacklist.list.query.placeholder.ip'),
             clearable: true
           },
           colSpan: 6
@@ -163,9 +163,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'Input',
           prop: 'path',
-          label: $t('dev.blacklist.list.query.path'),
+          label: $t('setting.gateway.blacklist.list.query.path'),
           componentProps: {
-            placeholder: $t('dev.blacklist.list.query.placeholder.path'),
+            placeholder: $t('setting.gateway.blacklist.list.query.placeholder.path'),
             clearable: true
           },
           colSpan: 6
@@ -173,9 +173,9 @@ export const crudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           prop: 'EQ_enabled',
-          label: $t('dev.blacklist.list.query.enabled'),
+          label: $t('setting.gateway.blacklist.list.query.enabled'),
           componentProps: {
-            placeholder: $t('dev.blacklist.list.query.placeholder.enabled'),
+            placeholder: $t('setting.gateway.blacklist.list.query.placeholder.enabled'),
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true
           },
@@ -193,7 +193,7 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '100px',
       schema: [
         {
-          label: $t('dev.blacklist.form.modal.id'),
+          label: $t('setting.gateway.blacklist.form.modal.id'),
           prop: 'id',
           component: 'Input',
           colSpan: 12,
@@ -202,21 +202,21 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'name',
-          label: $t('dev.blacklist.form.modal.name'),
+          label: $t('setting.gateway.blacklist.form.modal.name'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.name'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.name'),
             clearable: true
           },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.name') }]
+          rules: [{ required: true, message: $t('setting.gateway.blacklist.form.modal.placeholder.name') }]
         },
         {
           prop: 'match_type',
-          label: $t('dev.blacklist.form.modal.match_type'),
+          label: $t('setting.gateway.blacklist.form.modal.match_type'),
           component: 'Select',
           defaultValue: 'exact',
           componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.match_type'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.match_type'),
             clearable: true,
             options: [
               { label: '精确匹配', value: 'exact' },
@@ -224,23 +224,23 @@ export const crudSchema = (): CrudSchema => {
               { label: '正则表达式匹配', value: 'regex' }
             ]
           },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.match_type') }]
+          rules: [{ required: true, message: $t('setting.gateway.blacklist.form.modal.placeholder.match_type') }]
         },
         {
           prop: 'priority',
-          label: $t('dev.blacklist.form.modal.priority'),
+          label: $t('setting.gateway.blacklist.form.modal.priority'),
           component: 'Input',
           defaultValue: 100,
           componentProps: {
             type: 'number',
-            placeholder: $t('dev.blacklist.form.modal.placeholder.priority'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.priority'),
             clearable: true
           },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.placeholder.priority') }]
+          rules: [{ required: true, message: $t('setting.gateway.blacklist.form.modal.placeholder.priority') }]
         },
         {
           prop: 'ip',
-          label: $t('dev.blacklist.form.modal.ip'),
+          label: $t('setting.gateway.blacklist.form.modal.ip'),
           component: 'Input',
           componentProps: {
             placeholder: '留空表示不限 IP',
@@ -250,31 +250,31 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'methods',
-          label: $t('dev.blacklist.form.modal.methods'),
+          label: $t('setting.gateway.blacklist.form.modal.methods'),
           component: 'ApiDict',
           componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.methods'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.methods'),
             code: DictEnum.SYS_REQUEST_MODE
           },
-          rules: [{ required: true, message: $t('dev.blacklist.form.modal.methods') }]
+          rules: [{ required: true, message: $t('setting.gateway.blacklist.form.modal.methods') }]
         },
         {
           prop: 'path',
-          label: $t('dev.blacklist.form.modal.path'),
+          label: $t('setting.gateway.blacklist.form.modal.path'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('dev.blacklist.form.modal.placeholder.path'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.path'),
             clearable: true
           },
           rules: [{ required: true, message: '' }]
         },
         {
           prop: 'start_date',
-          label: $t('dev.blacklist.form.modal.start_time'),
+          label: $t('setting.gateway.blacklist.form.modal.start_time'),
           component: 'DatePicker',
           componentProps: {
             type: 'datetime',
-            placeholder: $t('dev.blacklist.form.modal.placeholder.start_time'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.start_time'),
             clearable: true,
             format: 'YYYY-MM-DD HH:mm:ss',
             valueFormat: 'YYYY-MM-DD HH:mm:ss'
@@ -282,11 +282,11 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'end_date',
-          label: $t('dev.blacklist.form.modal.end_time'),
+          label: $t('setting.gateway.blacklist.form.modal.end_time'),
           component: 'DatePicker',
           componentProps: {
             type: 'datetime',
-            placeholder: $t('dev.blacklist.form.modal.placeholder.end_time'),
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.end_time'),
             clearable: true,
             format: 'YYYY-MM-DD HH:mm:ss',
             valueFormat: 'YYYY-MM-DD HH:mm:ss'
@@ -294,7 +294,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'enabled',
-          label: $t('dev.blacklist.form.modal.enabled'),
+          label: $t('setting.gateway.blacklist.form.modal.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -305,22 +305,22 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'message',
-          label: $t('dev.blacklist.form.modal.message'),
+          label: $t('setting.gateway.blacklist.form.modal.message'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
             rows: 4,
-            placeholder: $t('dev.blacklist.form.modal.placeholder.message')
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.message')
           }
         },
         {
           prop: 'remark',
-          label: $t('dev.blacklist.form.modal.remark'),
+          label: $t('setting.gateway.blacklist.form.modal.remark'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
             rows: 4,
-            placeholder: $t('dev.blacklist.form.modal.placeholder.remark')
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.remark')
           }
         }
       ]

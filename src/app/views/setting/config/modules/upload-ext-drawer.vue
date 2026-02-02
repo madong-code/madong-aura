@@ -36,7 +36,7 @@
       },
       {
         prop: 'root',
-        label: $t('system.config.upload.extend.root'),
+        label: $t('setting.config.upload.extend.root'),
         component: 'RadioGroup',
         rules: [
           {
@@ -67,7 +67,7 @@
       {
         component: 'Input',
         prop: 'secretId',
-        label: $t('system.config.upload.extend.secretId'),
+        label: $t('setting.config.upload.extend.secretId'),
         rules: [
           {
             required: true
@@ -83,7 +83,7 @@
       {
         component: 'Input',
         prop: 'accessKey',
-        label: $t('system.config.upload.extend.accessKey'),
+        label: $t('setting.config.upload.extend.accessKey'),
         rules: [
           {
             required: true
@@ -99,7 +99,7 @@
       {
         component: 'Input',
         prop: 'accessKeyId',
-        label: $t('system.config.upload.extend.accessKeyId'),
+        label: $t('setting.config.upload.extend.accessKeyId'),
         rules: [
           {
             required: true
@@ -115,7 +115,7 @@
       {
         component: 'Input',
         prop: 'secretKey',
-        label: $t('system.config.upload.extend.secretKey'),
+        label: $t('setting.config.upload.extend.secretKey'),
         rules: [
           {
             required: true
@@ -131,7 +131,7 @@
       {
         component: 'Input',
         prop: 'key',
-        label: $t('system.config.upload.extend.key'),
+        label: $t('setting.config.upload.extend.key'),
         rules: [
           {
             required: true
@@ -147,7 +147,7 @@
       {
         component: 'Input',
         prop: 'accessKeySecret',
-        label: $t('system.config.upload.extend.accessKeySecret'),
+        label: $t('setting.config.upload.extend.accessKeySecret'),
         rules: [
           {
             required: true
@@ -163,7 +163,7 @@
       {
         component: 'Input',
         prop: 'secret',
-        label: $t('system.config.upload.extend.secret'),
+        label: $t('setting.config.upload.extend.secret'),
         rules: [
           {
             required: true
@@ -179,7 +179,7 @@
       {
         component: 'Input',
         prop: 'bucket',
-        label: $t('system.config.upload.extend.bucket'),
+        label: $t('setting.config.upload.extend.bucket'),
         rules: [
           {
             required: true
@@ -195,7 +195,7 @@
       {
         component: 'Input',
         prop: 'dirname',
-        label: $t('system.config.upload.extend.dirname'),
+        label: $t('setting.config.upload.extend.dirname'),
         rules: [
           {
             required: true
@@ -205,7 +205,7 @@
       {
         component: 'Input',
         prop: 'domain',
-        label: $t('system.config.upload.extend.domain'),
+        label: $t('setting.config.upload.extend.domain'),
         rules: [
           {
             required: true
@@ -222,7 +222,7 @@
       {
         component: 'Input',
         prop: 'endpoint',
-        label: $t('system.config.upload.extend.endpoint'),
+        label: $t('setting.config.upload.extend.endpoint'),
         ifShow: (values: any) => {
           if (values) {
             return ['oss', 'qiniu', 's3'].includes(values.mode)
@@ -234,7 +234,7 @@
       {
         component: 'Input',
         prop: 'region',
-        label: $t('system.config.upload.extend.region'),
+        label: $t('setting.config.upload.extend.region'),
         ifShow: (values: any) => {
           if (values) {
             return ['cos', 's3'].includes(values.mode)
@@ -245,7 +245,7 @@
       {
         component: 'Input',
         prop: 'acl',
-        label: $t('system.config.upload.extend.acl'),
+        label: $t('setting.config.upload.extend.acl'),
         ifShow: (values: any) => {
           if (values) {
             return ['s3'].includes(values.mode)
@@ -260,7 +260,7 @@
           rows: 5
         },
         prop: 'remark',
-        label: $t('system.config.upload.extend.remark')
+        label: $t('setting.config.upload.extend.remark')
       }
     ]
   })
