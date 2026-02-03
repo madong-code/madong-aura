@@ -1,0 +1,40 @@
+{
+    "title": "会员积分",
+    "table": {
+        "columns": {
+            "id": "ID",
+            "username": "用户名",
+            "nickname": "昵称",
+            "type": "操作类型",
+            "points": "积分",
+            "points_after": "操作后积分",
+            "source": "来源/用途",
+            "remark": "备注",
+            "operator": "操作人",
+            "create_time": "操作时间"
+        }
+    },
+    "search": {
+        "username": "用户名",
+        "type": "操作类型",
+        "date_range": "操作时间"
+    },
+    "form": {
+        "member_id": "会员",
+        "type": "操作类型",
+        "points": "积分",
+        "source": "来源/用途",
+        "remark": "备注"
+    },
+    "types": {
+        "earn": "获取",
+        "consume": "消耗",
+        "adjust": "调整"
+    },
+    "actions": {
+        "operate": "积分操作",
+        "batch_operate": "批量操作",
+        "export": "导出记录",
+        "set_rules": "设置规则"
+    }
+}

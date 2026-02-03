@@ -5,7 +5,7 @@
 export const DictEnum = {
   // 基础数据类
   SYS_LOCKED_STATUS: 'system.LockedStatus',
-  SYS_ENABLED_STATUS: 'system.EnabledStatus',
+  SYS_ENABLED_STATUS: 'common.EnabledStatus',
   SYS_YES_NO: 'system.YesNoStatus',
   SYS_SEX: 'system.Sex',
 
