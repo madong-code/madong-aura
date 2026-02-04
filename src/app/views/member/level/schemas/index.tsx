@@ -1,7 +1,11 @@
 import { CrudSchema } from '@/components/crud'
 import { MemberLevelService } from '@/app/api/member'
 import { $t } from '@/locales'
-
+import { DictEnum } from '@/app/enums'
+import { max } from 'xe-utils'
+import { Icon } from '@/components/icon'
+import { h } from 'vue'
+import { formatDateTime } from '@/utils'
 // crud配置
 export const crudSchema = (): CrudSchema => {
   return {
@@ -44,24 +48,36 @@ export const crudSchema = (): CrudSchema => {
       {
         prop: 'id',
         label: $t('member.level.table.columns.id'),
-        minWidth: 60
+        minWidth: 60,
+        visible: false
+      },
+      {
+        prop: 'level',
+        label: $t('member.level.table.columns.level'),
+        minWidth: 100
       },
       {
         prop: 'name',
         label: $t('member.level.table.columns.name'),
-        minWidth: 120
-      },
-      {
-        prop: 'icon',
-        label: $t('member.level.table.columns.icon'),
-        minWidth: 80,
-        cellRender: {
-          name: 'CellImage',
-          props: {
-            width: 30,
-            height: 30
-          }
-        }
+        formatter: (row) => {
+          return row.icon
+            ? h('span', {}, [
+                h(Icon, {
+                  icon: row.icon
+                }),
+                h(
+                  'span',
+                  {
+                    style: {
+                      paddingLeft: '6px'
+                    }
+                  },
+                  row.name
+                )
+              ])
+            : h('span', {}, row.name)
+        },
+        minWidth: 200
       },
       {
         prop: 'min_points',
@@ -80,29 +96,21 @@ export const crudSchema = (): CrudSchema => {
         minWidth: 100
       },
       {
-        prop: 'sort',
-        label: $t('member.level.table.columns.sort'),
-        minWidth: 80
-      },
-      {
-        prop: 'status',
-        label: $t('member.level.table.columns.status'),
+        prop: 'enabled',
+        label: $t('member.level.table.columns.enabled'),
         minWidth: 80,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.status === 1 ? 'success' : 'danger'),
-            value: (row: any) =>
-              row.status === 1
-                ? $t('member.level.status.enabled')
-                : $t('member.level.status.disabled')
-          }
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS
         }
       },
       {
-        prop: 'create_time',
-        label: $t('member.level.table.columns.create_time'),
-        minWidth: 160
+        prop: 'created_at',
+        label: $t('member.level.table.columns.created_at'),
+        minWidth: 160,
+        formatter: (row: any) => {
+          return formatDateTime(row.created_at)
+        }
       }
     ],
     // 搜索表单配置
@@ -110,19 +118,16 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '100px',
       schema: [
         {
-          prop: 'name',
+          prop: 'LINK_name',
           label: $t('member.level.search.name'),
           component: 'Input'
         },
         {
-          prop: 'status',
-          label: $t('member.level.search.status'),
-          component: 'Select',
+          prop: 'EQ_enabled',
+          label: $t('member.level.search.enabled'),
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: $t('member.level.status.enabled'), value: 1 },
-              { label: $t('member.level.status.disabled'), value: 0 }
-            ],
+            code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true
           }
         }
@@ -134,6 +139,13 @@ export const crudSchema = (): CrudSchema => {
       gutter: 20,
       schema: [
         {
+          prop: 'id',
+          label: $t('member.level.form.id'),
+          component: 'Input',
+          show: false,
+          ifDetail: false
+        },
+        {
           prop: 'name',
           label: $t('member.level.form.name'),
           component: 'Input',
@@ -142,11 +154,17 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         },
         {
-          prop: 'icon',
-          label: $t('member.level.form.icon'),
-          component: 'UploadImage',
+          prop: 'level',
+          label: $t('member.level.form.level'),
+          component: 'Input',
+          rules: [{ required: true, message: $t('member.level.form.rules_level') }],
+          defaultValue: 1,
           componentProps: {
-            limit: 1
+            style: { width: '100%' },
+            type: 'number',
+            min: 1,
+            max: 9999,
+            precision: 0
           },
           colSpan: 24
         },
@@ -174,6 +192,31 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 12
         },
         {
+          label: $t('member.level.form.icon'),
+          prop: 'icon',
+          component: 'IconPicker',
+          colSpan: 12,
+          componentProps: (__values: any) => {
+            return {
+              class: 'w-full',
+              clearable: true
+            }
+          }
+        },
+        {
+          prop: 'enabled',
+          label: $t('member.level.form.enabled'),
+          component: 'ApiDict',
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            renderType: 'RadioGroup',
+            isBtn: true
+          },
+          defaultValue: 1,
+          colSpan: 12
+        },
+
+        {
           prop: 'description',
           label: $t('member.level.form.description'),
           component: 'Input',
@@ -182,32 +225,11 @@ export const crudSchema = (): CrudSchema => {
             rows: 3
           },
           colSpan: 24
-        },
-        {
-          prop: 'sort',
-          label: $t('member.level.form.sort'),
-          component: 'InputNumber',
-          componentProps: {
-            min: 0,
-            precision: 0
-          },
-          defaultValue: 0,
-          colSpan: 12
-        },
-        {
-          prop: 'status',
-          label: $t('member.level.form.status'),
-          component: 'Radio',
-          componentProps: {
-            options: [
-              { label: $t('member.level.status.enabled'), value: 1 },
-              { label: $t('member.level.status.disabled'), value: 0 }
-            ]
-          },
-          defaultValue: 1,
-          colSpan: 12
         }
       ]
+    },
+    dialogProps: {
+      width: '40%'
     }
   }
 }

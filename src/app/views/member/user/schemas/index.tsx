@@ -1,8 +1,9 @@
+import { h } from 'vue'
 import { CrudSchema } from '@/components/crud'
 import { MemberService } from '@/app/api/member'
 import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
-import { t } from '@wangeditor/editor'
+import { formatDateTime } from '@/utils'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -69,37 +70,56 @@ export const crudSchema = (): CrudSchema => {
         minWidth: 150
       },
       {
-        prop: 'level_name',
-        label: $t('member.user.table.columns.level_name'),
-        minWidth: 100
+        prop: 'level.name',
+        label: $t('member.user.table.columns.level_name')
       },
       {
         prop: 'balance',
         label: $t('member.user.table.columns.balance'),
-        minWidth: 100
+        visible: false
       },
       {
         prop: 'points',
-        label: $t('member.user.table.columns.points'),
-        minWidth: 100
+        label: $t('member.user.table.columns.points')
       },
       {
-        prop: 'status',
-        label: $t('member.user.table.columns.status'),
-        minWidth: 80,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.status === 1 ? 'success' : 'danger'),
-            value: (row: any) =>
-              row.status === 1 ? $t('member.user.status.normal') : $t('member.user.status.disabled')
-          }
+        prop: 'tag',
+        label: $t('member.user.table.columns.tags'),
+        formatter(row) {
+          return h(
+            'div',
+            {
+              class: 'flex flex-wrap gap-2'
+            },
+            row.tags.map((item: any) =>
+              h(
+                'el-tag',
+                {
+                  size: 'small',
+                  class: 'bg-blue-100 text-blue-800'
+                },
+                item.name
+              )
+            )
+          )
         }
       },
       {
-        prop: 'create_time',
-        label: $t('member.user.table.columns.create_time'),
-        minWidth: 160
+        prop: 'enabled',
+        label: $t('member.user.table.columns.enabled'),
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          clearable: true
+        }
+      },
+      {
+        prop: 'created_at',
+        label: $t('member.user.table.columns.created_at'),
+        minWidth: 170,
+        formatter: (row: any) => {
+          return formatDateTime(row.created_at)
+        }
       }
     ],
     dialogProps: {
@@ -120,8 +140,8 @@ export const crudSchema = (): CrudSchema => {
           component: 'Input'
         },
         {
-          prop: 'status',
-          label: $t('member.user.search.status'),
+          prop: 'enabled',
+          label: $t('member.user.search.enabled'),
           component: 'ApiDict',
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
@@ -189,6 +209,7 @@ export const crudSchema = (): CrudSchema => {
           prop: 'password',
           label: $t('member.user.form.password'),
           component: 'Input',
+          ifDetail: false,
           componentProps: {
             type: 'password',
 
@@ -198,26 +219,27 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24,
           show: (formType: string) => formType === 'add'
         },
-        {
-          prop: 'level_id',
-          label: $t('member.user.form.level_id'),
-          component: 'ApiSelect',
-          colSpan: 24,
-          componentProps: {
-            api: '/member/level',
-            requestMethod: 'GET',
+        // {
+        //   prop: 'level_id',
+        //   label: $t('member.user.form.level_id'),
+        //   component: 'ApiSelect',
+        //   colSpan: 24,
+        //   componentProps: {
+        //     api: '/member/level',
+        //     requestMethod: 'GET',
 
-            params: { format: 'select' }
-          }
-        },
+        //     params: { format: 'select' }
+        //   }
+        // },
         {
-          prop: 'status',
-          label: $t('member.user.form.status'),
+          prop: 'enabled',
+          label: $t('member.user.form.enabled'),
           component: 'ApiDict',
           colSpan: 24,
           defaultValue: 1,
           componentProps: {
-            type: 'button',
+            renderType: 'RadioGroup',
+            isBtn: true,
             code: DictEnum.SYS_ENABLED_STATUS
           }
         }

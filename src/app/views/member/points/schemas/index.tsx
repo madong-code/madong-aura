@@ -1,6 +1,10 @@
 import { CrudSchema } from '@/components/crud'
 import { MemberPointsService } from '@/app/api/member'
 import { $t } from '@/locales'
+import { R } from 'vue-router/dist/router-CWoNjPRp.mjs'
+import { pa } from 'element-plus/es/locale'
+import { DictEnum } from '@/app/enums'
+import { formatDateTime } from '@/utils'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -40,15 +44,16 @@ export const crudSchema = (): CrudSchema => {
       {
         prop: 'id',
         label: $t('member.points.table.columns.id'),
-        minWidth: 60
+        minWidth: 60,
+        visible: false
       },
       {
-        prop: 'username',
+        prop: 'member.username',
         label: $t('member.points.table.columns.username'),
         minWidth: 100
       },
       {
-        prop: 'nickname',
+        prop: 'member.nickname',
         label: $t('member.points.table.columns.nickname'),
         minWidth: 100
       },
@@ -56,17 +61,9 @@ export const crudSchema = (): CrudSchema => {
         prop: 'type',
         label: $t('member.points.table.columns.type'),
         minWidth: 100,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.type === 1 ? 'success' : row.type === 2 ? 'danger' : 'info'),
-            value: (row: any) =>
-              row.type === 1
-                ? $t('member.points.types.earn')
-                : row.type === 2
-                  ? $t('member.points.types.consume')
-                  : $t('member.points.types.adjust')
-          }
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.MEMBER_POINT_TYPE
         }
       },
       {
@@ -79,12 +76,16 @@ export const crudSchema = (): CrudSchema => {
         }
       },
       {
-        prop: 'points_after',
-        label: $t('member.points.table.columns.points_after'),
+        prop: 'balance',
+        label: $t('member.points.table.columns.balance'),
         minWidth: 120
       },
       {
         prop: 'source',
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.MEMBER_POINT_SOURCE
+        },
         label: $t('member.points.table.columns.source'),
         minWidth: 150,
         showOverflowTooltip: true
@@ -93,17 +94,22 @@ export const crudSchema = (): CrudSchema => {
         prop: 'remark',
         label: $t('member.points.table.columns.remark'),
         minWidth: 200,
-        showOverflowTooltip: true
+        showOverflowTooltip: true,
+        visible: false
       },
       {
         prop: 'operator',
         label: $t('member.points.table.columns.operator'),
-        minWidth: 100
+        minWidth: 100,
+        visible: false
       },
       {
-        prop: 'create_time',
+        prop: 'created_at',
         label: $t('member.points.table.columns.create_time'),
-        minWidth: 160
+        minWidth: 160,
+        formatter(row) {
+          return formatDateTime(row.created_at)
+        }
       }
     ],
     // 搜索表单配置
@@ -123,13 +129,9 @@ export const crudSchema = (): CrudSchema => {
         {
           prop: 'type',
           label: $t('member.points.search.type'),
-          component: 'Select',
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: $t('member.points.types.earn'), value: 1 },
-              { label: $t('member.points.types.consume'), value: 2 },
-              { label: $t('member.points.types.adjust'), value: 3 }
-            ],
+            code: DictEnum.MEMBER_POINT_TYPE,
             clearable: true
           }
         },
@@ -154,36 +156,30 @@ export const crudSchema = (): CrudSchema => {
         {
           prop: 'member_id',
           label: $t('member.points.form.member_id'),
-          component: 'Select',
+          component: 'ApiSelect',
           rules: [{ required: true, message: $t('member.points.form.rules_member_id') }],
           componentProps: {
-            api: '/api/member/user/list',
-            props: {
-              label: 'username',
-              value: 'id'
-            }
+            api: '/member/user',
+            requestMethod: 'get',
+            params: { format: 'select' }
           },
           colSpan: 24
         },
         {
           prop: 'type',
           label: $t('member.points.form.type'),
-          component: 'Radio',
+          component: 'ApiDict',
           rules: [{ required: true, message: $t('member.points.form.rules_type') }],
           componentProps: {
-            options: [
-              { label: $t('member.points.types.earn'), value: 1 },
-              { label: $t('member.points.types.consume'), value: 2 },
-              { label: $t('member.points.types.adjust'), value: 3 }
-            ]
+            code: DictEnum.MEMBER_POINT_TYPE
           },
-          defaultValue: 1,
           colSpan: 24
         },
         {
           prop: 'points',
           label: $t('member.points.form.points'),
           component: 'InputNumber',
+          defaultValue: 0,
           rules: [{ required: true, message: $t('member.points.form.rules_points') }],
           componentProps: {
             min: 1,
@@ -194,10 +190,11 @@ export const crudSchema = (): CrudSchema => {
         {
           prop: 'source',
           label: $t('member.points.form.source'),
-          component: 'Input',
+          component: 'ApiDict',
           componentProps: {
-            placeholder: '例如：签到、购物、兑换等'
+            code: DictEnum.MEMBER_POINT_SOURCE
           },
+          rules: [{ required: true, message: $t('member.points.form.rules_source') }],
           colSpan: 24
         },
         {
@@ -211,6 +208,9 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         }
       ]
+    },
+    dialogProps: {
+      width: '40%'
     }
   }
 }
