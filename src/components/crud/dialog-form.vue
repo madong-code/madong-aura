@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, reactive, nextTick } from 'vue';
 import { useDetailForm, useForm } from "@/components/form";
 import { useDialog } from "@/components/dialog";
 import { ElMessage } from "element-plus";
@@ -25,7 +26,7 @@ const dialogTitle = computed(() => {
 });
 const [Dialog, dialogApi] = useDialog({
   title: dialogTitle.value,
-  // dialogType: 'drawer',
+  dialogType: props.crudSchema.dialogProps?.dialogType || 'dialog',
   destroyOnClose: true,
   draggable: true,
   modal: true,
