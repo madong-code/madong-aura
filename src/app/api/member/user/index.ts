@@ -23,8 +23,8 @@ export const MemberService = {
     return request.put({ url: `${baseUrl}/disable`, data })
   },
 
-  assignTags(data: Record<string, any>): Promise<any> {
-    return request.put({ url: `${baseUrl}/assign-tags`, data })
+  assignTags(id: number | string, data: Record<string, any>): Promise<any> {
+    return request.put({ url: `${baseUrl}/${id}/assign-tags`, data })
   },
 
   getDetail(id: number): Promise<Member> {

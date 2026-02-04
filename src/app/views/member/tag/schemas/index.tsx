@@ -4,6 +4,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/app/enums'
 import { formatter } from 'element-plus'
 import { formatISODate } from '@/utils'
+import { fa } from 'element-plus/es/locale'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -134,7 +135,13 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: 120,
       gutter: 20,
       schema: [
-        {prop: 'id', label: $t('member.tag.form.id'), component: 'Input', show: false},
+        {
+          prop: 'id',
+          label: $t('member.tag.form.id'),
+          component: 'Input',
+          show: false,
+          ifDetail: false
+        },
         {
           prop: 'name',
           label: $t('member.tag.form.name'),

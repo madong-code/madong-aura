@@ -10,14 +10,15 @@
             "level_name": "会员等级",
             "balance": "余额",
             "points": "积分",
-            "status": "状态",
-            "create_time": "注册时间"
+            "enabled": "状态",
+            "created_at": "注册时间",
+            "tags": "会员标签"
         }
     },
     "search": {
         "username": "用户名",
         "phone": "手机号",
-        "status": "状态"
+        "enabled": "状态"
     },
     "form": {
         "username": "用户名",
@@ -26,17 +27,20 @@
         "email": "邮箱",
         "password": "密码",
         "level_id": "会员等级",
-        "status": "状态",
-        "rules_username": "请输入用户名"
+        "enabled": "状态",
+        "tags": "标签",
+        "assign_tags": "分配标签",
+        "adjust_points": "调整积分",
+        "points": "积分",
+        "tags_help": "选择用户标签",
+        "reset_password": "重置密码",
+        "rules_username": "请输入用户名",
+        "rules_reset_password": "请输入重置密码"
     },
     "actions": {
         "reset_password": "重置密码",
         "enable": "启用",
         "disable": "禁用",
         "assign_tags": "分配标签"
-    },
-    "status": {
-        "normal": "正常",
-        "disabled": "禁用"
     }
 }

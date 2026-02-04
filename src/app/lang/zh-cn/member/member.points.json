@@ -7,7 +7,7 @@
             "nickname": "昵称",
             "type": "操作类型",
             "points": "积分",
-            "points_after": "操作后积分",
+            "balance": "操作后积分",
             "source": "来源/用途",
             "remark": "备注",
             "operator": "操作人",
@@ -16,6 +16,7 @@
     },
     "search": {
         "username": "用户名",
+        "nickname": "会员昵称",
         "type": "操作类型",
         "date_range": "操作时间"
     },
@@ -24,7 +25,11 @@
         "type": "操作类型",
         "points": "积分",
         "source": "来源/用途",
-        "remark": "备注"
+        "remark": "备注",
+        "rules_member_id": "会员不能为空",
+        "rules_points": "积分不能为空",
+        "rules_type": "操作类型不能为空",
+        "rules_source": "来源/用途不能为空"
     },
     "types": {
         "earn": "获取",

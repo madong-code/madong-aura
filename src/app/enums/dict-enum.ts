@@ -49,7 +49,10 @@ export const DictEnum = {
   //平台管理
   SYS_DB_TYPE: 'system.DbType',
   SYS_ISOLATION_MODE: 'platform.IsolationMode',
-  SYS_TENANT_ADMIN_TYPE: 'system.TenantAdminType'
+  SYS_TENANT_ADMIN_TYPE: 'system.TenantAdminType',
+  //会员管理
+  MEMBER_POINT_TYPE: 'member.PointType',
+  MEMBER_POINT_SOURCE: 'member.PointSource',
 } as const
 
 export type DictEnumKey = keyof typeof DictEnum
