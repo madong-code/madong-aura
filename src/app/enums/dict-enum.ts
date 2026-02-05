@@ -6,7 +6,7 @@ export const DictEnum = {
   // 基础数据类
   SYS_LOCKED_STATUS: 'system.LockedStatus',
   SYS_ENABLED_STATUS: 'common.EnabledStatus',
-  SYS_YES_NO: 'system.YesNoStatus',
+  SYS_YES_NO: 'common.YesNoStatus',
   SYS_SEX: 'system.Sex',
 
   //数据字典
@@ -53,6 +53,10 @@ export const DictEnum = {
   //会员管理
   MEMBER_POINT_TYPE: 'member.PointType',
   MEMBER_POINT_SOURCE: 'member.PointSource',
+  //Web管理
+  WEB_MENU_CATEGORY: 'web.MenuCategory',
+  WEB_MENU_TYPE: 'web.MenuType',
+  WEB_MENU_TARGET: 'web.MenuTarget',
 } as const
 
 export type DictEnumKey = keyof typeof DictEnum

@@ -1,22 +1,25 @@
 import { CrudSchema } from '@/components/crud';
 import { LinkService } from '@/app/api/web';
 import { $t } from '@/locales';
+import { DictEnum } from '@/app/enums';
+import { h } from 'vue';
+
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: LinkService.list,
-    dialogTitle: $t('web.link.pageTitle'),
+    dialogTitle: $t('web.link.title'),
     crudApi: {
       // 新增接口
-      add: LinkService.add,
+      add: LinkService.create,
       // 修改接口
-      edit: LinkService.edit,
+      edit: LinkService.update,
       // 删除接口
       remove: LinkService.delete,
       // 详情接口
-      view: LinkService.detail
+      view: LinkService.get
     },
     // 使用crud
     useCrud: true,
@@ -27,50 +30,62 @@ export const crudSchema = (): CrudSchema => {
     // 是否有修改
     hasEdit: true,
     // 是否有详情
-    hasView: true,
+    hasView: false,
     // 新增权限码
-    addAuth: 'web:link:add',
+    addAuth: 'web:link:create',
     // 删除权限码
     removeAuth: 'web:link:delete',
     // 修改权限码
-    editAuth: 'web:link:edit',
+    editAuth: 'web:link:update',
     // 详情权限码
-    viewAuth: 'web:link:detail',
+    viewAuth: 'web:link:read',
     // 表格列定义
     columns: [
       {
         type: 'selection'
       },
       {
+        prop: 'logo',
+        label: $t('web.link.table.columns.logo'),
+        component: 'Image',
+        formatter: (row: any) =>{
+          return h('div', {}, [
+            h('img', {
+              src: row.logo,
+              alt: (row.logo || $t('web.link.table.columns.logo')),
+              width: 40,
+              height: 40
+            })
+          ])
+        }
+      },
+      {
         prop: 'name',
-        label: '链接名称',
-        minWidth: 120
+        label: $t('web.link.table.columns.name'),
+        minWidth: 120,
       },
       {
         prop: 'url',
-        label: '链接地址',
+        label: $t('web.link.table.columns.url'),
         minWidth: 200
       },
       {
-        prop: 'logo',
-        label: '链接图标',
+        prop: 'description',
+        label: $t('web.link.table.columns.description'),
         minWidth: 150
       },
       {
         prop: 'sort',
-        label: '排序',
+        label: $t('web.link.table.columns.sort'),
         minWidth: 80
       },
       {
-        prop: 'status',
-        label: '状态',
+        prop: 'enabled',
+        label: $t('web.link.table.columns.enabled'),
         minWidth: 100,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.status === 1 ? 'success' : 'danger'),
-            value: (row: any) => (row.status === 1 ? '启用' : '禁用')
-          }
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
         }
       }
     ],
@@ -82,23 +97,26 @@ export const crudSchema = (): CrudSchema => {
       labelWidth: '120px',
       schema: [
         {
-          prop: 'name',
-          label: '链接名称',
+          prop: 'LIKE_name',
+          label: $t('web.link.search.name'),
           component: 'Input',
-          colSpan: 8
+          colSpan: 6
+        },
+                {
+          prop: 'LIKE_url',
+          label: $t('web.link.search.url'),
+          component: 'Input',
+          colSpan: 6
         },
         {
-          prop: 'status',
-          label: '状态',
-          component: 'Select',
+          prop: 'EQ_enabled',
+          label: $t('web.link.search.enabled'),
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: '启用', value: 1 },
-              { label: '禁用', value: 0 }
-            ],
+            code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true
           },
-          colSpan: 8
+          colSpan: 6
         }
       ]
     },
@@ -118,36 +136,35 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           prop: 'name',
-          label: '链接名称',
+          label: $t('web.link.form.name'),
           component: 'Input',
-          rules: [{ required: true, message: '请输入链接名称' }],
+          rules: [{ required: true, message: $t('web.link.form.rules_name') }],
           componentProps: {
-            placeholder: '请输入链接名称'
+            placeholder: $t('web.link.form.rules_name')
           },
           colSpan: 24
         },
         {
           prop: 'url',
-          label: '链接地址',
+          label: $t('web.link.form.url'),
           component: 'Input',
-          rules: [{ required: true, message: '请输入链接地址' }],
+          rules: [{ required: true, message: $t('web.link.form.rules_url') }],
           componentProps: {
-            placeholder: '请输入链接地址'
+            placeholder: $t('web.link.form.rules_url')
           },
           colSpan: 24
         },
         {
           prop: 'logo',
-          label: '链接图标',
-          component: 'Input',
+          label: $t('web.link.form.logo'),
+          component: 'Avatar',
           componentProps: {
-            placeholder: '请输入链接图标地址'
           },
           colSpan: 24
         },
         {
           prop: 'sort',
-          label: '排序',
+          label: $t('web.link.form.sort'),
           component: 'InputNumber',
           componentProps: {
             min: 0
@@ -155,16 +172,28 @@ export const crudSchema = (): CrudSchema => {
           colSpan: 24
         },
         {
-          prop: 'status',
-          label: '状态',
-          component: 'Switch',
+          prop: 'enabled',
+          label: $t('web.link.form.enabled'),
+          component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
-            checkedChildren: '启用',
-            unCheckedChildren: '禁用'
+            code: DictEnum.SYS_ENABLED_STATUS,
+             isBtn: true,
+            renderType: 'RadioGroup'
           },
           colSpan: 24
-        }
+        },
+                {
+          prop: 'description',
+          label: $t('web.link.form.description'),
+          component: 'Input',
+          componentProps: {
+            placeholder: $t('web.link.form.description'),
+            type: 'textarea',
+            rows: 4
+          },
+          colSpan: 24
+        },
       ]
     }
   }

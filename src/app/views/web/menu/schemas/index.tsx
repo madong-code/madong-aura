@@ -1,28 +1,31 @@
-import { MenuService } from '@/app/api/web'  
+import { MenuService } from '@/app/api/web'
+import { DictEnum } from '@/app/enums'
 import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
 import { $t } from '@/locales'
+import api from '@/utils/http'
 import { h } from 'vue'
+
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: MenuService.list,
-    dialogTitle: $t('web.menu.pageTitle'),
+    dialogTitle: $t('web.menu.title'),
     tree: {
       id: 'id',
       pid: 'parent_id'
     },
     crudApi: {
       // 新增接口
-      add: MenuService.add,
+      add: MenuService.create,
       // 修改接口
-      edit: MenuService.edit,
+      edit: MenuService.update,
       // 删除接口
       remove: MenuService.delete,
       // 详情接口
-      view: MenuService.detail
+      view: MenuService.get
     },
     // 使用crud
     useCrud: true,
@@ -50,7 +53,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         prop: 'name',
-        label: '菜单名称',
+        label: $t('web.menu.table.columns.name'),
         formatter: (row) => {
           return row.icon
             ? h('span', {}, [
@@ -72,109 +75,116 @@ export const crudSchema = (): CrudSchema => {
         minWidth: 200
       },
       {
-        prop: 'type',
-        label: '菜单类型',
-        minWidth: 100,
-        cellRender: {
-          name: 'CellText',
-          props: {
-            value: (row: any) => {
-              const typeMap = {
-                1: '导航菜单',
-                2: '外部链接',
-                3: '单页面'
-              }
-              return typeMap[row.type] || row.type
-            }
-          }
+        label: $t('web.menu.table.columns.category'),
+        prop: 'category',
+        component: 'ApiDict',
+        align: 'center',
+        componentProps: {
+          code: DictEnum.WEB_MENU_CATEGORY,
         }
       },
       {
         prop: 'url',
-        label: '链接地址',
-        minWidth: 150
+        label: $t('web.menu.table.columns.url'),
+        minWidth: 100,
+        formatter(row) {
+          if (row.type === 1) {
+            return '/'
+          }
+        },
       },
       {
-        prop: 'icon',
-        label: '图标',
-        minWidth: 100
+        prop: 'sort',
+        label: $t('web.menu.table.columns.sort'),
+      },
+      {
+        prop: 'type',
+        label: $t('web.menu.table.columns.type'),
+        component: 'ApiDict',
+        align: 'left',
+        componentProps: {
+          code: DictEnum.WEB_MENU_TYPE,
+        }
       },
       {
         prop: 'target',
-        label: '打开方式',
-        minWidth: 100,
-        cellRender: {
-          name: 'CellText',
-          props: {
-            value: (row: any) => {
-              const targetMap = {
-                1: '当前窗口',
-                2: '新窗口'
-              }
-              return targetMap[row.target] || row.target
-            }
-          }
+        label: $t('web.menu.table.columns.target'),
+        align: 'center',
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.WEB_MENU_TARGET,
         }
       },
       {
         prop: 'is_show',
-        label: '是否显示',
-        minWidth: 100,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.is_show ? 'success' : 'danger'),
-            value: (row: any) => (row.is_show ? '是' : '否')
-          }
+        label: $t('web.menu.table.columns.is_show'),
+        align: 'center',
+        component: 'ApiDict',
+        componentProps: {
+          code: DictEnum.SYS_YES_NO,
         }
       },
       {
-        prop: 'status',
-        label: '状态',
-        minWidth: 100,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: (row: any) => (row.status ? 'success' : 'danger'),
-            value: (row: any) => (row.status ? '启用' : '禁用')
-          }
+        prop: 'enabled',
+        label: $t('web.menu.table.columns.enabled'),
+        component: 'ApiDict',
+        align: 'center',
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
         }
       },
-      {
-        prop: 'sort',
-        label: '排序',
-        minWidth: 80
-      }
+
     ],
     // 内置弹窗配置
     dialogProps: {
-      width: '600px',
-      dialogType: 'drawer'
+      width: '60%',
+      dialogType: 'drawer',
     },
     // 搜索表单配置
     searchFormSchema: {
       labelWidth: '120px',
       schema: [
         {
-          prop: 'name',
-          label: '菜单名称',
+          label: $t('web.menu.search.app'),
+          prop: 'app',
+          component: 'ApiSelect',
+          colSpan: 6,
+          rules: [],
+          componentProps: (_value) => {
+            return {
+              api: '/system/menu/app/list',
+              requestMethod: 'GET',
+            }
+
+          }
+        },
+        {
+          prop: 'EQ_category',
+           label: $t('web.menu.search.category'), 
+           component: 'ApiDict', 
+           colSpan: 6, 
+           componentProps: {
+          code: DictEnum.WEB_MENU_CATEGORY,
+        }
+      },
+        {
+          prop: 'LINK_name',
+          label: $t('web.menu.search.name'),
           component: 'Input',
-          colSpan: 8
+          colSpan: 6
         },
         {
           prop: 'type',
-          label: '菜单类型',
-          component: 'Select',
+          label: $t('web.menu.search.type'),
+          component: 'ApiDict',
           componentProps: {
-            options: [
-              { label: '导航菜单', value: 1 },
-              { label: '外部链接', value: 2 },
-              { label: '单页面', value: 3 }
-            ],
+            placeholder: $t('web.menu.form.placeholder_type'),
+            code: DictEnum.WEB_MENU_TYPE,
             clearable: true
           },
-          colSpan: 8
-        }
+          colSpan: 6
+        },
+                
       ]
     },
     // crud表单配置
@@ -182,7 +192,6 @@ export const crudSchema = (): CrudSchema => {
       showDefaultActions: true,
       labelWidth: '130px',
       schema: [
-        // 菜单ID（隐藏字段）
         {
           label: 'ID',
           prop: 'id',
@@ -191,115 +200,179 @@ export const crudSchema = (): CrudSchema => {
           show: false,
           ifDetail: false
         },
-        // 菜单名称
         {
-          label: '菜单名称',
+          label: $t('web.menu.form.category'),
+          prop: 'type',
+          component: 'ApiDict',
+          defaultValue: 1,
+          colSpan: 24,
+          rules: [],
+          componentProps: {
+            renderType: 'RadioGroup',
+            placeholder: $t('web.menu.form.placeholder_type'),
+            code: DictEnum.WEB_MENU_CATEGORY,
+            isBtn: true,
+          }
+        },
+        {
+          label: $t('web.menu.form.app'),
+          prop: 'app',
+          component: 'ApiSelect',
+          defaultValue: 'web',
+          colSpan: 24,
+          rules: [],
+          componentProps: (_value) => {
+            return {
+              api: '/system/menu/app/list',
+              requestMethod: 'GET',
+              placeholder: $t('web.menu.form.placeholder_app'),
+              style: {
+                width: '330px',
+              }
+            }
+
+          }
+        },
+        {
+          label: $t('web.menu.form.source'),
+          prop: 'source',
+          component: 'Input',
+          colSpan: 24,
+          defaultValue: 'create',
+          componentProps: {
+            placeholder: $t('web.menu.form.source'),
+            clearable: true
+          }
+        },
+        {
+          label: $t('web.menu.form.name'),
           prop: 'name',
           component: 'Input',
           colSpan: 24,
-          rules: [{ required: true, message: '请输入菜单名称' }],
+          rules: [{ required: true, message: $t('web.menu.form.rules_name') }],
           componentProps: {
-            placeholder: '请输入菜单名称',
+            placeholder: $t('web.menu.form.name'),
             clearable: true
           }
         },
-        // 菜单类型
         {
-          label: '菜单类型',
+          label: $t('web.menu.form.type'),
           prop: 'type',
-          component: 'Select',
+          component: 'ApiDict',
           defaultValue: 1,
           colSpan: 24,
-          rules: [{ required: true, message: '请选择菜单类型' }],
+          rules: [{ required: true, message: $t('web.menu.form.rules_type') }],
           componentProps: {
-            placeholder: '请选择菜单类型',
-            options: [
-              { label: '导航菜单', value: 1 },
-              { label: '外部链接', value: 2 },
-              { label: '单页面', value: 3 }
-            ],
+            code: DictEnum.WEB_MENU_TYPE,
+            placeholder: $t('web.menu.form.placeholder_type'),
             clearable: false
           }
         },
-        // 父菜单
         {
-          label: '父菜单',
-          prop: 'parent_id',
-          component: 'Select',
+          label: $t('web.menu.form.pid'),
+          prop: 'pid',
+          component: 'ApiTreeSelect',
           colSpan: 24,
-          componentProps: {
-            placeholder: '请选择父菜单',
-            options: [],
-            clearable: true
+          componentProps: (values) => {
+            return {
+              placeholder: $t('web.menu.form.placeholder_pid'),
+              clearable: true,
+              checkStrictly: true,
+              api: '/web/menu',
+              params: {
+                format: 'tree',
+                app: values.app || 'web'
+              },
+              labelField: 'name',
+              valueField: 'id'
+            }
           }
         },
-        // 链接地址
         {
-          label: '链接地址',
+          label: $t('web.menu.form.url'),
           prop: 'url',
           component: 'Input',
           colSpan: 24,
-          componentProps: {
-            placeholder: '请输入链接地址',
-            clearable: true
+          ifShow(values) {
+            return [2, 3, 4].includes(values.type)
+          },
+          componentProps: (values) => {
+            return {
+              placeholder: $t('web.menu.form.placeholder_url'),
+              clearable: true,
+              disabled: ![2, 3, 4].includes(values.type)
+            }
           }
         },
-        // 图标
         {
-          label: '图标',
-          prop: 'icon',
-          component: 'Input',
-          colSpan: 24,
-          componentProps: {
-            placeholder: '请输入图标类名',
-            clearable: true
-          }
-        },
-        // 打开方式
-        {
-          label: '打开方式',
+          label: $t('web.menu.form.target'),
           prop: 'target',
-          component: 'Select',
+          component: 'ApiDict',
           defaultValue: 1,
           colSpan: 24,
-          componentProps: {
-            placeholder: '请选择打开方式',
-            options: [
-              { label: '当前窗口', value: 1 },
-              { label: '新窗口', value: 2 }
-            ],
-            clearable: false
+          ifShow(values) {
+            return [2, 3, 4].includes(values.type)
+          },
+          componentProps: (values) => {
+            return {
+              code: DictEnum.WEB_MENU_TARGET,
+              placeholder: $t('web.menu.form.placeholder_target'),
+              disabled: ![2, 3, 4].includes(values.type),
+              clearable: false
+            }
           }
         },
-        // 是否显示
         {
-          label: '是否显示',
-          prop: 'is_show',
-          component: 'Switch',
-          defaultValue: 1,
-          colSpan: 24
+          label: $t('web.menu.form.icon'),
+          prop: 'icon',
+          component: 'IconPicker',
+          colSpan: 12,
+          componentProps: (values) => {
+            return {
+              class: 'w-full',
+              placeholder: $t('web.menu.form.placeholder_icon'),
+              clearable: true,
+            }
+          }
         },
-        // 状态
         {
-          label: '状态',
-          prop: 'status',
-          component: 'Switch',
-          defaultValue: 1,
-          colSpan: 24
-        },
-        // 排序
-        {
-          label: '排序',
+          label: $t('web.menu.form.sort'),
           prop: 'sort',
           component: 'InputNumber',
           defaultValue: 999,
-          colSpan: 24,
+          colSpan: 12,
           componentProps: {
-            placeholder: '请输入排序',
+            placeholder: $t('web.menu.form.placeholder_sort'),
             clearable: true,
             min: 0
           }
-        }
+        },
+        {
+          label: $t('web.menu.form.enabled'),
+          prop: 'enabled',
+          component: 'ApiDict',
+          defaultValue: 1,
+          colSpan: 12,
+          componentProps: {
+            placeholder: $t('web.menu.form.placeholder_enabled'),
+            code: DictEnum.SYS_ENABLED_STATUS,
+            isBtn: true,
+            renderType: 'RadioGroup'
+          }
+        },
+        {
+          label: $t('web.menu.form.is_show'),
+          prop: 'is_show',
+          component: 'ApiDict',
+          colSpan: 12,
+          defaultValue: 1,
+          componentProps: {
+            placeholder: $t('web.menu.form.placeholder_is_show'),
+            code: DictEnum.SYS_YES_NO,
+            isBtn: true,
+            renderType: 'RadioGroup'
+          }
+        },
       ]
     }
   }
