@@ -202,7 +202,7 @@ export const crudSchema = (): CrudSchema => {
         },
         {
           label: $t('web.menu.form.category'),
-          prop: 'type',
+          prop: 'category',
           component: 'ApiDict',
           defaultValue: 1,
           colSpan: 24,
@@ -281,7 +281,8 @@ export const crudSchema = (): CrudSchema => {
               api: '/web/menu',
               params: {
                 format: 'tree',
-                app: values.app || 'web'
+                app: values.app || 'web',
+                category: values.category || 1,
               },
               labelField: 'name',
               valueField: 'id'
@@ -344,7 +345,7 @@ export const crudSchema = (): CrudSchema => {
           componentProps: {
             placeholder: $t('web.menu.form.placeholder_sort'),
             clearable: true,
-            min: 0
+            min: -1
           }
         },
         {

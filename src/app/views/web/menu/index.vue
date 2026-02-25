@@ -10,5 +10,8 @@ import { crudSchema } from "./schemas";
 
 const [BasicCrud] = useCrud({
   ...crudSchema(),
+    beforeFetch: (params: any) => {
+    return { ...params, format: "table_tree", page: 1, limit: 9999 };
+  },
 });
 </script>
