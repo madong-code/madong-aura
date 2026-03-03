@@ -7,6 +7,7 @@
     "EffectScope": true,
     "ElLoading": true,
     "ElMessage": true,
+    "ElTag": true,
     "ExtractDefaultPropTypes": true,
     "ExtractPropTypes": true,
     "ExtractPublicPropTypes": true,

@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { ElNotification } from 'element-plus'
 //@ts-ignore
 import { Push } from '@/utils/push/push-vue.js'
-import { MessageService, type NotificationItem } from '@/app/api/setting/message'
+import { MessageService, type NotificationItem } from '@/api/setting/message'
 import { useUserStore } from './user'
 
 export const useNotifyStore = defineStore(

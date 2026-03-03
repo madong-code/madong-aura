@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "@/app/api/request";
+import { getApiBaseUrl } from "@/api/request";
 import { useSystemConfigStore } from "@/store/modules/system-config";
 
 /**

@@ -10,9 +10,9 @@
   import { useEventListener } from '@vueuse/core'
   import { mittBus } from '@/utils/sys'
   import type { Handler } from 'mitt'
-  import bp from '@/app/assets/images/ceremony/hb.png'
-  import sd from '@/app/assets/images/ceremony/sd.png'
-  import yd from '@/app/assets/images/ceremony/yd.png'
+  import bp from '@/assets/images/ceremony/hb.png'
+  import sd from '@/assets/images/ceremony/sd.png'
+  import yd from '@/assets/images/ceremony/yd.png'
 
   defineOptions({ name: 'ArtFireworksEffect' })
 

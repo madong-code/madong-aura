@@ -132,7 +132,7 @@
 <script setup lang="ts">
   import AppConfig from '@/config'
   import { useSettingStore } from '@/store/modules/setting'
-  import { MenuTypeEnum, MenuWidth } from '@/app/enums/appEnum'
+  import { MenuTypeEnum, MenuWidth } from '@/enums/appEnum'
   import { useMenuStore } from '@/store/modules/menu'
   import { isIframe } from '@/utils/navigation'
   import { handleMenuJump } from '@/utils/navigation'
