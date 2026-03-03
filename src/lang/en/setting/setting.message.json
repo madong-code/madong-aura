@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "My Messages",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "type": "Type",
+        "title": "Title",
+        "related_id": "Business ID",
+        "content": "Content",
+        "sender": {
+          "user_name": "Username",
+          "real_name": "User Nickname"
+        },
+        "status": "Read Status",
+        "priority": "Priority",
+        "channel": "Scene",
+        "created_date": "Receive Time",
+        "read_date": "Read Time",
+        "updated_date": "Update Time",
+        "operation": "Operation",
+        "actions": {
+          "edit": "Edit",
+          "delete": {
+            "label": "Delete",
+            "title": "Warm Reminder",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "type": "Type",
+      "title": "Title",
+      "content": "Content",
+      "enabled": "Status",
+      "priority": "Priority",
+      "placeholder": {
+        "type": "Please select type",
+        "title": "Please enter title",
+        "content": "Please fill in content",
+        "enabled": "Please select status",
+        "priority": "Please select priority"
+      }
+    }
+  },
+  "message": {
+    "success": "Success",
+    "error": "Failed"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "list": {
+    "title": "Dictionary Management",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "group_code": "Group",
+        "name": "Dictionary Name",
+        "code": "Dictionary Code",
+        "sort": "Sort",
+        "data_type": "Data Type",
+        "description": "Description",
+        "enabled": "Status",
+        "dict_item": "Dictionary Items",
+        "operation": "Operation",
+        "actions": {
+          "item": "Dictionary Items",
+          "edit": "Edit",
+          "delete": {
+            "label": "Delete",
+            "title": "Delete Confirmation",
+            "confirm": "Are you sure you want to delete?"
+          },
+          "status": {
+            "disabled": "Disable",
+            "enabled": "Enable",
+            "confirm": "Do you want to change the status of {0} to [{1}]?",
+            "title": "Change Status"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "Add",
+        "enum": "Enum Dictionary",
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "group_code": "Group",
+      "code": "Dictionary Code",
+      "name": "Dictionary Name",
+      "enabled": "Status",
+      "placeholder": {
+        "group_code": "Please select group",
+        "code": "Please enter dictionary code",
+        "name": "Please enter dictionary name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "group_code": "Group",
+      "name": "Dictionary Name",
+      "code": "Dictionary Code",
+      "sort": "Sort",
+      "data_type": "Data Type",
+      "description": "Description",
+      "enabled": "Status",
+      "remark": "Remark",
+      "placeholder": {
+        "group_code": "Please select group",
+        "code": "Please enter dictionary code",
+        "name": "Please enter dictionary name",
+        "sort": "Please enter dictionary sort",
+        "remark": "Please enter remark"
+      }
+    },
+    "help": {}
+  },
+  "enum": {
+    "title": "Enum Dictionary",
+    "columns": {
+      "dict_key": "Namespace",
+      "name": "Enum Name",
+      "case": "Unique ID",
+      "label": "Label",
+      "value": "Value",
+      "color": "Label Color"
+    }
+  },
+  "message": {
+    "success": "Success",
+    "error": "Failed"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "list": {
+    "title": "操作日志",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "name": "模块",
+        "app": "App",
+        "ip": "ip",
+        "ip_location": "ip地址",
+        "browser": "浏览器",
+        "os": "操作系统",
+        "url": "请求地址",
+        "class_name": "类名",
+        "action": "方法名称",
+        "method": "请求方式",
+        "param": "请求参数",
+        "result": "返回结果",
+        "user_name": "操作用户",
+        "created_date": "操作时间",
+        "operation": "操作",
+        "actions": {
+          "detail": "详情",
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "empty": {
+          "label": "清空",
+          "title": "温馨提示",
+          "confirm": "确认清空所有操作记录吗？"
+        },
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "user_name": "操作用户",
+      "ip": "请求ip",
+      "url": "请求地址",
+      "created_date": "操作时间",
+      "placeholder": {
+        "user_name": "请输入操作用户",
+        "ip": "请输入ip地址",
+        "url": "请输入请求地址"
+      }
+    }
+  },
+  "form": {
+    "detail": "详情",
+    "app": "应用名称",
+    "ip": "IP地址",
+    "url": "请求地址",
+    "class_name": "类名称",
+    "method": "请求方式",
+    "action": "操作方法",
+    "created_date": "操作时间",
+    "user_name": "操作用户",
+    "param": "请求参数",
+    "result": "返回结果"
+  }
+}

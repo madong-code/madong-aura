@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "我的消息",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "type": "类型",
+        "title": "标题",
+        "related_id": "业务编号",
+        "content": "内容",
+        "sender": {
+          "user_name": "用户名",
+          "real_name": "用户昵称"
+        },
+        "status": "是否已读",
+        "priority": "优先级",
+        "channel": "场景",
+        "created_date": "接收时间",
+        "read_date": "阅读时间",
+        "updated_date": "更新时间",
+        "operation": "操作",
+        "actions": {
+          "edit": "编辑",
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "type": "类型",
+      "title": "标题",
+      "content": "内容",
+      "enabled": "状态",
+      "priority": "优先级",
+      "placeholder": {
+        "type": "请选择类型",
+        "title": "请输入标题",
+        "content": "请填写内容",
+        "enabled": "请选择状态",
+        "priority": "请选择优先级"
+      }
+    }
+  },
+  "message": {
+    "success": "成功",
+    "error": "失败"
+  }
+}

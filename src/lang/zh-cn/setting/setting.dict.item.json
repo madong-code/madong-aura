@@ -1,0 +1,85 @@
+{
+  "list": {
+    "title": "字典项管理",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "label": "字典项标签",
+        "value": "字典项键值",
+        "code": "字典标识",
+        "sort": "排序",
+        "enabled": "状态",
+        "other_class": "其他css",
+        "color": "颜色",
+        "is_default": "默认值",
+        "remark": "备注",
+        "created_date": "创建日期",
+        "updated_date": "更新日期",
+        "operation": "操作",
+        "actions": {
+          "edit": "修改",
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "新增",
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "label": "字典标签",
+      "value": "字典键值",
+      "enabled": "状态",
+      "placeholder": {
+        "label": "请输入字典项标签",
+        "value": "请输入字典项值",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "label": "字典标签",
+      "value": "字典键值",
+      "code": "字典标识",
+      "sort": "排序",
+      "enabled": "状态",
+      "other_class": "其他css",
+      "color": "颜色",
+      "is_default": "默认值",
+      "remark": "备注",
+      "placeholder": {
+        "label": "请输入字典项标签",
+        "value": "请输入字典项键值",
+        "sort": "请输入字典项排序",
+        "other_class": "可使用tailwind类名 如bg-blue w-full h-full等",
+        "color": "请选择字典标签颜色",
+        "is_default": "请输入默认值",
+        "remark": "请输入备注"
+      },
+      "help": {
+        "other_class": "标签的css样式, 可添加已经编译的css类名"
+      }
+    },
+    "tag_style": {
+      "default": "默认值颜色",
+      "custom": "自定义颜色",
+      "placeholder": {
+        "default": "请选择标签样式"
+      }
+    }
+  },
+  "message": {
+    "success": "成功",
+    "error": "失败"
+  }
+}

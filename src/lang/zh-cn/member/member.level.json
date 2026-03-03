@@ -1,0 +1,41 @@
+{
+    "title": "会员等级",
+    "table": {
+        "columns": {
+            "id": "ID",
+            "name": "名称",
+            "level": "等级",
+            "icon": "等级图标",
+            "min_points": "最低积分",
+            "discount": "折扣率",
+            "member_count": "会员数量",
+            "enabled": "状态",
+            "created_at": "创建时间"
+        }
+    },
+    "search": {
+        "name": "等级名称",
+        "enabled": "状态"
+    },
+    "form": {
+        "name": "名称",
+        "level": "等级",
+        "icon": "等级图标",
+        "min_points": "最低积分",
+        "discount": "折扣率",
+        "sort": "排序",
+        "enabled": "状态",
+        "description": "等级描述",
+        "rules_name": "等级名称不能为空",
+        "rules_level": "等级不能为空",
+        "rules_min_points": "最低积分不能为空",
+        "rules_discount": "折扣率不能为空",
+        "rules_sort": "排序不能为空",
+        "rules_enabled": "状态不能为空",
+        "rules_description": "等级描述不能为空"
+    },
+    "actions": {
+        "view_members": "查看会员",
+        "check_delete": "检查删除"
+    }
+}

@@ -1,0 +1,66 @@
+{
+  "list": {
+    "title": "岗位管理",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "code": "岗位代码",
+        "name": "岗位名称",
+        "dept_name": "部门名称",
+        "sort": "排序",
+        "enabled": "状态",
+        "created_date": "创建时间",
+        "remark": "备注",
+        "operation": "操作",
+        "actions": {
+          "edit": "修改",
+          "delete": {
+            "label": "删除",
+            "title": "删除确认",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "新增",
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "code": "岗位代码",
+      "name": "岗位名称",
+      "enabled": "状态",
+      "placeholder": {
+        "code": "请输入岗位代码",
+        "name": "请输入岗位名称",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "code": "岗位代码",
+      "name": "岗位名称",
+      "dept_name": "部门名称",
+      "sort": "排序",
+      "enabled": "状态",
+      "remark": "备注",
+      "placeholder": {
+        "code": "请输入岗位标识",
+        "name": "请输入岗位名称",
+        "sort": "请输岗位排序值",
+        "dept_name": "请选择部门",
+        "remark": "请输入备注"
+      }
+    },
+    "help": {}
+  },
+  "message": {
+    "success": "成功",
+    "error": "失败"
+  }
+}

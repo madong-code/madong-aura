@@ -1,0 +1,126 @@
+{
+  "list": {
+    "title": "用户管理",
+    "table": {
+      "columns": {
+        "id": "id",
+        "user_name": "账号",
+        "real_name": "用户昵称",
+        "nick_name": "用户昵称",
+        "password": "用户密码",
+        "is_super": "是否管理员",
+        "mobile_phone": "手机号码",
+        "email": "邮箱",
+        "avatar": "头像",
+        "signed": "签名",
+        "dashboard": "首页",
+        "dept_id": "部门ID",
+        "dept_name": "部门名称",
+        "enabled": "状态",
+        "login_ip": "登录ip",
+        "login_time": "登录时间",
+        "backend_setting": "个人配置",
+        "tenants": "授权租户",
+        "sex": "性别",
+        "remark": "备注",
+        "birthday": "生日",
+        "tel": "电话",
+        "is_locked": "是否锁定",
+        "operation": "操作",
+        "actions": {
+          "edit": "修改",
+          "managed_tenants": "租户管理",
+          "locked": {
+            "label": "锁定",
+            "title": "温馨提示",
+            "confirm": "你要将 {name}的账号进行锁定?"
+          },
+          "un_locked": {
+            "label": "解锁",
+            "title": "温馨提示",
+            "confirm": "你要将 {name}的账号进行解锁?"
+          },
+          "reset_password": "重置密码",
+          "delete": {
+            "label": "删除",
+            "title": "删除确认",
+            "confirm": "是否确认删除?"
+          },
+          "status": {
+            "disabled": "禁用",
+            "enabled": "启用",
+            "confirm": "你要将 {name}的状态切换为 【{status}】吗？",
+            "title": "切换状态"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "新增",
+        "delete": {
+          "label": "删除",
+          "title": "删除确认",
+          "confirm": "确认删除选中的{length}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "user_name": "用户名",
+      "real_name": "姓名",
+      "mobile_phone": "手机号码",
+      "enabled": "状态",
+      "created_date": "日期",
+      "is_locked": "是否锁定",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "real_name": "请输入姓名",
+        "mobile_phone": "请输入手机号码",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "user_name": "账号",
+      "real_name": "用户昵称",
+      "nick_name": "用户昵称",
+      "password": "用户密码",
+      "mobile_phone": "手机号码",
+      "email": "邮箱",
+      "sex": "性别",
+      "enabled": "状态",
+      "dept_name": "部门名称",
+      "post_name": "岗位名称",
+      "role_name": "角色名称",
+      "login_date": "上次登录时间",
+      "avatar": "头像",
+      "remark": "备注",
+      "birthday": "生日",
+      "tel": "电话",
+      "is_locked": "是否锁定",
+      "address": "地址",
+      "signed": "签名"
+    },
+    "help": {
+      "post_name": "选择部门后, 将自动加载该部门下所有的岗位"
+    },
+    "placeholder": {
+      "user_name": "请输入账号",
+      "real_name": "请输入用户昵称",
+      "nick_name": "请输入用户昵称",
+      "password": "请输入用户密码",
+      "mobile_phone": "请输入手机号码",
+      "email": "请输入邮箱",
+      "dept_name": "请选择部门",
+      "post_name": "请选择岗位",
+      "role_name": "请选择角色",
+      "remark": "备注"
+    }
+  },
+  "success": {
+    "reset_password": "重置密码成功",
+    "un_locked": "解锁成功",
+    "locked": "锁定成功",
+    "delete": "删除成功",
+    "operate": "操作成功"
+  }
+}

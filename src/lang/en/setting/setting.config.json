@@ -1,0 +1,100 @@
+{
+  "site": {
+    "title": "Site Settings",
+    "open": "Site Open",
+    "url": "Site URL",
+    "name": "Site Name",
+    "logo": "Site Logo",
+    "network_security": "Network Record No.",
+    "description": "Site Description",
+    "record_no": "Website ICP",
+    "icp_url": "ICP URL",
+    "network_security_url": "Network Security Record Link",
+    "keywords": "Keywords",
+    "placeholder": {
+      "title": "Please enter site name",
+      "url": "Please enter backend site address",
+      "name": "Please enter site name",
+      "network_security": "Please enter network record no.",
+      "description": "Please fill in site description",
+      "record_no": "Please enter website ICP",
+      "icp_url": "Please enter ICP URL",
+      "network_security_url": "Please enter network security record link",
+      "keywords": "Please enter site keywords"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  },
+  "upload": {
+    "title": "Upload Settings",
+    "mode": "Upload Mode",
+    "single_limit": "Upload Size",
+    "total_limit": "File Limit",
+    "nums": "Quantity Limit",
+    "exclude": "Disallowed File Types",
+    "extend": {
+      "root": "Storage Directory",
+      "secretId": "secretId",
+      "accessKey": "accessKey",
+      "accessKeyId": "accessKeyId",
+      "secretKey": "secretKey",
+      "key": "key",
+      "accessKeySecret": "accessKeySecret",
+      "secret": "secret",
+      "bucket": "Bucket Name",
+      "dirname": "Directory Name",
+      "domain": "Domain Address",
+      "endpoint": "Endpoint",
+      "region": "Region",
+      "acl": "Acl",
+      "remark": "Remark"
+    },
+    "button": {
+      "submit": "Save",
+      "extend": "Extended Settings"
+    }
+  },
+  "email": {
+    "title": "Email Settings",
+    "Host": "SMTP Server",
+    "Port": "SMTP Port",
+    "Username": "SMTP Username",
+    "Password": "SMTP Password",
+    "SMTPSecure": "SMTP Authentication Method",
+    "From": "Default Sender",
+    "FromName": "Default Sender Name",
+    "test": "Test Address",
+    "button": {
+      "submit": "Save"
+    },
+    "tip": {
+      "test": "Send Test Email"
+    },
+    "placeholder": {
+      "Host": "Please enter SMTP server address",
+      "Port": "Please enter SMTP port",
+      "Username": "Please enter SMTP username",
+      "Password": "Please enter SMTP password",
+      "SMTPSecure": "Please enter SMTP authentication method",
+      "From": "Please enter default sender",
+      "FromName": "Please enter default sender name",
+      "test": "Please enter test address"
+    }
+  },
+  "sms": {
+    "title": "SMS Settings",
+    "access_key_id": "access_key_id",
+    "access_key_secret": "access_key_secret",
+    "enable": "Enable",
+    "sign_name": "sign_name",
+    "placeholder": {
+      "access_key_id": "Please enter access_key_id",
+      "access_key_secret": "Please enter access_key_secret",
+      "sign_name": "Please enter default signature"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  }
+}
