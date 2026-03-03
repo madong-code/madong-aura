@@ -76,7 +76,8 @@ export class RouteTransformer {
       // 顶级 iframe：用 Layout 包裹
       targetRoute.component = this.componentLoader.loadLayout()
       targetRoute.path = this.extractFirstSegment(sourceRoute.path || '')
-      targetRoute.name = ''
+      // 移除父路由的 name，避免与子路由冲突
+      targetRoute.name = undefined
 
       targetRoute.children = [
         {
@@ -103,7 +104,8 @@ export class RouteTransformer {
   ): void {
     converted.component = this.componentLoader.loadLayout()
     converted.path = this.extractFirstSegment(route.path || '')
-    converted.name = ''
+    // 移除父路由的 name，避免与子路由冲突
+    converted.name = undefined
     route.meta.isFirstLevel = true
 
     converted.children = [

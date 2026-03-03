@@ -27,9 +27,16 @@ export class AppsRouteManager {
     private setupHMR(): void {
         if (import.meta.hot) {
             // 监听路由配置文件变化
-            import.meta.hot.on('vite:beforeUpdate', () => {
-                // 清空缓存，确保下次获取时重新扫描
-                this.clearCache()
+            import.meta.hot.on('vite:beforeUpdate', (payload: any) => {
+                const updates = Array.isArray(payload) ? payload : [payload]
+                const changedFiles = updates
+                    .filter(u => u.url?.includes('/apps/') || u.url?.includes('/routes/'))
+                    .map(u => u.url)
+                
+                if (changedFiles.length > 0) {
+                    console.log(`[FeatureRouteManager] 检测到 ${changedFiles.length} 个 apps 路由文件变化`)
+                    this.clearCache()
+                }
             })
         }
     }
@@ -38,21 +45,27 @@ export class AppsRouteManager {
      * 获取所有功能模块路由（懒加载）
      */
     getAppsRoutes(): AppRouteRecord[] {
+        // 生产环境使用缓存
         if (this.cachedRoutes && !import.meta.env.DEV) {
             return this.cachedRoutes
         }
 
-        console.log('[FeatureRouteManager] 开始扫描功能模块路由...')
+        // 开发环境每次都获取最新
+        const startTime = performance.now()
         this.cachedRoutes = this.scanner.getAppsRoutes()
+        const duration = performance.now() - startTime
 
         if (this.cachedRoutes.length > 0) {
-            console.log(`[FeatureRouteManager] 成功加载 ${this.cachedRoutes.length} 个功能模块路由`)
-            this.cachedRoutes.forEach((route, index) => {
-                //@ts-ignore
-                console.log(`[${index + 1}] ${route?.name || '未命名'} - ${route.path}`)
-            })
+            console.log(`✅ [FeatureRouteManager] 加载 ${this.cachedRoutes.length} 个 apps 路由 (${duration.toFixed(0)}ms)`)
+            // 只在首次加载或数量变化时显示详情
+            if (import.meta.env.DEV && duration > 10) {
+                this.cachedRoutes.forEach((route, index) => {
+                    //@ts-ignore
+                    console.log(`  ${index + 1}. ${route?.name || '未命名'} → ${route.path}`)
+                })
+            }
         } else {
-            console.warn('[FeatureRouteManager] 未找到任何功能模块路由')
+            console.warn('[FeatureRouteManager] 未找到任何 apps 路由')
         }
 
         return this.cachedRoutes

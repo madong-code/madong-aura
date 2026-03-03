@@ -305,7 +305,8 @@ function handleIframeRoute(
     // 顶级 iframe：用 Layout 包裹
     targetRoute.component = LAYOUT_VIEW
     targetRoute.path = `/${(sourceRoute.path?.split('/')[1] || '').trim()}`
-    targetRoute.name = ''
+    // 移除父路由的 name，避免与子路由冲突
+    targetRoute.name = undefined
 
     targetRoute.children = [
       {
@@ -332,7 +333,8 @@ function handleLayoutRoute(
 ): void {
   converted.component = () => import('@/app/views/layout/index.vue')
   converted.path = `/${(route.path?.split('/')[1] || '').trim()}`
-  converted.name = ''
+  // 移除父路由的 name，避免与子路由冲突
+  converted.name = undefined
   route.meta.isFirstLevel = true
 
   converted.children = [

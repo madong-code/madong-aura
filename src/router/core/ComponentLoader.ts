@@ -46,7 +46,8 @@ export class ComponentLoader {
     maxSize: 100, // 最大缓存数量
     ttl: 5 * 60 * 1000, // 缓存有效期 5分钟
     enableStats: import.meta.env.DEV, // 开发环境启用统计
-    enabled: !import.meta.env.DEV // 开发环境禁用缓存
+    enabled: !import.meta.env.DEV, // 开发环境禁用缓存
+    devCacheTTL: 2000 // 开发环境短暂缓存 2秒，避免频繁热更新
   }
 
   constructor() {
@@ -82,11 +83,19 @@ export class ComponentLoader {
   private setupHMR(): void {
     if (import.meta.hot) {
       // 监听组件文件变化
-      import.meta.hot.on('vite:beforeUpdate', () => {
-        // 刷新模块映射，确保能够捕获到文件变化
-        this.refreshModulesMap()
-        // 清除缓存，确保下次加载时使用新的模块
-        this.clearCache()
+      import.meta.hot.on('vite:beforeUpdate', (payload: any) => {
+        const updates = Array.isArray(payload) ? payload : [payload]
+        const componentChanges = updates
+          .filter(u => u.url?.includes('.vue'))
+          .map(u => u.url)
+        
+        if (componentChanges.length > 0) {
+          console.log(`[ComponentLoader] 检测到 ${componentChanges.length} 个组件文件变化`)
+          // 刷新模块映射，确保能够捕获到文件变化
+          this.refreshModulesMap()
+          // 清除缓存，确保下次加载时使用新的模块
+          this.clearCache()
+        }
       })
 
       // 监听错误事件，防止热更新失败导致页面崩溃
@@ -110,9 +119,11 @@ export class ComponentLoader {
     // 性能监控开始时间
     const startTime = this.cacheConfig.enableStats ? performance.now() : 0
 
-    // 检查缓存（仅在缓存启用时）
-    if (this.cacheConfig.enabled) {
-      const cachedItem = this.getFromCache(cacheKey)
+    // 开发环境使用短暂缓存，避免频繁热更新闪烁
+    const shouldUseCache = this.cacheConfig.enabled || (import.meta.env.DEV && this.cacheConfig.devCacheTTL > 0)
+
+    if (shouldUseCache) {
+      const cachedItem = this.getFromCache(cacheKey, import.meta.env.DEV ? this.cacheConfig.devCacheTTL : undefined)
       if (cachedItem) {
         if (this.cacheConfig.enableStats) {
           this.recordPerformance(true, performance.now() - startTime)
@@ -123,7 +134,7 @@ export class ComponentLoader {
 
     // 只在开发环境下输出日志
     if (import.meta.env.DEV) {
-      console.log(`加载模块 ${finalModuleName} 的组件: ${componentPath}`)
+      console.log(`[ComponentLoader] 加载组件: ${finalModuleName}/${componentPath}`)
     }
 
     let componentLoader: () => Promise<any>
@@ -141,8 +152,8 @@ export class ComponentLoader {
       componentLoader = this.loadComponent(componentPath)
     }
 
-    // 缓存组件加载器（仅在缓存启用时）
-    if (this.cacheConfig.enabled) {
+    // 缓存组件加载器
+    if (shouldUseCache) {
       this.addToCache(cacheKey, componentLoader)
     }
 
@@ -163,7 +174,7 @@ export class ComponentLoader {
   /**
    * 从缓存获取组件
    */
-  private getFromCache(cacheKey: string): (() => Promise<any>) | null {
+  private getFromCache(cacheKey: string, customTTL?: number): (() => Promise<any>) | null {
     const cachedItem = this.componentCache.get(cacheKey)
 
     if (!cachedItem) {
@@ -171,7 +182,8 @@ export class ComponentLoader {
     }
 
     // 检查缓存是否过期
-    if (Date.now() - cachedItem.timestamp > this.cacheConfig.ttl) {
+    const ttl = customTTL ?? this.cacheConfig.ttl
+    if (Date.now() - cachedItem.timestamp > ttl) {
       this.componentCache.delete(cacheKey)
       return null
     }

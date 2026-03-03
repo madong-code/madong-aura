@@ -9,10 +9,10 @@
  */
 
 import type { AppRouteRecord } from '@/types/router'
-import { RouteValidator } from './RouteValidator'
 
 export class AppsModuleScanner {
-    private validator = new RouteValidator()
+    private scanCache: { routes: AppRouteRecord[], timestamp: number, files: string[] } | null = null
+    private readonly CACHE_TTL = 500 // 500ms 缓存有效期
 
     constructor() {
         // 开发环境下添加热更新支持
@@ -27,8 +27,16 @@ export class AppsModuleScanner {
     private setupHMR(): void {
         if (import.meta.hot) {
             // 监听路由配置文件变化
-            import.meta.hot.on('vite:beforeUpdate', () => {
-                console.log('[AppsModuleScanner] 检测到文件变化，准备重新扫描路由...')
+            import.meta.hot.on('vite:beforeUpdate', (payload: any) => {
+                const updates = Array.isArray(payload) ? payload : [payload]
+                const changedFiles = updates
+                    .filter(u => u.url?.includes('/apps/') || u.url?.includes('/routes/'))
+                    .map(u => u.url)
+                
+                if (changedFiles.length > 0) {
+                    console.log('[AppsModuleScanner] 检测到 apps 路由文件变化，准备重新扫描...')
+                    this.scanCache = null
+                }
             })
         }
     }
@@ -37,6 +45,16 @@ export class AppsModuleScanner {
      * 扫描 apps 目录并生成路由配置
      */
     scanApps(): AppRouteRecord[] {
+        // 开发环境下检查缓存
+        if (import.meta.env.DEV && this.scanCache) {
+            const now = Date.now()
+            if (now - this.scanCache.timestamp < this.CACHE_TTL) {
+                if (this.cacheStillValid()) {
+                    return this.scanCache.routes
+                }
+            }
+            this.scanCache = null
+        }
         const appsRoutes: AppRouteRecord[] = []
 
         try {
@@ -45,9 +63,11 @@ export class AppsModuleScanner {
                 eager: true
             })
 
+            const moduleFiles = Object.keys(featureModules)
+
             // 开发环境下输出调试信息
             if (import.meta.env.DEV) {
-                console.log('[AppsModuleScanner] 扫描到的模块路径:', Object.keys(featureModules))
+                console.log(`[AppsModuleScanner] 扫描到 ${moduleFiles.length} 个 apps 模块`)
             }
 
             for (const [modulePath, module] of Object.entries(featureModules)) {
@@ -59,19 +79,24 @@ export class AppsModuleScanner {
                         // 开发环境下输出成功信息
                         if (import.meta.env.DEV) {
                             //@ts-ignore
-                            console.log(`[AppsModuleScanner] 成功添加路由: ${routes.name || routes.path}`)
+                            console.log(`[AppsModuleScanner] ✓ ${routes.name || routes.path}`)
                         }
                     }
                 } catch (error) {
-                    console.warn(`[AppsModuleScanner] 处理模块路由失败: ${modulePath}`, error)
+                    console.warn(`[AppsModuleScanner] ✗ ${modulePath}`, error)
                 }
             }
         } catch (error) {
             console.error('[AppsModuleScanner] 扫描功能模块失败:', error)
         }
 
-        // 开发环境下输出最终结果
+        // 开发环境下更新缓存
         if (import.meta.env.DEV) {
+            this.scanCache = {
+                routes: appsRoutes,
+                timestamp: Date.now(),
+                files: Object.keys(import.meta.glob('../../apps/**/routes/index.ts', { eager: false }))
+            }
             console.log(`[AppsModuleScanner] 最终扫描结果: ${appsRoutes.length} 个路由`)
         }
 
@@ -79,9 +104,25 @@ export class AppsModuleScanner {
     }
 
     /**
+     * 检查缓存是否仍然有效
+     */
+    private cacheStillValid(): boolean {
+        if (!this.scanCache) return false
+        
+        const currentFiles = Object.keys(import.meta.glob('../../apps/**/routes/index.ts', { eager: false }))
+        
+        // 如果文件数量变化，缓存失效
+        if (currentFiles.length !== this.scanCache.files.length) {
+            return false
+        }
+
+        return true
+    }
+
+    /**
      * 处理单个模块的路由配置
      */
-    private processModuleRoutes(module: any, modulePath: string): AppRouteRecord | null {
+    private processModuleRoutes(module: any, _modulePath: string): AppRouteRecord | null {
         if (!module || typeof module !== 'object') {
             return null
         }
