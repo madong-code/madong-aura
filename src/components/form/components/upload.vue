@@ -27,7 +27,7 @@ const props = defineProps({
   action: {
     // 上传的地址
     type: String,
-    default: `${import.meta.env.VITE_API_URL}/system/fileInfo/upload`,
+    default: `${import.meta.env.VITE_API_URL}/files/upload-file`,
   },
   headers: {
     // 上传请求的 headers
