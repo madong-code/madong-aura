@@ -21,7 +21,7 @@ import { ElMessage, ElUpload } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { $t } from "@/locales";
 import { DocProjectService } from "../../api";
-import PosterUpload from "./components/poster-upload.vue";
+import PosterUpload from "@/apps/official/components/poster-upload.vue";
 
 const record = ref<any>({});
 const crudApi = ref<CrudMethods>();
@@ -38,7 +38,7 @@ const schema: FormItemSchema[] = [
   },
   {
     prop: "thumb",
-    label: "海报上传",
+    label: "缩略图",
     component: "Input",
     colSpan: 24,
   },
@@ -152,33 +152,6 @@ const schema: FormItemSchema[] = [
       rows: 4,
       type: "textarea",
       clearable: true,
-    },
-  },
-  {
-    label: "测试文本",
-    prop: "test_text",
-    component: "Input",
-    colSpan: 24,
-    defaultValue: "",
-    renderComponentContent: {
-      default: () => {
-        return h(
-          "div",
-          { style: { padding: "10px", backgroundColor: "#f0f9ff", borderRadius: "4px" } },
-          [
-            h(
-              "span",
-              { style: { color: "#1890ff", fontWeight: "bold" } },
-              "这是一个自定义渲染的文本输入框"
-            ),
-            h(
-              "p",
-              { style: { margin: "5px 0 0 0", fontSize: "12px", color: "#666" } },
-              "使用 renderComponentContent 自定义默认插槽"
-            ),
-          ]
-        );
-      },
     },
   },
 ];

@@ -46,14 +46,24 @@ export const crudSchema = (): CrudSchema => {
       {
         label: '排序',
         prop: 'sort',
-        align: 'center'
+        align: 'center',
+        width: 80
       },
       {
         prop: 'thumb',
         label: '缩略图',
         align: 'center',
         width: 80,
-        useSlot: true
+        formatter: (row: any) => {
+          return h('img', {
+            src: row.thumb,
+            alt: row.title,
+            style: {
+              width: '40px',
+              height: '40px'
+            }
+          })
+        }
       },
       {
         label: '唯一标识',
@@ -67,7 +77,7 @@ export const crudSchema = (): CrudSchema => {
       },
       {
         label: '阅读量',
-        prop: 'sort',
+        prop: 'read',
         align: 'center'
       },
       {
