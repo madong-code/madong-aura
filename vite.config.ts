@@ -33,6 +33,11 @@ export default ({ mode }: { mode: string }) => {
           target: VITE_API_PROXY_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/adminapi/, '/adminapi')
+        },
+        '/upload': {
+          target: VITE_API_PROXY_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/upload/, '/upload')
         }
       },
       host: true

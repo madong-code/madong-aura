@@ -5,7 +5,7 @@
   >
     <div class="flex-cc !hidden max-[1180px]:!flex ml-2 max-sm:ml-6">
       <ArtLogo class="icon" size="46" />
-      <h1 class="text-xl ont-mediumf ml-2">{{ AppConfig.systemInfo.name }}</h1>
+      <h1 class="text-xl ont-mediumf ml-2">{{ systemTitle }}</h1>
     </div>
 
     <div class="flex-cc gap-1.5 mr-2 max-sm:mr-5">
@@ -74,6 +74,7 @@
   import { useI18n } from 'vue-i18n'
   import { useSettingStore } from '@/store/modules/setting'
   import { useUserStore } from '@/store/modules/user'
+  import { useSystemConfigStore } from '@/store/modules/system-config'
   import { useHeaderBar } from '@/hooks/core/useHeaderBar'
   import { themeAnimation } from '@/utils/ui/animation'
   import { languageOptions } from '@/locales'
@@ -84,12 +85,16 @@
 
   const settingStore = useSettingStore()
   const userStore = useUserStore()
+  const systemConfigStore = useSystemConfigStore()
   const { isDark, systemThemeColor } = storeToRefs(settingStore)
   const { shouldShowThemeToggle, shouldShowLanguage } = useHeaderBar()
   const { locale } = useI18n()
 
   const mainColors = AppConfig.systemMainColor
   const color = systemThemeColor // css v-bind 使用
+
+  // 优先使用后台配置的系统标题
+  const systemTitle = computed(() => systemConfigStore.config.title || AppConfig.systemInfo.name)
 
   const changeLanguage = (lang: LanguageEnum) => {
     if (locale.value === lang) return

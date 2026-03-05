@@ -6,6 +6,8 @@ import { ElNotification } from 'element-plus'
 import { Push } from '@/utils/push/push-vue.js'
 import { MessageService, type NotificationItem } from '@/api/setting/message'
 import { useUserStore } from './user'
+import { getApiBaseUrl } from '@/api/request'
+import { buildStaticUrl } from '@/utils/url/static-resource'
 
 export const useNotifyStore = defineStore(
   'app-notify',
@@ -60,7 +62,7 @@ export const useNotifyStore = defineStore(
         })
         notificationList.value.unshift({
           id: String(data.id),
-          avatar: data?.sender?.avatar || '',
+          avatar: data?.sender?.avatar ? buildStaticUrl(data.sender.avatar) : '',
           date: data.created_date,
           isRead: isReadActionCaseInsensitive(data.status),
           message: data.content || '',
@@ -90,7 +92,7 @@ export const useNotifyStore = defineStore(
       const connection = new Push({
         url: wssUrl, // websocket地址
         app_key: appKey,
-        auth: '/plugin/webman/push/auth' // 订阅鉴权(仅限于私有频道)
+        auth: `${getApiBaseUrl()}/plugin/webman/push/auth` // 订阅鉴权(仅限于私有频道)
       })
 
       // 公共订阅-弃用
