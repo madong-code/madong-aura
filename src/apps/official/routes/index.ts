@@ -23,6 +23,18 @@ export default {
       }
     },
     {
+      path: 'doc-item',
+      name: 'OfficialDocItem',
+      component: '/doc-item/index',
+      meta: {
+        title: '文档章节',
+        icon: 'ri:list-unordered',
+        keepAlive: false,
+        isHide: true,
+        module: 'official'
+      }
+    },
+    {
       path: 'market',
       name: 'OfficialMarket',
       component: '/market/index',
