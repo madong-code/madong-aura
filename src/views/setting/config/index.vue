@@ -30,7 +30,7 @@
   const settingList = ref([
     {
       component: markRaw(
-        defineAsyncComponent(() => import('@/app/views/setting/config/modules/site.vue'))
+        defineAsyncComponent(() => import('@/views/setting/config/modules/site.vue'))
       ),
       key: '1',
       name: $t('setting.config.site.title'),
@@ -38,7 +38,7 @@
     },
     {
       component: markRaw(
-        defineAsyncComponent(() => import('@/app/views/setting/config/modules/upload.vue'))
+        defineAsyncComponent(() => import('@/views/setting/config/modules/upload.vue'))
       ),
       key: '2',
       name: $t('setting.config.upload.title'),
@@ -46,7 +46,7 @@
     },
     {
       component: markRaw(
-        defineAsyncComponent(() => import('@/app/views/setting/config/modules/email.vue'))
+        defineAsyncComponent(() => import('@/views/setting/config/modules/email.vue'))
       ),
       key: '3',
       name: $t('setting.config.email.title'),
@@ -54,7 +54,7 @@
     },
     {
       component: markRaw(
-        defineAsyncComponent(() => import('@/app/views/setting/config/modules/sms.vue'))
+        defineAsyncComponent(() => import('@/views/setting/config/modules/sms.vue'))
       ),
       key: '4',
       name: $t('setting.config.sms.title'),
