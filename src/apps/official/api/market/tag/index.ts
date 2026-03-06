@@ -1,7 +1,7 @@
 import BaseService from '@/api/core/base'
 import type { MarketTag, MarketTagSearchParams } from './types'
 
-const baseUrl = '/apps/tag'
+const baseUrl = '/market/tag'
 
 /**
  * 应用标签服务

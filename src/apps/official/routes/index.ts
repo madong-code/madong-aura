@@ -37,24 +37,82 @@ export default {
     {
       path: 'market',
       name: 'OfficialMarket',
-      component: '/market/index',
       meta: {
-        title: '市场管理',
-        icon: 'ri:list-unordered',
+        title: '应用市场',
+        icon: 'ant-design:appstore-add-outlined',
         keepAlive: false,
         module: 'official'
-      }
+      },
+      children: [
+        {
+          path: 'category',
+          name: 'OfficialMarketCategory',
+          component: '/market/category/index',
+          meta: {
+            title: '应用分类',
+            icon: 'ant-design:exception-outlined',
+            keepAlive: false,
+            module: 'official'
+          }
+        },
+        {
+          path: 'list',
+          name: 'OfficialMarketList',
+          component: '/market/apps/index',
+          meta: {
+            title: '应用列表',
+            icon: 'ant-design:ordered-list-outlined',
+            keepAlive: false,
+            module: 'official'
+          }
+        }
+
+      ]
     },
     {
-      path: 'qa',
-      name: 'OfficialQa',
-      component: '/ask/question/index',
+      path: '/ask',
+      name: 'OfficialAsk',
       meta: {
         title: '社区问答',
-        icon: 'ri:list-unordered',
+        icon: 'ant-design:question-circle-outlined',
         keepAlive: false,
         module: 'official'
-      }
+      },
+      children: [
+        {
+          path: '/ask/question',
+          name: 'OfficialQaQuestion',
+          component: '/ask/question/index',
+          meta: {
+            title: '问题列表',
+            icon: 'ant-design:ordered-list-outlined',
+            keepAlive: false,
+            module: 'official'
+          }
+        },
+        {
+          path: '/ask/category',
+          name: 'OfficialQaCategory',
+          component: '/ask/category/index',
+          meta: {
+            title: '分类管理',
+            icon: 'ant-design:exception-outlined',
+            keepAlive: false,
+            module: 'official'
+          }
+        },
+        {
+          path: '/ask/tag',
+          name: 'OfficialQaTag',
+          component: '/ask/tag/index',
+          meta: {
+            title: '标签管理',
+            icon: 'ant-design:tag-outlined',
+            keepAlive: false,
+            module: 'official'
+          }
+        }
+      ]
     },
 
   ]

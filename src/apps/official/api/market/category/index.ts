@@ -1,7 +1,7 @@
 import BaseService from '@/api/core/base'
 import type { MarketCategory } from './types'
 
-const baseUrl = '/apps/category'
+const baseUrl = '/market/category'
 
 /**
  * 应用分类服务
