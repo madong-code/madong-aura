@@ -1,5 +1,5 @@
 <template>
-  <div class="official-market-page art-full-height">
+  <div class="ask-tag-page art-full-height">
     <BasicCrud />
   </div>
 </template>
@@ -8,10 +8,10 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 
-const [BasicCrud] = useCrud({
+const [BasicCrud, crudApi] = useCrud({
   ...crudSchema(),
   beforeFetch: (params: any) => {
-    // return { ...params, format: "table_tree", page: 1, limit: 9999 };
+    return params;
   },
 });
 </script>
