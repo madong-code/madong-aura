@@ -29,7 +29,7 @@ export const crudSchema = (): CrudSchema => {
     // 是否有删除
     hasRemove: true,
     // 是否有修改
-    hasEdit: true,
+    hasEdit: false,
     // 是否有详情
     hasView: true,
     // 新增权限码
