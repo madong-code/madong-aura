@@ -1,9 +1,9 @@
 import { AppRouteRecord } from '@/types'
 import { AppRouteRecordRaw } from '@/utils/router'
-import { FeatureRouteManager } from '../core/FeatureRouteManager'
+import { AppsRouteManager } from '../core/AppsRouteManager'
 
 // 创建功能模块路由管理器实例
-const featureRouteManager = new FeatureRouteManager()
+const appsRouteManager = new AppsRouteManager()
 
 /**
  * 静态路由配置（不需要权限就能访问的路由）
@@ -26,37 +26,37 @@ export const staticRoutes: AppRouteRecordRaw[] = [
   {
     path: '/auth/login',
     name: 'Login',
-    component: () => import('@/app/views/auth/login/index.vue'),
+    component: () => import('@/views/auth/login/index.vue'),
     meta: { title: 'menus.login.title', isHideTab: true }
   },
   {
     path: '/auth/register',
     name: 'Register',
-    component: () => import('@/app/views/auth/register/index.vue'),
+    component: () => import('@/views/auth/register/index.vue'),
     meta: { title: 'menus.register.title', isHideTab: true }
   },
   {
     path: '/auth/forget-password',
     name: 'ForgetPassword',
-    component: () => import('@/app/views/auth/forget-password/index.vue'),
+    component: () => import('@/views/auth/forget-password/index.vue'),
     meta: { title: 'menus.forgetPassword.title', isHideTab: true }
   },
   {
     path: '/403',
     name: 'Exception403',
-    component: () => import('@/app/views/exception/403/index.vue'),
+    component: () => import('@/views/exception/403/index.vue'),
     meta: { title: '403', isHideTab: true }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'Exception404',
-    component: () => import('@/app/views/exception/404/index.vue'),
+    component: () => import('@/views/exception/404/index.vue'),
     meta: { title: '404', isHideTab: true }
   },
   {
     path: '/500',
     name: 'Exception500',
-    component: () => import('@/app/views/exception/500/index.vue'),
+    component: () => import('@/views/exception/500/index.vue'),
     meta: { title: '500', isHideTab: true }
   },
   {
@@ -113,7 +113,7 @@ export const localRoutes: AppRouteRecord[] = [
     },
   },
   // 自动扫描的功能模块-静态路由
-  ...featureRouteManager.getFeatureRoutes()
+  ...appsRouteManager.getAppsRoutes()
 ]
 
 

@@ -28,7 +28,7 @@
  * @module utils/ui/loading
  * @author Art Design Pro Team
  */
-import { fourDotsSpinnerSvg } from '@/app/assets/svg/loading'
+import { fourDotsSpinnerSvg } from '@/assets/svg/loading'
 
 /**
  * 获取当前主题对应的loading背景色

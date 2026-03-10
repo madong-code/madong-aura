@@ -21,7 +21,7 @@
         <div class="flex-c c-p" @click="toHome" v-if="isTopMenu">
           <ArtLogo class="pl-4.5" />
           <p v-if="width >= 1400" class="my-0 mx-2 ml-2 text-lg">
-            {{ AppConfig.systemInfo.name }}
+            {{ systemTitle }}
           </p>
         </div>
 
@@ -206,9 +206,10 @@
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useFullscreen, useWindowSize } from "@vueuse/core";
-import { LanguageEnum, MenuTypeEnum } from "@/app/enums/appEnum";
+import { LanguageEnum, MenuTypeEnum } from "@/enums/appEnum";
 import { useSettingStore } from "@/store/modules/setting";
 import { useUserStore } from "@/store/modules/user";
+import { useSystemConfigStore } from "@/store/modules/system-config";
 import { useMenuStore } from "@/store/modules/menu";
 import AppConfig from "@/config";
 import { languageOptions } from "@/locales";
@@ -230,6 +231,10 @@ const { width } = useWindowSize();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
 const menuStore = useMenuStore();
+const systemConfigStore = useSystemConfigStore();
+
+// 优先使用后台配置的系统标题
+const systemTitle = computed(() => systemConfigStore.config.title || AppConfig.systemInfo.name)
 
 // 顶部栏功能配置
 const {
