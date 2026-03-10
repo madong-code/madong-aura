@@ -201,8 +201,8 @@
 <script setup lang="ts">
   import { ElAlert, ElMessageBox, ElScrollbar } from 'element-plus'
   import { nextTick, onMounted, reactive, useTemplateRef } from 'vue'
-  import { TerminalService } from '@/app/api/tools/terminal'
-  import { DictEnum, taskStatus } from '@/app/enums/index'
+  import { TerminalService } from '@/api/tools/terminal'
+  import { DictEnum, taskStatus } from '@/enums/index'
   import { useTerminalStore } from '@/store/modules/terminal'
   import { $t } from '@/locales'
   import { RefreshRight, Delete } from '@element-plus/icons-vue'

@@ -65,7 +65,7 @@ src/app/views/{模块名}/{实体名}/
 
 ```typescript
 import { BaseService } from '@/utils/request'
-import { {EntityName}Row } from '@/app/api/{模块名}/models/{实体名}-model'
+import { {EntityName}Row } from '@/api/{模块名}/models/{实体名}-model'
 
 /**
  * {实体名} API 服务
@@ -98,7 +98,7 @@ export default {EntityName}Service
 
 ```typescript
 import { CrudSchema } from '@/components/crud'
-import { {EntityName}Service } from '@/app/api/{模块名}/{实体名}'
+import { {EntityName}Service } from '@/api/{模块名}/{实体名}'
 import { $t } from '@/locales'
 
 /**
@@ -477,7 +477,7 @@ const handleCreateSuccess = () => {
 
 ```typescript
 import { BaseService } from '@/utils/request'
-import { PostRow } from '@/app/api/system/models/post-model'
+import { PostRow } from '@/api/system/models/post-model'
 
 /**
  * 岗位管理 API 服务
@@ -493,7 +493,7 @@ export default PostService
 
 ```typescript
 import { CrudSchema } from '@/components/crud'
-import { PostService } from '@/app/api/system/post'
+import { PostService } from '@/api/system/post'
 import { $t } from '@/locales'
 
 /** 岗位管理 CRUD 配置 */
@@ -692,7 +692,7 @@ export const crudSchema = (): CrudSchema => {
 
 ```typescript
 import { BaseService } from '@/utils/request'
-import { DeptRow } from '@/app/api/system/models/dept-model'
+import { DeptRow } from '@/api/system/models/dept-model'
 
 /**
  * 部门管理 API 服务
@@ -714,7 +714,7 @@ export default DeptService
 
 ``tsx
 import { CrudSchema } from '@/components/crud'
-import { DeptService, getDeptTree } from '@/app/api/system/dept'
+import { DeptService, getDeptTree } from '@/api/system/dept'
 import { $t } from '@/locales'
 
 /** 部门管理 CRUD 配置 */

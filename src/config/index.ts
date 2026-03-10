@@ -29,7 +29,7 @@
  * @author Art Design Pro Team
  */
 
-import { MenuThemeEnum, MenuTypeEnum, SystemThemeEnum } from "@/app/enums/appEnum";
+import { MenuThemeEnum, MenuTypeEnum, SystemThemeEnum } from "@/enums/appEnum";
 import { SystemConfig } from "@/types/config";
 import { configImages } from "./assets/images";
 import fastEnterConfig from "./modules/fastEnter";

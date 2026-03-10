@@ -24,7 +24,7 @@
  * @author Art Design Pro Team
  */
 
-import { MenuTypeEnum, SystemThemeEnum } from '@/app/enums/appEnum'
+import { MenuTypeEnum, SystemThemeEnum } from '@/enums/appEnum'
 import { MenuThemeType, SystemThemeTypes } from '@/types/store'
 
 // 主题设置

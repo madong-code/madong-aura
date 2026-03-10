@@ -2,9 +2,9 @@
   import { useVModel } from '@vueuse/core'
   import { ElUpload as Upload } from 'element-plus'
 
-  import { FilesService } from '@/app/api/tools/files'
+  import { FilesService } from '@/api/tools/files'
   import { Icon } from '@/components/icon'
-  import { fullUrl, stripBaseUrl } from '@/utils'
+  import { buildStaticUrl, extractRelativePath } from '@/utils/url/static-resource'
 
   defineOptions({
     inheritAttrs: false
@@ -30,12 +30,12 @@
 
   // 处理显示URL（确保回显时带公共路径）
   const displayUrl = computed(() => {
-    return props.autoHandleBaseUrl && mValue.value ? fullUrl(mValue.value) : mValue.value
+    return props.autoHandleBaseUrl && mValue.value ? buildStaticUrl(mValue.value) : mValue.value
   })
 
   // 处理存储URL（确保存储时无公共路径）
   const getStorableUrl = (url: string) => {
-    return props.autoHandleBaseUrl ? stripBaseUrl(url) : url
+    return props.autoHandleBaseUrl ? extractRelativePath(url) : url
   }
 
   const customRequest = async (e: any) => {

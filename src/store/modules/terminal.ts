@@ -3,8 +3,8 @@ import { defineStore } from 'pinia'
 
 import { timestampFormat, uuid } from '@/utils'
 import { $t } from '@/locales'
-import { Terminal, TerminalService } from '@/app/api/tools/terminal'
-import { taskStatus } from '@/app/enums/terminal-enum'
+import { Terminal, TerminalService } from '@/api/tools/terminal'
+import { taskStatus } from '@/enums/terminal-enum'
 import { ElNotification } from 'element-plus'
 
 export const useTerminalStore = defineStore(
@@ -186,7 +186,7 @@ export const useTerminalStore = defineStore(
       command: string,
       blockOnFailure = true,
       extend = '',
-      callback: Function = () => {}
+      callback: Function = () => { }
     ) {
       if (!state.show) {
         toggleDot(true)
@@ -235,7 +235,7 @@ export const useTerminalStore = defineStore(
       command: string,
       blockOnFailure = true,
       extend = '',
-      callback: Function = () => {}
+      callback: Function = () => { }
     ) {
       addTask(command + '.' + state.packageManager, blockOnFailure, extend, callback)
     }
