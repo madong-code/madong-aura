@@ -7,7 +7,7 @@
 <script setup lang="tsx">
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
-import { PluginDevelopRow } from "@/api/tools/plugin-develop/model";
+import { PluginDevelopRow } from "@/api/tools/apps/develop/model";
 
 const [BasicCrud] = useCrud({
   ...crudSchema(),

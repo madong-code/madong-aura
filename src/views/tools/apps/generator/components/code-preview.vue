@@ -49,7 +49,7 @@
   import { ref } from 'vue'
   import { useDialog } from '@/components/dialog'
   import { CrudMethods, useCrud } from '@/components/crud'
-  import { GeneratorCodeService } from '@/api/tools/generator'
+  import { GeneratorCodeService } from '@/api/tools/apps/generator'
   import { $t } from '@/locales'
   import { Folder, FolderOpened, Document } from '@element-plus/icons-vue'
   import CodeHighlight from '@/components/code/index.vue'

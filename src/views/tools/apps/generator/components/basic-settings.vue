@@ -83,7 +83,7 @@
 
 <script lang="ts" setup>
   import { Grid } from '@element-plus/icons-vue'
-  import { GeneratorCodeService } from '@/api/tools/generator'
+  import { GeneratorCodeService } from '@/api/tools/apps/generator'
   import { debounce } from 'lodash-es'
 
   interface BasicSettingsData {

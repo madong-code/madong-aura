@@ -61,7 +61,7 @@
   const route = useRoute()
   const router = useRouter()
 
-  import { GeneratorCodeService } from '@/api/tools/generator'
+  import { GeneratorCodeService } from '@/api/tools/apps/generator'
 
   const activeName = ref('basic')
 

@@ -3,7 +3,7 @@ import { $t } from '@/locales'
 import { DictEnum } from '@/enums'
 import { Recordable } from '@/types'
 import { Icon } from '@/components/icon'
-import { GeneratorCodeService } from '@/api/tools/generator'
+import { GeneratorCodeService } from '@/api/tools/apps/generator'
 
 
 // crud配置 - 函数方式

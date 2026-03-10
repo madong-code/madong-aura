@@ -1,5 +1,5 @@
 import request from '@/utils/http'
-import BaseService from '../../core/base'
+import BaseService from '../../../core/base'
 
 
 const baseUrl = '/generator/code'

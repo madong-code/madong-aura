@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { TableHeader, ModuleList, UpgradeLog, ModuleDetail } from "./components";
-import FeaturesService from "@/api/tools/features";
+import AppsService from "@/api/tools/apps/module";
 
 // 状态管理
 const searchKeyword = ref("");
@@ -79,7 +79,7 @@ const fetchModules = async () => {
   loading.value = true;
   try {
     const params = buildApiParams();
-    const response = await FeaturesService.getFeaturesList(params);
+    const response = await AppsService.getFeaturesList(params);
     const features = response?.items || [];
     modulesData.value = features;
     totalCount.value = response.total || features.length;
@@ -91,7 +91,7 @@ const fetchModules = async () => {
 // 显示模块详情
 const showModuleDetail = async (module: any) => {
   try {
-    const response = await FeaturesService.getFeaturesDetail(module.name);
+    const response = await AppsService.getFeaturesDetail(module.name);
     selectedModuleForDetail.value = { ...module, ...response };
     moduleDetailRef.value?.openDialog();
   } catch (error) {
@@ -104,7 +104,7 @@ const showModuleDetail = async (module: any) => {
 // 显示更新记录
 const showUpgradeLog = async (module: any) => {
   try {
-    const response = await FeaturesService.getFeaturesUpgradeLogs(module.name);
+    const response = await AppsService.getFeaturesUpgradeLogs(module.name);
     selectedModuleForUpgrade.value = { ...module, upgradeLogs: response };
     upgradeLogRef.value?.openDialog();
   } catch (error) {
@@ -136,7 +136,7 @@ const handleRefresh = async () => {
 // 下载模块
 const handleDownload = async (module: any) => {
   try {
-    const response = await FeaturesService.downloadFeatures({
+    const response = await AppsService.downloadFeatures({
       name: module.name,
       version: module.version,
     });
@@ -155,7 +155,7 @@ const handleDownload = async (module: any) => {
 // 卸载模块
 const handleUninstall = async (module: any) => {
   try {
-    const response = await FeaturesService.uninstallFeatures({
+    const response = await AppsService.uninstallFeatures({
       name: module.name,
     });
 

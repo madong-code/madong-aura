@@ -8,7 +8,7 @@
 <script setup lang="tsx">
   import { useDialog } from '@/components/dialog'
   import { CrudMethods, useCrud } from '@/components/crud'
-  import { GeneratorCodeService } from '@/api/tools/generator'
+  import { GeneratorCodeService } from '@/api/tools/apps/generator'
   import { $t } from '@/locales'
 
   // Emits定义：向父组件发送选中表数据事件

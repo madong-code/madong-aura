@@ -1,4 +1,4 @@
-import BaseService from '@/api/core/base'
+import BaseService from "@/api/core/base";
 import type {
     FeaturesRow,
     FeaturesSearchParams,
@@ -9,16 +9,16 @@ import type {
     FeaturesDownloadParams,
     FeaturesOperationResponse,
     FeaturesStatistics,
-    FeaturesUpgradeRecord
-} from './model'
-import request from '@/utils/http'
+    FeaturesUpgradeRecord,
+} from "./model";
+import request from "@/utils/http";
 
-const baseUrl = '/plugin'
+const baseUrl = "/plugin";
 
 /**
  * 功能模块API服务
  */
-export const FeaturesService = {
+export const AppsService = {
     // ...BaseService<FeaturesRow>({
     //     baseUrl,
     //     forbiddenMethods: ['export','changStatus','remove','delete']
@@ -31,8 +31,8 @@ export const FeaturesService = {
     getFeaturesList(params: FeaturesSearchParams): Promise<FeaturesListResponse> {
         return request.get<FeaturesListResponse>({
             url: baseUrl,
-            params
-        })
+            params,
+        });
     },
 
     /**
@@ -41,8 +41,8 @@ export const FeaturesService = {
      */
     getFeaturesDetail(name: string | number): Promise<FeaturesDetailResponse> {
         return request.get<FeaturesDetailResponse>({
-            url: `${baseUrl}/detail/${name}`
-        })
+            url: `${baseUrl}/detail/${name}`,
+        });
     },
 
     /**
@@ -52,8 +52,8 @@ export const FeaturesService = {
     installFeatures(data: FeaturesInstallParams): Promise<FeaturesOperationResponse> {
         return request.post<FeaturesOperationResponse>({
             url: `${baseUrl}/install`,
-            data
-        })
+            data,
+        });
     },
 
     /**
@@ -63,8 +63,8 @@ export const FeaturesService = {
     uninstallFeatures(data: FeaturesUninstallParams): Promise<FeaturesOperationResponse> {
         return request.post<FeaturesOperationResponse>({
             url: `${baseUrl}/uninstall`,
-            data
-        })
+            data,
+        });
     },
 
     /**
@@ -74,8 +74,8 @@ export const FeaturesService = {
     downloadFeatures(data: FeaturesDownloadParams): Promise<FeaturesOperationResponse> {
         return request.post<FeaturesOperationResponse>({
             url: `${baseUrl}/${data.features_id}/download`,
-            data
-        })
+            data,
+        });
     },
 
     /**
@@ -84,9 +84,9 @@ export const FeaturesService = {
      */
     getFeaturesUpgradeLogs(name: string | number): Promise<FeaturesUpgradeRecord> {
         return request.get<FeaturesUpgradeRecord>({
-            url: `${baseUrl}/${name}/upgrade-logs`
-        })
+            url: `${baseUrl}/${name}/upgrade-logs`,
+        });
     },
-}
+};
 
-export default FeaturesService
+export default AppsService;
