@@ -1,4 +1,5 @@
 import { h } from 'vue'
+import { ElTag } from 'element-plus'
 import { CrudSchema } from '@/components/crud'
 import { MemberService } from '@/api/member'
 import { $t } from '@/locales'
@@ -85,6 +86,8 @@ export const crudSchema = (): CrudSchema => {
       {
         prop: 'tag',
         label: $t('member.user.table.columns.tags'),
+        visible: false,
+        minWidth: 200,
         formatter(row) {
           return h(
             'div',
@@ -93,12 +96,12 @@ export const crudSchema = (): CrudSchema => {
             },
             row.tags.map((item: any) =>
               h(
-                'el-tag',
+                ElTag,
                 {
                   size: 'small',
-                  class: 'bg-blue-100 text-blue-800'
+                  type: 'primary'
                 },
-                item.name
+                () => item.name
               )
             )
           )

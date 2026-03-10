@@ -1,13 +1,13 @@
-import avatar1 from '@features/demo/assets/images/avatar/avatar1.webp'
-import avatar2 from '@features/demo/assets/images/avatar/avatar2.webp'
-import avatar3 from '@features/demo/assets/images/avatar/avatar3.webp'
-import avatar4 from '@features/demo/assets/images/avatar/avatar4.webp'
-import avatar5 from '@features/demo/assets/images/avatar/avatar5.webp'
-import avatar6 from '@features/demo/assets/images/avatar/avatar6.webp'
-import avatar7 from '@features/demo/assets/images/avatar/avatar7.webp'
-import avatar8 from '@features/demo/assets/images/avatar/avatar8.webp'
-import avatar9 from '@features/demo/assets/images/avatar/avatar9.webp'
-import avatar10 from '@features/demo/assets/images/avatar/avatar10.webp'
+import avatar1 from '@/apps/demo/assets/images/avatar/avatar1.webp'
+import avatar2 from '@/apps/demo/assets/images/avatar/avatar2.webp'
+import avatar3 from '@/apps/demo/assets/images/avatar/avatar3.webp'
+import avatar4 from '@/apps/demo/assets/images/avatar/avatar4.webp'
+import avatar5 from '@/apps/demo/assets/images/avatar/avatar5.webp'
+import avatar6 from '@/apps/demo/assets/images/avatar/avatar6.webp'
+import avatar7 from '@/apps/demo/assets/images/avatar/avatar7.webp'
+import avatar8 from '@/apps/demo/assets/images/avatar/avatar8.webp'
+import avatar9 from '@/apps/demo/assets/images/avatar/avatar9.webp'
+import avatar10 from '@/apps/demo/assets/images/avatar/avatar10.webp'
 
 export interface User {
   id: number

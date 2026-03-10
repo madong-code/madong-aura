@@ -3,7 +3,6 @@
     <BasicCrud />
     <AuthMenu ref="authMenuRef" />
     <UserRole ref="userRoleRef" />
-    <DataScope ref="dataScopeRef" />
   </div>
 </template>
 
@@ -11,7 +10,7 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import AuthMenu from "./auth-menu.vue";
-import UserRole from "./user-role.vue";
+import UserRole from "./user-tag.vue";
 
 const authMenuRef = ref();
 const userRoleRef = ref();
@@ -28,7 +27,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1010,
       link: true,
       icon: "ant-design:setting-outlined",
-      auth: "system:auth:save_role_menu",
+      auth: "member:auth:save_tag_menu",
       dialogRef: authMenuRef,
       dialogParams(record) {
         return {
@@ -45,7 +44,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1010,
       link: true,
       icon: "ant-design:team-outlined",
-      auth: "system:auth:user_list_by_role_id",
+      auth: "member:auth:user_list_by_tab_id",
       dialogRef: userRoleRef,
       dialogParams(record) {
         return {

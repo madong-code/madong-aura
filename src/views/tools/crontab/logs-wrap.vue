@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import CrontabLogIndex from "@/app/views/tools/crontab-log/index.vue";
+import CrontabLogIndex from "@/views/tools/crontab-log/index.vue";
 import { CrudMethods } from "@/components/crud";
 import { useDialog } from "@/components/dialog";
 

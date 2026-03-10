@@ -12,7 +12,7 @@ import { useMenuStore } from '@/store/modules/menu'
 /**
  * 动态导入 app/views 目录下所有 .vue 组件
  */
-const appModules: Record<string, () => Promise<any>> = import.meta.glob('@/app/views/**/*.vue', { eager: false })
+const appModules: Record<string, () => Promise<any>> = import.meta.glob('@/views/**/*.vue', { eager: false })
 
 /**
  * 动态导入 features 模块下所有 .vue 组件
@@ -189,8 +189,8 @@ function loadComponent(componentPath: string, routeName: string, meta: any): () 
  */
 function loadAppComponent(componentPath: string, routeName: string): () => Promise<any> {
   // 构建可能的路径
-  const fullPath = `@/app/views${componentPath}.vue`
-  const fullPathWithIndex = `@/app/views${componentPath}/index.vue`
+  const fullPath = `@/views${componentPath}.vue`
+  const fullPathWithIndex = `@/views${componentPath}/index.vue`
 
   // 先尝试直接路径，再尝试添加/index的路径
   const module = appModules[fullPath] || appModules[fullPathWithIndex]
@@ -331,7 +331,7 @@ function handleLayoutRoute(
   route: AppRouteRecord,
   component: string | undefined
 ): void {
-  converted.component = () => import('@/app/views/layout/index.vue')
+  converted.component = () => import('@/views/layout/index.vue')
   converted.path = `/${(route.path?.split('/')[1] || '').trim()}`
   // 移除父路由的 name，避免与子路由冲突
   converted.name = undefined

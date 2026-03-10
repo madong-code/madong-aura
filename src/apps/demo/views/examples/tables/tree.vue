@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { useTable } from "@/hooks/core/useTable";
 import { UserService } from "@/api/system/user";
-import UserSearch from "@features/demo/views/system/user/modules/user-search.vue";
+import UserSearch from "@apps/demo/views/system/user/modules/user-search.vue";
 
 defineOptions({ name: "TreeTable" });
 

@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import "@features/demo/assets/styles/core/md.scss";
-import "@features/demo/assets/styles/custom/one-dark-pro.scss";
+import "@/apps/demo/assets/styles/core/md.scss";
+import "@/apps/demo/assets/styles/custom/one-dark-pro.scss";
 import { useCommon } from "@/hooks/core/useCommon";
 import axios from "axios";
 

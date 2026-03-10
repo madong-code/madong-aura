@@ -6,16 +6,25 @@
           <template #icon>
             <Icon icon="ant-design:folder-open-outlined" />
           </template>
-          展开/折叠<ElIcon class="el-icon--right"
+          {{ $t("member.tag.auth.expand.title")
+          }}<ElIcon class="el-icon--right"
             ><Icon icon="ant-design:down-outlined"
           /></ElIcon>
         </ElButton>
         <template #dropdown>
           <ElDropdownMenu>
-            <ElDropdownItem command="expandAll">展开所有</ElDropdownItem>
-            <ElDropdownItem command="expandLevel1">展开一级</ElDropdownItem>
-            <ElDropdownItem command="expandLevel2">展开二级</ElDropdownItem>
-            <ElDropdownItem command="collapseAll">折叠所有</ElDropdownItem>
+            <ElDropdownItem command="expandAll">{{
+              $t("member.tag.auth.expand.expand_all")
+            }}</ElDropdownItem>
+            <ElDropdownItem command="expandLevel1">{{
+              $t("member.tag.auth.expand.expand_level1")
+            }}</ElDropdownItem>
+            <ElDropdownItem command="expandLevel2">{{
+              $t("member.tag.auth.expand.expand_level2")
+            }}</ElDropdownItem>
+            <ElDropdownItem command="collapseAll">{{
+              $t("member.tag.auth.expand.collapse_all")
+            }}</ElDropdownItem>
           </ElDropdownMenu>
         </template>
       </ElDropdown>
@@ -30,17 +39,41 @@
       <!-- 使用插槽自定义节点内容 -->
       <template #default="{ node, data }">
         <span>
-          {{ data.title }}
+          {{ data.name }}
           <el-tag
             :style="{
               marginLeft: '8px',
-              backgroundColor: getTagColor(data.type),
+              backgroundColor: getTagColor(data.category),
               color: 'white',
               border: 'none',
             }"
             size="small"
           >
-            {{ getTagName(data.type) }}
+            {{ getTagName(data.category) }}
+          </el-tag>
+          <el-tag
+            v-if="data.code"
+            :style="{
+              marginLeft: '4px',
+              backgroundColor: '#F56C6C',
+              color: 'white',
+              border: 'none',
+            }"
+            size="small"
+          >
+            {{ $t("member.tag.auth.tag.auth") }}
+          </el-tag>
+          <el-tag
+            v-if="!data.code"
+            :style="{
+              marginLeft: '4px',
+              backgroundColor: '#909399',
+              color: 'white',
+              border: 'none',
+            }"
+            size="small"
+          >
+            {{ $t("member.tag.auth.tag.public") }}
           </el-tag>
         </span>
       </template>
@@ -50,11 +83,12 @@
 <script setup lang="tsx">
 import { useDialog } from "@/components/dialog";
 import { CrudMethods } from "@/components/crud";
-import { MenuService } from "@/api/system/menu";
-import { AuthService } from "@/api/system/auth";
+import { MenuService } from "@/api/web/menu";
+import { AuthService } from "@/api/member/auth";
 import { getTreeLeafNodeIds } from "@/utils/tool";
 import { Icon } from "@/components/icon";
 import { UserService } from "@/api/system/user";
+import { $t } from "@/locales";
 const record = ref<any>({});
 const crudApi = ref<CrudMethods>();
 const treeData = ref<any>([]);
@@ -70,12 +104,10 @@ const defaultProps = ref({
 // 获取类型对应的标签名称
 const getTagName = (type: number) => {
   const typeConfig: Record<number, string> = {
-    1: "目录",
-    2: "菜单",
-    3: "按钮",
-    4: "权限",
+    1: $t("member.tag.auth.tag.nav_menu"),
+    2: $t("member.tag.auth.tag.member_menu"),
   };
-  return typeConfig[type] || "未知";
+  return typeConfig[type] || $t("member.tag.auth.tag.unknown");
 };
 
 // 获取类型对应的标签颜色
@@ -90,7 +122,7 @@ const getTagColor = (type: number) => {
 };
 
 const [Dialog, dialogApi] = useDialog({
-  title: "授权菜单",
+  title: $t("member.tag.auth.title"),
   width: "50%",
   dialogType: "drawer",
   modal: true,
@@ -105,12 +137,12 @@ const [Dialog, dialogApi] = useDialog({
       confirmLoading: true,
       loading: true,
     });
-    AuthService.saveRoleMenu({
-      role_id: record.value.id,
+    AuthService.saveTagMenu({
+      tag_id: record.value.id,
       menu_id: submitKeys,
     })
       .then(() => {
-        ElMessage.success("授权成功");
+        ElMessage.success($t("member.tag.auth.message.auth_success"));
       })
       .finally(() => {
         dialogApi.setState({
@@ -212,17 +244,17 @@ defineExpose({
   show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
     record.value = data;
     dialogApi.setState({
-      title: `【${data.name}】授权菜单`,
+      title: $t("member.tag.auth.auth_manage", { name: data.name }),
     });
 
     crudApi.value = getCrudApi();
     dialogApi.open();
     nextTick(() => {
-      AuthService.getUserMenus().then((res) => {
+      AuthService.getMemberAllPermission().then((res) => {
         treeData.value = res;
         leafNodeIds.value = getTreeLeafNodeIds(treeData.value);
-        AuthService.roleMenuIds({
-          role_id: data.id,
+        AuthService.tagMenuIds({
+          tag_id: data.id,
         }).then((res: any) => {
           // 只能设置叶子节点，原因是当勾选父节点时，子节点也会被勾选
           checkedKeys.value = res.filter((id: any) => leafNodeIds.value.includes(id));

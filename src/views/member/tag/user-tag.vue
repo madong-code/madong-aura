@@ -5,13 +5,13 @@
 <script setup lang="tsx">
 import { useDialog } from "@/components/dialog";
 import { CrudReadonlyState, useCrud } from "@/components/crud";
-import { AuthService } from "@/api/system/auth";
+import { AuthService } from "@/api/member/auth";
 import AddUser from "./add-user.vue";
 import { $t } from "@/locales";
 const record = ref<any>({});
 const addUserRef = ref();
 const [Dialog, dialogApi] = useDialog({
-  title: $t("system.user.list.title"),
+  title: $t("member.tag.user.list_title"),
   width: "70%",
   dialogType: "drawer",
   modal: true,
@@ -20,42 +20,42 @@ const [Dialog, dialogApi] = useDialog({
   destroyOnClose: true,
 });
 const [BasicCrud, crudApi] = useCrud({
-  api: AuthService.userListByRoleId,
+  api: AuthService.userListByTagId,
   beforeFetch(params: any) {
     // 请求参数处理
     return {
       ...params,
-      role_id: record.value.id,
+      tag_id: record.value.id,
     };
   },
   tableActionColumn: {
-    width: "120px",
+    width: 120,
   },
   useCrud: false,
   searchFormSchema: {
     schema: [
       {
-        prop: "user_name",
-        label: $t("system.user.list.query.user_name"),
+        prop: "username",
+        label: $t("member.tag.user.search.user_name"),
         component: "Input",
         componentProps: {
-          placeholder: $t("system.user.list.query.placeholder.user_name"),
+          placeholder: $t("member.tag.user.search.placeholder.user_name"),
         },
       },
       {
-        prop: "real_name",
-        label: $t("system.user.list.query.real_name"),
+        prop: "nickname",
+        label: $t("member.tag.user.search.real_name"),
         component: "Input",
         componentProps: {
-          placeholder: $t("system.user.list.query.placeholder.real_name"),
+          placeholder: $t("member.tag.user.search.placeholder.real_name"),
         },
       },
       {
-        prop: "mobile_phone",
-        label: $t("system.user.list.query.mobile_phone"),
+        prop: "phone",
+        label: $t("member.tag.user.search.mobile_phone"),
         component: "Input",
         componentProps: {
-          placeholder: $t("system.user.list.query.placeholder.mobile_phone"),
+          placeholder: $t("member.tag.user.search.placeholder.mobile_phone"),
         },
       },
     ],
@@ -65,25 +65,29 @@ const [BasicCrud, crudApi] = useCrud({
       type: "selection",
     },
     {
-      prop: "user_name",
-      label: $t("system.user.list.table.columns.user_name"),
+      prop: "username",
+      label: $t("member.tag.user.table.columns.user_name"),
     },
     {
-      prop: "real_name",
-      label: $t("system.user.list.table.columns.real_name"),
+      prop: "nickname",
+      label: $t("member.tag.user.table.columns.real_name"),
     },
     {
-      prop: "mobile_phone",
-      label: $t("system.user.list.table.columns.mobile_phone"),
+      prop: "phone",
+      align: "center",
+      formatter(row: any) {
+        return row.phone || "/";
+      },
+      label: $t("member.tag.user.table.columns.mobile_phone"),
     },
   ],
   toolbarActions: [
     {
-      label: "添加用户",
+      label: $t("member.tag.user.actions.add_user"),
       icon: "ant-design:plus-outlined",
       type: "primary",
       dialogRef: addUserRef,
-      auth: "system:auth:save_user_role",
+      auth: "member:auth:save_user_tag",
       dialogParams() {
         return {
           data: record.value,
@@ -94,13 +98,13 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: "移除用户",
+      label: $t("member.tag.user.actions.remove_user"),
       type: "danger",
       icon: "ant-design:delete-outlined",
-      auth: "system:auth:delete_user_role",
+      auth: "member:auth:remove_user_tag",
       confirm: {
-        title: "提示",
-        content: "确定删除吗？",
+        title: $t("member.tag.user.confirm.title"),
+        content: $t("member.tag.user.confirm.content"),
         ok() {
           handleRemove({});
         },
@@ -112,14 +116,14 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   tableActions: [
     {
-      label: "移除用户",
+      label: $t("member.tag.user.actions.remove_user"),
       type: "danger",
       link: true,
       icon: "ant-design:delete-outlined",
       auth: "system:auth:remove_user_role",
       confirm: {
-        title: "提示",
-        content: "确定删除吗？",
+        title: $t("member.tag.user.confirm.title"),
+        content: $t("member.tag.user.confirm.content"),
         ok(record: any) {
           handleRemove(record);
         },
@@ -135,16 +139,16 @@ const handleRemove = (row: any) => {
     loading: true,
     confirmLoading: true,
   });
-  AuthService.removeUserRole(
+  AuthService.removeUserTag(
     userIds.map((userId) => {
       return {
-        role_id: record.value.id,
-        admin_id: userId,
+        tag_id: record.value.id,
+        member_id: userId,
       };
     })
   )
     .then(() => {
-      ElMessage.success("删除成功");
+      ElMessage.success($t("member.tag.user.message.delete_success"));
       crudApi.refreshRemove();
     })
     .finally(() => {
@@ -161,7 +165,7 @@ defineExpose({
   show({ data }: { data: any }) {
     record.value = data;
     dialogApi.setState({
-      title: `【${data.name}】成员管理`,
+      title: $t("member.tag.user.member_manage", { name: data.name }),
     });
     dialogApi.open();
     nextTick(() => {

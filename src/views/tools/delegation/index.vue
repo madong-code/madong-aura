@@ -92,7 +92,7 @@
 
 <script lang="ts" setup>
 import { type AuthInfo, ToolsAuthService } from "@/api/tools/delegation";
-import AuthDialog from "@/app/views/tools/delegation/authorization.vue";
+import AuthDialog from "@/views/tools/delegation/authorization.vue";
 
 
 

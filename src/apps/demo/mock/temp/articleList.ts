@@ -1,13 +1,13 @@
-import cover1 from '@features/demo/assets/images/cover/img1.webp'
-import cover2 from '@features/demo/assets/images/cover/img2.webp'
-import cover3 from '@features/demo/assets/images/cover/img3.webp'
-import cover4 from '@features/demo/assets/images/cover/img4.webp'
-import cover5 from '@features/demo/assets/images/cover/img5.webp'
-import cover6 from '@features/demo/assets/images/cover/img6.webp'
-import cover7 from '@features/demo/assets/images/cover/img7.webp'
-import cover8 from '@features/demo/assets/images/cover/img8.webp'
-import cover9 from '@features/demo/assets/images/cover/img9.webp'
-import cover10 from '@features/demo/assets/images/cover/img10.webp'
+import cover1 from '@/apps/demo/assets/images/cover/img1.webp'
+import cover2 from '@/apps/demo/assets/images/cover/img2.webp'
+import cover3 from '@/apps/demo/assets/images/cover/img3.webp'
+import cover4 from '@/apps/demo/assets/images/cover/img4.webp'
+import cover5 from '@/apps/demo/assets/images/cover/img5.webp'
+import cover6 from '@/apps/demo/assets/images/cover/img6.webp'
+import cover7 from '@/apps/demo/assets/images/cover/img7.webp'
+import cover8 from '@/apps/demo/assets/images/cover/img8.webp'
+import cover9 from '@/apps/demo/assets/images/cover/img9.webp'
+import cover10 from '@/apps/demo/assets/images/cover/img10.webp'
 
 export const ArticleList = [
   {
