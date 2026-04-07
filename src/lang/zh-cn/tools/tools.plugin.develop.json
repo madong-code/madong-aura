@@ -1,0 +1,75 @@
+{
+  "title": "插件开发",
+  "create": "新增插件",
+  "edit": "编辑插件",
+  "delete": "删除插件",
+  "view": "查看插件",
+  "create_success": "插件创建成功",
+  "create_fail": "插件创建失败",
+  "update_success": "插件更新成功",
+  "update_fail": "插件更新失败",
+  "delete_success": "插件删除成功",
+  "delete_fail": "插件删除失败",
+  "list": {
+    "author": "作者",
+    "version": "版本号",
+    "cover": "封面",
+    "id": "主键",
+    "key": "插件标识",
+    "desc": "插件描述",
+    "support_app": "插件支持的应用空表示通用插件",
+    "installed_at": "安装时间",
+    "title": "插件名称",
+    "icon": "插件图标",
+    "status": "状态",
+    "type": "插件类型app，plugin",
+    "variables": "插件变量",
+    "created_at": "创建时间",
+    "install_status": "安装状态",
+    "installed": "已安装",
+    "uninstalled": "未安装"
+  },
+  "form": {
+    "author": "作者",
+    "version": "版本",
+    "cover": "封面",
+    "id": "主键",
+    "key": "标识",
+    "desc": "描述",
+    "support_app": "插件支持的应用空表示通用插件",
+    "installed_at": "安装时间",
+    "title": "名称",
+    "icon": "图标",
+    "status": "状态",
+    "type": "类型",
+    "type_options": {
+      "app": "App",
+      "module": "Module"
+    },
+    "key_disabled": "插件标识，创建后不可修改",
+    "icon_upload": "上传图标",
+    "cover_upload": "上传封面",
+    "icon_tip": "建议尺寸：128x128px，支持jpg、png格式",
+    "cover_tip": "建议尺寸：750x400px，支持jpg、png格式"
+  },
+  "search": {
+    "desc": "插件描述",
+    "title": "插件名称",
+    "status": "状态"
+  },
+  "action": {
+    "package": "打包插件",
+    "package_success": "打包成功",
+    "package_plugin": "插件",
+    "package_zip_path": "ZIP路径",
+    "package_has_frontend": "包含前端",
+    "package_confirm_title": "确认打包",
+    "package_confirm_message": "确认要打包此插件吗？",
+    "package_confirm": "确认",
+    "package_cancel": "取消"
+  },
+  "status": {
+    "enabled": "启用",
+    "disabled": "禁用"
+  }
+}

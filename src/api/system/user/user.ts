@@ -1,11 +1,11 @@
 import BaseService from '@/api/core/base';
 import request from '@/utils/http';
-import type { User } from './user-model';
+import type { User } from './types';
 
 /**
  * 公共接口
  */
-const baseUrl = '/system/user';
+const baseUrl = '/system/admin';
 
 export const UserService = {
   ...BaseService<User>({
@@ -27,7 +27,7 @@ export const UserService = {
   },
 
   grantRole(data: any) {
-    return request.put({ url: `${baseUrl}/grant-role`, data });
+    return request.post({ url: `${baseUrl}/grant-role`, data });
   },
 
   locked(data: any) {

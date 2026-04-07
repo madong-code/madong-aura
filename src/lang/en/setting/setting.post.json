@@ -1,0 +1,66 @@
+{
+  "list": {
+    "title": "Post Management",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "code": "Post Code",
+        "name": "Post Name",
+        "dept_name": "Department Name",
+        "sort": "Sort",
+        "enabled": "Status",
+        "created_date": "Creation Time",
+        "remark": "Remark",
+        "operation": "Operation",
+        "actions": {
+          "edit": "Edit",
+          "delete": {
+            "label": "Delete",
+            "title": "Delete Confirmation",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "Add",
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "code": "Post Code",
+      "name": "Post Name",
+      "enabled": "Status",
+      "placeholder": {
+        "code": "Please enter post code",
+        "name": "Please enter post name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "code": "Post Code",
+      "name": "Post Name",
+      "dept_name": "Department Name",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark",
+      "placeholder": {
+        "code": "Please enter post identifier",
+        "name": "Please enter post name",
+        "sort": "Please enter post sort value",
+        "dept_name": "Please select department",
+        "remark": "Please enter remark"
+      }
+    },
+    "help": {}
+  },
+  "message": {
+    "success": "Success",
+    "error": "Failed"
+  }
+}

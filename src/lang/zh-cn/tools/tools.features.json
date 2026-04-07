@@ -1,0 +1,26 @@
+{
+  "search_placeholder": "输入模块关键字",
+  "card_view": "卡片视图",
+  "table_view": "表格视图",
+  "total_modules": "共 {count} 个模块",
+  "no_data_title": "暂无模块数据",
+  "no_data_description": "当前筛选条件下没有找到匹配的模块",
+  "version": "版本：",
+  "update_log": "更新记录",
+  "uninstall": "卸载",
+  "download": "立即下载",
+  "view_details": "详情",
+  "update_info": "更新信息",
+  "table_columns": {
+    "index": "序号",
+    "module_info": "模块信息",
+    "app_id": "应用标识",
+    "version": "版本",
+    "status": "状态",
+    "actions": "操作"
+  },
+  "status": {
+    "installed": "已安装",
+    "not_installed": "未安装"
+  }
+}

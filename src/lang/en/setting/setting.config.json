@@ -1,0 +1,229 @@
+{
+  "common": {
+    "title": "Common Config",
+    "list": {
+      "table": {
+        "columns": {
+          "name": "Config Name",
+          "code": "Config Code",
+          "content": "Config Content",
+          "remark": "Description",
+          "enabled": "Status",
+          "updated_at": "Updated At",
+          "operation": "Operations"
+        },
+        "toolbar": {
+          "create": "Create Config"
+        },
+        "actions": {
+          "edit": "Edit",
+          "copy": "Copy",
+          "enable": "Enable",
+          "disable": "Disable",
+          "delete": "Delete",
+          "delete_confirm": "Are you sure you want to delete config '{name}'?"
+        }
+      },
+      "query": {
+        "keyword": "Search config name or code"
+      }
+    },
+    "form": {
+      "modal": {
+        "title": {
+          "create": "Create Config",
+          "update": "Edit Config"
+        }
+      },
+      "label": {
+        "name": "Config Name",
+        "code": "Config Code",
+        "group_code": "Config Group",
+        "content_type": "Content Type",
+        "kv_config": "Key-Value Config",
+        "config_content": "Config Content",
+        "remark": "Description"
+      },
+      "placeholder": {
+        "name": "Please enter config name",
+        "code": "Please enter config code (English, unique)",
+        "group_code": "Please select group",
+        "key": "Key",
+        "string_value": "String Value",
+        "number_value": "Number Value",
+        "config_content": "Please enter config content",
+        "remark": "Please enter config description"
+      },
+      "group_code_options": {
+        "common": "Common Config",
+        "system": "System Config",
+        "site": "Site Settings"
+      },
+      "content_type_options": {
+        "json": "JSON Object (Key-Value)",
+        "string": "String"
+      },
+      "type_options": {
+        "string": "String",
+        "number": "Number",
+        "boolean": "Boolean"
+      },
+      "kv_add": "Add Key-Value"
+    },
+    "rules": {
+      "name_required": "Please enter config name",
+      "code_required": "Please enter config code",
+      "code_pattern": "Code must start with a letter and contain only letters, numbers, and underscores"
+    },
+    "message": {
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "delete_success": "Deleted successfully",
+      "delete_failed": "Delete failed",
+      "enable_success": "Enabled",
+      "disable_success": "Disabled",
+      "operation_failed": "Operation failed",
+      "not_found": "Config not found",
+      "sys_config_not_delete": "System config cannot be deleted"
+    }
+  },
+  "site": {
+    "title": "Backend Settings",
+    "open": "Site Open",
+    "url": "Site URL",
+    "name": "Site Name",
+    "logo": "Site Logo",
+    "network_security": "Network Record No.",
+    "description": "Site Description",
+    "record_no": "Website ICP",
+    "icp_url": "ICP URL",
+    "network_security_url": "Network Security Record Link",
+    "keywords": "Keywords",
+    "placeholder": {
+      "title": "Please enter site name",
+      "url": "Please enter backend site address",
+      "name": "Please enter site name",
+      "network_security": "Please enter network record no.",
+      "description": "Please fill in site description",
+      "record_no": "Please enter website ICP",
+      "icp_url": "Please enter ICP URL",
+      "network_security_url": "Please enter network security record link",
+      "keywords": "Please enter site keywords"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  },
+  "web_site": {
+    "title": "Frontend Settings",
+    "site_name": "Site Name",
+    "site_url": "Site URL",
+    "logo": "Site Logo",
+    "seo_title": "SEO Title",
+    "seo_keywords": "SEO Keywords",
+    "seo_description": "SEO Description",
+    "share_image": "Share Image",
+    "copyright": "Copyright",
+    "icp": "ICP Record No.",
+    "icp_url": "ICP Record Link",
+    "network_security": "Public Security Record No.",
+    "network_security_url": "Public Security Record Link",
+    "placeholder": {
+      "site_name": "Please enter site name",
+      "site_url": "Please enter site URL",
+      "seo_title": "Please enter SEO title",
+      "seo_keywords": "Please enter SEO keywords, separate with commas",
+      "seo_description": "Please enter SEO description",
+      "copyright": "Please enter copyright information",
+      "icp": "Please enter ICP record no.",
+      "icp_url": "Please enter ICP record link",
+      "network_security": "Please enter public security record no.",
+      "network_security_url": "Please enter public security record link"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  },
+  "baidu_tongji": {
+    "title": "Baidu Analytics",
+    "baidu_tongji_enabled": "Enable",
+    "baidu_tongji_code": "Analytics Code",
+    "placeholder": {
+      "baidu_tongji_code": "Please enter Baidu Analytics code"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  },
+  "upload": {
+    "title": "Upload Settings",
+    "mode": "Upload Mode",
+    "single_limit": "Upload Size",
+    "total_limit": "File Limit",
+    "nums": "Quantity Limit",
+    "exclude": "Disallowed File Types",
+    "extend": {
+      "root": "Storage Directory",
+      "secretId": "secretId",
+      "accessKey": "accessKey",
+      "accessKeyId": "accessKeyId",
+      "secretKey": "secretKey",
+      "key": "key",
+      "accessKeySecret": "accessKeySecret",
+      "secret": "secret",
+      "bucket": "Bucket Name",
+      "dirname": "Directory Name",
+      "domain": "Domain Address",
+      "endpoint": "Endpoint",
+      "region": "Region",
+      "acl": "Acl",
+      "remark": "Remark"
+    },
+    "button": {
+      "submit": "Save",
+      "extend": "Extended Settings"
+    }
+  },
+  "email": {
+    "title": "Email Settings",
+    "Host": "SMTP Server",
+    "Port": "SMTP Port",
+    "Username": "SMTP Username",
+    "Password": "SMTP Password",
+    "SMTPSecure": "SMTP Authentication Method",
+    "From": "Default Sender",
+    "FromName": "Default Sender Name",
+    "test": "Test Address",
+    "button": {
+      "submit": "Save"
+    },
+    "tip": {
+      "test": "Send Test Email"
+    },
+    "placeholder": {
+      "Host": "Please enter SMTP server address",
+      "Port": "Please enter SMTP port",
+      "Username": "Please enter SMTP username",
+      "Password": "Please enter SMTP password",
+      "SMTPSecure": "Please enter SMTP authentication method",
+      "From": "Please enter default sender",
+      "FromName": "Please enter default sender name",
+      "test": "Please enter test address"
+    }
+  },
+  "sms": {
+    "title": "SMS Settings",
+    "access_key_id": "access_key_id",
+    "access_key_secret": "access_key_secret",
+    "enable": "Enable",
+    "sign_name": "sign_name",
+    "placeholder": {
+      "access_key_id": "Please enter access_key_id",
+      "access_key_secret": "Please enter access_key_secret",
+      "sign_name": "Please enter default signature"
+    },
+    "button": {
+      "submit": "Save"
+    }
+  }
+}

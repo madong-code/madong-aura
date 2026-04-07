@@ -1,23 +1,23 @@
 import BaseService from '@/api/core/base';
 import request from '@/utils/http';
-import type { RouteRow } from './rule-model';
+import type { RouteRow } from './types';
 
-const baseUrl = '/system/role';
+const baseUrl = '/system/rule';
 
 export const RuleService = {
   ...BaseService<RouteRow>({ baseUrl }),
 
   /**
-* 列表
-* @param params 
-* @returns 
-*/
+   * 列表（扫描模式）
+   * @param params 
+   * @returns 
+   */
   list(params?: Record<string, any>): Promise<RouteRow[]> {
-    return request.get<RouteRow[]>({ url: `system/rule-list`, params });
+    return request.get<RouteRow[]>({ url: `system/rule`, params });
   },
 
   /**
-   * 类型
+   * 类型（扫描模式，基于tags）
    * @param params 
    * @returns 
    */
@@ -27,12 +27,12 @@ export const RuleService = {
 
 
   /**
-   * 同步
+   * 刷新扫描缓存
    * @param data 
    * @returns 
    */
-  sync(data: any): Promise<void> {
-    return request.post({ url: `system/rule-sync`, data });
+  sync(data?: any): Promise<void> {
+    return request.post({ url: `system/rule/refresh`, data });
   }
 };
 

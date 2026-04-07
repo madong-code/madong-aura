@@ -5,7 +5,7 @@ import { computed, onMounted, ref, useAttrs, watch } from "vue";
 
 import { ElMessage as message, ElUpload as Upload } from "element-plus";
 
-import { FilesService } from "@/api/system/files";
+import { FilesService } from "@/api/tools/files";
 import { Icon } from "@/components/icon";
 import { useUserStore } from "@/store/modules/user";
 import { omit } from "lodash-es";
@@ -27,7 +27,7 @@ const props = defineProps({
   action: {
     // 上传的地址
     type: String,
-    default: `${import.meta.env.VITE_API_URL}/system/fileInfo/upload`,
+    default: `${import.meta.env.VITE_API_URL}/files/upload-file`,
   },
   headers: {
     // 上传请求的 headers

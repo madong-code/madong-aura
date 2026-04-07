@@ -1,20 +1,21 @@
 <template>
   <Dialog>
     <div style="padding: 20px">
-      <p>1.接口可多选，可重复添加；</p>
-      <p>2.开发者按照后端路由规则进行添加路由定义；</p>
-      <p>3.添加后即可在此选择对应的接口；</p>
+      <p>{{ $t("system.menu.api.tips.1") }}</p>
+      <p>{{ $t("system.menu.api.tips.2") }}</p>
+      <p>{{ $t("system.menu.api.tips.3") }}</p>
       <div class="button-row">
         <Input
           class="mt-2"
           style="width: 250px; margin-right: 2px"
           v-model:value="keyword"
+          :placeholder="$t('search.placeholder')"
         ></Input>
         <ElButton class="ml-2" type="primary" @click="handleSearch">{{
           $t("system.menu.api.search")
         }}</ElButton>
-        <ElButton class="ml-2" @click="handleSync">{{
-          $t("system.menu.api.sync")
+        <ElButton class="ml-2" type="info" @click="handleRefreshCache">{{
+          $t("system.menu.api.refresh_cache")
         }}</ElButton>
       </div>
 
@@ -29,7 +30,9 @@
               ref="treeRef"
               node-key="id"
               :data="treeData"
-              :props="defaultProps"
+              :props="{ label: 'label', children: 'children' }"
+              :current-node-key="defaultSelectedKeys[0]"
+              highlight-current
               @node-click="handleNodeClick"
             />
           </ElCard>
@@ -55,19 +58,60 @@
                 style="margin-bottom: 5px"
               >
                 <div class="route-info">
-                  <p>
-                    <strong>接口名称：</strong>
-                    <span>{{ item.name }}</span>
+                  <p
+                    style="
+                      display: flex;
+                      align-items: flex-start;
+                      margin: 0;
+                      padding: 4px 0;
+                    "
+                  >
+                    <span style="flex-shrink: 0; margin-right: 8px"
+                      >{{ $t("system.menu.api.route_info.name") }}：</span
+                    >
+                    <span class="ellipsis-text" :title="item.name">{{ item.name }}</span>
                   </p>
-                  <p>
-                    <strong>接口方式：</strong>
-                    <span>
-                      {{ item.method }}
-                    </span>
+                  <p
+                    style="
+                      display: flex;
+                      align-items: flex-start;
+                      margin: 0;
+                      padding: 4px 0;
+                    "
+                  >
+                    <span style="flex-shrink: 0; margin-right: 8px"
+                      >{{ $t("system.menu.api.route_info.method") }}：</span
+                    >
+                    <span class="ellipsis-text" :title="item.method">{{
+                      item.method
+                    }}</span>
                   </p>
-                  <p>
-                    <strong>接口地址：</strong>
-                    <span>{{ item.path }}</span>
+                  <p
+                    style="
+                      display: flex;
+                      align-items: flex-start;
+                      margin: 0;
+                      padding: 4px 0;
+                    "
+                  >
+                    <span style="flex-shrink: 0; margin-right: 8px"
+                      >{{ $t("system.menu.api.route_info.path") }}：</span
+                    >
+                    <span class="ellipsis-text" :title="item.path">{{ item.path }}</span>
+                  </p>
+                  <p
+                    v-if="item.code"
+                    style="
+                      display: flex;
+                      align-items: flex-start;
+                      margin: 0;
+                      padding: 4px 0;
+                    "
+                  >
+                    <span style="flex-shrink: 0; margin-right: 8px"
+                      >{{ $t("system.menu.api.route_info.code") }}：</span
+                    >
+                    <span class="ellipsis-text" :title="item.code">{{ item.code }}</span>
                   </p>
                 </div>
               </el-card>
@@ -85,6 +129,7 @@ import { CrudMethods } from "@/components/crud";
 import { useDialog } from "@/components/dialog";
 import { $t } from '@/locales'
 
+
 const record = ref<any>({});
 const crudApi = ref<CrudMethods>();
 const cateList = ref<any>([]);
@@ -93,11 +138,7 @@ const treeData = ref<any>([]);
 const defaultSelectedKeys = ref<(string | number)[]>([]);
 const selectedRoute = ref<Pick<RouteRow, "path" | "method">[]>([]);
 const routeList = ref<RouteRow[]>([]);
-const defaultProps = ref({
-  label: (data: any) => {
-    return `${data.name}`;
-  },
-});
+// 删除不再使用的 defaultProps
 
 const emit = defineEmits<{
   success: [];
@@ -105,62 +146,55 @@ const emit = defineEmits<{
 
 
 /**
- * 加载Tree数据
+ * 加载Tree数据（扫描模式）
  */
 const getTree = async () => {
   //1.0清空选中路由列表
   selectedRoute.value = [];
-  //2.0获取tree数据
-  const result = await RuleService.cate({ page: 1, limit: 9999, format: "tree" });
+  //2.0获取tree数据（扫描模式，基于tags）
+  const result = await RuleService.cate();
   treeData.value = result || [];
-  //3.0将第一个子级第一个节点设为默认节点
-  defaultSelectedKeys.value = getFirstLeafKeys(treeData.value);
+  //3.0将第一个节点设为默认节点
+  const firstNodeId = getFirstNodeId(treeData.value);
+  if (firstNodeId) {
+    defaultSelectedKeys.value = [firstNodeId];
+    //4.0加载第一个分类的数据
+    loadData(firstNodeId, null);
+  }
 };
 
 /**
- * 加载列表数据
+ * 加载列表数据（扫描模式）
  * @param cateId
  * @param name
  */
 const loadData = async (cateId: any, name: any) => {
   const result = await RuleService.list({
-    page: 1,
-    limit: 9999,
     cate_id: cateId,
-    LIKE_name: name,
+    keyword: name,
   });
   //@ts-ignore
-  routeList.value = result?.items || [];
+  routeList.value = result || [];
 };
 
 /**
  * 搜索
  */
 const handleSearch = () => {
-  loadData(defaultSelectedKeys.value[0] || null, keyword.value);
+  // 搜索时清空分类选中
+  defaultSelectedKeys.value = [];
+  loadData(null, keyword.value);
 };
 
 /**
- * 获取tree第一个子节点
+ * 获取tree第一个节点ID
  * @param tree
  */
- const getFirstLeafKeys = (tree: any) => {
-  //@ts-ignore
-  const findLeafKeys = (nodes: any) => {
-    const keys = [];
-    for (const node of nodes) {
-      if (node.children && node.children.length > 0) {
-        // 如果有子节点，递归查找
-        keys.push(...findLeafKeys(node.children));
-      } else {
-        // 如果没有子节点，是叶子节点，加入 keys
-        keys.push(node.id);
-      }
-    }
-    return keys;
-  };
-  const allLeafKeys = findLeafKeys(tree);
-  return allLeafKeys.length > 0 ? [allLeafKeys[0]] : [];
+const getFirstNodeId = (tree: any): string | null => {
+  if (!tree || tree.length === 0) {
+    return null;
+  }
+  return tree[0].id;
 }
 
 /**
@@ -184,14 +218,37 @@ const handleSync = () => {
     });
 };
 
+/**
+ * 刷新缓存
+ */
+const handleRefreshCache = () => {
+  dialogApi.setState({ loading: true, confirmLoading: true });
+  RuleService.sync({})
+    .then(() => {
+      getTree();
+      ElMessage({
+        message:$t("common.message.success"),
+        type:'success'
+    })
+
+
+
+    })
+    .finally(() => {
+      dialogApi.setState({ loading: false, confirmLoading: false });
+    });
+};
+
 
 /**
  * 点击树
  * @param data
  */
 const handleNodeClick = (data: any) => {
-  loadData(data?.value|| null, null)
-}
+  // 更新选中的分类
+  defaultSelectedKeys.value = [data?.id || null];
+  loadData(data?.id || null, null);
+};
 
 // 统一方法类型格式
 const normalizeMethod = (method: string): HttpMethod => {
@@ -215,18 +272,19 @@ const isSelected = (item: RouteRow): boolean => {
 };
 
 /**
- * 卡片点击事件
+ * 卡片点击事件（扫描模式）
  * @param item
  */
 const handleCardClick = (item: RouteRow): void => {
   const normalizedMethod = normalizeMethod(item.method);
   //@ts-ignore
-  const target: Pick<RouteItem, "path" | "method" | "title" | "type" | "methods"> = {
+  const target: Pick<RouteRow, "path" | "method" | "title" | "type" | "methods" | "code"> = {
     path: item.path,
     method: item.method,
     methods: item.method,
     title: item.name,
     type: 4, //接口
+    code: item.code,
   };
 
   const existIndex = selectedRoute.value.findIndex(
@@ -254,9 +312,10 @@ const mergePropertiesToRoutes = (routes: any, propertiesToMerge: any): RouteRow[
 
 
 const [Dialog, dialogApi] = useDialog({
-  title: "选择权限",
-  width: "70%",
+  title: $t("system.menu.api.title"),
+  width: "75%",
   modal: true,
+  dialogType:"drawer",
   draggable: true,
   closeOnClickModal: true,
   destroyOnClose: true,
@@ -267,6 +326,7 @@ const [Dialog, dialogApi] = useDialog({
       MenuService.batchStore({ menus: data })
         .then(() => {
           ElMessage.success($t('common.message.success'));
+          crudApi?.value?.refreshCreate();
           emit('success');
           dialogApi.close();
         })
@@ -288,7 +348,6 @@ defineExpose({
     dialogApi.open();
     nextTick(async () => {
       await getTree();
-      loadData(defaultSelectedKeys.value[0] || null, null);
     });
   },
 });
@@ -337,6 +396,20 @@ defineExpose({
   :hover.shadow-md {
     background-color: #1890ff1a;
     border-color: #1890ff80;
+  }
+
+  // 不换行样式
+  .ellipsis-text {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // 卡片内容字体大小
+  .route-info {
+    font-size: 14px;
   }
 }
 

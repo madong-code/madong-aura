@@ -1,5 +1,5 @@
 import BaseService from '@/api/core/base';
-import type { MenuRow } from './menu-model';
+import type { MenuRow } from './types';
 import request from '@/utils/http';
 
 const baseUrl = '/system/menu';

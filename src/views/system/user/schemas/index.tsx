@@ -3,6 +3,10 @@ import { UserService } from '@/api/system/user'
 import { $t } from '@/locales'
 import { RendererElement, RendererNode, VNodeArrayChildren } from 'vue'
 import { DictEnum } from '@/enums'
+import { de } from 'element-plus/es/locale'
+import { on } from 'events'
+import { PostService } from '@/api/setting/post'
+import { mutable } from 'element-plus/es/utils'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -75,14 +79,14 @@ export const crudSchema = (): CrudSchema => {
               (dept: {
                 id: any
                 name:
-                | string
-                | number
-                | boolean
-                | VNodeArrayChildren
-                | { [name: string]: unknown; $stable?: boolean }
-                | VNode<RendererNode, RendererElement, { [key: string]: any }>
-                | (() => any)
-                | undefined
+                  | string
+                  | number
+                  | boolean
+                  | VNodeArrayChildren
+                  | { [name: string]: unknown; $stable?: boolean }
+                  | VNode<RendererNode, RendererElement, { [key: string]: any }>
+                  | (() => any)
+                  | undefined
               }) => h(ElTag, { key: dept.id }, dept.name)
             )
           )
@@ -227,6 +231,8 @@ export const crudSchema = (): CrudSchema => {
           prop: 'password',
           label: $t('system.user.form.modal.password'),
           componentProps: {
+            type: 'password',
+            showPassword: true,
             placeholder: $t('system.user.form.placeholder.password')
           },
           rules: [
@@ -235,6 +241,9 @@ export const crudSchema = (): CrudSchema => {
               message: $t('system.user.form.placeholder.password')
             }
           ],
+          ifShow(values, formApi) {
+            return values.id === undefined
+          },
           colSpan: 12
         },
         {
@@ -320,13 +329,19 @@ export const crudSchema = (): CrudSchema => {
               message: $t('system.user.form.placeholder.dept_name')
             }
           ],
-          componentProps: {
-            placeholder: $t('system.user.form.placeholder.dept_name'),
-            clearable: true,
-            api: '/system/dept/getTree',
-            params: { format: 'tree' },
-            labelField: 'name',
-            valueField: 'id'
+          componentProps: (_values) => {
+            return {
+              checkStrictly: true,
+              placeholder: $t('system.user.form.placeholder.dept_name'),
+              clearable: true,
+              api: '/org/dept',
+              params: { format: 'tree' },
+              labelField: 'name',
+              valueField: 'id',
+              onChange: (_value: any) => {
+                _values.post_id_list = []
+              }
+            }
           }
         },
         // 所属岗位
@@ -342,12 +357,19 @@ export const crudSchema = (): CrudSchema => {
               message: $t('system.user.form.placeholder.post_name')
             }
           ],
-          componentProps: {
-            placeholder: $t('system.user.form.placeholder.post_name'),
-            clearable: true,
-            api: '/system/post',
-            requestMethod: 'get',
-            params: { format: 'select' }
+          componentProps: (_value) => {
+            return {
+              multiple: true,
+              disabled: !_value?.dept_id,
+              placeholder: $t('system.user.form.placeholder.post_name'),
+              clearable: true,
+              api: '/org/post',
+              requestMethod: 'get',
+              params: {
+                format: 'select',
+                dept_id: _value?.dept_id || undefined
+              }
+            }
           }
         },
 

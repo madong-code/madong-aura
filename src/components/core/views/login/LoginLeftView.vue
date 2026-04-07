@@ -74,7 +74,7 @@
   import AppConfig from '@/config'
   import loginIcon from '@imgs/svg/login_icon.svg'
   import { themeAnimation } from '@/utils/ui/animation'
-  import { useSystemConfigStore } from '@/store/modules/system-config'
+  import { useSystemConfigStore } from '@/store/modules/site-config'
   const systemConfigStore = useSystemConfigStore()
 
   // 定义 props

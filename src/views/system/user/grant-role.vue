@@ -64,7 +64,6 @@ defineExpose({
     record.value = data;
     crudApi.value = getCrudApi();
     dialogApi.open();
-    console.log(data);
     nextTick(() => {
       // 修改这里：将对象数组转换为ID数组
       let roleIds = [];

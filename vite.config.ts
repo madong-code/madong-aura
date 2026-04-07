@@ -33,6 +33,11 @@ export default ({ mode }: { mode: string }) => {
           target: VITE_API_PROXY_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/adminapi/, '/adminapi')
+        },
+        '/upload': {
+          target: VITE_API_PROXY_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/upload/, '/upload')
         }
       },
       host: true
@@ -46,7 +51,9 @@ export default ({ mode }: { mode: string }) => {
         '@icons': resolvePath('src/assets/icons'),
         '@utils': resolvePath('src/utils'),
         '@stores': resolvePath('src/store'),
-        '@styles': resolvePath('src/assets/styles')
+        '@plugins': resolvePath('src/plugins'),
+        '@apps': resolvePath('src/apps'),
+        '@styles': resolvePath('src/styles')
       }
     },
     build: {

@@ -1,5 +1,5 @@
 import request from '@/utils/http'
-import { RedisMonitorData } from './redis-model'
+import { RedisMonitorData } from './types'
 
 const baseUrl = '/monitor/redis'
 

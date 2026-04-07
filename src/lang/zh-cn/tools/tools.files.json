@@ -1,0 +1,63 @@
+{
+  "list": {
+    "title": "附件管理",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "url": "访问地址",
+        "size": "文件大小",
+        "size_info": "文件详情",
+        "hash": "Hash",
+        "filename": "文件名称",
+        "original_filename": "原始文件名",
+        "base_path": "基础路径",
+        "path": "存储路径",
+        "ext": "扩展名",
+        "content_type": "MIME类型",
+        "platform": "存储平台",
+        "th_url": "缩略图访问路径",
+        "object_id": "文件所属对象Id",
+        "object_type": "对象类型",
+        "attr": "附加属性",
+        "remark": "",
+        "created_date": "创建日期",
+        "updated_date": "更新日期",
+        "created_name": "上传人",
+        "operation": "操作",
+        "actions": {
+          "download": "下载",
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "upload": "上传",
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "filename": "文件名",
+      "original_filename": "原文件名",
+      "ext": "扩展名",
+      "platform": "平台",
+      "placeholder": {
+        "filename": "请输入文件名称",
+        "original_filename": "请输入原始文件名称",
+        "ext": "请输入扩展名",
+        "platform": "请输入平台"
+      }
+    }
+  },
+  "form": {},
+  "message": {
+    "success": "成功",
+    "error": "失败"
+  }
+}

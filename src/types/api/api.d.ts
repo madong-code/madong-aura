@@ -88,7 +88,7 @@ declare namespace Api {
       // userId: number
       // userName: string
       // email: string
-      // avatar?: string
+      avatar?: string
       id: string;
       user_name: string;
       real_name: string;

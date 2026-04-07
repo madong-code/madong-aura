@@ -11,6 +11,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import type { AppRouteRecord } from '@/types/router'
 import { ComponentLoader } from './ComponentLoader'
 import { IframeRouteManager } from './IframeRouteManager'
+import { RoutesAlias } from '../routesAlias'
 
 interface ConvertedRoute extends Omit<RouteRecordRaw, 'children'> {
   id?: number
@@ -75,7 +76,8 @@ export class RouteTransformer {
       // 顶级 iframe：用 Layout 包裹
       targetRoute.component = this.componentLoader.loadLayout()
       targetRoute.path = this.extractFirstSegment(sourceRoute.path || '')
-      targetRoute.name = ''
+      // 移除父路由的 name，避免与子路由冲突
+      targetRoute.name = undefined
 
       targetRoute.children = [
         {
@@ -102,13 +104,14 @@ export class RouteTransformer {
   ): void {
     converted.component = this.componentLoader.loadLayout()
     converted.path = this.extractFirstSegment(route.path || '')
-    converted.name = ''
+    // 移除父路由的 name，避免与子路由冲突
+    converted.name = undefined
     route.meta.isFirstLevel = true
 
     converted.children = [
       {
         ...route,
-        component: component ? this.componentLoader.load(component) : undefined
+        component: component ? this.componentLoader.load(component, route.meta?.module as string) : undefined
       } as ConvertedRoute
     ]
   }
@@ -118,7 +121,39 @@ export class RouteTransformer {
    */
   private handleNormalRoute(converted: ConvertedRoute, component: string | undefined): void {
     if (component) {
-      converted.component = this.componentLoader.load(component)
+      // 检查是否为路由别名
+      if (this.isRoutesAlias(component)) {
+        this.handleRoutesAlias(converted, component)
+      } else {
+        converted.component = this.componentLoader.load(component, converted?.meta?.module as string)
+      }
+    }
+  }
+
+  /**
+   * 检查是否为路由别名
+   */
+  private isRoutesAlias(component: string): boolean {
+    return Object.values(RoutesAlias).includes(component as RoutesAlias)
+  }
+
+  /**
+   * 处理路由别名
+   */
+  private handleRoutesAlias(converted: ConvertedRoute, alias: string): void {
+    switch (alias) {
+      case RoutesAlias.Layout:
+        converted.component = this.componentLoader.loadLayout()
+        break
+      case RoutesAlias.Outside:
+        converted.component = this.componentLoader.loadIframe()
+        break
+      case RoutesAlias.Login:
+        // 登录页使用普通组件加载逻辑
+        converted.component = this.componentLoader.load(alias, converted?.meta?.module as string)
+        break
+      default:
+        converted.component = this.componentLoader.load(alias, converted?.meta?.module as string)
     }
   }
 

@@ -1,0 +1,83 @@
+{
+    "list": {
+        "title": "定时任务",
+        "table": {
+            "columns": {
+                "id": "ID",
+                "biz_id": "业务ID",
+                "title": "名称",
+                "type": "类型",
+                "task_cycle": "任务周期",
+                "cycle_rule": "周期规则",
+                "rule": "任务表达式",
+                "rule_name": "执行规则",
+                "target": "调用任务",
+                "running_times": "运行次数",
+                "last_running_time": "上次运行时间",
+                "enabled": "启用状态",
+                "singleton": "是否循环",
+                "created_date": "创建时间",
+                "operation": "操作",
+                "actions": {
+                    "edit": "修改",
+                    "execute": "执行",
+                    "logs": "日志",
+                    "resume": "启动",
+                    "pause": "停止",
+                    "delete": {
+                        "label": "删除",
+                        "title": "删除确认",
+                        "confirm": "是否确认删除?"
+                    }
+                }
+            },
+            "toolbar": {
+                "create": "新增",
+                "delete": {
+                    "label": "删除",
+                    "title": "温馨提示",
+                    "confirm": "确认删除选中的{0}条记录吗？"
+                }
+            }
+        },
+        "query": {
+            "title": "任务名称",
+            "type": "任务类型",
+            "enabled": "状态",
+            "placeholder": {
+                "title": "请输入任务名称",
+                "type": "请选择任务类型",
+                "enabled": "请选择任务状态"
+            }
+        }
+    },
+    "form": {
+        "modal": {
+            "id": "ID",
+            "biz_id": "业务ID",
+            "title": "任务名称",
+            "type": "任务类型",
+            "task_cycle": "执行周期",
+            "cycle_rule": "周期规则",
+            "rule": "表达式",
+            "target": "调用任务",
+            "running_times": "运行次数",
+            "last_running_time": "上次运行时间",
+            "enabled": "状态",
+            "singleton": "是否循环执行",
+            "remark": "备注",
+            "placeholder": {
+                "title": "请输入任务名称",
+                "target": "请输入调用任务",
+                "remark": "请输入备注"
+            },
+            "suffix": {
+                "month": "月",
+                "day": "日",
+                "hour": "时",
+                "minute": "分",
+                "second": "秒"
+            }
+        }
+    }
+}

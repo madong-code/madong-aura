@@ -1,6 +1,9 @@
 import { AppRouteRecord } from '@/types'
 import { AppRouteRecordRaw } from '@/utils/router'
-import { routeModules } from '../modules'
+import { AppsRouteManager } from '../core/AppsRouteManager'
+
+// 创建功能模块路由管理器实例
+const appsRouteManager = new AppsRouteManager()
 
 /**
  * 静态路由配置（不需要权限就能访问的路由）
@@ -23,42 +26,42 @@ export const staticRoutes: AppRouteRecordRaw[] = [
   {
     path: '/auth/login',
     name: 'Login',
-    component: () => import('@views/auth/login/index.vue'),
+    component: () => import('@/views/auth/login/index.vue'),
     meta: { title: 'menus.login.title', isHideTab: true }
   },
   {
     path: '/auth/register',
     name: 'Register',
-    component: () => import('@views/auth/register/index.vue'),
+    component: () => import('@/views/auth/register/index.vue'),
     meta: { title: 'menus.register.title', isHideTab: true }
   },
   {
     path: '/auth/forget-password',
     name: 'ForgetPassword',
-    component: () => import('@views/auth/forget-password/index.vue'),
+    component: () => import('@/views/auth/forget-password/index.vue'),
     meta: { title: 'menus.forgetPassword.title', isHideTab: true }
   },
   {
     path: '/403',
     name: 'Exception403',
-    component: () => import('@views/exception/403/index.vue'),
+    component: () => import('@/views/exception/403/index.vue'),
     meta: { title: '403', isHideTab: true }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'Exception404',
-    component: () => import('@views/exception/404/index.vue'),
+    component: () => import('@/views/exception/404/index.vue'),
     meta: { title: '404', isHideTab: true }
   },
   {
     path: '/500',
     name: 'Exception500',
-    component: () => import('@views/exception/500/index.vue'),
+    component: () => import('@/views/exception/500/index.vue'),
     meta: { title: '500', isHideTab: true }
   },
   {
     path: '/outside',
-    component: () => import('@views/layout/index.vue'),
+    component: () => import('@/layout/index.vue'),
     name: 'Outside',
     meta: { title: 'menus.outside.title' },
     children: [
@@ -66,12 +69,14 @@ export const staticRoutes: AppRouteRecordRaw[] = [
       {
         path: '/outside/iframe/:path',
         name: 'Iframe',
-        component: () => import('@/views/outside/Iframe.vue'),
+        component: () => import('@/layout/outside/index.vue'),
         meta: { title: 'iframe' }
       }
     ]
-  }
+  },
 ]
+
+
 
 
 
@@ -92,11 +97,25 @@ export const localRoutes: AppRouteRecord[] = [
     name: "system:user-center",
     component: "/system/user-center/index",
     meta: {
+      module: "app", // 添加模块信息，指定从 app 模块加载
       isHide: true,//不显示在菜单列表
       title: "个人中心",
       keepAlive: false,
     },
   },
-  //示例模块路由
-  routeModules
+  {
+    path: '/generator/code/:id?',
+    name: 'CodeGenerator',
+    component: '/tools/apps/generator/generator',
+    meta: {
+      module: "app", // 添加模块信息，指定从 app 模块加载
+      title: '代码生成器',
+      isHide: true,
+    },
+  },
+  // 自动扫描的功能模块-静态路由
+  ...appsRouteManager.getAppsRoutes()
 ]
+
+
+

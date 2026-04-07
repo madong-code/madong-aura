@@ -1,0 +1,131 @@
+{
+  "list": {
+    "title": "菜单管理",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "type": "类型",
+        "title": "标题",
+        "code": "权限标识",
+        "path": "路由地址",
+        "component": "页面组件",
+        "sort": "排序",
+        "enabled": "状态",
+        "remark": "",
+        "created_date": "创建日期",
+        "updated_date": "更新日期",
+        "operation": "操作",
+        "actions": {
+          "api": "选择权限",
+          "append": "新增下级",
+          "edit": "编辑",
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "新增",
+        "collapse": "收缩",
+        "expand": "展开",
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "type": "类型",
+      "title": "标题",
+      "path": "路由地址",
+      "code": "权限标识",
+      "enabled": "状态",
+      "placeholder": {
+        "type": "请选择类型",
+        "title": "请输入标题",
+        "path": "请输入路由地址",
+        "code": "请输入权限标识",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "type": "菜单类型",
+      "pid": "上级菜单",
+      "app": "应用编码",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "sort": "排序",
+      "path": "路由地址/接口",
+      "component": "组件地址",
+      "redirect": "重定向",
+      "icon": "图标",
+      "is_show": "是否显示",
+      "is_link": "是否内链",
+      "link_url": "内链地址",
+      "enabled": "状态",
+      "open_type": "打开方式",
+      "is_cache": "是否缓存 ",
+      "is_sync": "是否同步",
+      "is_affix": "是否固定",
+      "methods": "请求方式",
+      "is_frame": "是否外链",
+      "placeholder": {
+        "pid": "请选择上级菜单",
+        "title": "请输入菜单名称",
+        "code": "请输入权限标识",
+        "sort": "请输入排序",
+        "path": "请输入路由地址/接口",
+        "component": "请输入组件地址",
+        "icon": "请选择图标",
+        "link_url": "请输入内链地址"
+      }
+    },
+    "placeholder": {
+      "type": "请选择菜单类型",
+      "pid": "请选择上级菜单",
+      "app": "请选择应用",
+      "title": "请输入菜单名称",
+      "code": "请输入权限标识",
+      "sort": "请输入排序",
+      "path": "请输入路由地址/接口",
+      "component": "请输入组件地址",
+      "open_type": "请选择打开方式",
+      "icon": "请选择图标",
+      "link_url": "请输入内链地址",
+      "enabled": "请选择状态",
+      "is_show": "请选择是否显示",
+      "is_sync": "请选择是否同步",
+      "is_cache": "请选择是否缓存"
+    },
+    "help": {
+      "path": "请输入正确的路由地址或接口路径",
+      "link_url": "请输入正确的内链地址"
+    }
+  },
+  "api": {
+    "title": "选择接口",
+    "search": "搜索",
+    "refresh_cache": "刷新缓存",
+    "tips": {
+      "1": "1.接口可多选，可重复添加；",
+      "2": "2.开发者按照后端路由规则进行添加路由定义；",
+      "3": "3.添加后即可在此选择对应的接口；"
+    },
+    "route_info": {
+      "name": "接口名称",
+      "method": "接口方式",
+      "path": "接口地址",
+      "code": "权限标识"
+    }
+  },
+  "message": {
+    "success": "成功",
+    "error": "失败"
+  }
+}

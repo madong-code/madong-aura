@@ -10,9 +10,11 @@
   "i18n-ally.enabledFrameworks": ["vue", "react"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": true,
-  "i18n-ally.namespace": true
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "i18n-ally.namespace": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   } // 设置默认格式化工具为 Prettier
 }

@@ -41,6 +41,7 @@ import NProgress from 'nprogress'
 import { useSettingStore } from '@/store/modules/setting'
 import { useUserStore } from '@/store/modules/user'
 import { useMenuStore } from '@/store/modules/menu'
+import { useSystemConfigStore } from '@/store/modules/site-config'
 import { setWorktab } from '@/utils/navigation'
 import { setPageTitle } from '@/utils/router'
 import { RoutesAlias } from '../routesAlias'
@@ -124,10 +125,21 @@ async function handleRouteGuard(
 ): Promise<void> {
   const settingStore = useSettingStore()
   const userStore = useUserStore()
+  const systemConfigStore = useSystemConfigStore()
 
   // 启动进度条
   if (settingStore.showNprogress) {
     NProgress.start()
+  }
+
+  // 在登录页或所有页面加载前获取系统配置（如果还没有配置数据）
+  // 这确保了登录前和浏览器刷新时都能获取到配置
+  // 使用 isLoaded 标志判断是否已经加载过，避免重复请求
+  if (!systemConfigStore.isLoaded && !systemConfigStore.loading) {
+    // 不等待配置加载完成，避免阻塞路由导航
+    systemConfigStore.fetchSystemConfig('site_setting').catch(err => {
+      console.warn('获取系统配置失败:', err)
+    })
   }
 
   // 1. 检查登录状态

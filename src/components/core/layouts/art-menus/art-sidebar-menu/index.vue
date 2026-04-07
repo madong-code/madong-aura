@@ -84,7 +84,7 @@
               opacity: !menuOpen ? 0 : 1
             }"
           >
-            {{ AppConfig.systemInfo.name }}
+            {{ systemTitle }}
           </p>
         </div>
 
@@ -132,6 +132,7 @@
 <script setup lang="ts">
   import AppConfig from '@/config'
   import { useSettingStore } from '@/store/modules/setting'
+  import { useSystemConfigStore } from '@/store/modules/site-config'
   import { MenuTypeEnum, MenuWidth } from '@/enums/appEnum'
   import { useMenuStore } from '@/store/modules/menu'
   import { isIframe } from '@/utils/navigation'
@@ -151,6 +152,10 @@
   const route = useRoute()
   const router = useRouter()
   const settingStore = useSettingStore()
+  const systemConfigStore = useSystemConfigStore()
+
+  // 优先使用后台配置的系统标题
+  const systemTitle = computed(() => systemConfigStore.config.title || AppConfig.systemInfo.name)
 
   const { getMenuOpenWidth, menuType, uniqueOpened, dualMenuShowText, menuOpen, getMenuTheme } =
     storeToRefs(settingStore)

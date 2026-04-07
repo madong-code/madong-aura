@@ -1,18 +1,18 @@
 import { CrudSchema } from '@/components/crud'
 import { $t } from '@/locales'
-import { } from '@/api/dev/gateway'
+import {} from '@/api/setting/gateway'
 import { dayjs } from 'element-plus'
 import ProfileService from '@/api/system/profile'
-
+import { formatDateTime } from '@/utils'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
-    api: ProfileService.onlineDevice,
-    dialogTitle: $t("system.user.profile.online_device.table.title"),
-    crudApi: {
-    },
+    api: ProfileService.getOnlineDevices,
+    dialogTitle: $t('system.user.center.online_device.table.title'),
+    crudApi: {},
+    rowKey:'jti',
     // 使用crud
     useCrud: true,
     // 是否有新增
@@ -38,38 +38,36 @@ export const crudSchema = (): CrudSchema => {
       // },
 
       {
-        label: $t('system.user.profile.online_device.table.columns.user_name'),
-        prop: 'user_name',
+        label: $t('system.user.center.online_device.table.columns.user_name'),
+        prop: 'user_name'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.ip'),
-        prop: 'ip',
+        label: $t('system.user.center.online_device.table.columns.ip'),
+        prop: 'ip'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.ip_location'),
-        prop: 'ip_location',
+        label: $t('system.user.center.online_device.table.columns.ip_location'),
+        prop: 'ip_location'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.browser'),
+        label: $t('system.user.center.online_device.table.columns.browser'),
         prop: 'browser'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.os'),
-        prop: 'os',
+        label: $t('system.user.center.online_device.table.columns.os'),
+        prop: 'os'
       },
       {
-        label: $t('system.user.profile.online_device.table.columns.login_time'),
+        label: $t('system.user.center.online_device.table.columns.login_time'),
         prop: 'login_time',
-        width: 170,
-        formatter: ({ cellValue }) => {
-          return dayjs(cellValue * 1000).format('YYYY-MM-DD HH:mm:ss');
-        },
-      },
+        minWidth: 170,
+        formatter: (row) => {
+          return formatDateTime(row.login_time)
+        }
+      }
     ],
     useSearchForm: false,
     // 搜索表单定义
-    searchFormSchema: {
-
-    }
+    searchFormSchema: {}
   }
 }

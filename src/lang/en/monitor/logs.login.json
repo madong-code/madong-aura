@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Login Logs",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "user_name": "User Name",
+        "real_name": "Nick Name",
+        "ip": "IP",
+        "ip_location": "IP Location",
+        "os": "Operating System",
+        "browser": "Browser",
+        "status": "Login Status",
+        "message": "Message",
+        "key": "Key",
+        "remark": "Remark",
+        "login_date": "Login Time",
+        "operation": "Operation",
+        "actions": {
+          "delete": {
+            "label": "Delete",
+            "title": "Warm Reminder",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "empty": {
+          "label": "Clear",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to clear all login records?"
+        },
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "user_name": "Username",
+      "ip": "Login IP",
+      "status": "Login Status",
+      "created_date": "Login Time",
+      "placeholder": {
+        "user_name": "Please enter username",
+        "ip": "Please enter login IP address",
+        "status": "Please select login status"
+      }
+    }
+  }
+}

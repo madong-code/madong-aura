@@ -1,5 +1,5 @@
 import request from '@/utils/http'
-import { type ServerInfo } from './server-model'
+import { type ServerInfo } from './types'
 
 const baseUrl = '/monitor/server'
 

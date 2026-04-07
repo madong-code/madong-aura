@@ -1,0 +1,97 @@
+{
+  "list": {
+    "title": "Role Management",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "name": "Role",
+        "code": "Role Code",
+        "role_name": "Role Name",
+        "is_super_admin": "Super Admin",
+        "role_type": "Role Type",
+        "data_scope": "Data Permission",
+        "sort": "Sort",
+        "enabled": "Status",
+        "remark": "Remark",
+        "created_date": "Creation Time",
+        "operation": "Operation",
+        "actions": {
+          "edit": "Edit",
+          "user": "Assign Users",
+          "data_scope": "Data Permission",
+          "delete": {
+            "label": "Delete",
+            "title": "Delete Confirmation",
+            "confirm": "Are you sure you want to delete?"
+          },
+          "status": {
+            "disabled": "Disable",
+            "enabled": "Enable",
+            "confirm": "Do you want to change the status of {name} to [{status}]?",
+            "title": "Change Status"
+          }
+        }
+      },
+      "toolbar": {
+        "create": "Add",
+        "delete": {
+          "label": "Delete",
+          "title": "Delete Confirmation",
+          "confirm": "Are you sure you want to delete the selected {length} records?"
+        }
+      }
+    },
+    "query": {
+      "code": "Role Code",
+      "name": "Role Name",
+      "enabled": "Role Status",
+      "created_date": "Date",
+      "placeholder": {
+        "code": "Please enter role code",
+        "name": "Please enter role name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "code": "Role Code",
+      "name": "Role Name",
+      "is_super_admin": "Super Admin",
+      "role_type": "Role Type",
+      "data_scope": "Data Permission",
+      "sort": "Sort",
+      "enabled": "Status",
+      "permissions": "Permissions",
+      "dept_list": "Department List",
+      "remark": "Remark",
+      "placeholder": {
+        "code": "Please enter role identifier",
+        "name": "Please enter role name",
+        "role_type": "Please select role type",
+        "remark": "Please enter remark"
+      }
+    },
+    "data_scope": {
+      "title": "Data Permission",
+      "role_code": "Role Code",
+      "role_name": "Role Name",
+      "data_permission": "Data Permission",
+      "dept_list": "Department List",
+      "assign_permission": "Assign Permission",
+      "assign_success": "Assignment Success"
+    },
+    "help": {}
+  },
+  "assign_user": {
+    "title": "Assign Users",
+    "append_title": "Add Users"
+  },
+  "message": {
+    "success": "Success",
+    "error": "Failed",
+    "delete": "Deletion Success",
+    "operate": "Operation Success"
+  }
+}

@@ -10,7 +10,7 @@ import AppConfig from '@/config'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import i18n, { $t } from '@/locales'
-import { useSystemConfigStore } from '@/store/modules/system-config'
+import { useSystemConfigStore } from '@/store/modules/site-config'
 /** 扩展的路由配置类型 */
 export type AppRouteRecordRaw = RouteRecordRaw & {
   hidden?: boolean

@@ -32,6 +32,9 @@ const [BasicCrud, crudApi] = useCrud({
       icon: "ant-design:team-outlined",
       type: "primary",
       link: true,
+      ifShow(action, record) {
+        return record?.is_super !== 1;
+      },
       dialogRef: grantRoleRef,
       dialogParams() {
         return {

@@ -218,7 +218,7 @@ defineExpose({
     crudApi.value = getCrudApi();
     dialogApi.open();
     nextTick(() => {
-      AuthService.getUserMenus().then((res) => {
+      AuthService.getUserPermission().then((res) => {
         treeData.value = res;
         leafNodeIds.value = getTreeLeafNodeIds(treeData.value);
         AuthService.roleMenuIds({

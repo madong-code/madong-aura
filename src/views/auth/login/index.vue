@@ -18,7 +18,7 @@
             @keyup.enter="handleSubmit"
             style="margin-top: 25px"
           >
-            <ElFormItem prop="account">
+            <!-- <ElFormItem prop="account">
               <ElSelect v-model="formData.account" @change="setupAccount">
                 <ElOption
                   v-for="account in accounts"
@@ -29,7 +29,7 @@
                   <span>{{ account.label }}</span>
                 </ElOption>
               </ElSelect>
-            </ElFormItem>
+            </ElFormItem> -->
             <ElFormItem prop="username">
               <ElInput
                 class="custom-height"
@@ -48,30 +48,26 @@
               />
             </ElFormItem>
 
-            <!-- 推拽验证 -->
-            <div class="relative pb-5 mt-6">
-              <div
-                class="relative z-[2] overflow-hidden select-none rounded-lg border border-transparent tad-300"
-                :class="{ '!border-[#FF4E4F]': !isPassing && isClickPass }"
-              >
-                <ArtDragVerify
-                  ref="dragVerify"
-                  v-model:value="isPassing"
-                  :text="$t('login.sliderText')"
-                  textColor="var(--art-gray-700)"
-                  :successText="$t('login.sliderSuccessText')"
-                  :progressBarBg="getCssVar('--el-color-primary')"
-                  :background="isDark ? '#26272F' : '#F1F1F4'"
-                  handlerBg="var(--default-box-color)"
+            <!-- 验证码 -->
+            <ElFormItem prop="captcha">
+              <div class="flex items-center gap-2" style="width: 100%;">
+                <ElInput
+                  class="custom-height"
+                  :placeholder="$t('login.placeholder.captcha')"
+                  v-model.trim="formData.captcha"
+                  style="flex: 1; min-width: 0;"
                 />
+                <div class="relative" style="width: 120px; height: 40px; flex-shrink: 0;">
+                  <img
+                    :src="captchaUrl"
+                    alt="验证码"
+                    class="w-full h-full object-cover rounded-md cursor-pointer"
+                    @click="refreshCaptcha"
+                    style="cursor: pointer"
+                  />
+                </div>
               </div>
-              <p
-                class="absolute top-0 z-[1] px-px mt-2 text-xs text-[#f56c6c] tad-300"
-                :class="{ 'translate-y-10': !isPassing && isClickPass }"
-              >
-                {{ $t("login.placeholder.slider") }}
-              </p>
-            </div>
+            </ElFormItem>
 
             <div class="flex-cb mt-2 text-sm">
               <ElCheckbox v-model="formData.rememberPassword">{{
@@ -146,37 +142,13 @@ export interface Account {
   roles: string[]
 }
 
-const accounts = computed<Account[]>(() => [
-  {
-    key: 'super',
-    label: t('login.roles.super'),
-    userName: 'superAdmin',
-    password: '123456',
-    roles: ['R_SUPER']
-  },
-  {
-    key: 'admin',
-    label: t('login.roles.admin'),
-    userName: 'admin',
-    password: '123456',
-    roles: ['R_ADMIN']
-  },
-  {
-    key: 'user',
-    label: t('login.roles.user'),
-    userName: 'test',
-    password: '123456',
-    roles: ['R_USER']
-  }
-])
 
-const dragVerify = ref()
 
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
-const isPassing = ref(false)
-const isClickPass = ref(false)
+const captchaUrl = ref('')
+const captchaUuid = ref('')
 
 const systemName = AppConfig.systemInfo.name
 const formRef = ref<FormInstance>()
@@ -185,27 +157,40 @@ const formData = reactive({
   account: '',
   username: '',
   password: '',
+  captcha: '',
   rememberPassword: true
 })
 
 const rules = computed<FormRules>(() => ({
   username: [{ required: true, message: t('login.placeholder.username'), trigger: 'blur' }],
-  password: [{ required: true, message: t('login.placeholder.password'), trigger: 'blur' }]
+  password: [{ required: true, message: t('login.placeholder.password'), trigger: 'blur' }],
+  captcha: [{ required: true, message: t('login.placeholder.captcha'), trigger: 'blur' }]
 }))
 
 const loading = ref(false)
 
 onMounted(() => {
-  setupAccount('super')
+  refreshCaptcha()
 })
 
-// 设置账号
-const setupAccount = (key: AccountKey) => {
-  const selectedAccount = accounts.value.find((account: Account) => account.key === key)
-  formData.account = key
-  formData.username = selectedAccount?.userName ?? ''
-  formData.password = selectedAccount?.password ?? ''
+// 刷新验证码
+const refreshCaptcha = async () => {
+  try {
+    const response = await AuthService.getCaptcha() as any;
+    if (response?.base64) {
+      // 将 base64 编码的图片数据转换为可显示的图片 URL
+      captchaUrl.value = response.base64;
+      // 存储验证码 uuid
+      if (response.uuid) {
+        captchaUuid.value = response.uuid;
+      }
+    }
+  } catch (error) {
+    console.error('获取验证码失败:', error);
+    ElMessage.error('获取验证码失败，请稍后重试');
+  }
 }
+
 
 // 登录
 const handleSubmit = async () => {
@@ -215,12 +200,6 @@ const handleSubmit = async () => {
     // 表单验证
     const valid = await formRef.value.validate();
     if (!valid) return;
-
-    // 拖拽验证
-    if (!isPassing.value) {
-      isClickPass.value = true;
-      return;
-    }
 
     loading.value = true;
 
@@ -242,10 +221,12 @@ const handleSubmit = async () => {
       throw new Error("RSA encryption failed");
     }
 
-    const { access_token, refresh_token } = (await AuthService.login({
+    const { access_token, refresh_token, expires_time } = (await AuthService.login({
       user_name: username,
       password: encryptedPassword,
       key_id,
+      code: formData.captcha,
+      uuid: captchaUuid.value
     })) as any;
 
     // 验证token
@@ -253,8 +234,8 @@ const handleSubmit = async () => {
       throw new Error("Login failed - no token received");
     }
 
-    // 存储token和用户信息
-    userStore.setToken(access_token, refresh_token);
+    // 存储token和用户信息，包含过期时间
+    userStore.setToken(access_token, refresh_token, expires_time);
     userStore.setLoginStatus(true);
     // 这里可以一次性初始化所有字典
     dictStore.initAllDicts(DictService.getAllDict);
@@ -273,16 +254,14 @@ const handleSubmit = async () => {
     }
   } finally {
     loading.value = false;
-    resetDragVerify();
+    // 刷新验证码
+    refreshCaptcha();
   }
 };
 
 
 
-// 重置拖拽验证
-const resetDragVerify = () => {
-  dragVerify.value.reset()
-}
+
 
 // 登录成功提示
 const showLoginSuccessNotice = () => {

@@ -18,7 +18,9 @@
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="el-dialog__header-inner">
-        <span :id="titleId" :class="titleClass">{{ dialogPropsRef.title ?? '操作' }}</span>
+        <span :id="titleId" :class="titleClass">{{
+          dialogPropsRef.title ?? "操作"
+        }}</span>
         <div class="dialog-header-actions">
           <ElButton
             v-if="dialogPropsRef.dialogType === 'dialog'"
@@ -27,7 +29,9 @@
             link
           >
             <template #icon>
-              <Icon :icon="fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'" />
+              <Icon
+                :icon="fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'"
+              />
             </template>
           </ElButton>
           <ElButton class="dialog-header-btn" @click="close" link>
@@ -42,7 +46,9 @@
     <template #footer v-if="dialogPropsRef.footer">
       <slot name="footer">
         <slot name="prepend-footer"></slot>
-        <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel">取消</ElButton>
+        <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel"
+          >取消</ElButton
+        >
         <slot name="center-footer"></slot>
         <ElButton
           v-if="dialogPropsRef.showConfirmButton"
@@ -58,162 +64,164 @@
 </template>
 
 <script setup lang="ts">
-  import { Icon } from '@/components/icon'
-  import { DialogEmits, MyDialogInstance, MyDialogProps } from './types'
-  import { ElDialog, ElDrawer } from 'element-plus'
+import { Icon } from "@/components/icon";
+import { DialogEmits, MyDialogInstance, MyDialogProps } from "./types";
+import { ElDialog, ElDrawer } from "element-plus";
 
-  const props = withDefaults(defineProps<MyDialogProps>(), {
-    loading: false,
-    confirmLoading: false,
-    showConfirmButton: true,
-    showCancelButton: true,
-    footer: true,
-    dialogType: 'dialog',
-    draggable: false
-  })
+const props = withDefaults(defineProps<MyDialogProps>(), {
+  loading: false,
+  confirmLoading: false,
+  showConfirmButton: true,
+  showCancelButton: true,
+  footer: true,
+  dialogType: "dialog",
+  draggable: false,
+});
 
-  const emit = defineEmits<DialogEmits>()
-  const dialogVisible = ref(false)
-  const fullscreen = ref(false)
+const emit = defineEmits<DialogEmits>();
+const dialogVisible = ref(false);
+const fullscreen = ref(false);
 
-  // 根据 dialogType 决定使用哪个组件
-  const dialogComponent = computed(() => {
-    return props.dialogType === 'drawer' ? ElDrawer : ElDialog
-  })
+// 根据 dialogType 决定使用哪个组件
+const dialogComponent = computed(() => {
+  return props.dialogType === "drawer" ? ElDrawer : ElDialog;
+});
 
-  // 根据 dialogType 设置不同的 customClass
-  const customClass = computed(() => {
-    const baseClass = dialogPropsRef.value.customClass ?? 'm-dialog'
-    return props.dialogType === 'drawer' ? `${baseClass} m-drawer` : `${baseClass} m-dialog-box`
-  })
+// 根据 dialogType 设置不同的 customClass
+const customClass = computed(() => {
+  const baseClass = dialogPropsRef.value.customClass ?? "m-dialog";
+  return props.dialogType === "drawer"
+    ? `${baseClass} m-drawer`
+    : `${baseClass} m-dialog-box`;
+});
 
-  const dialogPropsRef = ref<MyDialogProps>(props)
-  const toggleFullscreen = () => {
-    fullscreen.value = !fullscreen.value
+const dialogPropsRef = ref<MyDialogProps>(props);
+const toggleFullscreen = () => {
+  fullscreen.value = !fullscreen.value;
+};
+const handleCancel = () => {
+  dialogVisible.value = false;
+  if (props.onCancel) {
+    props.onCancel();
+  } else {
+    emit("cancel");
   }
-  const handleCancel = () => {
-    dialogVisible.value = false
-    if (props.onCancel) {
-      props.onCancel()
-    } else {
-      emit('cancel')
-    }
+};
+const handleSubmit = () => {
+  if (props.onConfirm) {
+    props.onConfirm();
+  } else {
+    emit("confirm");
   }
-  const handleSubmit = () => {
-    if (props.onConfirm) {
-      props.onConfirm()
-    } else {
-      emit('confirm')
-    }
-  }
-  const methods: MyDialogInstance = {
-    open() {
-      dialogVisible.value = true
-    },
-    close() {
-      dialogVisible.value = false
-    },
-    // 设置组件状态（props）
-    setState(state: MyDialogProps) {
-      return new Promise((resolve) => {
-        dialogPropsRef.value = {
-          ...dialogPropsRef.value,
-          ...state
-        }
-        nextTick(() => {
-          resolve()
-        })
-      })
-    },
-    getState(): Promise<MyDialogProps> {
-      return new Promise((resolve) => {
-        resolve(dialogPropsRef.value)
-      })
-    }
-  }
-  onMounted(() => {
-    emit('register', methods)
-  })
-  defineExpose(methods)
+};
+const methods: MyDialogInstance = {
+  open() {
+    dialogVisible.value = true;
+  },
+  close() {
+    dialogVisible.value = false;
+  },
+  // 设置组件状态（props）
+  setState(state: MyDialogProps) {
+    return new Promise((resolve) => {
+      dialogPropsRef.value = {
+        ...dialogPropsRef.value,
+        ...state,
+      };
+      nextTick(() => {
+        resolve();
+      });
+    });
+  },
+  getState(): Promise<MyDialogProps> {
+    return new Promise((resolve) => {
+      resolve(dialogPropsRef.value);
+    });
+  },
+};
+onMounted(() => {
+  emit("register", methods);
+});
+defineExpose(methods);
 </script>
 
 <style lang="scss" scoped>
-  .el-dialog__header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.el-dialog__header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .dialog-header-actions {
-    display: flex;
-    align-items: center;
-  }
+.dialog-header-actions {
+  display: flex;
+  align-items: center;
+}
 
-  .dialog-header-btn {
-    margin-left: 10px;
-    padding: 0;
-    width: 24px;
-    height: 24px;
+.dialog-header-btn {
+  margin-left: 10px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
 
-    :deep(.el-icon) {
-      font-size: 16px;
-    }
+  :deep(.el-icon) {
+    font-size: 16px;
   }
-  :deep(.el-dialog__header) {
-    display: block !important;
-  }
+}
+:deep(.el-dialog__header) {
+  display: block !important;
+}
 
-  :deep(.el-drawer__header) {
-    margin-bottom: 0;
-  }
+:deep(.el-drawer__header) {
+  margin-bottom: 0;
+}
 </style>
 
 <style lang="scss">
-  // 全局样式，用于区分 dialog 和 drawer 的外观
-  .m-dialog-box {
+// 全局样式，用于区分 dialog 和 drawer 的外观
+.m-dialog-box {
+  padding: 0;
+
+  .el-dialog__header {
+    // background-color: var(--el-color-primary-light-6);
+    // border-bottom: 1px solid var(--el-border-color);
+    padding: 15px 20px !important;
+  }
+
+  .m-dialog-body {
+    background-color: var(--el-bg-color);
     padding: 0;
-
-    .el-dialog__header {
-      background-color: var(--el-color-primary-light-6);
-      border-bottom: 1px solid var(--el-border-color);
-      padding: 15px 20px !important;
-    }
-
-    .m-dialog-body {
-      background-color: var(--el-bg-color);
-      padding: 0;
-    }
-
-    .el-dialog__footer {
-      // background-color: var(--el-color-primary-light-6);
-      border-top: 1px solid var(--el-border-color);
-      padding: 15px 20px !important;
-    }
-    .el-dialog__body {
-      padding: 0 !important;
-    }
   }
 
-  .m-drawer {
-    .el-drawer__header {
-      background-color: var(--el-color-primary-light-6);
-      border-bottom: 1px solid var(--el-border-color);
-      padding: 15px 20px !important;
-      margin-bottom: 0 !important;
-    }
-
-    .m-dialog-body {
-      background-color: var(--el-bg-color);
-      padding: 0;
-    }
-
-    .el-drawer__footer {
-      // background-color: var(--el-color-primary-light-6);
-      border-top: 1px solid var(--el-border-color);
-      padding: 15px 20px !important;
-    }
-    .el-drawer__body {
-      padding: 0 !important;
-    }
+  .el-dialog__footer {
+    // background-color: var(--el-color-primary-light-6);
+    border-top: 1px solid var(--el-border-color);
+    padding: 15px 20px !important;
   }
+  .el-dialog__body {
+    padding: 0 !important;
+  }
+}
+
+.m-drawer {
+  .el-drawer__header {
+    // background-color: var(--el-color-primary-light-6);
+    // border-bottom: 1px solid var(--el-border-color);
+    padding: 15px 20px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .m-dialog-body {
+    background-color: var(--el-bg-color);
+    padding: 0;
+  }
+
+  .el-drawer__footer {
+    // background-color: var(--el-color-primary-light-6);
+    border-top: 1px solid var(--el-border-color);
+    padding: 15px 20px !important;
+  }
+  .el-drawer__body {
+    padding: 0 !important;
+  }
+}
 </style>

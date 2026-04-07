@@ -3,15 +3,18 @@
     <BasicCrud />
     <AuthMenu ref="authMenuRef" />
     <UserRole ref="userRoleRef" />
+    <DataScope ref="dataScopeRef" />
   </div>
 </template>
 <script setup lang="tsx">
 import { useCrud } from "@/components/crud";
+import DataScope from "./data-scope.vue";
 import { crudSchema } from "./schemas";
 import AuthMenu from "./auth-menu.vue";
 import UserRole from "./user-role.vue";
 const authMenuRef = ref();
 const userRoleRef = ref();
+const dataScopeRef = ref();
 const [BasicCrud, crudApi] = useCrud({
   ...crudSchema(),
   tableActionColumn: {
@@ -74,7 +77,28 @@ const [BasicCrud, crudApi] = useCrud({
         crudApi.openEditDialog();
       },
     },
+    {
+      label: "分配权限",
+      type: "primary",
+      sort: 10,
+      link: true,
+      icon: "ant-design:edit-outlined",
+      auth: "system:auth:data_scope",
+      dialogRef: dataScopeRef,
+      dialogParams(record) {
+        return {
+          data: record,
+          getCrudApi() {
+            return crudApi;
+          },
+        };
+      }
+    },
   ],
 });
+
+
+
+
 </script>
 <style lang="scss" scoped></style>

@@ -1,0 +1,13 @@
+{
+  "selector": {
+    "title": "选择图片",
+    "searchPlaceholder": "搜索图片名称",
+    "upload": "上传图片",
+    "select": "选择图片",
+    "loadError": "加载图片列表失败",
+    "uploadSuccess": "上传成功",
+    "uploadError": "上传失败",
+    "selectSuccess": "选择成功",
+    "empty": "暂无图片"
+  }
+}

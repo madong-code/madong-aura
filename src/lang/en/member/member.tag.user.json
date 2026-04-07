@@ -1,0 +1,35 @@
+{
+  "add_title": "Add User",
+  "list_title": "User List",
+  "member_manage": "【{name}】Member Management",
+  "message": {
+    "select_user": "Please select user",
+    "save_success": "Save successfully",
+    "delete_success": "Delete successfully"
+  },
+  "search": {
+    "user_name": "Username",
+    "placeholder": {
+      "user_name": "Please input username",
+      "real_name": "Please input real name",
+      "mobile_phone": "Please input mobile phone"
+    },
+    "real_name": "Real Name",
+    "mobile_phone": "Mobile Phone"
+  },
+  "table": {
+    "columns": {
+      "user_name": "Username",
+      "real_name": "Real Name",
+      "mobile_phone": "Mobile Phone"
+    }
+  },
+  "actions": {
+    "add_user": "Add User",
+    "remove_user": "Remove User"
+  },
+  "confirm": {
+    "title": "Tips",
+    "content": "Are you sure to delete?"
+  }
+}

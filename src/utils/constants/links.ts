@@ -10,13 +10,13 @@ export const WEB_LINKS = {
   GITHUB_HOME: 'https://gitee.com/liu_guan_qing',
 
   // 项目 Github 主页
-  GITHUB: 'https://gitee.com/motion-code/madong-ui-admin-art-design',
+  GITHUB: 'https://gitee.com/motion-code/madong-vue',
 
   // 个人博客
   BLOG: 'https://madong.tech/',
 
   // 项目文档
-  DOCS: 'https://madong.tech/doc/madong-ui-art',
+  DOCS: 'https://madong.tech/docs/framework',
 
 
   // 项目社区
@@ -26,5 +26,5 @@ export const WEB_LINKS = {
   BILIBILI: '',
 
   // 项目介绍
-  INTRODUCE: 'https://madong.tech/doc/madong-ui-art'
+  INTRODUCE: 'https://madong.tech/docs/framework/297061518217330688'
 }

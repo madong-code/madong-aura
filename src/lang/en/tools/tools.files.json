@@ -1,0 +1,63 @@
+{
+  "list": {
+    "title": "Attachment Management",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "url": "Access Address",
+        "size": "File Size",
+        "size_info": "File Details",
+        "hash": "Hash",
+        "filename": "File Name",
+        "original_filename": "Original File Name",
+        "base_path": "Base Path",
+        "path": "Storage Path",
+        "ext": "Extension",
+        "content_type": "MIME Type",
+        "platform": "Storage Platform",
+        "th_url": "Thumbnail Access Path",
+        "object_id": "File Belonging Object Id",
+        "object_type": "Object Type",
+        "attr": "Additional Attributes",
+        "remark": "",
+        "created_date": "Creation Date",
+        "updated_date": "Update Date",
+        "created_name": "Uploader",
+        "operation": "Operation",
+        "actions": {
+          "download": "Download",
+          "delete": {
+            "label": "Delete",
+            "title": "Warm Reminder",
+            "confirm": "Are you sure you want to delete?"
+          }
+        }
+      },
+      "toolbar": {
+        "upload": "Upload",
+        "delete": {
+          "label": "Delete",
+          "title": "Warm Reminder",
+          "confirm": "Are you sure you want to delete the selected {0} records?"
+        }
+      }
+    },
+    "query": {
+      "filename": "File Name",
+      "original_filename": "Original File Name",
+      "ext": "Extension",
+      "platform": "Platform",
+      "placeholder": {
+        "filename": "Please enter file name",
+        "original_filename": "Please enter original file name",
+        "ext": "Please enter extension",
+        "platform": "Please enter platform"
+      }
+    }
+  },
+  "form": {},
+  "message": {
+    "success": "Success",
+    "error": "Failed"
+  }
+}

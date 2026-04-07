@@ -1,0 +1,41 @@
+{
+    "title": "Member Management",
+    "table": {
+        "columns": {
+            "id": "ID",
+            "username": "Username",
+            "nickname": "Nickname",
+            "phone": "Phone",
+            "email": "Email",
+            "level_name": "Member Level",
+            "balance": "Balance",
+            "points": "Points",
+            "status": "Status",
+            "create_time": "Registration Time"
+        }
+    },
+    "search": {
+        "username": "Username",
+        "phone": "Phone",
+        "status": "Status"
+    },
+    "form": {
+        "username": "Username",
+        "nickname": "Nickname",
+        "phone": "Phone",
+        "email": "Email",
+        "password": "Password",
+        "level_id": "Member Level",
+        "status": "Status"
+    },
+    "actions": {
+        "reset_password": "Reset Password",
+        "enable": "Enable",
+        "disable": "Disable",
+        "assign_tags": "Assign Tags"
+    },
+    "status": {
+        "normal": "Normal",
+        "disabled": "Disabled"
+    }
+}

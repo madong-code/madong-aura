@@ -10,7 +10,7 @@
 import type { AppRouteRecord } from '@/types/router'
 import { useUserStore } from '@/store/modules/user'
 import { useAppMode } from '@/hooks/core/useAppMode'
-import { fetchGetMenuList } from '@/api/system-manage'
+import { AuthService } from '@/api/system/auth'
 import { asyncRoutes } from '../routes/asyncRoutes'
 import { RoutesAlias } from '../routesAlias'
 import { formatMenuTitle } from '@/utils'
@@ -59,7 +59,7 @@ export class MenuProcessor {
    * 处理后端控制模式的菜单
    */
   private async processBackendMenu(): Promise<AppRouteRecord[]> {
-    const list = await fetchGetMenuList()
+    const list = await AuthService.fetchGetMenuList()
     // 合并路由并转换数据结构
     const allRoutes = [
       ...(list as AppRouteRecord[]),

@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "登录日志",
+    "table": {
+      "columns": {
+        "id": "ID",
+        "user_name": "用户名",
+        "real_name": "昵称",
+        "ip": "ip",
+        "ip_location": "ip归属地",
+        "os": "操作系统",
+        "browser": "浏览器",
+        "status": "登录状态",
+        "message": "提示消息",
+        "key": "Key",
+        "remark": "备注",
+        "login_date": "登录时间",
+        "operation": "操作",
+        "actions": {
+          "delete": {
+            "label": "删除",
+            "title": "温馨提示",
+            "confirm": "是否确认删除?"
+          }
+        }
+      },
+      "toolbar": {
+        "empty": {
+          "label": "清空",
+          "title": "温馨提示",
+          "confirm": "确认清空所有登录记录吗？"
+        },
+        "delete": {
+          "label": "删除",
+          "title": "温馨提示",
+          "confirm": "确认删除选中的{0}条记录吗？"
+        }
+      }
+    },
+    "query": {
+      "user_name": "用户名",
+      "ip": "登录ip",
+      "status": "登录状态",
+      "created_date": "登录时间",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "ip": "请输入登录ip地址",
+        "status": "请选择登录状态"
+      }
+    }
+  }
+}

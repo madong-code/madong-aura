@@ -7,10 +7,16 @@
             class="absolute top-0 left-0 w-full h-50 object-cover"
             src="@imgs/user/bg.webp"
           />
-          <img
-            class="relative z-10 w-20 h-20 mt-30 mx-auto object-cover border-2 border-white rounded-full"
-            src="@imgs/user/avatar.webp"
-          />
+          <!-- 头像上传 -->
+          <div class="relative z-10 mt-30 mx-auto">
+            <Avatar
+              :value="(userInfo as any).avatar || defaultAvatar"
+              shape="circle"
+              class="border-2 border-white overflow-hidden"
+              @update:value="handleAvatarUpdate"
+              @success="handleAvatarSuccess"
+            />
+          </div>
           <h2 class="mt-5 text-xl font-normal">{{ userInfo?.user_name || "" }}</h2>
           <p class="mt-5 text-sm">{{ userInfo.signed || "专注于用户体验跟视觉设计" }}</p>
 
@@ -28,7 +34,7 @@
             <div class="mt-2.5">
               <ArtSvgIcon icon="ri:building-2-line" class="text-g-700" />
               <span class="ml-2 text-sm">{{
-                userInfo?.depts?.name ?? "未分配部门"
+                formatDepts(userInfo.depts) || "未分配部门"
               }}</span>
             </div>
           </div>
@@ -37,11 +43,11 @@
             <h3 class="text-sm font-medium">标签</h3>
             <div class="flex flex-wrap justify-center mt-3.5">
               <div
-                v-for="item in lableList"
-                :key="item"
+                v-for="role in userInfo.roles"
+                :key="role.id"
                 class="py-1 px-1.5 mr-2.5 mb-2.5 text-xs border border-g-300 rounded"
               >
-                {{ item }}
+                {{ role.name }}
               </div>
             </div>
           </div>
@@ -50,7 +56,7 @@
       <div class="flex-1 overflow-hidden max-md:w-full max-md:mt-3.5">
         <div class="art-card-sm">
           <h1 class="p-4 text-xl font-normal border-b border-g-300">
-            {{ $t("system.user.profile.base_setting.title") }}
+            {{ $t("system.user.center.base_setting.title") }}
           </h1>
 
           <ElForm
@@ -87,9 +93,9 @@
             <ElRow>
               <ElFormItem
                 :label="$t('system.user.form.modal.nick_name')"
-                prop="nike_name"
+                prop="nick_name"
               >
-                <ElInput v-model="form.nike_name" :disabled="!isEdit" />
+                <ElInput v-model="form.nick_name" :disabled="!isEdit" />
               </ElFormItem>
               <ElFormItem
                 :label="$t('system.user.form.modal.email')"
@@ -139,7 +145,7 @@
         </div>
 
         <div class="info box-style" style="margin-top: 20px">
-          <h1 class="title">{{ $t("system.user.profile.secure_setting.title") }}</h1>
+          <h1 class="title">{{ $t("system.user.center.secure_setting.title") }}</h1>
 
           <ElForm
             :model="pwdForm"
@@ -150,7 +156,7 @@
             label-position="top"
           >
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.old_password')"
+              :label="$t('system.user.center.secure_setting.old_password')"
               prop="password"
             >
               <ElInput
@@ -162,7 +168,7 @@
             </ElFormItem>
 
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.new_password')"
+              :label="$t('system.user.center.secure_setting.new_password')"
               prop="new_password"
             >
               <ElInput
@@ -174,7 +180,7 @@
             </ElFormItem>
 
             <ElFormItem
-              :label="$t('system.user.profile.secure_setting.confirm_password')"
+              :label="$t('system.user.center.secure_setting.confirm_password')"
               prop="confirm_password"
             >
               <ElInput
@@ -199,7 +205,7 @@
         </div>
 
         <div class="info box-style" style="margin-top: 20px; margin-bottom: 20px">
-          <h1 class="title">{{ $t("system.user.profile.online_device.table.title") }}</h1>
+          <h1 class="title">{{ $t("system.user.center.online_device.table.title") }}</h1>
           <BasicCrud style="min-height: 300px" />
         </div>
       </div>
@@ -209,9 +215,7 @@
 
 <script setup lang="ts">
 
-import { AuthService } from "@/api/system/auth";
 import ProfileService from "@/api/system/profile";
-import { UserService } from "@/api/system/user";
 import { useCrud } from "@/components/crud";
 import { $t } from "@/locales";
 import { useUserStore } from "@/store/modules/user";
@@ -222,29 +226,69 @@ import {
   type FormRules
 } from "element-plus";
 import { crudSchema } from "./schemas";
+import Avatar from '@/components/form/components/avatar.vue';
+import defaultAvatar from '@/assets/images/avatar/default-avatar.webp';
 
 defineOptions({ name: "UserCenter" });
 
 const userStore = useUserStore();
-const userInfo = computed(() => userStore.getUserInfo);
+const userInfo = computed(() => {
+  const info = userStore.getUserInfo;
+  console.log('UserInfo from store:', info);
+  return info;
+});
+
+// 格式化部门信息（从 depts 数组中获取 name）
+const formatDepts = (depts: any[] | undefined): string => {
+  if (!depts || depts.length === 0) return "";
+  return depts.map(dept => dept.name).join(', ');
+};
+
+// 头像更新（Avatar 组件调用）
+const handleAvatarUpdate = (newAvatarUrl: string) => {
+  console.log('头像组件更新:', newAvatarUrl);
+  // 这里可以更新本地状态，如果需要的话
+};
+
+// 头像上传成功回调
+const handleAvatarSuccess = async (avatarUrl: string) => {
+  try {
+    console.log('开始更新头像到后端:', avatarUrl);
+
+    // 调用专用头像更新接口
+    await ProfileService.updateAvatar({ avatar: avatarUrl });
+    console.log('头像更新到后端成功');
+
+    // 更新本地 store 中的用户头像
+    const currentUser = userStore.getUserInfo;
+    if (currentUser) {
+      userStore.setUserInfo({
+        ...(currentUser as any),
+        avatar: avatarUrl
+      } as any);
+      console.log('本地 store 头像已更新');
+    }
+
+    ElMessage.success('头像更新成功');
+  } catch (error) {
+    console.error('头像更新失败:', error);
+    ElMessage.error('头像更新失败');
+  }
+};
 
 // 基本设置表单相关
 const isEdit = ref(false);
 const profileFormRef = ref<FormInstance>();
 const form = ref({
   real_name: "",
-  nike_name: "",
+  nick_name: "",
   email: "",
   mobile_phone: "",
   signed: "",
   sex: 0,
   address: "",
+  avatar:""
 });
-
-  /**
-   * 用户标签列表
-   */
-   const lableList: Array<string> = ['专注设计', '很有想法', '辣~', '大长腿', '川妹子', '海纳百川']
 
 const options= reactive([
   {value:1,label:'男'},
@@ -257,7 +301,7 @@ const profileRules = reactive<FormRules>({
     { required: true, message: "请输入真实姓名", trigger: "blur" },
     { min: 2, max: 50, message: "长度在 2 到 50 个字符", trigger: "blur" },
   ],
-  nike_name: [
+  nick_name: [
     { required: true, message: "请输入昵称", trigger: "blur" },
     { min: 2, max: 30, message: "长度在 2 到 30 个字符", trigger: "blur" },
   ],
@@ -283,7 +327,7 @@ const pwdForm = reactive({
   confirm_password: ""
 });
 
-const validateConfirmPassword = (rule: any, value: string, callback: any) => {
+const validateConfirmPassword = (_rule: any, value: string, callback: any) => {
   if (value !== pwdForm.new_password) {
     callback(new Error("两次输入的密码不一致"));
   } else {
@@ -314,15 +358,16 @@ const pwdRules = reactive<FormRules>({
 // 加载用户信息
 async function loadProfile() {
   try {
-    const resp = await AuthService.userInfo() as any;
+    const resp = await ProfileService.getProfile() as any;
     form.value = {
       real_name: resp.real_name || "",
-      nike_name: resp.nike_name || "",
+      nick_name: resp.nick_name || "",
       email: resp.email || "",
       mobile_phone: resp.mobile_phone || "",
       signed: resp.signed || "",
       sex: resp.sex || 0,
       address: resp.address || "",
+      avatar: resp.avatar || "",
     };
   } catch (error) {
     console.error("加载用户信息失败:", error);
@@ -348,19 +393,16 @@ const handleProfileEdit = async () => {
       type: "warning"
     });
 
-    // 提交API
-    const loading = ElMessage.info({
-      message: "正在保存...",
-      duration: 0
-    });
-
     //更新用户数据
-    await ProfileService.updateInfo(form.value as any);
+    console.log('更新个人信息数据:', form.value);
+    await ProfileService.updateProfile(form.value as any);
+
     //获取新的用户数据
-    const newUser = await UserService.getUserInfo() as any
+    const newUser = await ProfileService.getProfile() as any;
+    console.log('新的用户信息:', newUser);
 
     // 更新store中的用户信息
-    const userStore = useUserStore()
+    const userStore = useUserStore();
     userStore.setUserInfo(newUser);
 
     ElMessage.success("个人信息更新成功");
@@ -399,32 +441,44 @@ const handlePwdEdit = async () => {
 
   try {
 
-    await ProfileService.updatePwd({
+    await ProfileService.updatePassword({
       old_password: pwdForm.password,
-      new_password: pwdForm.new_password
+      new_password: pwdForm.new_password,
+      confirm_password: pwdForm.confirm_password
     });
 
 
 
     // 显示成功消息并开始倒计时
     let seconds = 5;
-    const message = ElMessage.success({
-      message: `密码修改成功，${seconds}秒后将自动跳转到登录页面`,
-      duration: 0,
-      showClose: true
-    });
+    let messageHandler: any = null;
+
+    const updateMessage = () => {
+      if (messageHandler) {
+        messageHandler.close();
+      }
+      messageHandler = ElMessage.success({
+        message: `密码修改成功，${seconds}秒后将自动跳转到登录页面`,
+        duration: 0,
+        showClose: true
+      });
+    };
+
+    updateMessage();
 
     // 倒计时定时器
     const timer = setInterval(() => {
       seconds--;
       if (seconds <= 0) {
         clearInterval(timer);
-        message.close();
+        if (messageHandler) {
+          messageHandler.close();
+        }
         // 强制重新登录
         const userStore = useUserStore();
         userStore.logOut();
       } else {
-        message.message = `密码修改成功，${seconds}秒后将自动跳转到登录页面`;
+        updateMessage();
       }
     }, 1000);
 
@@ -468,14 +522,14 @@ const [BasicCrud, crudApi] = useCrud({
   // 表格行操作
   tableActions: [
     {
-      label: $t('system.user.profile.online_device.table.columns.actions.force_offline.label'),
+      label: $t('system.user.center.online_device.table.columns.actions.force_offline.label'),
       type: "danger",
       sort: 1020,
       link: true,
       icon: "ant-design:stop-outlined",
-      auth: "system:recycle_bin:recover",
-      onClick: (e: Event, record: any) => {
-        ProfileService.kickoutByTokenValue(record.key)
+      // auth: "system:recycle_bin:recover",
+      onClick: (_e: Event, record: any) => {
+        ProfileService.kickoutSession(record.jti)
         crudApi.refreshData()
       },
     }

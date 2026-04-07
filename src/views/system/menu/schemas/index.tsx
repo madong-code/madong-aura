@@ -3,14 +3,15 @@ import { CrudSchema } from '@/components/crud'
 import { Icon } from '@/components/icon'
 import { DictEnum } from '@/enums'
 import { $t } from '@/locales'
-import { m } from 'vue-router/dist/router-CWoNjPRp.mjs'
+import { request } from 'http'
+import { h } from 'vue'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: MenuService.list,
-    dialogTitle: '菜单',
+    dialogTitle: $t('system.menu.form.modal.title'),
     tree: {
       id: 'id',
       pid: 'pid'
@@ -48,55 +49,58 @@ export const crudSchema = (): CrudSchema => {
     columns: [
       {
         prop: 'title',
-        label: '菜单名称',
+        label: $t('system.menu.list.table.columns.title'),
         formatter: (row) => {
           return row.icon
             ? h('span', {}, [
-              h(Icon, {
-                icon: row.icon
-              }),
-              h(
-                'span',
-                {
-                  style: {
-                    paddingLeft: '6px'
-                  }
-                },
-                row.title
-              )
-            ])
+                h(Icon, {
+                  icon: row.icon
+                }),
+                h(
+                  'span',
+                  {
+                    style: {
+                      paddingLeft: '6px'
+                    }
+                  },
+                  row.title
+                )
+              ])
             : h('span', {}, row.title)
         },
-        minWidth: 200
+        minWidth: 150
       },
       {
         prop: 'code',
-        label: '唯一编码',
-        width: 200,
+        label: $t('system.menu.list.table.columns.code'),
+        width: 150
       },
       {
         prop: 'type',
-        label: '菜单类型',
+        label: $t('system.menu.list.table.columns.type'),
         component: 'ApiDict',
         componentProps: {
-          code: DictEnum.SYS_MENU_TYPE,
+          code: DictEnum.SYS_MENU_TYPE
         }
       },
       {
         prop: 'path',
-        label: '路由/接口地址'
+        label: $t('system.menu.list.table.columns.path'),
+        width: 200
       },
       {
         prop: 'component',
-        label: '组件地址'
+        label: $t('system.menu.list.table.columns.component')
       },
       {
         prop: 'sort',
-        label: '排序'
+        label: $t('system.menu.list.table.columns.sort'),
+        width: 90,
+        visible: false
       },
       {
         prop: 'enabled',
-        label: '是否启用',
+        label: $t('system.menu.list.table.columns.enabled'),
         component: 'ApiDict',
         componentProps: {
           code: 'yes_no',
@@ -124,8 +128,30 @@ export const crudSchema = (): CrudSchema => {
           componentProps: {
             code: DictEnum.SYS_MENU_TYPE,
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.type'),
-          },
+            placeholder: $t('system.menu.list.query.placeholder.type')
+          }
+        },
+        {
+          component: 'Select',
+          prop: 'EQ_plugin',
+          label: $t('system.menu.list.query.enabled'),
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+            placeholder: $t('system.menu.list.query.placeholder.enabled')
+          }
+        },
+        {
+          component: 'ApiSelect',
+          prop: 'EQ_app',
+          label: $t('system.menu.form.modal.app'),
+          defaultValue: 'admin',
+          componentProps: {
+            api: '/system/menu/app/list',
+            requestMethod: 'GET',
+            placeholder: $t('system.menu.form.placeholder.app'),
+            clearable: true
+          }
         },
         {
           component: 'Input',
@@ -133,7 +159,7 @@ export const crudSchema = (): CrudSchema => {
           label: $t('system.menu.list.query.title'),
           componentProps: {
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.title'),
+            placeholder: $t('system.menu.list.query.placeholder.title')
           }
         },
         {
@@ -142,7 +168,7 @@ export const crudSchema = (): CrudSchema => {
           label: $t('system.menu.list.query.code'),
           componentProps: {
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.code'),
+            placeholder: $t('system.menu.list.query.placeholder.code')
           }
         },
         {
@@ -151,7 +177,7 @@ export const crudSchema = (): CrudSchema => {
           label: $t('system.menu.list.query.path'),
           componentProps: {
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.path'),
+            placeholder: $t('system.menu.list.query.placeholder.path')
           }
         },
         {
@@ -159,12 +185,11 @@ export const crudSchema = (): CrudSchema => {
           componentProps: {
             clearable: true,
             code: DictEnum.SYS_ENABLED_STATUS,
-            placeholder: $t('system.menu.list.query.placeholder.enabled'),
+            placeholder: $t('system.menu.list.query.placeholder.enabled')
           },
           prop: 'enabled',
-          label: $t('system.menu.list.query.enabled'),
-        },
-
+          label: $t('system.menu.list.query.enabled')
+        }
       ]
     },
     // crud表单配置
@@ -174,94 +199,115 @@ export const crudSchema = (): CrudSchema => {
       schema: [
         // 菜单ID（隐藏字段）
         {
-          label: '菜单ID',
+          label: $t('system.menu.form.modal.id'),
           prop: 'id',
           component: 'Input',
           colSpan: 24,
           show: false,
           ifDetail: false
         },
-
-        // 菜单类型
         {
-          label: '菜单类型',
+          label: $t('system.menu.form.modal.type'),
           prop: 'type',
           component: 'ApiDict',
           defaultValue: 1,
-          colSpan: 12,
+          colSpan: 24,
           rules: [],
           componentProps: {
-            placeholder: '请选择菜单类型',
+            placeholder: $t('system.menu.form.placeholder.type'),
             code: DictEnum.SYS_MENU_TYPE,
             isBtn: true,
             renderType: 'RadioGroup'
           }
         },
+        {
+          label: $t('system.menu.form.modal.app'),
+          prop: 'app',
+          component: 'ApiSelect',
+          defaultValue: 'admin',
+          colSpan: 24,
+          rules: [],
+          componentProps: (_value) => {
+            return {
+              api: '/system/menu/app/list',
+              requestMethod: 'GET',
+              placeholder: $t('system.menu.form.placeholder.app'),
+              style: {
+                width: '330px'
+              }
+            }
+          }
+        },
 
         // 所属上级
         {
-          label: '所属上级',
+          label: $t('system.menu.form.modal.pid'),
           prop: 'pid',
           component: 'ApiTreeSelect',
           colSpan: 12,
-          componentProps: {
-            placeholder: '请选择所属上级',
-            clearable: true,
-            // 任意节点可选 
-            checkStrictly: true,
-            api: '/system/menu',
-            params: { format: 'tree' },
-            labelField: 'name',
-            valueField: 'id'
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.pid'),
+              clearable: true,
+              checkStrictly: true,
+              api: '/system/menu',
+              requestMethod: 'GET',
+              params: {
+                format: 'tree',
+                app: values.app || 'admin' // 根据当前选择的应用过滤上级菜单
+              },
+              labelField: 'name',
+              valueField: 'id'
+            }
           }
         },
 
         // 菜单名称
         {
-          label: '菜单名称',
+          label: $t('system.menu.form.modal.title'),
           prop: 'title',
           component: 'Input',
           colSpan: 12,
           rules: [
             {
               required: true,
-              message: '请输入菜单名称'
+              message: $t('system.menu.form.placeholder.title')
             }
           ],
           componentProps: {
-            placeholder: '请输入菜单名称',
+            placeholder: $t('system.menu.form.placeholder.title'),
             clearable: true
           }
         },
 
         // 唯一编码
         {
-          label: '唯一编码',
+          label: $t('system.menu.form.modal.code'),
           prop: 'code',
           component: 'Input',
           colSpan: 12,
           rules: [
             {
               required: true,
-              message: '请输入唯一编码'
+              message: $t('system.menu.form.placeholder.code')
             }
           ],
           componentProps: {
-            placeholder: '请输入唯一编码',
+            placeholder: $t('system.menu.form.placeholder.code'),
             clearable: true
           }
         },
 
         // 路由/接口地址
         {
-          label: '路由/接口地址',
+          label: $t('system.menu.form.modal.path'),
           prop: 'path',
           component: 'Input',
           colSpan: 12,
-          helpMessage: 'route.path',
+          helpMessage: $t('system.menu.form.help.path'),
           componentProps: (values) => {
             return {
-              placeholder: '请输入路由/接口地址',
+              placeholder: $t('system.menu.form.placeholder.path'),
               clearable: true,
               disabled: ![1, 2, 4].includes(values.type)
             }
@@ -270,13 +316,13 @@ export const crudSchema = (): CrudSchema => {
 
         // 组件地址
         {
-          label: '组件地址',
+          label: $t('system.menu.form.modal.component'),
           prop: 'component',
           component: 'Input',
           colSpan: 12,
           componentProps: (values) => {
             return {
-              placeholder: '请输入组件地址',
+              placeholder: $t('system.menu.form.placeholder.component'),
               clearable: true,
               disabled: ![1, 2].includes(values.type)
             }
@@ -285,14 +331,14 @@ export const crudSchema = (): CrudSchema => {
 
         // 打开方式
         {
-          label: '打开方式',
+          label: $t('system.menu.form.modal.open_type'),
           prop: 'openType',
           component: 'ApiDict',
           defaultValue: 1,
           colSpan: 12,
           componentProps: (values) => {
             return {
-              placeholder: '请选择打开方式',
+              placeholder: $t('system.menu.form.placeholder.open_type'),
               code: 'sys_menu_open_type',
               isBtn: true,
               renderType: 'RadioGroup',
@@ -303,14 +349,14 @@ export const crudSchema = (): CrudSchema => {
 
         // 图标
         {
-          label: '图标',
+          label: $t('system.menu.form.modal.icon'),
           prop: 'icon',
           component: 'IconPicker',
           colSpan: 12,
           componentProps: (values) => {
             return {
               class: 'w-full',
-              placeholder: '请选择图标',
+              placeholder: $t('system.menu.form.placeholder.icon'),
               clearable: true,
               disabled: ![1, 2].includes(values.type)
             }
@@ -319,14 +365,14 @@ export const crudSchema = (): CrudSchema => {
 
         // 内外链地址
         {
-          label: '内外链地址',
+          label: $t('system.menu.form.modal.link_url'),
           prop: 'url',
           component: 'Input',
           colSpan: 12,
-          helpMessage: 'url',
+          helpMessage: $t('system.menu.form.help.link_url'),
           componentProps: (values) => {
             return {
-              placeholder: '请输入内外链地址',
+              placeholder: $t('system.menu.form.placeholder.link_url'),
               clearable: true,
               disabled: ![2, 3].includes(values.openType)
             }
@@ -335,26 +381,26 @@ export const crudSchema = (): CrudSchema => {
 
         // 排序
         {
-          label: '排序',
+          label: $t('system.menu.form.modal.sort'),
           prop: 'sort',
           component: 'InputNumber',
           colSpan: 12,
           defaultValue: 999,
           componentProps: {
-            placeholder: '请输入排序',
+            placeholder: $t('system.menu.form.placeholder.sort'),
             clearable: true
           }
         },
 
         // 是否启用
         {
-          label: '是否启用',
+          label: $t('system.menu.form.modal.enabled'),
           prop: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
           colSpan: 6,
           componentProps: {
-            placeholder: '请选择是否启用',
+            placeholder: $t('system.menu.form.placeholder.enabled'),
             code: 'yes_no',
             isBtn: true,
             renderType: 'RadioGroup'
@@ -363,14 +409,14 @@ export const crudSchema = (): CrudSchema => {
 
         // 是否显示
         {
-          label: '是否显示',
+          label: $t('system.menu.form.modal.is_show'),
           prop: 'isShow',
           component: 'ApiDict',
           defaultValue: 1,
           colSpan: 6,
           componentProps: (values) => {
             return {
-              placeholder: '请选择是否显示',
+              placeholder: $t('system.menu.form.placeholder.is_show'),
               code: 'yes_no',
               isBtn: true,
               renderType: 'RadioGroup',
@@ -381,13 +427,13 @@ export const crudSchema = (): CrudSchema => {
 
         // 是否同步
         {
-          label: '是否同步',
+          label: $t('system.menu.form.modal.is_sync'),
           prop: 'isSync',
           component: 'ApiDict',
           defaultValue: 0,
           colSpan: 6,
           componentProps: {
-            placeholder: '请选择是否同步',
+            placeholder: $t('system.menu.form.placeholder.is_sync'),
             code: 'yes_no',
             isBtn: true,
             renderType: 'RadioGroup'
@@ -396,14 +442,14 @@ export const crudSchema = (): CrudSchema => {
 
         // 是否缓存
         {
-          label: '是否缓存',
+          label: $t('system.menu.form.modal.is_cache'),
           prop: 'isCache',
           component: 'ApiDict',
           defaultValue: 0,
           colSpan: 6,
           componentProps: (values) => {
             return {
-              placeholder: '请选择是否缓存',
+              placeholder: $t('system.menu.form.placeholder.is_cache'),
               code: 'yes_no',
               isBtn: true,
               renderType: 'RadioGroup',

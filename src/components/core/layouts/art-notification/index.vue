@@ -111,7 +111,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, type Ref, type ComputedRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useNotifyStore } from "@/store/modules/notify";
+import { useNotifyStore } from '@/store/modules/notify'
 
 // 导入头像图片
 import avatar1 from '@/assets/images/avatar/avatar1.webp'
@@ -120,11 +120,11 @@ import avatar3 from '@/assets/images/avatar/avatar3.webp'
 import avatar4 from '@/assets/images/avatar/avatar4.webp'
 import avatar5 from '@/assets/images/avatar/avatar5.webp'
 import avatar6 from '@/assets/images/avatar/avatar6.webp'
-import MessageService from '@/api/system/message';
+import MessageService from '@/api/setting/message'
 
 defineOptions({ name: 'ArtNotification' })
-const router = useRouter();
-const notifyStore = useNotifyStore();
+const router = useRouter()
+const notifyStore = useNotifyStore()
 
 interface NoticeItem {
   /** 标题 */
@@ -262,7 +262,7 @@ const useNotificationData = () => {
     {
       name: computed(() => t('notice.bar[1]')),
       num: notifyStore.notificationList.length
-    },
+    }
     // {
     //   name: computed(() => t('notice.bar[2]')),
     //   num: pendingList.value.length
@@ -386,14 +386,12 @@ const useTabManagement = (
 const useBusinessLogic = () => {
   const handleNoticeAll = () => {
     // 处理查看全部通知
-    router.push("/system/message");
-
+    router.push('/message')
   }
 
   const handleMsgAll = () => {
     // 处理查看全部消息
     console.log('查看全部消息')
-
   }
 
   const handlePendingAll = () => {
@@ -429,12 +427,12 @@ watch(
 )
 
 onMounted(() => {
-  notifyStore.startListeningMessage();
+  notifyStore.startListeningMessage()
   //延迟1秒预防ui没加载完成
   setTimeout(() => {
-    MessageService.notifyOnFirstLoginToAll({});
-  }, 1000);
-});
+    MessageService.notifyOnFirstLoginToAll({})
+  }, 1000)
+})
 </script>
 
 <style scoped>
