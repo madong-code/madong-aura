@@ -5,7 +5,7 @@ dist-ssr
 *.local
 .cursorrules
 *.idea
-
+src/apps
 
 # Auto-generated files
 src/types/import/auto-imports.d.ts
