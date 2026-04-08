@@ -45,35 +45,30 @@
           <div class="kv-editor">
             <div v-for="(kv, index) in jsonKvList" :key="index" class="kv-item">
               <div class="kv-item-row">
-                <el-input v-model="kv.key" :placeholder="$t('setting.config.common.form.placeholder.key')" class="kv-input kv-key" />
+                <el-input v-model="kv.key" :placeholder="$t('setting.config.common.form.placeholder.key')" class="kv-key" />
+                <el-input
+                  v-show="kv.type === 'string'"
+                  v-model="kv.value"
+                  :placeholder="$t('setting.config.common.form.placeholder.string_value')"
+                  class="kv-value"
+                />
+                <el-input-number
+                  v-show="kv.type === 'number'"
+                  v-model="kv.value"
+                  :controls="false"
+                  class="kv-value"
+                  :placeholder="$t('setting.config.common.form.placeholder.number_value')"
+                />
+                <el-switch
+                  v-show="kv.type === 'boolean'"
+                  v-model="kv.value"
+                  class="kv-switch"
+                />
                 <el-select v-model="kv.type" class="kv-select">
                   <el-option :label="$t('setting.config.common.form.type_options.string')" value="string" />
                   <el-option :label="$t('setting.config.common.form.type_options.number')" value="number" />
                   <el-option :label="$t('setting.config.common.form.type_options.boolean')" value="boolean" />
                 </el-select>
-              </div>
-
-              <!-- 值输入：根据类型显示不同控件 -->
-              <div class="kv-item-row">
-                <el-input
-                  v-if="kv.type === 'string'"
-                  v-model="kv.value"
-                  :placeholder="$t('setting.config.common.form.placeholder.string_value')"
-                  class="kv-input"
-                />
-                <el-input-number
-                  v-else-if="kv.type === 'number'"
-                  v-model="kv.value"
-                  :controls="false"
-                  class="kv-input"
-                  :placeholder="$t('setting.config.common.form.placeholder.number_value')"
-                />
-                <el-switch
-                  v-else-if="kv.type === 'boolean'"
-                  v-model="kv.value"
-                  class="kv-switch"
-                />
-
                 <el-button
                   type="danger"
                   :icon="Delete"
@@ -343,11 +338,8 @@ defineExpose({
   width: 100%;
 
   .kv-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 16px;
-    padding: 12px;
+    margin-bottom: 12px;
+    padding: 8px;
     border: 1px solid #e4e7ed;
     border-radius: 4px;
     background-color: #f5f7fa;
@@ -356,19 +348,19 @@ defineExpose({
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: nowrap;
 
-      .kv-input {
+      .kv-key {
+        flex: 0 0 30%;
+        min-width: 0;
+      }
+
+      .kv-value {
         flex: 1;
         min-width: 0;
-
-        &.kv-key {
-          flex: 0 0 150px;
-        }
       }
 
       .kv-select {
-        flex: 0 0 90px;
+        flex: 0 0 100px;
       }
 
       .kv-switch {
@@ -377,7 +369,6 @@ defineExpose({
 
       .kv-delete-btn {
         flex: 0 0 auto;
-        margin-left: 8px;
       }
     }
   }
