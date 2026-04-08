@@ -366,44 +366,5 @@
     "zebra": "Zebra",
     "border": "Border",
     "headerBackground": "Header BG"
-  },
-  "setting": {
-    "config": {
-      "site": {
-        "title": "Site Settings",
-        "open": "Site Open",
-        "url": "Site URL",
-        "name": "Site Name",
-        "logo": "Site Logo",
-        "network_security": "Network Security",
-        "description": "Site Description",
-        "record_no": "ICP No",
-        "icp_url": "ICP URL",
-        "network_security_url": "Network Security URL",
-        "keywords": "Keywords",
-        "placeholder": {
-          "url": "Please enter site URL",
-          "name": "Please enter site name",
-          "network_security": "Please enter network security",
-          "keywords": "Please enter keywords",
-          "record_no": "Please enter ICP number",
-          "icp_url": "Please enter ICP URL",
-          "network_security_url": "Please enter network security URL",
-          "description": "Please enter site description"
-        }
-      },
-      "upload": {
-        "title": "Upload Settings"
-      },
-      "email": {
-        "title": "Email Settings"
-      },
-      "sms": {
-        "title": "SMS Settings"
-      },
-      "common": {
-        "title": "Common Config"
-      }
-    }
   }
 }

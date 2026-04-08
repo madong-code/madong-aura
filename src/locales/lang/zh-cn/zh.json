@@ -366,44 +366,5 @@
     "zebra": "斑马纹",
     "border": "边框",
     "headerBackground": "表头背景"
-  },
-  "setting": {
-    "config": {
-      "site": {
-        "title": "站点设置",
-        "open": "站点开启",
-        "url": "网站地址",
-        "name": "站点名称",
-        "logo": "站点Logo",
-        "network_security": "网备案号",
-        "description": "网站描述",
-        "record_no": "网站ICP",
-        "icp_url": "ICP URL",
-        "network_security_url": "网安备案链接",
-        "keywords": "关键字",
-        "placeholder": {
-          "url": "请输入网站地址",
-          "name": "请输入站点名称",
-          "network_security": "请输入网备案号",
-          "keywords": "请输入关键字",
-          "record_no": "请输入网站ICP",
-          "icp_url": "请输入ICP URL",
-          "network_security_url": "请输入网安备案链接",
-          "description": "请输入网站描述"
-        }
-      },
-      "upload": {
-        "title": "上传设置"
-      },
-      "email": {
-        "title": "邮件设置"
-      },
-      "sms": {
-        "title": "短信设置"
-      },
-      "common": {
-        "title": "通用配置"
-      }
-    }
   }
 }
