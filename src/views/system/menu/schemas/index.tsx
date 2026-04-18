@@ -223,17 +223,22 @@ export const crudSchema = (): CrudSchema => {
         {
           label: $t('system.menu.form.modal.app'),
           prop: 'app',
-          component: 'ApiSelect',
+          component: 'ApiTreeSelect',
           defaultValue: 'admin',
           colSpan: 24,
           rules: [],
           componentProps: (_value) => {
             return {
               api: '/system/menu/app/list',
-              requestMethod: 'GET',
+              requestMethod: 'get',
               placeholder: $t('system.menu.form.placeholder.app'),
               style: {
                 width: '330px'
+              },
+               labelField: 'label',
+              valueField: 'value',
+                onChange: (_values: any) => {
+                _value.pid = ''
               }
             }
           }
@@ -245,16 +250,17 @@ export const crudSchema = (): CrudSchema => {
           prop: 'pid',
           component: 'ApiTreeSelect',
           colSpan: 12,
-          componentProps: (values) => {
+          componentProps: (_value) => {
             return {
               placeholder: $t('system.menu.form.placeholder.pid'),
               clearable: true,
+              disabled: !_value?.app,
               checkStrictly: true,
               api: '/system/menu',
-              requestMethod: 'GET',
+              requestMethod: 'get',
               params: {
                 format: 'tree',
-                app: values.app || 'admin' // 根据当前选择的应用过滤上级菜单
+                app: _value.app || 'admin' // 根据当前选择的应用过滤上级菜单
               },
               labelField: 'name',
               valueField: 'id'
