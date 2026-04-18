@@ -98,7 +98,16 @@
       "tel": "电话",
       "is_locked": "是否锁定",
       "address": "地址",
-      "signed": "签名"
+      "signed": "签名",
+      "id": "用户ID",
+      "base_info": "基础信息",
+      "other_info": "其他信息",
+      "dept_id_list": "所属部门",
+      "post_id_list": "所属职位",
+      "main_dept_id": "主要部门",
+      "main_post_id": "主要职务",
+      "create": "新增用户",
+      "edit": "编辑"
     },
     "help": {
       "post_name": "选择部门后, 将自动加载该部门下所有的岗位"
@@ -113,7 +122,12 @@
       "dept_name": "请选择部门",
       "post_name": "请选择岗位",
       "role_name": "请选择角色",
-      "remark": "备注"
+      "remark": "备注",
+      "main_dept_id": "请选择主要部门",
+      "main_post_id": "请选择主要职务",
+      "dept_id_list": "请选择所属部门",
+      "post_id_list": "请选择所属职位",
+      "role_id_list": "请选择角色"
     }
   },
   "success": {
@@ -122,5 +136,13 @@
     "locked": "锁定成功",
     "delete": "删除成功",
     "operate": "操作成功"
+  },
+  "button": {
+    "create": "新增",
+    "edit": "编辑",
+    "grant_role": "授权角色"
+  },
+  "dialog": {
+    "title": "用户"
   }
 }

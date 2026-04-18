@@ -10,7 +10,6 @@ const baseUrl = '/system/admin';
 export const UserService = {
   ...BaseService<User>({
     baseUrl,
-    allowedMethods: [],
     forbiddenMethods: ['export'],
   }),
 

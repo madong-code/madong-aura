@@ -2,6 +2,7 @@
   <div class="user-page art-full-height">
     <BasicCrud @reset="handleReset" />
     <GrantRole ref="grantRoleRef" />
+    <Form ref="formRef" />
   </div>
 </template>
 
@@ -9,8 +10,11 @@
 import { useCrud } from "@/components/crud";
 import { crudSchema } from "./schemas";
 import GrantRole from "./grant-role.vue";
+import Form from "./form.vue";
+import { $t } from "@/locales";
 // import DeptTree from "./dept-tree.vue";
 const grantRoleRef = ref();
+const formRef = ref();
 const deptIdList = ref([]);
 
 const [BasicCrud, crudApi] = useCrud({
@@ -20,15 +24,42 @@ const [BasicCrud, crudApi] = useCrud({
   // },
   // hasAdd: true,
   // 左侧工具栏
-  toolbarActions: [],
+  toolbarActions: [
+    {
+      label: $t("system.user.button.create"),
+      icon: "ant-design:plus-outlined",
+      type: "primary",
+      dialogRef: formRef,
+      auth: "system:user:create",
+      dialogParams() {
+        return {
+          getCrudApi: () => crudApi,
+        };
+      },
+    },
+  ],
   // 左侧栏工具-下拉菜单
   dropDownToolbarActions: [],
   // 表格行操作
-  tableActions: [],
+  tableActions: [
+    {
+      label: $t("system.user.button.edit"),
+      icon: "ant-design:edit-outlined",
+      type: "primary",
+      link: true,
+      dialogRef: formRef,
+      auth: "system:user:edit",
+      dialogParams() {
+        return {
+          getCrudApi: () => crudApi,
+        };
+      },
+    },
+  ],
   // 表格行操作-下拉菜单
   dropDownActions: [
     {
-      label: "授权角色",
+      label: $t("system.user.button.grant_role"),
       icon: "ant-design:team-outlined",
       type: "primary",
       link: true,

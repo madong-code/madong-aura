@@ -5,6 +5,7 @@ const baseUrl = '/org/post';
 
 export const PostService = {
   ...BaseService<PostRow>({ baseUrl }),
+  getList: BaseService<PostRow>({ baseUrl }).list,
 };
 
 export default PostService;

@@ -13,7 +13,7 @@ export const crudSchema = (): CrudSchema => {
   return {
     // 接口地址
     api: UserService.list,
-    dialogTitle: '用户',
+    dialogTitle: $t('system.user.dialog.title'),
     crudApi: {
       // 新增接口
       add: UserService.create,
@@ -27,13 +27,13 @@ export const crudSchema = (): CrudSchema => {
     // 使用crud
     useCrud: true,
     // 是否有新增
-    hasAdd: true,
+    hasAdd: false,
     // 是否有删除
     hasRemove: true,
     // 是否有修改
-    hasEdit: true,
+    hasEdit: false,
     // 是否有详情
-    hasView: true,
+    hasView: false,
     // 新增权限码
     addAuth: 'system:user:create',
     // 删除权限码
@@ -192,7 +192,7 @@ export const crudSchema = (): CrudSchema => {
       schema: [
         // 用户ID（隐藏字段）
         {
-          label: '用户ID',
+          label: $t('system.user.form.modal.id'),
           prop: 'id',
           component: 'Input',
           colSpan: 12,
@@ -208,7 +208,7 @@ export const crudSchema = (): CrudSchema => {
           component: 'Divider',
           colSpan: 24,
           componentProps: {
-            title: '基础信息'
+            title: $t('system.user.form.modal.base_info')
           }
         },
         {
@@ -314,7 +314,7 @@ export const crudSchema = (): CrudSchema => {
           component: 'Divider',
           colSpan: 24,
           componentProps: {
-            title: '其他信息'
+            title: $t('system.user.form.modal.other_info')
           }
         },
         // 所属部门
@@ -382,7 +382,7 @@ export const crudSchema = (): CrudSchema => {
           rules: [
             {
               required: false,
-              message: '请选择所属角色'
+              message: $t('system.user.form.placeholder.role_name')
             }
           ],
           ifShow: false,

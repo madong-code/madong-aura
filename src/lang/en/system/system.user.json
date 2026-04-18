@@ -98,7 +98,16 @@
       "tel": "Telephone",
       "is_locked": "Locked",
       "address": "Address",
-      "signed": "Signature"
+      "signed": "Signature",
+      "id": "User ID",
+      "base_info": "Basic Information",
+      "other_info": "Other Information",
+      "dept_id_list": "Departments",
+      "post_id_list": "Positions",
+      "main_dept_id": "Main Department",
+      "main_post_id": "Main Position",
+      "create": "Create User",
+      "edit": "Edit"
     },
     "help": {
       "post_name": "After selecting a department, all posts under that department will be automatically loaded"
@@ -113,7 +122,12 @@
       "dept_name": "Please select department",
       "post_name": "Please select post",
       "role_name": "Please select role",
-      "remark": "Remark"
+      "remark": "Remark",
+      "main_dept_id": "Please select main department",
+      "main_post_id": "Please select main position",
+      "dept_id_list": "Please select departments",
+      "post_id_list": "Please select positions",
+      "role_id_list": "Please select roles"
     }
   },
   "success": {
@@ -122,5 +136,13 @@
     "locked": "Lock successful",
     "delete": "Deletion successful",
     "operate": "Operation successful"
+  },
+  "button": {
+    "create": "Create",
+    "edit": "Edit",
+    "grant_role": "Grant Role"
+  },
+  "dialog": {
+    "title": "User"
   }
 }
