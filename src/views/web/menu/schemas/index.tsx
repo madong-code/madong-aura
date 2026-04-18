@@ -5,7 +5,7 @@ import { Icon } from '@/components/icon'
 import { $t } from '@/locales'
 import api from '@/utils/http'
 import { h } from 'vue'
-
+import { request } from 'http'
 
 // crud配置
 export const crudSchema = (): CrudSchema => {
@@ -23,7 +23,7 @@ export const crudSchema = (): CrudSchema => {
       // 修改接口
       edit: MenuService.update,
       // 删除接口
-      remove: MenuService.delete,
+      remove: MenuService.remove,
       // 详情接口
       view: MenuService.get
     },
@@ -57,19 +57,19 @@ export const crudSchema = (): CrudSchema => {
         formatter: (row) => {
           return row.icon
             ? h('span', {}, [
-              h(Icon, {
-                icon: row.icon
-              }),
-              h(
-                'span',
-                {
-                  style: {
-                    paddingLeft: '6px'
-                  }
-                },
-                row.name
-              )
-            ])
+                h(Icon, {
+                  icon: row.icon
+                }),
+                h(
+                  'span',
+                  {
+                    style: {
+                      paddingLeft: '6px'
+                    }
+                  },
+                  row.name
+                )
+              ])
             : h('span', {}, row.name)
         },
         minWidth: 200
@@ -80,7 +80,7 @@ export const crudSchema = (): CrudSchema => {
         component: 'ApiDict',
         align: 'center',
         componentProps: {
-          code: DictEnum.WEB_MENU_CATEGORY,
+          code: DictEnum.WEB_MENU_CATEGORY
         }
       },
       {
@@ -91,11 +91,11 @@ export const crudSchema = (): CrudSchema => {
           if (row.type === 1) {
             return '/'
           }
-        },
+        }
       },
       {
         prop: 'sort',
-        label: $t('web.menu.table.columns.sort'),
+        label: $t('web.menu.table.columns.sort')
       },
       {
         prop: 'type',
@@ -103,7 +103,7 @@ export const crudSchema = (): CrudSchema => {
         component: 'ApiDict',
         align: 'left',
         componentProps: {
-          code: DictEnum.WEB_MENU_TYPE,
+          code: DictEnum.WEB_MENU_TYPE
         }
       },
       {
@@ -112,7 +112,7 @@ export const crudSchema = (): CrudSchema => {
         align: 'center',
         component: 'ApiDict',
         componentProps: {
-          code: DictEnum.WEB_MENU_TARGET,
+          code: DictEnum.WEB_MENU_TARGET
         }
       },
       {
@@ -121,7 +121,7 @@ export const crudSchema = (): CrudSchema => {
         align: 'center',
         component: 'ApiDict',
         componentProps: {
-          code: DictEnum.SYS_YES_NO,
+          code: DictEnum.SYS_YES_NO
         }
       },
       {
@@ -130,15 +130,14 @@ export const crudSchema = (): CrudSchema => {
         component: 'ApiDict',
         align: 'center',
         componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
+          code: DictEnum.SYS_ENABLED_STATUS
         }
-      },
-
+      }
     ],
     // 内置弹窗配置
     dialogProps: {
       width: '60%',
-      dialogType: 'drawer',
+      dialogType: 'drawer'
     },
     // 搜索表单配置
     searchFormSchema: {
@@ -153,20 +152,19 @@ export const crudSchema = (): CrudSchema => {
           componentProps: (_value) => {
             return {
               api: '/system/menu/app/list',
-              requestMethod: 'GET',
+              requestMethod: 'GET'
             }
-
           }
         },
         {
           prop: 'EQ_category',
-           label: $t('web.menu.search.category'), 
-           component: 'ApiDict', 
-           colSpan: 6, 
-           componentProps: {
-          code: DictEnum.WEB_MENU_CATEGORY,
-        }
-      },
+          label: $t('web.menu.search.category'),
+          component: 'ApiDict',
+          colSpan: 6,
+          componentProps: {
+            code: DictEnum.WEB_MENU_CATEGORY
+          }
+        },
         {
           prop: 'LINK_name',
           label: $t('web.menu.search.name'),
@@ -183,8 +181,7 @@ export const crudSchema = (): CrudSchema => {
             clearable: true
           },
           colSpan: 6
-        },
-                
+        }
       ]
     },
     // crud表单配置
@@ -211,7 +208,7 @@ export const crudSchema = (): CrudSchema => {
             renderType: 'RadioGroup',
             placeholder: $t('web.menu.form.placeholder_type'),
             code: DictEnum.WEB_MENU_CATEGORY,
-            isBtn: true,
+            isBtn: true
           }
         },
         {
@@ -227,10 +224,9 @@ export const crudSchema = (): CrudSchema => {
               requestMethod: 'GET',
               placeholder: $t('web.menu.form.placeholder_app'),
               style: {
-                width: '330px',
+                width: '330px'
               }
             }
-
           }
         },
         {
@@ -279,10 +275,11 @@ export const crudSchema = (): CrudSchema => {
               clearable: true,
               checkStrictly: true,
               api: '/web/menu',
+              requestMethod: 'get',
               params: {
                 format: 'tree',
                 app: values.app || 'web',
-                category: values.category || 1,
+                category: values.category || 1
               },
               labelField: 'name',
               valueField: 'id'
@@ -332,7 +329,7 @@ export const crudSchema = (): CrudSchema => {
             return {
               class: 'w-full',
               placeholder: $t('web.menu.form.placeholder_icon'),
-              clearable: true,
+              clearable: true
             }
           }
         },
@@ -373,7 +370,7 @@ export const crudSchema = (): CrudSchema => {
             isBtn: true,
             renderType: 'RadioGroup'
           }
-        },
+        }
       ]
     }
   }
