@@ -34,10 +34,13 @@
  * @module utils/sys/upgrade
  * @author Art Design Pro Team
  */
-import { upgradeLogList } from '@/apps/demo/mock/upgrade/changeLog'
+// import { upgradeLogList } from '@/apps/demo/mock/upgrade/changeLog'
 import { ElNotification } from 'element-plus'
 import { useUserStore } from '@/store/modules/user'
 import { StorageConfig } from '@/utils/storage/storage-config'
+
+
+const upgradeLogList = ref([])
 
 /**
  * 版本管理器
