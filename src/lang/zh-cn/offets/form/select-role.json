@@ -1,0 +1,15 @@
+{
+    "modal": {
+        "title": "角色选择",
+        "button": "选择"
+    },
+    "placeholder": {
+        "default": "请选择角色"
+    },
+    "search": {
+        "placeholder": "搜索角色名称/编码"
+    },
+    "empty": {
+        "description": "暂无角色"
+    }
+}

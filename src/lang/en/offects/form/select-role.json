@@ -1,0 +1,15 @@
+{
+    "modal": {
+        "title": "Role Selection",
+        "button": "Select"
+    },
+    "placeholder": {
+        "default": "Please select role"
+    },
+    "search": {
+        "placeholder": "Search role name/code"
+    },
+    "empty": {
+        "description": "No roles available"
+    }
+}
