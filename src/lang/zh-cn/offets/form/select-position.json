@@ -1,0 +1,19 @@
+{
+    "modal": {
+        "title": "职位选择",
+        "button": "选择"
+    },
+    "placeholder": {
+        "default": "请选择职位"
+    },
+    "tree": {
+        "tree_operation": "树操作",
+        "expand_all": "展开全部",
+        "collapse_all": "折叠全部",
+        "select_all": "全选",
+        "cancel_select_all": "取消全选"
+    },
+    "search": {
+        "placeholder": "按岗位名称搜索..."
+    }
+}

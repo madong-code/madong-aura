@@ -1,0 +1,19 @@
+{
+    "modal": {
+        "title": "Position Selection",
+        "button": "Select"
+    },
+    "placeholder": {
+        "default": "Please select position"
+    },
+    "tree": {
+        "tree_operation": "Tree Operations",
+        "expand_all": "Expand All",
+        "collapse_all": "Collapse All",
+        "select_all": "Select All",
+        "cancel_select_all": "Cancel Select All"
+    },
+    "search": {
+        "placeholder": "Search by position name..."
+    }
+}
