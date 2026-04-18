@@ -2,7 +2,7 @@
 <template>
   <ElDialog
     v-model="dialogVisible"
-    :title="$t('components.form.image-selector.selector.title')"
+    :title="$t('image-picker.selector.title')"
     width="50%"
     top="10vh"
     draggable
@@ -16,7 +16,7 @@
         <div class="flex items-center gap-2 flex-1 mr-4">
           <ElInput
             v-model="searchKeyword"
-            :placeholder="$t('components.form.image-selector.selector.searchPlaceholder')"
+            :placeholder="$t('image-picker.selector.search_placeholder')"
             class="flex-1"
             clearable
             @keyup.enter="handleSearch"
@@ -33,7 +33,7 @@
         <ElUpload :http-request="customUpload" :show-file-list="false" accept="image/*">
           <ElButton type="primary">
             <ArtSvgIcon icon="ant-design:upload-outlined" class="mr-1" />
-            {{ $t("components.form.image-selector.selector.upload") }}
+            {{ $t("image-picker.selector.upload") }}
           </ElButton>
         </ElUpload>
       </div>
@@ -63,7 +63,7 @@
         <div v-if="!loading && imageList.length === 0" class="empty-state">
           <ArtSvgIcon icon="ri:image-line" class="text-4xl text-g-400 mb-2" />
           <div class="text-g-500">
-            {{ $t("components.form.image-selector.selector.empty") }}
+            {{ $t("image-picker.selector.empty") }}
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@ const loadImages = async () => {
     imageList.value = res.items || [];
     total.value = res.total || 0;
   } catch (error) {
-    ElMessage.error($t("components.form.image-selector.selector.loadError"));
+    ElMessage.error($t("image-picker.selector.load_error"));
   } finally {
     loading.value = false;
   }
@@ -245,11 +245,11 @@ const toggleSelect = (image: any) => {
 const customUpload = async (e: any) => {
   try {
     const data = await FilesService.uploadFile({ file: e.file });
-    ElMessage.success($t("components.form.image-selector.selector.uploadSuccess"));
+    ElMessage.success($t("image-picker.selector.upload_success"));
     // 重新加载列表
     loadImages();
   } catch (error) {
-    ElMessage.error($t("components.form.image-selector.selector.uploadError"));
+    ElMessage.error($t("image-picker.selector.upload_error"));
   }
 };
 

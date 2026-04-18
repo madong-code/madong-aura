@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useVModel } from '@vueuse/core'
-import { ElMessage, ElIcon } from 'element-plus'
-import { Edit, Delete, Plus } from '@element-plus/icons-vue'
-import { buildStaticUrl, extractRelativePath } from '@/utils/url/static-resource'
-import defaultImage from '@/assets/images/avatar/default-avatar.webp'
-import ImageSelectorDialog from './image-selector-dialog.vue'
-import { $t } from '@/locales'
+import { computed, ref, watch } from "vue";
+import { useVModel } from "@vueuse/core";
+import { ElMessage, ElIcon } from "element-plus";
+import { Edit, Delete, Plus } from "@element-plus/icons-vue";
+import { buildStaticUrl, extractRelativePath } from "@/utils/url/static-resource";
+import defaultImage from "@/assets/images/avatar/default-avatar.webp";
+import ImageSelectorDialog from "./image-picker-dialog.vue";
+import { $t } from "@/locales";
 
 interface Props {
-  value?: string | string[] | null
-  autoHandleBaseUrl?: boolean
-  multiple?: boolean
-  disabled?: boolean
-  shape?: 'circle' | 'square'
-  size?: 'small' | 'medium' | 'large'
-  accept?: string
+  value?: string | string[] | null;
+  autoHandleBaseUrl?: boolean;
+  multiple?: boolean;
+  disabled?: boolean;
+  shape?: "circle" | "square";
+  size?: "small" | "medium" | "large";
+  accept?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,91 +23,94 @@ const props = withDefaults(defineProps<Props>(), {
   autoHandleBaseUrl: true,
   multiple: false,
   disabled: false,
-  shape: 'square',
-  size: 'medium',
-  accept: 'image/*'
-})
+  shape: "square",
+  size: "medium",
+  accept: "image/*",
+});
 
 const emit = defineEmits<{
-  'update:value': [value: string | string[] | null]
-  change: [value: string | string[] | null]
-  confirm: [value: string | string[]]
-}>()
+  "update:value": [value: string | string[] | null];
+  change: [value: string | string[] | null];
+  confirm: [value: string | string[]];
+}>();
 
-const dialogVisible = ref(false)
+const dialogVisible = ref(false);
 
 // 使用 v-model 进行双向绑定
-const mValue = useVModel(props, 'value', emit, {
+const mValue = useVModel(props, "value", emit, {
   defaultValue: props.value,
-  passive: true
-})
+  passive: true,
+});
 
 // 监听外部 value 变化
-watch(() => props.value, (newValue) => {
-  if (JSON.stringify(newValue) !== JSON.stringify(mValue.value)) {
-    mValue.value = newValue
+watch(
+  () => props.value,
+  (newValue) => {
+    if (JSON.stringify(newValue) !== JSON.stringify(mValue.value)) {
+      mValue.value = newValue;
+    }
   }
-})
+);
 
 // 计算显示的图片URL
 const displayImages = computed(() => {
-  if (!mValue.value) return []
-  
-  const values = Array.isArray(mValue.value) ? mValue.value : [mValue.value]
-  
-  return values.map(url => {
-    if (!props.autoHandleBaseUrl || !url) return url
-    return buildStaticUrl(url)
-  })
-})
+  if (!mValue.value) return [];
+
+  const values = Array.isArray(mValue.value) ? mValue.value : [mValue.value];
+
+  return values.map((url) => {
+    if (!props.autoHandleBaseUrl || !url) return url;
+    return buildStaticUrl(url);
+  });
+});
 
 // 获取默认图片
 const getDefaultImage = () => {
-  return defaultImage
-}
+  return defaultImage;
+};
 
 // 打开图片选择器
 const openSelector = () => {
-  if (props.disabled) return
-  dialogVisible.value = true
-}
+  if (props.disabled) return;
+  dialogVisible.value = true;
+};
 
 // 处理图片选择确认
 const handleConfirm = (selected: string | string[]) => {
-  mValue.value = selected
-  emit('change', selected)
-  emit('confirm', selected)
-  ElMessage.success($t('components.form.image-selector.selector.selectSuccess'))
-}
+  mValue.value = selected;
+  emit("change", selected);
+  emit("confirm", selected);
+  ElMessage.success($t("image-picker.selector.select_success"));
+};
 
 // 移除图片
 const removeImage = (index: number) => {
-  if (props.disabled) return
-  
+  if (props.disabled) return;
+
   if (props.multiple && Array.isArray(mValue.value)) {
-    const newValue = [...mValue.value]
-    newValue.splice(index, 1)
-    mValue.value = newValue
+    const newValue = [...mValue.value];
+    newValue.splice(index, 1);
+    mValue.value = newValue;
   } else {
-    mValue.value = null
+    mValue.value = null;
   }
-  emit('change', mValue.value)
-}
+  emit("change", mValue.value);
+};
 
 // 计算组件尺寸
 const componentSize = computed(() => {
   const sizeMap = {
-    small: '80px',
-    medium: '120px',
-    large: '160px'
-  }
-  return sizeMap[props.size]
-})
+    small: "80px",
+    medium: "120px",
+    large: "160px",
+  };
+  return sizeMap[props.size];
+});
 
 // 计算默认选中值（传递给弹窗）
 const defaultSelected = computed(() => {
-  return mValue.value || (props.multiple ? [] : '')
-})
+  return mValue.value || (props.multiple ? [] : "");
+});
 </script>
 
 <template>
@@ -124,22 +127,24 @@ const defaultSelected = computed(() => {
           :src="displayImages[0]"
           class="preview-image"
         />
-        <img
-          v-else
-          :src="getDefaultImage()"
-          class="preview-image default-image"
-        />
-        
+        <img v-else :src="getDefaultImage()" class="preview-image default-image" />
+
         <!-- 悬停遮罩 -->
         <div v-if="!disabled" class="image-overlay">
           <ElIcon class="text-white text-2xl">
             <Edit />
           </ElIcon>
-          <div class="overlay-text">{{ $t('components.form.image-selector.selector.select') }}</div>
+          <div class="overlay-text">
+            {{ $t("image-picker.selector.select") }}
+          </div>
         </div>
-        
+
         <!-- 移除按钮 -->
-        <div v-if="!disabled && displayImages.length > 0" class="remove-btn" @click.stop="removeImage(0)">
+        <div
+          v-if="!disabled && displayImages.length > 0"
+          class="remove-btn"
+          @click.stop="removeImage(0)"
+        >
           <ElIcon>
             <Delete />
           </ElIcon>
@@ -163,7 +168,7 @@ const defaultSelected = computed(() => {
             </ElIcon>
           </div>
         </div>
-        
+
         <!-- 添加按钮 -->
         <div
           v-if="!disabled"
@@ -174,7 +179,9 @@ const defaultSelected = computed(() => {
           <ElIcon class="text-g-500 text-2xl">
             <Plus />
           </ElIcon>
-          <div class="add-text">{{ $t('components.form.image-selector.selector.select') }}</div>
+          <div class="add-text">
+            {{ $t("image-picker.selector.select") }}
+          </div>
         </div>
       </div>
     </template>
