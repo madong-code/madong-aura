@@ -46,17 +46,19 @@
     <template #footer v-if="dialogPropsRef.footer">
       <slot name="footer">
         <slot name="prepend-footer"></slot>
-        <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel"
-          >取消</ElButton
-        >
-        <slot name="center-footer"></slot>
-        <ElButton
-          v-if="dialogPropsRef.showConfirmButton"
-          type="primary"
-          @click="handleSubmit"
-          v-loading="dialogPropsRef.confirmLoading ?? false"
-          >确定</ElButton
-        >
+        <div class="footer-right">
+          <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel"
+            >取消</ElButton
+          >
+          <slot name="center-footer"></slot>
+          <ElButton
+            v-if="dialogPropsRef.showConfirmButton"
+            type="primary"
+            @click="handleSubmit"
+            v-loading="dialogPropsRef.confirmLoading ?? false"
+            >确定</ElButton
+          >
+        </div>
         <slot name="append-footer"></slot>
       </slot>
     </template>
@@ -196,6 +198,9 @@ defineExpose(methods);
     // background-color: var(--el-color-primary-light-6);
     border-top: 1px solid var(--el-border-color);
     padding: 15px 20px !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
   .el-dialog__body {
     padding: 0 !important;
@@ -219,9 +224,23 @@ defineExpose(methods);
     // background-color: var(--el-color-primary-light-6);
     border-top: 1px solid var(--el-border-color);
     padding: 15px 20px !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
   .el-drawer__body {
     padding: 0 !important;
+  }
+}
+
+// 底部按钮两端对齐的样式（用于select-dept和select-position组件）
+.m-dialog-footer-between {
+  .el-dialog__footer {
+    justify-content: space-between;
+  }
+
+  .el-drawer__footer {
+    justify-content: space-between;
   }
 }
 </style>
