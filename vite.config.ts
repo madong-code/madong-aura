@@ -11,6 +11,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
 import tailwindcss from '@tailwindcss/vite'
+import fs from 'fs'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
 export default ({ mode }: { mode: string }) => {
@@ -108,7 +109,7 @@ export default ({ mode }: { mode: string }) => {
         threshold: 10240, // 只有大小大于该值的资源会被处理 10240B = 10KB
         deleteOriginFile: false // 压缩后是否删除原文件
       }),
-      vueDevTools()
+      vueDevTools(),
       // 打包分析
       // visualizer({
       //   open: true,
@@ -116,6 +117,18 @@ export default ({ mode }: { mode: string }) => {
       //   brotliSize: true,
       //   filename: 'dist/stats.html' // 分析图生成的文件名及路径
       // }),
+      {
+        name: 'svg-transform',
+        transform(code, id) {
+          if (id.endsWith('.svg')) {
+            const base64Str = fs.readFileSync(id, 'base64')
+            return {
+              code: `export default 'data:image/svg+xml;base64,${base64Str}'`,
+              map: null,
+            }
+          }
+        },
+      }
     ],
     // 依赖预构建：避免运行时重复请求与转换，提升首次加载速度
     optimizeDeps: {
