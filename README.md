@@ -101,6 +101,12 @@ pnpm preview
 
 欢迎贡献代码和反馈问题！请先阅读 CONTRIBUTING.md 文档。
 
+## 社区支持
+
+- 官方文档：https://madong.tech
+- 讨论交流：点击链接加入群聊：690671595
+- 项目演示：https://demo.madong.tech/ 账号：admin 密码：123456
+
 ## 许可证
 
 该项目采用 MIT 许可证。详见 LICENSE 文件。
