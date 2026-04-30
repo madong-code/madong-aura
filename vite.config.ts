@@ -14,6 +14,8 @@ import tailwindcss from '@tailwindcss/vite'
 import fs from 'fs'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
+import { collectPluginDependencies } from './src/utils/plugin-deps'
+
 export default ({ mode }: { mode: string }) => {
   const root = process.cwd()
   const env = loadEnv(mode, root)
@@ -74,7 +76,10 @@ export default ({ mode }: { mode: string }) => {
         warnOnError: true,
         exclude: [],
         include: ['src/views/**/*.vue']
-      }
+      },
+      commonjsOptions: {
+        include: /node_modules|lib/  //这里记得把lib目录加进来，否则生产打包会报错！！
+      },
     },
     plugins: [
       vue(),
@@ -128,7 +133,7 @@ export default ({ mode }: { mode: string }) => {
             }
           }
         },
-      }
+      },
     ],
     // 依赖预构建：避免运行时重复请求与转换，提升首次加载速度
     optimizeDeps: {
@@ -150,7 +155,8 @@ export default ({ mode }: { mode: string }) => {
         'element-plus/es/components/upload/style/index',
         'element-plus/es/components/button/style/index',
         'element-plus/es/components/icon/style/index',
-        'element-plus/es/components/*/style/index'
+        'element-plus/es/components/*/style/index',
+        ...collectPluginDependencies()
       ]
     },
     css: {
