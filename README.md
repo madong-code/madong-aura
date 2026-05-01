@@ -104,7 +104,7 @@ pnpm preview
 ## 社区支持
 
 - 官方文档：https://madong.tech
-- 讨论交流：点击链接加入群聊：690671595
+- 讨论交流：[点击链接加入群聊：690671595](https://qm.qq.com/q/dEfMqYL42c)
 - 项目演示：https://demo.madong.tech/ 账号：admin 密码：123456
 
 ## 许可证
