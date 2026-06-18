@@ -96,10 +96,11 @@ export default ({ mode }: { mode: string }) => {
           globalsPropValue: true
         }
       }),
-      // 自动按需导入组件
+        // 自动按需导入组件（view/components 由 component-map.ts 手动注册，用 globs 排除以避免与 form 组件重名冲突）
       Components({
         dts: 'src/types/import/components.d.ts',
-        resolvers: [ElementPlusResolver()]
+        resolvers: [ElementPlusResolver()],
+        globs: ['src/components/**/*.vue', '!src/components/view/components/**']
       }),
       // 按需定制主题配置
       ElementPlus({
