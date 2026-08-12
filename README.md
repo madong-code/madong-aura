@@ -1,6 +1,6 @@
 # Madong-Vue
 
-基于 Vue 3 + Vite 的现代化管理后台前端框架，专为对接 MD-Admin 5.x 版本后端服务设计。采用 Composition API 和 TypeScript 开发，提供响应式布局和完整的权限管理功能。
+基于 Vue 3 + Vite 的现代化管理后台前端框架，专为对接 MD-Admin 5.0 版本后端服务设计。采用 Composition API 和 TypeScript 开发，提供响应式布局和完整的权限管理功能。
 
 ## 项目介绍
 
