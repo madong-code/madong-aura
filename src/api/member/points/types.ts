@@ -1,6 +1,3 @@
-/**
- * 会员积分记录模型
- */
 export interface MemberPointsLog {
   id?: number;
   member_id?: number;

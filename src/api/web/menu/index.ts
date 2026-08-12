@@ -1,15 +1,13 @@
-import BaseService from '@/api/core/base';
-import request from '@/utils/http';
 import type { Menu } from './types';
+
+import BaseService from '#/api/core/base';
 
 const baseUrl = '/web/menu';
 
-export const MenuService = {
+export const WebMenuService = {
   ...BaseService<Menu>({
     baseUrl,
     allowedMethods: [],
     forbiddenMethods: [],
-  })
+  }),
 };
-
-export default MenuService;

@@ -1,0 +1,46 @@
+{
+  "title": "前台菜单",
+  "table": {
+    "columns": {
+      "name": "菜单名称",
+      "category": "分类",
+      "url": "链接地址",
+      "sort": "排序",
+      "type": "类型",
+      "target": "打开方式",
+      "is_show": "是否显示",
+      "enabled": "状态"
+    },
+    "search": {
+      "app": "应用",
+      "category": "分类",
+      "name": "菜单名称",
+      "type": "类型"
+    }
+  },
+  "form": {
+    "category": "分类",
+    "app": "应用",
+    "source": "来源",
+    "name": "菜单名称",
+    "type": "类型",
+    "pid": "上级菜单",
+    "url": "链接地址",
+    "target": "打开方式",
+    "icon": "图标",
+    "sort": "排序",
+    "enabled": "状态",
+    "is_show": "是否显示",
+    "rules_name": "请输入菜单名称",
+    "rules_type": "请选择类型",
+    "placeholder_app": "请选择应用",
+    "placeholder_pid": "请选择上级菜单",
+    "placeholder_url": "请输入链接地址",
+    "placeholder_target": "请选择打开方式",
+    "placeholder_icon": "请选择图标",
+    "placeholder_sort": "请输入排序",
+    "placeholder_enabled": "请选择状态",
+    "placeholder_is_show": "请选择是否显示",
+    "placeholder_type": "请选择类型"
+  }
+}

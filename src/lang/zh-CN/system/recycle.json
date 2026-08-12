@@ -1,0 +1,26 @@
+{
+  "title": "回收站",
+  "table": {
+    "columns": {
+      "table_name": "数据表",
+      "data": "数据",
+      "is_restore": "是否还原",
+      "created_date": "删除时间"
+    },
+    "search": {
+      "table_name": "数据表",
+      "enabled": "状态"
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "table_name": "数据表",
+      "operate_name": "操作人",
+      "ip": "IP",
+      "created_date": "创建时间",
+      "enabled": "状态",
+      "data": "数据"
+    }
+  }
+}

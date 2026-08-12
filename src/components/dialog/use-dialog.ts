@@ -1,5 +1,8 @@
-import Dialog from './dialog.vue'
-import { MyDialogInstance, MyDialogProps } from './types'
+import type { MyDialogInstance, MyDialogProps } from './types';
+
+import { defineComponent, h, ref } from 'vue';
+
+import Dialog from './dialog.vue';
 /**
  *
  * 防止未来重构影响
@@ -10,26 +13,26 @@ import { MyDialogInstance, MyDialogProps } from './types'
  * @returns
  */
 export function useDialog(props: MyDialogProps) {
-  const dialogRef = ref<any>(null)
+  const dialogRef = ref<any>(null);
   const register = (dialogInstance: MyDialogInstance) => {
-    dialogRef.value = dialogInstance
-  }
+    dialogRef.value = dialogInstance;
+  };
   const dialogMethods = {
     // 设置组件状态（props）
     setState(state: MyDialogProps) {
-      return dialogRef.value?.setState(state)
+      return dialogRef.value?.setState(state);
     },
     // 获取组件状态
     getState() {
-      return dialogRef.value?.getState()
+      return dialogRef.value?.getState();
     },
     open() {
-      dialogRef.value?.open()
+      dialogRef.value?.open();
     },
     close() {
-      dialogRef.value?.close()
-    }
-  }
+      dialogRef.value?.close();
+    },
+  };
 
   // 创建表单组件的配置
   const DialogComponent = defineComponent({
@@ -40,12 +43,12 @@ export function useDialog(props: MyDialogProps) {
           {
             ...attrs,
             ...props,
-            onRegister: register
+            onRegister: register,
           },
-          slots
-        )
-    }
-  })
+          slots,
+        );
+    },
+  });
 
-  return [DialogComponent, dialogMethods] as const
+  return [DialogComponent, dialogMethods] as const;
 }

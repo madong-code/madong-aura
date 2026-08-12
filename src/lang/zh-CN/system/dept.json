@@ -1,0 +1,39 @@
+{
+  "title": "部门管理",
+  "table": {
+    "columns": {
+      "name": "部门名称",
+      "code": "部门代码",
+      "sort": "排序",
+      "leader": "负责人",
+      "enabled": "状态"
+    },
+    "search": {
+      "code": "部门代码",
+      "name": "部门名称",
+      "enabled": "状态",
+      "placeholder": {
+        "code": "请输入部门代码",
+        "name": "请输入部门名称",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "parent_dept": "上级部门",
+    "name": "部门名称",
+    "code": "部门代码",
+    "sort": "排序",
+    "enabled": "状态",
+    "leader": "负责人",
+    "remark": "备注",
+    "placeholder": {
+      "parent_dept": "请选择上级部门",
+      "name": "请输入部门名称",
+      "code": "请输入部门代码",
+      "leader": "请选择负责人",
+      "remark": "请输入备注"
+    }
+  }
+}

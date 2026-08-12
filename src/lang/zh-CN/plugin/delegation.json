@@ -1,0 +1,15 @@
+{
+  "title": "授权管理",
+  "company_name": "授权公司",
+  "domain": "授权域名",
+  "auth_code": "授权编码",
+  "secret_key": "授权密钥",
+  "expire_time": "到期时间",
+  "modules": "授权模块",
+  "set_auth": "授权码认证",
+  "no_auth_info": "暂无授权信息",
+  "placeholder": {
+    "auth_code": "请输入授权码",
+    "secret_key": "请输入授权密钥"
+  }
+}

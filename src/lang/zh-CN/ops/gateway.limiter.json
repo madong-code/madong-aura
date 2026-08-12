@@ -1,0 +1,31 @@
+{
+  "title": "限流规则",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "规则名称",
+      "ip": "IP",
+      "path": "请求路径",
+      "methods": "HTTP方法",
+      "limit_type": "限制类型",
+      "limit_value": "限制值",
+      "period": "统计周期(秒)",
+      "enabled": "状态"
+    }
+  },
+  "search": {
+    "name": "规则名称"
+  },
+  "form": {
+    "id": "ID",
+    "name": "规则名称",
+    "ip": "IP",
+    "path": "请求路径",
+    "methods": "HTTP方法",
+    "limit_type": "限制类型",
+    "limit_value": "限制值",
+    "period": "统计周期(秒)",
+    "enabled": "状态",
+    "message": "提示信息"
+  }
+}

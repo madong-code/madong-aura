@@ -1,0 +1,15 @@
+{
+  "title": "Authorization",
+  "company_name": "Company",
+  "domain": "Domain",
+  "auth_code": "Auth Code",
+  "secret_key": "Secret Key",
+  "expire_time": "Expire Time",
+  "modules": "Modules",
+  "set_auth": "Set Authorization",
+  "no_auth_info": "No authorization info",
+  "placeholder": {
+    "auth_code": "Enter auth code",
+    "secret_key": "Enter secret key"
+  }
+}

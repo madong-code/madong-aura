@@ -1,550 +1,449 @@
-import { nextTick, reactive, computed } from 'vue'
-import { defineStore } from 'pinia'
+import type { CommandGroup, Terminal } from '#/api/devtools/terminal/types';
 
-import { timestampFormat, uuid } from '@/utils'
-import { $t } from '@/locales'
-import { Terminal, TerminalService } from '@/api/tools/terminal'
-import { taskStatus } from '@/enums/terminal-enum'
-import { ElNotification } from 'element-plus'
+import { computed, nextTick, reactive } from 'vue';
+
+import { defineStore } from 'pinia';
+
+import { TerminalService } from '#/api/devtools/terminal';
+import { TerminalTaskStatus } from '#/enums';
+
+let uuidCounter = 0;
+function uuid() {
+  uuidCounter += 1;
+  return `task_${Date.now()}_${uuidCounter}`;
+}
+function timestampFormat() {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
+interface TerminalTask {
+  uuid: string;
+  date: string;
+  status: number;
+  command: string;
+  displayCommand: string;
+  message: string[];
+  showMessage: boolean;
+  blockOnFailure: boolean;
+  extend: string;
+  callback: (...args: any[]) => any;
+}
 
 export const useTerminalStore = defineStore(
-  'app-terminal',
+  'terminal',
   () => {
-    const state: Terminal = reactive({
-      // 显示终端窗口
+    const state = reactive<Terminal>({
       show: false,
-      // 在后台终端按钮上显示一个红点
       showDot: false,
-      // 任务列表
-      taskList: [],
-      // 包管理器
-      packageManager: 'npm',
-      // 显示包管理器切换窗口
+      taskList: [] as TerminalTask[],
+      packageManager: 'pnpm',
       showPackageManagerDialog: false,
-      // 显示终端设置窗口
       showConfig: false,
-      // 开发服务器
       developmentServer: false,
-      // 开始任务时自动清理已完成任务
       automaticCleanupTask: '0',
-      // npm源
       npmRegistry: 'unknown',
-      // composer源
       composerRegistry: 'unknown',
-      // 命令分组列表
-      commandGroups: []
-    })
+      commandGroups: [] as CommandGroup[],
+    });
 
-    /**
-     * 初始化终端状态
-     * - 遍历任务列表，将处于连接中(Connecting)或执行中(Executing)的任务状态重置为未知(Unknown)
-     * - 从后端加载配置
-     * - 用于应用启动时恢复中断的任务状态
-     */
-    async function init() {
-      for (const key in state.taskList) {
-        if (
-          state.taskList[key].status == taskStatus.Connecting ||
-          state.taskList[key].status == taskStatus.Executing
-        ) {
-          state.taskList[key].status = taskStatus.Unknown
-        }
+    function getTask(idx: number): TerminalTask | undefined {
+      const raw = state.taskList[idx] as any;
+      if (!raw) return undefined;
+      if (!raw.displayCommand) {
+        raw.displayCommand = raw.command.replace(
+          /\.pnpm$|\.npm$|\.cnpm$|\.yarn$/,
+          '',
+        );
       }
-      // 加载命令列表
-      loadCommands()
-      // 从后端加载配置
-      await loadConfig()
+      return raw as TerminalTask;
     }
 
-    /**
-     * 从后端加载终端配置
-     */
+    async function init() {
+      for (const t of state.taskList) {
+        if (
+          t.status === TerminalTaskStatus.Connecting ||
+          t.status === TerminalTaskStatus.Executing
+        ) {
+          t.status = TerminalTaskStatus.Unknown;
+        }
+      }
+      loadCommands();
+      await loadConfig();
+    }
+
     async function loadConfig() {
       try {
-        const config = await TerminalService.getConfig()
-        if (config) {
-          // 更新包管理器
-          if (config.npm_package_manager) {
-            state.packageManager = config.npm_package_manager
+        const cfg: any = await TerminalService.getConfig();
+        if (cfg) {
+          if (cfg.npm_package_manager) {
+            state.packageManager = cfg.npm_package_manager;
           }
-          // 更新npm源
-          if (config.npm_registry) {
-            state.npmRegistry = config.npm_registry
+          if (cfg.npm_registry) {
+            state.npmRegistry = cfg.npm_registry;
           }
-          // 更新composer源
-          if (config.composer_registry) {
-            state.composerRegistry = config.composer_registry
+          if (cfg.composer_registry) {
+            state.composerRegistry = cfg.composer_registry;
           }
         }
       } catch (error) {
-        console.error('加载终端配置失败:', error)
+        console.error('加载终端配置失败:', error);
       }
     }
 
-    /**
-     * 加载命令分组列表
-     */
     async function loadCommands() {
       try {
-        const commandGroups = await TerminalService.getCommands()
-        state.commandGroups = Array.isArray(commandGroups) ? commandGroups : []
+        const commands = await TerminalService.getCommands();
+        state.commandGroups = Array.isArray(commands) ? commands : [];
       } catch (error) {
-        console.error('加载命令列表失败:', error)
+        console.error('加载终端命令失败:', error);
       }
     }
 
-    /**
-     * 切换终端窗口显示状态
-     * @param val - 可选参数，指定显示/隐藏状态（默认取反当前状态）
-     * - 显示窗口时会自动清除后台红点提示
-     */
     function toggle(val = !state.show) {
-      state.show = val
+      state.show = val;
       if (val) {
-        toggleDot(false)
+        toggleDot(false);
       }
     }
 
-    /**
-     * 切换后台红点提示状态
-     * @param val - 可选参数，指定红点显示/隐藏（默认取反当前状态）
-     * - 当有新任务添加且终端未打开时触发
-     */
     function toggleDot(val = !state.showDot) {
-      state.showDot = val
+      state.showDot = val;
     }
 
-    /**
-     * 切换终端设置弹窗显示
-     * @param val - 可选参数，指定显示/隐藏（默认取反当前状态）
-     * - 打开设置时会自动关闭主终端窗口
-     */
     function toggleConfigDialog(val = !state.showConfig) {
-      toggle(!val)
-      state.showConfig = val
+      toggle(!val);
+      state.showConfig = val;
     }
 
-    /**
-     * 切换包管理器选择弹窗
-     * @param val - 可选参数，指定显示/隐藏（默认取反当前状态）
-     * - 打开弹窗时会自动关闭主终端窗口
-     */
-    function togglePackageManagerDialog(val = !state.showPackageManagerDialog) {
-      toggle(!val)
-      state.showPackageManagerDialog = val
+    function changeRegistry(val: string, type: 'composer' | 'npm') {
+      state[type === 'npm' ? 'npmRegistry' : 'composerRegistry'] = val;
     }
 
-    /**
-     * 设置数据源
-     * @param val
-     * @param type
-     */
-    function changeRegistry(val: string, type: 'npm' | 'composer') {
-      state[type == 'npm' ? 'npmRegistry' : 'composerRegistry'] = val
-    }
-
-    /**
-     * 修改包管理器类型
-     * @param val - 新的包管理器名称 (如 'npm'/'yarn'/'pnpm')
-     */
     function changePackageManager(val: string) {
-      state.packageManager = val
+      state.packageManager = val;
     }
 
-    /**
-     * 保存终端配置到后端
-     */
     async function saveConfig() {
       try {
         await TerminalService.updateConfig({
-          npm_package_manager: state.packageManager
-        })
-        return true
+          npm_package_manager: state.packageManager,
+        });
+        return true;
       } catch (error) {
-        console.error('保存终端配置失败:', error)
-        return false
+        console.error('保存终端配置失败:', error);
+        return false;
       }
     }
 
-    /**
-     * 修改任务自动清理策略
-     * @param val - '0' 禁用 / '1' 启用
-     * - 启用时添加新任务会自动清理已完成任务
-     */
     function changeAutomaticCleanupTask(val: '0' | '1') {
-      state.automaticCleanupTask = val
+      state.automaticCleanupTask = val;
     }
 
-    /**
-     * 更新任务状态
-     * @param idx - 任务索引
-     * @param status - 新状态（参考 taskStatus 枚举）
-     * - 若任务标记为失败且配置了阻塞，自动展开日志面板
-     */
     function setTaskStatus(idx: number, status: number) {
-      state.taskList[idx].status = status
+      const t = getTask(idx);
+      if (!t) return;
+      t.status = status;
       if (
-        (status == taskStatus.Failed || status == taskStatus.Unknown) &&
-        state.taskList[idx].blockOnFailure
+        (status === TerminalTaskStatus.Failed ||
+          status === TerminalTaskStatus.Unknown) &&
+        t.blockOnFailure
       ) {
-        setTaskShowMessage(idx, true)
+        setTaskShowMessage(idx, true);
       }
     }
 
-    /**
-     * 任务完成回调处理
-     * @param idx - 任务索引
-     * - 根据成功/失败状态调用任务的 callback 函数
-     */
     function taskCompleted(idx: number) {
-      if (typeof state.taskList[idx].callback != 'function') {
-        return
-      }
-      const status = state.taskList[idx].status
-      if (status == taskStatus.Failed || status == taskStatus.Unknown) {
-        state.taskList[idx].callback(taskStatus.Failed)
-      } else if (status == taskStatus.Success) {
-        state.taskList[idx].callback(taskStatus.Success)
+      const t = getTask(idx);
+      if (!t) return;
+      const cb = t.callback;
+      if (typeof cb !== 'function') return;
+      const status = t.status;
+      if (
+        status === TerminalTaskStatus.Failed ||
+        status === TerminalTaskStatus.Unknown
+      ) {
+        cb(TerminalTaskStatus.Failed);
+      } else if (status === TerminalTaskStatus.Success) {
+        cb(TerminalTaskStatus.Success);
       }
     }
 
-    /**
-     * 切换任务日志面板显示
-     * @param idx - 任务索引
-     * @param val - 可选参数，指定显示/隐藏（默认取反当前状态）
-     */
-    function setTaskShowMessage(idx: number, val = !state.taskList[idx].showMessage) {
-      state.taskList[idx].showMessage = val
+    function setTaskShowMessage(idx: number, val = !getTask(idx)?.showMessage) {
+      const t = getTask(idx);
+      if (t) t.showMessage = val;
     }
 
-    /**
-     * 追加任务日志内容
-     * @param idx - 任务索引
-     * @param message - 要追加的日志字符串
-     * - 自动滚动日志面板到底部
-     * - 若终端未打开则触发红点提示
-     */
     function addTaskMessage(idx: number, message: string) {
-      if (!state.show) toggleDot(true)
-      state.taskList[idx].message = state.taskList[idx].message.concat(message)
+      if (!state.show) toggleDot(true);
+      const t = getTask(idx);
+      if (t) t.message = [...t.message, message];
       nextTick(() => {
-        execMessageScrollbarKeep(state.taskList[idx].uuid)
-      })
+        execMessageScrollbarKeep(t?.uuid ?? '');
+      });
     }
 
-    /**
-     * 添加普通终端任务
-     * @param command - 待执行的命令字符串
-     * @param blockOnFailure - 任务失败时是否阻塞后续任务（默认 true）
-     * @param extend - 附加参数
-     * @param callback - 任务完成回调函数
-     * - 自动触发后台红点提示
-     * - 根据配置自动清理已完成任务
-     */
     function addTask(
       command: string,
       blockOnFailure = true,
       extend = '',
-      callback: Function = () => { }
+      callback: (...args: any[]) => any = () => {},
     ) {
       if (!state.show) {
-        toggleDot(true)
+        toggleDot(true);
       }
-      state.taskList = state.taskList.concat({
+      const displayCommand = command.replace(
+        /\.pnpm$|\.npm$|\.cnpm$|\.yarn$/,
+        '',
+      );
+      const task: any = {
         uuid: uuid(),
         date: timestampFormat(),
-        status: taskStatus.Waiting,
-        command: command,
-        displayCommand: command.replace(/\.pnpm$|\.npm$|\.cnpm$|\.yarn$/, ''), // 移除包管理器后缀
+        status: TerminalTaskStatus.Waiting,
+        command,
+        displayCommand,
         message: [],
         showMessage: false,
-        blockOnFailure: blockOnFailure,
-        extend: extend,
-        callback: callback
-      })
+        blockOnFailure,
+        extend,
+        callback,
+      };
+      state.taskList.push(task);
 
-      // 清理任务列表
-      if (parseInt(state.automaticCleanupTask) === 1) {
-        clearSuccessTask()
+      if (Number.parseInt(state.automaticCleanupTask) === 1) {
+        clearSuccessTask();
       }
-
-      // 检查是否有已经失败的任务
-      if (state.show === false) {
-        for (const key in state.taskList) {
-          if (
-            state.taskList[key].status == taskStatus.Failed ||
-            state.taskList[key].status == taskStatus.Unknown
-          ) {
-            ElNotification({
-              title: '失败任务提醒',
-              message: $t('dev.terminal.task_blocking'),
-              type: 'error'
-            })
-            break
-          }
-        }
-      }
-      startTask()
+      startTask();
     }
 
-    /**
-     * 添加包管理器任务（自动拼接当前包管理器类型）
-     * @example addTaskPM('install') → 执行 'install.pnpm'
-     */
     function addTaskPM(
       command: string,
       blockOnFailure = true,
       extend = '',
-      callback: Function = () => { }
+      callback: (...args: any[]) => any = () => {},
     ) {
-      addTask(command + '.' + state.packageManager, blockOnFailure, extend, callback)
+      addTask(
+        `${command}.${state.packageManager}`,
+        blockOnFailure,
+        extend,
+        callback,
+      );
     }
 
-    /**
-     * 删除指定任务
-     * @param idx - 任务索引
-     * - 仅允许删除非运行状态的任务
-     * - 删除后自动触发任务调度
-     */
     function delTask(idx: number) {
+      const t = getTask(idx);
       if (
-        state.taskList[idx].status != taskStatus.Connecting &&
-        state.taskList[idx].status != taskStatus.Executing
+        t &&
+        t.status !== TerminalTaskStatus.Connecting &&
+        t.status !== TerminalTaskStatus.Executing
       ) {
-        state.taskList.splice(idx, 1)
+        state.taskList.splice(idx, 1);
       }
-      startTask()
-    }
-
-    /**
-     * 启动任务调度
-     * - 按顺序检查等待中(Wating)任务
-     * - 遇到运行中或阻塞性失败任务时停止调度
-     * - 找到可执行任务后触发 EventSource 连接
-     */
-    function startTask() {
-      let taskKey = null
-
-      // 捕获可以开始执行的命令
-      for (const key in state.taskList) {
-        if (state.taskList[key].status == taskStatus.Waiting) {
-          taskKey = parseInt(key)
-          break
-        }
-        if (
-          state.taskList[key].status == taskStatus.Connecting ||
-          state.taskList[key].status == taskStatus.Executing
-        ) {
-          break
-        }
-        if (state.taskList[key].status == taskStatus.Success) {
-          continue
-        }
-        if (
-          state.taskList[key].status == taskStatus.Failed ||
-          state.taskList[key].status == taskStatus.Unknown
-        ) {
-          if (state.taskList[key].blockOnFailure) {
-            break
-          } else {
-            continue
-          }
-        }
-      }
-      if (taskKey !== null) {
-        setTaskStatus(taskKey, taskStatus.Connecting)
-        startEventSource(taskKey)
-      }
-    }
-
-    function startEventSource(taskKey: number) {
-      const { command, uuid, extend } = state.taskList[taskKey]
-
-      let sseConnection: any
-
-      sseConnection = TerminalService.command(command, uuid, extend, {
-        // 进度事件 - 处理所有执行过程中的消息
-        progress: (payload: any, event: string) => {
-          try {
-            const taskIdx = findTaskIdxFromUuid(payload.uuid)
-            if (taskIdx === false) {
-              console.warn('Task not found for uuid:', payload.uuid)
-              return
-            }
-
-            // Sse::progress 返回的数据结构: { status, message, progress, data }
-            const sseData = payload.data || {}
-            const innerData = sseData.data || {}
-            const stage = innerData.stage || 'output'
-            const message = sseData.message || ''
-
-            // 根据阶段更新任务状态
-            if (stage === 'connected') {
-              setTaskStatus(taskIdx, taskStatus.Executing)
-            }
-
-            // 添加消息到日志
-            if (message) {
-              addTaskMessage(taskIdx, message)
-            }
-          } catch (error) {
-            console.error('Error processing progress:', error)
-          }
-        },
-        // 完成事件 - 命令执行完成
-        completed: (payload: any) => {
-          try {
-            const taskIdx = findTaskIdxFromUuid(payload.uuid)
-            if (taskIdx === false) {
-              console.warn('Task not found for uuid:', payload.uuid)
-              sseConnection?.close()
-              return
-            }
-
-            // Sse::completed 返回的数据结构: { status, message, data }
-            const sseData = payload.data || {}
-            const innerData = sseData.data || {}
-            const success = innerData.success === true
-
-            // 添加完成消息
-            if (sseData.message) {
-              addTaskMessage(taskIdx, sseData.message)
-            }
-
-            // 设置最终状态
-            setTaskStatus(taskIdx, success ? taskStatus.Success : taskStatus.Failed)
-            sseConnection?.close()
-            taskCompleted(taskIdx)
-            startTask()
-          } catch (error) {
-            console.error('Error processing completed:', error)
-            sseConnection?.close()
-          }
-        },
-        // 错误事件 - 服务器发送的错误，前端终止连接
-        error: (payload: any) => {
-          try {
-
-            const taskIdx = findTaskIdxFromUuid(payload.uuid)
-            if (taskIdx === false) {
-              console.warn('Task not found for uuid:', payload.uuid)
-              sseConnection?.close()
-              return
-            }
-
-            // Sse::error 返回的数据结构: { status, message, data, error_type }
-            const sseData = payload.data || {}
-            const message = sseData.message || '执行出错'
-
-            // 添加错误消息
-            addTaskMessage(taskIdx, message)
-
-            // 设置失败状态
-            setTaskStatus(taskIdx, taskStatus.Failed)
-            sseConnection?.close()
-            taskCompleted(taskIdx)
-            startTask()
-          } catch (error) {
-            console.error('Error processing error event:', error)
-            sseConnection?.close()
-          }
-        },
-
-        // 连接错误处理 - EventSource 连接失败
-        connectionError: (event) => {
-          console.error('SSE connection error:', event)
-          sseConnection?.close()
-          // 设置任务状态为失败
-          const taskIdx = findTaskIdxFromUuid(uuid)
-          if (taskIdx !== false) {
-            // 检查任务状态，如果不是失败状态（说明没有处理过服务器错误事件），则添加连接错误消息
-            if (state.taskList[taskIdx].status !== taskStatus.Failed) {
-              setTaskStatus(taskIdx, taskStatus.Failed)
-              addTaskMessage(taskIdx, '连接错误，请重试')
-              taskCompleted(taskIdx)
-              startTask()
-            }
-          }
-        },
-        // 连接打开
-        open: () => {
-          console.log('SSE connection opened for command:', command)
-        }
-      })
-    }
-
-    /**
-     * 重试失败任务
-     * @param idx - 任务索引
-     * - 清空原有日志，状态重置为等待中(Waiting)
-     * - 重新加入任务调度队列
-     */
-    function retryTask(idx: number) {
-      state.taskList[idx].message = []
-      setTaskStatus(idx, taskStatus.Waiting)
-      startTask()
-    }
-
-    /**
-     * 清理所有成功完成的任务
-     * - 根据 state.automaticCleanupTask  配置自动触发
-     */
-    function clearSuccessTask() {
-      state.taskList = state.taskList.filter((item) => item.status != taskStatus.Success)
+      startTask();
     }
 
     /**
      * 通过UUID查找任务索引
-     * @returns 索引值 (找不到返回 false)
      */
-    function findTaskIdxFromUuid(uuid: string) {
+    function findTaskIdxFromUuid(uuid: string): false | number {
       for (const key in state.taskList) {
-        if (state.taskList[key].uuid == uuid) {
-          return parseInt(key)
+        const item = state.taskList[key];
+        if (item && item.uuid === uuid) {
+          return Number.parseInt(key);
         }
       }
-      return false
-    }
-
-    /**
-     * 智能猜测当前运行任务索引
-     * - 当索引失效时，自动查找状态为 Connecting/Executing 的任务
-     * @returns 索引值 (找不到返回 false)
-     */
-    function findTaskIdxFromGuess(idx: number) {
-      if (!state.taskList[idx]) {
-        let taskKey = -1
-        for (const key in state.taskList) {
-          if (
-            state.taskList[key].status == taskStatus.Connecting ||
-            state.taskList[key].status == taskStatus.Executing
-          ) {
-            taskKey = parseInt(key)
-          }
-        }
-        return taskKey === -1 ? false : taskKey
-      } else {
-        return idx
-      }
+      return false;
     }
 
     /**
      * 保持任务日志滚动条在底部
-     * @param uuid - 任务唯一ID
-     * - 通过DOM操作实现自动滚动
      */
     function execMessageScrollbarKeep(uuid: string) {
-      const execMessageEl = document.querySelector('.exec-message-' + uuid)
-      if (execMessageEl && execMessageEl.scrollHeight) {
-        execMessageEl.scrollTop = execMessageEl.scrollHeight
+      const el = document.querySelector(`.exec-message-${uuid}`);
+      if (el && (el as HTMLElement).scrollHeight) {
+        (el as HTMLElement).scrollTop = (el as HTMLElement).scrollHeight;
       }
     }
 
-    /**
-     * 退出清空数据
-     */
+    function startTask() {
+      let taskKey: null | number = null;
+      const len = state.taskList.length;
+      const list = state.taskList as any[];
+      for (let keyIdx = 0; keyIdx < len; keyIdx++) {
+        const s = list[keyIdx].status as number;
+        if (s === TerminalTaskStatus.Waiting) {
+          taskKey = keyIdx;
+          break;
+        }
+        if (
+          s === TerminalTaskStatus.Connecting ||
+          s === TerminalTaskStatus.Executing
+        ) {
+          break;
+        }
+        if (s === TerminalTaskStatus.Success) continue;
+        if (
+          (s === TerminalTaskStatus.Failed ||
+            s === TerminalTaskStatus.Unknown) &&
+          list[keyIdx].blockOnFailure
+        )
+          break;
+      }
+      if (taskKey !== null) {
+        setTaskStatus(taskKey, TerminalTaskStatus.Connecting);
+        startEventSource(taskKey);
+      }
+    }
+
+    function startEventSource(taskKey: number) {
+      const task = getTask(taskKey);
+      if (!task) return;
+
+      const { command, uuid: taskUuid, extend } = task;
+
+      const sseConnection: any = TerminalService.command(
+        command,
+        taskUuid,
+        extend,
+        {
+          // 进度事件 - 处理所有执行过程中的消息
+          progress: (payload: any) => {
+            try {
+              const taskIdx = findTaskIdxFromUuid(payload.uuid);
+              if (taskIdx === false) {
+                console.warn('Task not found for uuid:', payload.uuid);
+                return;
+              }
+
+              // Sse::progress 返回: { status, message, progress, data }
+              const sseData = payload.data || {};
+              const innerData = sseData.data || {};
+              const stage = innerData.stage || 'output';
+              const message = sseData.message || '';
+
+              // 根据阶段更新任务状态
+              if (stage === 'connected') {
+                setTaskStatus(taskIdx, TerminalTaskStatus.Executing);
+              }
+
+              // 添加消息到日志
+              if (message) {
+                addTaskMessage(taskIdx, `\n${message}`);
+              }
+            } catch (error) {
+              console.error('Error processing progress:', error);
+            }
+          },
+
+          // 完成事件 - 命令执行完成
+          completed: (payload: any) => {
+            try {
+              const taskIdx = findTaskIdxFromUuid(payload.uuid);
+              if (taskIdx === false) {
+                console.warn('Task not found for uuid:', payload.uuid);
+                sseConnection?.close();
+                return;
+              }
+
+              // Sse::completed 返回: { status, message, data: { success, ... } }
+              const sseData = payload.data || {};
+              const innerData = sseData.data || {};
+              const success = innerData.success === true;
+
+              const message = sseData.message || '';
+              if (message) {
+                addTaskMessage(taskIdx, `\n${message}`);
+              }
+
+              setTaskStatus(
+                taskIdx,
+                success
+                  ? TerminalTaskStatus.Success
+                  : TerminalTaskStatus.Failed,
+              );
+              sseConnection?.close();
+              taskCompleted(taskIdx);
+              startTask();
+            } catch (error) {
+              console.error('Error processing completed:', error);
+              sseConnection?.close();
+            }
+          },
+
+          // 错误事件 - 服务器发送的错误
+          error: (payload: any) => {
+            try {
+              const taskIdx = findTaskIdxFromUuid(payload.uuid);
+              if (taskIdx === false) {
+                console.warn('Task not found for uuid:', payload.uuid);
+                sseConnection?.close();
+                return;
+              }
+
+              const sseData = payload.data || {};
+              const message = sseData.message || '执行出错';
+
+              addTaskMessage(taskIdx, `\n${message}`);
+
+              setTaskStatus(taskIdx, TerminalTaskStatus.Failed);
+              sseConnection?.close();
+              taskCompleted(taskIdx);
+              startTask();
+            } catch (error) {
+              console.error('Error processing error event:', error);
+              sseConnection?.close();
+            }
+          },
+
+          // 连接错误 - EventSource 连接失败
+          onError: () => {
+            console.error('SSE connection error for command:', command);
+            sseConnection?.close();
+            const taskIdx = findTaskIdxFromUuid(taskUuid);
+            const taskItem =
+              taskIdx === false ? undefined : state.taskList[taskIdx];
+            // 只有任务仍在执行中才标记失败（completed 后 close 触发的 error 忽略）
+            if (
+              taskItem &&
+              (taskItem.status === TerminalTaskStatus.Connecting ||
+                taskItem.status === TerminalTaskStatus.Executing ||
+                taskItem.status === TerminalTaskStatus.Waiting)
+            ) {
+              setTaskStatus(taskIdx as number, TerminalTaskStatus.Failed);
+              addTaskMessage(taskIdx as number, '\n连接错误，请重试');
+              taskCompleted(taskIdx as number);
+              startTask();
+            }
+          },
+
+          // 连接打开
+          open: () => {
+            console.warn('SSE connection opened for command:', command);
+          },
+        },
+      );
+    }
+
+    function retryTask(idx: number) {
+      const t = getTask(idx);
+      if (t) t.message = [];
+      setTaskStatus(idx, TerminalTaskStatus.Waiting);
+      startTask();
+    }
+
+    function clearSuccessTask() {
+      state.taskList = state.taskList.filter(
+        (item) => item.status !== TerminalTaskStatus.Success,
+      );
+    }
+
+    function clearAllTasks() {
+      state.taskList = [];
+    }
+
     function $reset() {
-      state.taskList = []
+      state.taskList = [];
     }
 
     return {
@@ -566,12 +465,12 @@ export const useTerminalStore = defineStore(
       startTask,
       retryTask,
       clearSuccessTask,
-      togglePackageManagerDialog,
-      toggleConfigDialog,
+      clearAllTasks,
       changePackageManager,
       changeRegistry,
-      changeAutomaticCleanupTask
-    }
+      changeAutomaticCleanupTask,
+      toggleConfigDialog,
+    };
   },
   {
     persist: {
@@ -580,8 +479,8 @@ export const useTerminalStore = defineStore(
         'state.taskList',
         'state.automaticCleanupTask',
         'state.npmRegistry',
-        'state.composerRegistry'
-      ]
-    }
-  }
-)
+        'state.composerRegistry',
+      ],
+    },
+  },
+);

@@ -12,9 +12,9 @@ export {
   buildStaticUrl,
   buildStaticUrls,
   extractRelativePath,
-  isCdnMode,
   getStaticUrlBase,
+  isCdnMode,
   joinUrls,
   staticUrl,
-  staticUrls
-} from '@/utils/url/static-resource'
+  staticUrls,
+} from '#/utils/url/static-resource';

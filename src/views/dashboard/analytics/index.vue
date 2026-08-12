@@ -1,50 +1,90 @@
-<!-- 分析页页面 -->
+<script lang="ts" setup>
+import type { TabOption } from '#/core/shared/types';
+import type { AnalysisOverviewItem } from '#/core/ui/common';
+
+import {
+  SvgBellIcon,
+  SvgCakeIcon,
+  SvgCardIcon,
+  SvgDownloadIcon,
+} from '#/core/design/icons';
+import {
+  AnalysisChartCard,
+  AnalysisChartsTabs,
+  AnalysisOverview,
+} from '#/core/ui/common';
+
+import AnalyticsTrends from './analytics-trends.vue';
+import AnalyticsVisitsData from './analytics-visits-data.vue';
+import AnalyticsVisitsSales from './analytics-visits-sales.vue';
+import AnalyticsVisitsSource from './analytics-visits-source.vue';
+import AnalyticsVisits from './analytics-visits.vue';
+
+const overviewItems: AnalysisOverviewItem[] = [
+  {
+    icon: SvgCardIcon,
+    title: '用户量',
+    totalTitle: '总用户量',
+    totalValue: 120_000,
+    value: 2000,
+  },
+  {
+    icon: SvgCakeIcon,
+    title: '访问量',
+    totalTitle: '总访问量',
+    totalValue: 500_000,
+    value: 20_000,
+  },
+  {
+    icon: SvgDownloadIcon,
+    title: '下载量',
+    totalTitle: '总下载量',
+    totalValue: 120_000,
+    value: 8000,
+  },
+  {
+    icon: SvgBellIcon,
+    title: '使用量',
+    totalTitle: '总使用量',
+    totalValue: 50_000,
+    value: 5000,
+  },
+];
+
+const chartTabs: TabOption[] = [
+  {
+    label: '流量趋势',
+    value: 'trends',
+  },
+  {
+    label: '月访问量',
+    value: 'visits',
+  },
+];
+</script>
+
 <template>
-  <div>
-    <ElRow :gutter="20">
-      <ElCol :xl="14" :lg="15" :xs="24">
-        <TodaySales />
-      </ElCol>
-      <ElCol :xl="10" :lg="9" :xs="24">
-        <VisitorInsights />
-      </ElCol>
-    </ElRow>
+  <div class="p-5">
+    <AnalysisOverview :items="overviewItems" />
+    <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
+      <template #trends>
+        <AnalyticsTrends />
+      </template>
+      <template #visits>
+        <AnalyticsVisits />
+      </template>
+    </AnalysisChartsTabs>
 
-    <ElRow :gutter="20">
-      <ElCol :xl="10" :lg="10" :xs="24">
-        <TotalRevenue />
-      </ElCol>
-      <ElCol :xl="7" :lg="7" :xs="24">
-        <CustomerSatisfaction />
-      </ElCol>
-      <ElCol :xl="7" :lg="7" :xs="24">
-        <TargetVsReality />
-      </ElCol>
-    </ElRow>
-
-    <ElRow :gutter="20">
-      <ElCol :xl="10" :lg="10" :xs="24">
-        <TopProducts />
-      </ElCol>
-      <ElCol :xl="7" :lg="7" :xs="24">
-        <SalesMappingByCountry />
-      </ElCol>
-      <ElCol :xl="7" :lg="7" :xs="24">
-        <VolumeServiceLevel />
-      </ElCol>
-    </ElRow>
+    <div class="mt-5 w-full md:flex">
+      <AnalysisChartCard class="mt-5 md:mt-0 md:mr-4 md:w-1/3" title="访问数量">
+        <AnalyticsVisitsData />
+      </AnalysisChartCard>
+      <AnalysisChartCard class="mt-5 md:mt-0 md:mr-4 md:w-1/3" title="访问来源">
+        <AnalyticsVisitsSource />
+      </AnalysisChartCard>
+      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
+        <AnalyticsVisitsSales />
+      </AnalysisChartCard>
+    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  import TodaySales from './modules/today-sales.vue'
-  import VisitorInsights from './modules/visitor-insights.vue'
-  import TotalRevenue from './modules/total-revenue.vue'
-  import CustomerSatisfaction from './modules/customer-satisfaction.vue'
-  import TargetVsReality from './modules/target-vs-reality.vue'
-  import TopProducts from './modules/top-products.vue'
-  import SalesMappingByCountry from './modules/sales-mapping-by-country.vue'
-  import VolumeServiceLevel from './modules/volume-service-level.vue'
-
-  defineOptions({ name: 'Analysis' })
-</script>

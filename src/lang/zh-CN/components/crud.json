@@ -1,0 +1,33 @@
+{
+  "search": {
+    "toggle": "搜索",
+    "reset": "重置"
+  },
+  "table": {
+    "action": "操作",
+    "delete_confirm_title": "删除确认",
+    "batch_delete_confirm_title": "批量删除确认",
+    "confirm_delete": "确定要删除选中的{0}吗？",
+    "confirm_batch_delete": "确定要删除选中的{0}条{1}吗？"
+  },
+  "action": {
+    "add": "新增",
+    "edit": "编辑",
+    "delete": "删除",
+    "view": "查看",
+    "export": "导出",
+    "refresh": "刷新",
+    "batch_delete": "批量删除",
+    "print": "打印",
+    "add_child": "子节点",
+    "more": "更多",
+    "confirm_title": "提示",
+    "confirm_content": "确定要执行此操作吗？"
+  },
+  "message": {
+    "no_delete_api": "未配置删除接口",
+    "no_batch_delete_api": "未配置批量删除接口",
+    "no_selection": "请先勾选要删除的数据",
+    "delete_success": "删除{0}成功"
+  }
+}

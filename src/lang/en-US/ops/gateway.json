@@ -1,0 +1,109 @@
+{
+  "blacklist": {
+    "title": "Blacklist",
+    "table": {
+      "columns": {
+        "priority": "Priority",
+        "name": "Name",
+        "ip": "IP",
+        "match_type": "Match Type",
+        "methods": "Methods",
+        "path": "Path",
+        "enabled": "Status",
+        "start_date": "Start",
+        "end_date": "End",
+        "created_date": "Created"
+      },
+      "search": {
+        "name": "Name",
+        "ip": "IP",
+        "path": "Path",
+        "enabled": "Status",
+        "placeholder": {
+          "name": "Please enter name",
+          "ip": "Please enter IP",
+          "path": "Please enter path",
+          "enabled": "Please select status"
+        }
+      }
+    },
+    "form": {
+      "modal": {
+        "id": "ID",
+        "name": "Name",
+        "match_type": "Match Type",
+        "priority": "Priority",
+        "ip": "IP",
+        "methods": "Methods",
+        "path": "Path",
+        "start_time": "Start",
+        "end_time": "End",
+        "enabled": "Status",
+        "message": "Message",
+        "remark": "Remark",
+        "placeholder": {
+          "name": "Please enter name",
+          "match_type": "Please select",
+          "priority": "Please enter priority",
+          "path": "Please enter path",
+          "start_time": "Please select start",
+          "end_time": "Please select end",
+          "message": "Please enter message",
+          "remark": "Please enter remark"
+        }
+      }
+    }
+  },
+  "limiter": {
+    "title": "Limiter",
+    "table": {
+      "columns": {
+        "priority": "Priority",
+        "name": "Name",
+        "match_type": "Match Type",
+        "methods": "Methods",
+        "path": "Path",
+        "enabled": "Status",
+        "limit_type": "Limit Type",
+        "limit_value": "Value",
+        "period": "Period",
+        "ttl": "TTL"
+      },
+      "search": {
+        "name": "Name",
+        "path": "Path",
+        "enabled": "Status",
+        "placeholder": {
+          "name": "Please enter name",
+          "path": "Please enter path",
+          "enabled": "Please select status"
+        }
+      }
+    },
+    "form": {
+      "modal": {
+        "name": "Name",
+        "match_type": "Match Type",
+        "limit_type": "Limit Type",
+        "methods": "Methods",
+        "path": "Path",
+        "limit_value": "Value",
+        "period": "Period",
+        "ttl": "TTL",
+        "enabled": "Status",
+        "message": "Message",
+        "placeholder": {
+          "name": "Please enter name",
+          "match_type": "Please select",
+          "limit_type": "Please select",
+          "methods": "Please select",
+          "path": "Please enter path",
+          "limit_value": "Please enter value",
+          "period": "Please enter period",
+          "ttl": "Please enter TTL",
+          "message": "Please enter message"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "title": "服务器监控",
+  "columns": {
+    "key": "属性",
+    "value": "值",
+    "filesystem": "文件系统",
+    "size": "总大小",
+    "available": "可用空间",
+    "used": "已用空间",
+    "use_percentage": "使用百分比",
+    "mounted_on": "挂载点"
+  },
+  "cpu": {
+    "title": "CPU"
+  },
+  "memory": {
+    "title": "内存"
+  },
+  "server": {
+    "title": "服务器详情"
+  },
+  "disk": {
+    "title": "磁盘状态"
+  }
+}

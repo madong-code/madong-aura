@@ -1,0 +1,85 @@
+{
+  "title": "Role Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Role",
+      "code": "Role Code",
+      "role_type": "Role Type",
+      "data_scope": "Data Permission",
+      "enabled": "Status",
+      "sort": "Sort",
+      "remark": "Remark",
+      "created_date": "Creation Time",
+      "created_at": "Created",
+      "updated_at": "Updated"
+    }
+  },
+  "search": {
+    "name": "Role Name",
+    "code": "Role Code",
+    "enabled": "Status"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Role Name",
+    "code": "Role Code",
+    "role_type": "Role Type",
+    "data_scope": "Data Permission",
+    "sort": "Sort",
+    "enabled": "Status",
+    "remark": "Remark",
+    "data_scope_form": {
+      "role_code": "Role Code",
+      "role_name": "Role Name",
+      "data_permission": "Data Permission",
+      "dept_list": "Department List",
+      "assign_permission": "Assign Data Permission",
+      "assign_success": "Assignment successful"
+    }
+  },
+  "member": {
+    "manage": "【{name}】Member Management",
+    "add_user": "Add User",
+    "remove_user": "Remove User",
+    "add_user_title": "Add User",
+    "confirm": {
+      "title": "Prompt",
+      "content": "Are you sure to delete?"
+    },
+    "message": {
+      "delete_success": "Deleted successfully",
+      "save_success": "Saved successfully",
+      "select_user": "Please select a user"
+    }
+  },
+  "table_actions": {
+    "auth_menu": "Authorize Menu",
+    "member_manage": "Member Management"
+  },
+  "drop_down_actions": {
+    "edit": "Edit",
+    "assign_permission": "Assign Permission"
+  },
+  "auth_menu": {
+    "title": "Authorize Menu",
+    "success": "Authorization successful",
+    "title_template": "【{name}】Authorize Menu",
+    "type_labels": {
+      "dir": "Directory",
+      "menu": "Menu",
+      "button": "Button",
+      "api": "API"
+    },
+    "toolbar": {
+      "operation": "Operations",
+      "expand_all": "Expand All",
+      "expand_level_1": "Expand Level 1",
+      "expand_level_2": "Expand Level 2",
+      "collapse_all": "Collapse All",
+      "select_all": "Select All",
+      "select_none": "Deselect All",
+      "select_inverse": "Invert Selection"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "Member Level",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "level": "Level",
+      "name": "Level Name",
+      "min_points": "Min Points",
+      "discount": "Discount",
+      "member_count": "Members",
+      "enabled": "Status",
+      "created_at": "Created"
+    },
+    "search": {
+      "name": "Name",
+      "enabled": "Status"
+    }
+  },
+  "form": {
+    "id": "ID",
+    "name": "Name",
+    "level": "Level",
+    "min_points": "Min Points",
+    "discount": "Discount",
+    "icon": "Icon",
+    "enabled": "Status",
+    "description": "Description",
+    "rules_name": "Please enter name",
+    "rules_level": "Please enter level",
+    "rules_min_points": "Please enter min points",
+    "rules_discount": "Please enter discount"
+  }
+}

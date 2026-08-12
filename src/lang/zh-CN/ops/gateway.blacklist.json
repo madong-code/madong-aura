@@ -1,0 +1,29 @@
+{
+  "title": "黑名单管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "名称",
+      "ip": "IP",
+      "path": "路径",
+      "methods": "HTTP方法",
+      "enabled": "状态",
+      "start_date": "起始日期",
+      "end_date": "结束日期"
+    }
+  },
+  "search": {
+    "name": "名称"
+  },
+  "form": {
+    "id": "ID",
+    "name": "名称",
+    "ip": "IP",
+    "path": "路径",
+    "methods": "HTTP方法",
+    "enabled": "状态",
+    "start_date": "起始日期",
+    "end_date": "结束日期",
+    "remark": "备注"
+  }
+}

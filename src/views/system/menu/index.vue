@@ -1,46 +1,39 @@
-<template>
-  <div class="user-page art-full-height">
-    <BasicCrud />
-    <InterfaceForm ref="interfaceRef" />
-  </div>
-</template>
-<script setup lang="tsx">
-import { useCrud } from "@/components/crud";
-import { crudSchema } from "./schemas";
-import InterfaceForm from "./initerface-list.vue";
+<script setup lang="ts">
+import { ref } from 'vue';
 
-const interfaceRef = ref();
+import { useCrud } from '#/adapter/crud';
+import { Page } from '#/components/page';
+
+import InterfaceListSelector from './initerface-list.vue';
+import { useCrudSchema } from './schemas';
+
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema(),
-  beforeFetch: (params: any) => {
-    return { ...params, format: "table_tree", page: 1, limit: 9999 };
-  },
-  tableActionColumn: {},
-  // 左侧工具栏
-  toolbarActions: [],
-  // 左侧栏工具-下拉菜单
-  dropDownToolbarActions: [],
-  tableActions: [],
-  // 表格行操作-下拉菜单
+  ...useCrudSchema(),
   dropDownActions: [
     {
-      label: "选择权限",
-      type: "primary",
-      sort: 1020,
+      label: '选择权限',
+      type: 'primary',
       link: true,
-      icon: "ant-design:safety-certificate-filled",
-      auth: "system:auth:save_role_menu",
-      dialogRef: interfaceRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
+      auth: 'system:auth:save_role_menu',
+      icon: 'ant-design:link-outlined',
+      onClick: (_e: any, row: any) => {
+        interfaceListSelectorRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
       },
     },
   ],
 });
+const interfaceListSelectorRef = ref();
 </script>
-<style lang="scss" scoped></style>
+
+<template>
+  <Page auto-content-height>
+    <BasicCrud />
+    <InterfaceListSelector
+      ref="interfaceListSelectorRef"
+      @success="crudApi?.refreshCreate()"
+    />
+  </Page>
+</template>

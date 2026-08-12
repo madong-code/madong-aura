@@ -1,0 +1,110 @@
+{
+  "title": "User Management",
+  "table": {
+    "columns": {
+      "user_name": "Username",
+      "real_name": "Real Name",
+      "nick_name": "Nickname",
+      "mobile_phone": "Mobile",
+      "is_locked": "Lock Status",
+      "sex": "Sex",
+      "dept": "Dept",
+      "post": "Post",
+      "depts": "Departments",
+      "posts": "Posts",
+      "roles": "Roles",
+      "email": "Email",
+      "enabled": "Status",
+      "login_time": "Last Login",
+      "operation": "Operation"
+    },
+    "search": {
+      "user_name": "Username",
+      "real_name": "Real Name",
+      "mobile_phone": "Mobile",
+      "is_locked": "Lock Status",
+      "placeholder": {
+        "user_name": "Please enter username",
+        "real_name": "Please enter real name",
+        "mobile_phone": "Please enter mobile",
+        "is_locked": "Please select lock status"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "base_info": "Basic Information",
+    "outher_info": "Other Information",
+    "user_name": "Username",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "real_name": "Real Name",
+    "nick_name": "Nickname",
+    "sex": "Sex",
+    "mobile_phone": "Mobile",
+    "email": "Email",
+    "dept_id": "Department",
+    "dept_name": "Department Name",
+    "post_id_list": "Post List",
+    "post_name": "Post Name",
+    "main_dept_name": "Main Department",
+    "main_post_name": "Main Post",
+    "role_name": "Role",
+    "enabled": "Status",
+    "remark": "Remark",
+    "avatar": "Avatar",
+    "signed": "Signature",
+    "modal": {
+      "id": "ID",
+      "real_name": "Real Name",
+      "nick_name": "Nickname",
+      "sex": "Sex",
+      "mobile_phone": "Mobile",
+      "email": "Email",
+      "signed": "Signature",
+      "address": "Address",
+      "user_name": "Username",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "dept_name": "Department Name",
+      "post_name": "Post Name",
+      "role_name": "Role",
+      "enabled": "Status",
+      "remark": "Remark",
+      "avatar": "Avatar"
+    },
+    "placeholder": {
+      "user_name": "Please enter username",
+      "password": "Please enter password",
+      "confirm_password": "Please confirm password",
+      "real_name": "Please enter real name",
+      "nick_name": "Please enter nickname",
+      "mobile_phone": "Please enter mobile",
+      "email": "Please enter email",
+      "dept_name": "Please select department",
+      "post_name": "Please select post",
+      "role_name": "Please select role",
+      "remark": "Please enter remark"
+    }
+  },
+  "action": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "detail": "Detail",
+    "reset_password": "Reset Password",
+    "play_user": "Play User",
+    "unplay_user": "Cancel Play",
+    "grant_role": "Grant Role",
+    "locked": "Lock",
+    "unlocked": "Unlock"
+  },
+  "confirm": {
+    "delete": "Are you sure to delete this user?",
+    "reset_password": "Are you sure to reset password?",
+    "play_user": "Are you sure to play this user?",
+    "unplay_user": "Are you sure to cancel play?",
+    "locked": "Are you sure to lock this user?",
+    "unlocked": "Are you sure to unlock this user?",
+    "grant_role_success": "Role granted successfully"
+  }
+}

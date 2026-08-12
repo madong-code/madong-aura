@@ -1,0 +1,40 @@
+{
+  "title": "操作日志",
+  "table": {
+    "columns": {
+      "user_name": "账号",
+      "name": "栏目",
+      "app": "应用",
+      "ip": "IP地址",
+      "ip_location": "IP归属地",
+      "os": "操作系统",
+      "browser": "浏览器",
+      "url": "请求地址",
+      "param": "请求参数",
+      "created_at": "操作时间",
+      "created_date": "操作时间"
+    },
+    "search": {
+      "user_name": "操作用户",
+      "ip": "IP",
+      "url": "请求地址",
+      "created_date": "操作时间",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "ip": "请输入IP",
+        "url": "请输入请求地址"
+      }
+    }
+  },
+  "form": {
+    "app": "应用",
+    "ip": "IP地址",
+    "class_name": "类名",
+    "method": "请求方式",
+    "action": "操作",
+    "created_date": "操作时间",
+    "user_name": "操作用户",
+    "param": "请求参数",
+    "result": "返回结果"
+  }
+}

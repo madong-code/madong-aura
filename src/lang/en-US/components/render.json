@@ -1,0 +1,9 @@
+{
+  "switch": {
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "dict": {
+    "empty": "-"
+  }
+}

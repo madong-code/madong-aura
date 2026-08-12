@@ -1,0 +1,53 @@
+{
+  "title": "Review Records",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "summary": "Summary",
+      "type": "Biz Type",
+      "status": "Status",
+      "reason": "Review Note",
+      "applicant": "Applicant",
+      "reviewer": "Reviewer",
+      "reviewed_at": "Reviewed At",
+      "created_at": "Initiated"
+    },
+    "search": {
+      "type": "Biz Type",
+      "type_placeholder": "Select biz type",
+      "status": "Status",
+      "status_placeholder": "Select status",
+      "keyword": "Keyword",
+      "keyword_placeholder": "Title / Summary / Applicant",
+      "date_range": "Initiated"
+    }
+  },
+  "actions": {
+    "detail": "Detail"
+  },
+  "status": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled"
+  },
+  "detail": {
+    "title": "Review Record Detail",
+    "archived_tip": "This review has been archived",
+    "tabs": {
+      "info": "Info",
+      "form": "Form Data",
+      "status": "Status",
+      "events": "Events"
+    },
+    "reviewable_id": "Biz ID",
+    "created_by": "Applicant ID",
+    "flow_type": "Flow Type",
+    "reason": "Review Note",
+    "cancel_reason": "Cancel Reason",
+    "no_form": "No form data",
+    "no_events": "No events"
+  }
+}

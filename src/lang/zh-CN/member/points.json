@@ -1,0 +1,34 @@
+{
+  "title": "积分管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "用户名",
+      "nickname": "昵称",
+      "type": "类型",
+      "points": "积分",
+      "balance": "余额",
+      "source": "来源",
+      "remark": "备注",
+      "operator": "操作人",
+      "create_time": "创建时间"
+    },
+    "search": {
+      "username": "用户名",
+      "nickname": "昵称",
+      "type": "类型",
+      "date_range": "日期范围"
+    }
+  },
+  "form": {
+    "member_id": "会员",
+    "type": "类型",
+    "points": "积分",
+    "source": "来源",
+    "remark": "备注",
+    "rules_member_id": "请选择会员",
+    "rules_type": "请选择类型",
+    "rules_points": "请输入积分",
+    "rules_source": "请选择来源"
+  }
+}

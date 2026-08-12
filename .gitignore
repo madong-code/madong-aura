@@ -4,15 +4,21 @@ dist
 dist-ssr
 *.local
 .cursorrules
-*.idea
-
-
-# 忽略 src/apps 目录下除了 demo 之外的内容
-src/apps/*
-!src/apps/demo/
-
 
 # Auto-generated files
 src/types/import/auto-imports.d.ts
 src/types/import/components.d.ts
 .auto-import.json
+
+# 调试/测试残留（仅限仓库根目录）
+/*.log
+/*.err
+/*.out.log
+/*.yaml
+/*.png
+/*.txt
+/*.cjs
+/*.js
+/verify.*
+/vite.verify.config.ts
+/.playwright-cli/

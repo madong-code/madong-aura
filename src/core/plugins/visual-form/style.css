@@ -1,0 +1,29 @@
+.dark .el-container.main-container {
+  color: var(--el-text-color-primary);
+  background: var(--el-bg-color);
+}
+
+.dark .el-container.main-container .left-aside-toggle-bar,
+.dark .el-container.main-container .right-aside-toggle-bar {
+  background: var(--el-bg-color-overlay);
+}
+
+.dark .el-container.center-layout-container,
+.dark .el-header.main-header,
+.dark .el-header.toolbar-header {
+  border-color: var(--el-border-color);
+}
+
+.dark .el-container.main-container div.main-title,
+.dark .el-container.main-container div.main-title span.version-span,
+.dark .el-container.main-container div.external-link a {
+  color: var(--el-text-color-primary);
+}
+
+.dark .readonly-mode-form .el-form-item__content {
+  background-color: var(--el-fill-color-light);
+}
+
+.dark .readonly-mode-form .sub-form-container .el-form-item__content {
+  background-color: var(--el-bg-color);
+}

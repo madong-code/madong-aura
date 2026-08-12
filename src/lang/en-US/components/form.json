@@ -1,0 +1,42 @@
+{
+  "select_dept": {
+    "placeholder": "Please select department",
+    "modal_button": "Select",
+    "modal_title": "Select Department",
+    "search_placeholder": "Search department",
+    "tree_operation": "Tree Operations",
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All",
+    "select_all": "Select All",
+    "cancel_select_all": "Cancel Select All"
+  },
+  "select_position": {
+    "placeholder": "Please select position",
+    "modal_button": "Select",
+    "modal_title": "Select Position",
+    "search_placeholder": "Search position",
+    "tree_operation": "Tree Operations",
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All",
+    "select_all": "Select All",
+    "cancel_select_all": "Cancel Select All"
+  },
+  "select_role": {
+    "placeholder": "Please select role",
+    "modal_button": "Select",
+    "modal_title": "Select Role",
+    "search_placeholder": "Search role",
+    "empty_description": "No role data"
+  },
+  "image_picker": {
+    "title": "Select Image",
+    "select": "Select Image",
+    "select_success": "Selected successfully",
+    "search_placeholder": "Search image name",
+    "upload": "Upload Image",
+    "upload_success": "Uploaded successfully",
+    "upload_error": "Upload failed",
+    "load_error": "Failed to load images",
+    "empty": "No images"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Web Menu",
+  "table": {
+    "columns": {
+      "name": "Name",
+      "category": "Category",
+      "url": "URL",
+      "sort": "Sort",
+      "type": "Type",
+      "target": "Target",
+      "is_show": "Visible",
+      "enabled": "Status"
+    },
+    "search": {
+      "app": "App",
+      "category": "Category",
+      "name": "Name",
+      "type": "Type"
+    }
+  },
+  "form": {
+    "category": "Category",
+    "app": "App",
+    "source": "Source",
+    "name": "Name",
+    "type": "Type",
+    "pid": "Parent",
+    "url": "URL",
+    "target": "Target",
+    "icon": "Icon",
+    "sort": "Sort",
+    "enabled": "Status",
+    "is_show": "Visible",
+    "rules_name": "Please enter name",
+    "rules_type": "Please select type",
+    "placeholder_app": "Please select app",
+    "placeholder_pid": "Please select parent",
+    "placeholder_url": "Please enter URL",
+    "placeholder_target": "Please select target",
+    "placeholder_icon": "Please select icon",
+    "placeholder_sort": "Please enter sort",
+    "placeholder_enabled": "Please select status",
+    "placeholder_is_show": "Please select visibility",
+    "placeholder_type": "Please select type"
+  }
+}

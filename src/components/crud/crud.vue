@@ -1,506 +1,629 @@
-<template>
-  <div v-if="crudSchema?.useVxeTable" class="bg-card h-full flex flex-col">
-    <vxe-grid
-      ref="gridRef"
-      :id="crudSchemaRef?.rowKey"
-      :columns="vxeTableColumns"
-      :toolbar-config="{
-        refresh: true, // 刷新
-        print: false, // 打印
-        export: false, // 导出
-        custom: true, // 自定义列
-        zoom: true, // 最大化最小化,
-        slots: {
-          buttons: 'toolbar-left',
-          tools: 'toolbar-right'
-        }
-      }"
-      :keepSource="true"
-      :tree-config="
-        crudSchemaRef.tree
-          ? {
-              childrenField: crudSchemaRef.tree?.children || 'children',
-              rowField: crudSchemaRef.tree?.id || 'id'
-            }
-          : undefined
-      "
-      height="auto"
-      :pager-config="{
-        enabled: crudSchemaRef.tree ? false : true,
-        layouts: [
-          'Total',
-          'Sizes',
-          'Home',
-          'PrevJump',
-          'PrevPage',
-          'Number',
-          'NextPage',
-          'NextJump',
-          'End'
-        ],
-        pageSize: 20,
-        background: true,
-        pageSizes: [10, 20, 30, 50, 100, 200],
-        className: 'w-full',
-        size: 'mini' as const,
-        align: 'center'
-    }"
-      :proxy-config="{
-        ajax: {
-          query: ({ page }, formValues) => {
-            return funApi({
-              [tableConfig.paginationKey.current || 'pageNum']: page.currentPage,
-              [tableConfig.paginationKey.size || 'pageSize']: page.pageSize,
-              ...formValues
-            })
-          }
-        },
-        response: {
-          result: ({data}: {data: any}) => {
-             const fields = tableConfig.recordFields || ['rows']
-              for (const field of fields) {
-                if (data[field]) {
-                  return data[field]
-                }
-              }
-              return []
-          },
-          total: ({data}: {data: any}) => {
-             const fields = tableConfig.totalFields || ['recordCount']
-              for (const field of fields) {
-                if (data[field]) {
-                  return data[field]
-                }
-              }
-              return 0
-          },
-          list: ({data}: {data: any}) => {
-            if(crudSchemaRef.tree) return data;
-             const fields = tableConfig.totalFields || ['rows']
-              for (const field of fields) {
-                if (data[field]) {
-                  return data[field]
-                }
-              }
-              return data
-          },
-        }
-      }"
-      @checkboxChange="handleCheckboxChange"
-      @checkboxAll="handleCheckboxAll"
-      v-bind="{ ...$attrs }"
-    >
-      <template #toolbar-left>
-        <slot name="toolbar-actions">
-          <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
-            <template #more>
-              <ElButton>
-                <template #icon
-                  ><Icon class="icon-more" icon="ant-design:down-outlined"
-                /></template>
-                更多操作</ElButton
-              >
-            </template>
-          </TableAction>
-        </slot>
-      </template>
-      <template #toolbar-right>
-        <div class="pr-[7px]">
-          <button
-            :key="item.auth"
-            :title="item.label"
-            v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
-            class="vxe-button type--button is--circle"
-            @click="handleToolbarToolClick(item.auth)"
-          >
-            <i class="iconfont-sys">
-              <Icon :icon="item.icon" />
-            </i>
-          </button>
-        </div>
-        <slot name="toolbar-tools"></slot>
-      </template>
-      <template #form>
-        <slot name="form">
-          <div class="relative" v-if="crudSchemaRef.useSearchForm !== false">
-            <SearchBar @reset="handleReset" @submit="handleSearch" />
-          </div>
-        </slot>
-      </template>
-      <template v-for="(_, slotName) in $slots" #[slotName]>
-        <slot :name="slotName"></slot>
-      </template>
-    </vxe-grid>
-  </div>
-  <template v-else>
-    <SearchBar
-      v-if="crudSchemaRef.useSearchForm !== false"
-      @reset="handleReset"
-      @submit="handleSearch"
-    />
-    <ElCard class="art-table-card" shadow="never">
-      <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" @refresh="refreshData" :layout="headerLayout">
-        <template #left>
-          <slot name="toolbar-actions">
-            <TableAction :actions="toolbarActions" :drop-down-actions="dropDownToolbarActions">
-              <template #more>
-                <ElButton>
-                  <template #icon
-                    ><Icon class="icon-more" icon="ant-design:down-outlined"
-                  /></template>
-                  更多操作</ElButton
-                >
-              </template>
-            </TableAction>
-          </slot>
-        </template>
-        <template #tools>
-          <div
-            :key="item.auth"
-            v-for="item in crudSchemaRef.toolbarConfig?.tools || []"
-            class="button active"
-            @click="handleToolbarToolClick(item.auth)"
-          >
-            <i class="iconfont-sys">
-              <Icon :icon="item.icon" />
-            </i>
-          </div>
-        </template>
-        <template #right>
-          <slot name="toolbar-tools"></slot>
-        </template>
-      </ArtTableHeader>
-      <!-- 表格 -->
-      <ArtTable
-        :rowKey="crudSchemaRef.rowKey ?? 'id'"
-        :loading="loading"
-        :data="crudSchemaRef.data ?? tableData"
-        :columns="columns"
-        :pagination="crudSchemaRef.tree ? undefined : pagination"
-        @pagination:size-change="handleSizeChange"
-        @pagination:current-change="handleCurrentChange"
-        @selection-change="handleSelectionChange"
-        :stripe="true"
-        v-bind="{ ...$attrs }"
-      >
-        <template v-for="(_, slotName) in $slots" #[slotName]>
-          <slot :name="slotName"></slot>
-        </template>
-      </ArtTable>
-    </ElCard>
-  </template>
-  <DialogForm
-    v-bind="{ ...crudSchemaRef.dialogProps }"
-    ref="dialogFormRef"
-    :crud-schema="crudSchemaRef"
-  />
-</template>
 <script setup lang="tsx">
-  import { useSearchBar } from '@/components/search-bar'
-  import { CrudInstance, CrudReadonlyState, CrudSchema } from './types'
-  import request from '@/utils/http'
-  import { TableAction } from '../table-action'
-  import DialogForm from './dialog-form.vue'
-  import { useAction } from './use-action'
-  import { Icon } from '@/components/icon'
-  import { getTreeNodeAndChildrenIds } from '@/utils/tool'
-  import { useTable } from '@/hooks'
-  import { useColumns } from './use-columns'
-  import { tableConfig } from '@/utils/table/tableConfig'
-  defineOptions({
-    inheritAttrs: false
-  })
-  const props = withDefaults(
-    defineProps<{
-      crudSchema: CrudSchema
-      crudMethods?: any
-    }>(),
-    {
-      crudSchema: () => {
-        return {
-          columns: [],
-          api: '',
-          useSearchForm: true,
-          useVxeTable: false,
-          searchFormSchema: {
-            schema: []
-          }
-        }
+import type { FormDialogOptions } from './components/dialog/types';
+import type {
+  CrudApiInstance,
+  CrudSchema,
+  FormActionType,
+} from './components/types';
+
+import type { VbenFormProps } from '#/adapter/form';
+
+import {
+  computed,
+  nextTick,
+  reactive,
+  ref,
+  shallowReactive,
+  useSlots,
+} from 'vue';
+import { useRoute } from 'vue-router';
+
+import { ElMessage, ElMessageBox } from 'element-plus';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { $t } from '#/locales';
+
+import FormDialogComponent from './components/dialog/dialog.vue';
+import { TableAction } from './components/table-action';
+import { useAction } from './use-action';
+import { useColumns } from './use-columns';
+
+const props = withDefaults(
+  defineProps<{
+    /** CRUD API 实例（可选，内部会自动创建） */
+    crudApi?: CrudApiInstance;
+    crudSchema: CrudSchema;
+    /** 是否内置表单弹窗，默认 true */
+    embeddedFormDialog?: boolean;
+  }>(),
+  {
+    embeddedFormDialog: true,
+    crudApi: undefined,
+  },
+);
+
+const emit = defineEmits<{
+  register: [instance: any];
+}>();
+
+const EXCLUDED_SLOTS = new Set(['toolbar-actions', 'toolbar-tools']);
+
+const slots = useSlots();
+
+const dialogFormRef = ref<InstanceType<typeof FormDialogComponent> | null>(
+  null,
+);
+const readonlyState = reactive<{ selection: any[] }>({ selection: [] });
+const route = useRoute();
+
+// 动态状态，用于存储通过 setState 设置的配置
+const dynamicState = shallowReactive<Record<string, unknown>>({});
+
+// 合并后的 crudSchema，优先使用动态配置
+const mergedCrudSchema = computed<CrudSchema>(() => {
+  const schema = Object.assign(
+    {},
+    props.crudSchema,
+    dynamicState,
+  ) as CrudSchema;
+  return {
+    ...schema,
+    formDialog: schema.formDialog ?? {
+      dialogType: schema.dialogType,
+      enabled: schema.useCrud !== false,
+      schema: schema.formSchema,
+      title: schema.dialogTitle,
+      width: schema.dialogWidth,
+    },
+    searchForm: schema.searchForm ?? {
+      enabled: schema.useSearchForm !== false,
+      schema: schema.searchFormSchema,
+    },
+    toolbar: schema.toolbar ?? schema.toolbarConfig,
+  } as CrudSchema;
+});
+
+// ============ 表格配置 ============
+// 直接使用扁平化配置
+const tableConfig = computed(() => mergedCrudSchema.value);
+
+// ============ 工具栏动作配置 ============
+const {
+  toolbarActions,
+  dropDownToolbarActions,
+  toolbarToolActions,
+  tableActions,
+  dropDownActions,
+} = useAction(
+  mergedCrudSchema.value as CrudSchema,
+  dialogFormRef,
+  props.crudApi ?? {
+    executeBatchRemove: () => {},
+    executeRemove: () => {},
+  },
+  () => readonlyState.selection,
+);
+
+// 智能合并：当 dropDownToolbarActions 只有 1 个按钮时，直接放到工具栏
+const finalToolbarActions = computed(() => {
+  if (dropDownToolbarActions.value.length === 1) {
+    return [...toolbarActions.value, ...dropDownToolbarActions.value];
+  }
+  return toolbarActions.value;
+});
+
+const finalDropDownToolbarActions = computed(() => {
+  if (dropDownToolbarActions.value.length <= 1) {
+    return [];
+  }
+  return dropDownToolbarActions.value;
+});
+
+// 获取表格列定义（支持顶层和嵌套两种配置方式）
+const tableColumns = computed(() => {
+  const cols = tableConfig.value.columns;
+  if (!cols) return [];
+  return typeof cols === 'function' ? cols() : cols;
+});
+
+const columns = useColumns(
+  {
+    columns: tableColumns.value,
+    tableActionColumn: tableConfig.value.tableActionColumn,
+  },
+  tableActions,
+  dropDownActions,
+);
+
+const filteredSlots = computed(() => {
+  const result: Record<string, any> = {};
+  for (const name of Object.keys(slots)) {
+    if (!EXCLUDED_SLOTS.has(name)) {
+      result[name] = slots[name];
+    }
+  }
+  return result;
+});
+
+// ============ 搜索表单配置 ============
+const searchFormEnabled = computed(() => {
+  return mergedCrudSchema.value.searchForm?.enabled !== false;
+});
+
+const searchFormSchema = computed(() => {
+  const schema = mergedCrudSchema.value.searchForm?.schema;
+  if (!schema) return undefined;
+  return typeof schema === 'function' ? schema() : schema;
+});
+
+const mergedFormOptions = computed((): undefined | VbenFormProps => {
+  if (!searchFormEnabled.value || !searchFormSchema.value?.length)
+    return undefined;
+
+  const sf = mergedCrudSchema.value.searchForm;
+
+  return {
+    schema: searchFormSchema.value as any,
+    submitOnChange: sf?.submitOnChange ?? false,
+    collapsed: sf?.collapsed ?? false,
+    collapsedRows: sf?.collapsedRows ?? 2,
+    commonConfig: sf?.commonConfig,
+    showDefaultActions: true,
+    compact: true,
+  };
+});
+
+// ============ 表单弹窗配置 ============
+const formDialogEnabled = computed(() => {
+  return mergedCrudSchema.value.formDialog?.enabled !== false;
+});
+
+const formDialogTitle = computed(() => {
+  return mergedCrudSchema.value.formDialog?.title || '';
+});
+
+const formDialogWidth = computed(() => {
+  return mergedCrudSchema.value.formDialog?.width || 'w-[60%]';
+});
+
+// 默认行1列配置
+const formDialogWrapperClass = computed(() => {
+  return mergedCrudSchema.value.formDialog?.wrapperClass || 'grid-cols-1';
+});
+
+// 表单弹窗配置（使用 getter 函数确保 crudInstance 已定义）
+function getFormDialogOptions(): FormDialogOptions {
+  const fd = mergedCrudSchema.value.formDialog;
+  const { crudApi: api } = mergedCrudSchema.value;
+  const tableProxy = tableConfig.value.proxyConfig;
+
+  // table.proxyConfig 可覆盖 crudApi
+  const finalApi = tableProxy
+    ? {
+        add: tableProxy.create || api.add,
+        edit: tableProxy.update || api.edit,
+        view: tableProxy.get || api.view,
       }
-    }
-  )
-  const emit = defineEmits<{
-    (e: 'submit', values: any): void
-    (e: 'reset'): void
-    (e: 'register', methods: CrudInstance): void
-    (e: 'toolbarToolClick', code: string): void
-  }>()
-  const crudSchemaRef = ref(props.crudSchema)
-  const dialogFormRef = ref<any>(null)
-  // 计算各种操作按钮配置
-  const { toolbarActions, dropDownToolbarActions, tableActions, dropDownActions } = useAction(
-    crudSchemaRef.value,
-    dialogFormRef,
-    props.crudMethods
-  )
-  const headerLayout = computed(() => {
-    const defaultLayout = ['refresh', 'size', 'fullscreen', 'columns', 'settings'] as const
-    const toolbarConfig = crudSchemaRef.value.toolbarConfig || {}
-    // 过滤掉被禁用的选项
-    const layout = defaultLayout.filter((item) => toolbarConfig[item] !== false)
+    : {
+        add: api.add,
+        edit: api.edit,
+        view: api.view,
+      };
 
-    return layout.join(',')
-  })
-  const funApi = computed(() => {
-    const { api, requestMethod, beforeFetch, afterFetch } = props.crudSchema
-
-    if (!api) return api as any
-
-    const fun = (params: any) => {
-      // 处理请求前的参数
-      let processedParams = beforeFetch ? beforeFetch(params) : params
-
-      // 发起请求
-      const apiRequest =
-        typeof api === 'string'
-          ? request[requestMethod ?? 'post']({ url: api, params: processedParams })
-          : api(processedParams)
-
-      // 处理响应后的结果
-      return afterFetch ? apiRequest.then(afterFetch) : apiRequest
-    }
-
-    return fun
-  })
-  const actionItemRecord = ref()
-  const handleActionItemClick = (record: any) => {
-    actionItemRecord.value = record
-  }
-  const [SearchBar, searchBarApi] = useSearchBar(crudSchemaRef.value.searchFormSchema || {})
-  const tableObject = useTable<any>({
-    core: {
-      apiFn: funApi.value,
-      immediate:
-        (crudSchemaRef.value.immediate ?? true) && crudSchemaRef.value?.useVxeTable !== true,
-      apiParams: {
-        // 其他搜索参数
-      },
-      columnsFactory: () => {
-        const { columns } = useColumns(
-          crudSchemaRef,
-          tableActions,
-          dropDownActions,
-          handleActionItemClick
-        )
-        return columns as any
-      }
-    }
-  })
-  const {
-    data: tableData,
-    columns,
-    loading,
-    pagination,
-    columnChecks,
-    getData,
-    refreshData,
-    handleSizeChange,
-    handleCurrentChange
-  } = tableObject
-  const handleSearch = (values: any) => {
-    //Object.assign(searchParams, values)
-    emit('submit', values)
-    if (crudSchemaRef.value.useVxeTable === true) {
-      gridRef.value?.commitProxy('query', values)
-      return
-    }
-    getData(values)
-  }
-  const handleReset = () => {
-    //Object.assign(searchParams, {})
-    emit('reset')
-    if (crudSchemaRef.value.useVxeTable === true) {
-      gridRef.value?.commitProxy('query', {})
-      return
-    }
-    getData({})
-  }
-  // 删除
-  const handleDelete = (row: any) => {
-    const rowKey = props.crudSchema.rowKey || 'id'
-    let ids = row?.[rowKey]
-      ? [row[rowKey]]
-      : multipleSelection.value.map((item: any) => item[rowKey])
-
-    // 如果是树形结构，需要获取节点及其所有子节点
-    if (crudSchemaRef.value.tree) {
-      const idKey = crudSchemaRef.value.tree.id || 'id'
-      const childrenKey = crudSchemaRef.value.tree.children || 'children'
-
-      // 收集所有选中节点及其子节点的ID
-      const allIds: any[] = []
-      const selectedRows = row?.[rowKey] ? [row] : multipleSelection.value
-
-      selectedRows.forEach((selectedRow: any) => {
-        const nodeIds = getTreeNodeAndChildrenIds(
-          tableData.value,
-          selectedRow[idKey],
-          idKey,
-          childrenKey
-        )
-        allIds.push(...nodeIds)
-      })
-
-      ids = allIds
-    }
-
-    props.crudSchema.crudApi
-      ?.remove?.({
-        [`${rowKey}s`]: ids
-      })
-      .then(() => {
-        ElMessage.success(`删除${props.crudSchema.dialogTitle}成功`)
-        if (crudSchemaRef.value.useVxeTable === true) {
-          props.crudMethods?.refreshRemove(ids)
+  return {
+    schema: fd?.schema as any,
+    api: fd?.api || finalApi,
+    dialogType: fd?.dialogType || 'modal',
+    title: formDialogTitle.value,
+    width: formDialogWidth.value,
+    rowKey: tableConfig.value.rowKey || 'id',
+    layout: fd?.layout,
+    wrapperClass: formDialogWrapperClass.value,
+    commonConfig: fd?.commonConfig,
+    draggable: fd?.draggable,
+    fullscreenButton: fd?.fullscreenButton,
+    transformFormValues: fd?.transformFormValues,
+    // 支持业务层自定义 onSuccess 回调，未提供则使用默认刷新逻辑
+    onSuccess:
+      fd?.onSuccess ||
+      ((type: FormActionType, _values?: Record<string, any>) => {
+        const api = props.crudApi || crudInstance;
+        if (type === 'edit') {
+          api.refreshUpdate();
         } else {
-          tableObject.refreshRemove()
+          api.refreshCreate();
         }
-      })
-  }
-  const handleToolbarToolClick = (key: any) => {
-    emit('toolbarToolClick', key)
-  }
-  // 定义一些只读状态
-  const readonlyState = reactive<CrudReadonlyState>({
-    selection: []
-  })
-  const multipleSelection = ref<any>([])
-  const handleSelectionChange = (selection: any) => {
-    multipleSelection.value = selection
-    readonlyState.selection = selection
-  }
-  const crudInstanceMethods: CrudInstance = {
-    async reload(params) {
-      const values = await searchBarApi.getValues()
-      if (crudSchemaRef.value.useVxeTable === true) {
-        return await gridRef.value?.commitProxy('query', { ...values, ...params })
-      }
-      return getData({
-        ...values,
-        ...params
-      })
-    },
-    // 设置组件状态（props）
-    setState(state: CrudSchema) {
-      return new Promise((resolve) => {
-        crudSchemaRef.value = {
-          ...crudSchemaRef.value,
-          ...state
-        }
-        nextTick(() => {
-          resolve()
-        })
-      })
-    },
-    getState(): Promise<CrudSchema> {
-      return new Promise((resolve) => {
-        resolve(crudSchemaRef.value)
-      })
-    },
-    getReadonlyState() {
-      return readonlyState
-    },
-    getArtTableInstance() {
-      return tableObject
-    },
-    getVxeTableInstance() {
-      return gridRef.value
-    },
-    getRowSelection() {
-      return multipleSelection.value
-    },
-    removeByApi(row) {
-      handleDelete(row)
-    },
-    openAddDialog() {
-      dialogFormRef.value?.show({
-        data: {},
-        type: 'add',
-        getCrudApi() {
-          return props.crudMethods
-        }
-      })
-    },
-    openEditDialog() {
-      dialogFormRef.value?.show({
-        data: actionItemRecord.value,
-        type: 'edit',
-        getCrudApi() {
-          return props.crudMethods
-        }
-      })
-    },
-    openViewDialog() {
-      dialogFormRef.value?.show({
-        data: {},
-        type: 'view',
-        getCrudApi() {
-          return props.crudMethods
-        }
-      })
-    },
-    executeRemove() {
-      handleDelete(actionItemRecord.value)
-    },
-    executeBatchRemove() {
-      handleDelete({})
-    }
-  }
-  onMounted(() => {
-    emit('register', crudInstanceMethods)
-  })
-  // vxe-table部分逻辑
-  const gridRef = ref()
-  const vxeTableColumns = computed<any>(() => {
-    if (crudSchemaRef.value?.useVxeTable === true) {
-      const { columns } = useColumns(
-        crudSchemaRef,
-        tableActions,
-        dropDownActions,
-        handleActionItemClick
-      )
-      return columns
-    }
-    return []
-  })
-  const handleCheckboxChange = () => {
-    const records = gridRef.value.getCheckboxRecords()
-    multipleSelection.value = records
-    readonlyState.selection = records
-  }
-  const handleCheckboxAll = () => {
-    const records = gridRef.value.getCheckboxRecords()
-    multipleSelection.value = records
-    readonlyState.selection = records
-  }
-</script>
-<style scoped>
-  @reference '@styles/core/tailwind.css';
+      }),
+  } as FormDialogOptions;
+}
 
-  .button {
-    @apply ml-2 
-    size-8 
-    flex 
-    items-center 
-    justify-center 
-    cursor-pointer 
-    rounded-md 
-    bg-g-300/55
-    dark:bg-g-300/40
-    text-g-700  
-    hover:bg-g-300 
-    md:ml-0 
-    md:mr-2.5;
+// ============ Grid 配置 ============
+const mergedToolbarConfig = computed(() => {
+  const tc = tableConfig.value.toolbar;
+  const hasSearchForm =
+    searchFormEnabled.value && !!searchFormSchema.value?.length;
+
+  return {
+    refresh: tc?.refresh ?? true,
+    custom: tc?.custom ?? true,
+    zoom: tc?.zoom ?? true,
+    export: tc?.export ?? false,
+    search: hasSearchForm,
+  };
+});
+
+const mergedTreeConfig = computed(() => {
+  const tree = tableConfig.value.tree;
+  if (!tree) return undefined;
+
+  return {
+    parentField: tree.pid || 'parentId',
+    rowField: tree.id || 'id',
+    childrenField: tree.children || 'children',
+    transform: false,
+    // 透传 reserve 配置，刷新后保持展开状态
+    reserve: tree.reserve ?? false,
+  };
+});
+
+const mergedGridOptions = computed(() => {
+  const { crudApi: api } = mergedCrudSchema.value;
+  const paginationConfig = tableConfig.value.pagination;
+  const isTreeMode = !!mergedTreeConfig.value;
+
+  // 获取最终使用的 API（table.proxyConfig 可覆盖 crudApi）
+  const finalApi = tableConfig.value.proxyConfig
+    ? {
+        list: tableConfig.value.proxyConfig.query || api.list,
+        add: tableConfig.value.proxyConfig.create || api.add,
+        edit: tableConfig.value.proxyConfig.update || api.edit,
+        remove: tableConfig.value.proxyConfig.delete || api.remove,
+        view: tableConfig.value.proxyConfig.get || api.view,
+      }
+    : api;
+
+  return {
+    columns: columns.value,
+    height: tableConfig.value.height ?? 'auto',
+    keepSource: tableConfig.value.keepSource ?? true,
+    // 直接使用配置值，由全局配置兜底
+    border: tableConfig.value.border,
+    stripe: tableConfig.value.stripe,
+    hoverRow: tableConfig.value.hoverRow,
+    highlightCurrentRow: tableConfig.value.highlightCurrentRow,
+    highlightHoverColumn: tableConfig.value.highlightHoverColumn,
+    showOverflow: tableConfig.value.showOverflow,
+    // 树形模式下自动禁用分页
+    pagerConfig: isTreeMode
+      ? { enabled: false }
+      : (tableConfig.value.pagerConfig ?? true),
+    sortConfig: tableConfig.value.sortConfig,
+    filterConfig: tableConfig.value.filterConfig,
+    exportConfig: tableConfig.value.exportConfig,
+    contextMenuConfig: tableConfig.value.contextMenuConfig,
+    scrollY: tableConfig.value.scrollY,
+    // 行号列宽
+    seqColumnWidth: tableConfig.value.seqColumnWidth ?? (isTreeMode ? 50 : 60),
+    // 选择列宽
+    checkboxWidth: tableConfig.value.checkboxColumnWidth ?? 60,
+    // 是否可选择（树形模式下默认禁用）
+    checkboxConfig: isTreeMode
+      ? undefined
+      : tableConfig.value.checkable === false
+        ? undefined
+        : { checkKey: tableConfig.value.rowKey || 'id' },
+    treeConfig: mergedTreeConfig.value,
+    toolbarConfig: mergedToolbarConfig.value,
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }: any, formValues: any) => {
+          // 树形模式不分页
+          const params = isTreeMode
+            ? { ...formValues }
+            : {
+                [paginationConfig?.currentKey || 'page']: page.currentPage,
+                [paginationConfig?.sizeKey || 'limit']: page.pageSize,
+                ...formValues,
+              };
+          // 使用合并后的 beforeFetch（优先顶层配置）
+          const beforeFetch = tableConfig.value.beforeFetch;
+          const processedParams = beforeFetch ? beforeFetch(params) : params;
+          let result = await finalApi.list(processedParams);
+          // 使用合并后的 afterFetch（优先顶层配置）
+          const afterFetch = tableConfig.value.afterFetch;
+          if (afterFetch) {
+            result = afterFetch(result);
+          }
+          return result;
+        },
+      },
+    },
+  };
+});
+
+// 多选框勾选变化事件
+const mergedGridEvents = computed(() => {
+  return {
+    // 点击单行 checkbox 时触发
+    'checkbox-change': ({ records }: { records: any[] }) => {
+      readonlyState.selection = records;
+    },
+    // 点击全选 checkbox 时触发
+    'checkbox-all': ({ records }: { records: any[] }) => {
+      readonlyState.selection = records;
+    },
+  };
+});
+
+// ============ CRUD 实例 ============
+
+// 树形展开状态保持：记录当前展开的行 ID
+function getExpandedRowIds(): any[] {
+  const grid = gridApi.grid;
+  if (!grid) return [];
+  return (grid.getTreeExpandRecords() || []).map(
+    (row: any) => row[tableConfig.value.rowKey || 'id'],
+  );
+}
+
+// 树形展开状态保持：恢复展开状态
+function restoreExpand(rowIds: any[]) {
+  if (rowIds.length === 0) return;
+  const grid = gridApi.grid;
+  if (!grid) return;
+  nextTick(() => {
+    const rowKey = tableConfig.value.rowKey || 'id';
+    const fullData = grid.getTableData()?.fullData || [];
+    const expandRows = fullData.filter((row: any) =>
+      rowIds.includes(row[rowKey]),
+    );
+    if (expandRows.length > 0) {
+      grid.setTreeExpand(expandRows, true);
+    }
+  });
+}
+
+// 是否启用树形展开状态保持
+function isTreeReserveEnabled() {
+  return !!tableConfig.value.tree?.reserve;
+}
+
+// 轻度刷新：保持展开状态
+function queryWithReserve() {
+  let expandedIds: any[] = [];
+  if (isTreeReserveEnabled()) {
+    expandedIds = getExpandedRowIds();
   }
-</style>
+  const result = gridApi.query();
+  if (isTreeReserveEnabled()) {
+    result.then(() => restoreExpand(expandedIds));
+  }
+  return result;
+}
+
+// 获取路径参数（用于删除等操作时携带额外参数）
+function getPathParams(row?: any) {
+  // 兼容新旧两种配置方式
+  const pathParamsConfig = tableConfig.value.pathParams;
+  if (!pathParamsConfig || pathParamsConfig.length === 0) return {};
+
+  const pathParams: Record<string, any> = {};
+
+  for (const config of pathParamsConfig) {
+    if (config.source === 'row' && config.field && row) {
+      // 从行数据中获取参数
+      pathParams[config.key] = row[config.field];
+    } else if (config.source === 'route') {
+      // 从路由参数中获取
+      const routeKey = config.routeKey || config.key;
+      pathParams[config.key] = route.params[routeKey];
+    }
+  }
+
+  return pathParams;
+}
+
+// 删除
+async function handleSingleDelete(row: any) {
+  const rowKey = tableConfig.value.rowKey || 'id';
+  const id = row[rowKey];
+
+  // 优先使用 proxyConfig.delete，其次使用 crudApi.remove（单个删除）
+  const removeApi =
+    tableConfig.value.proxyConfig?.delete ||
+    mergedCrudSchema.value.crudApi.remove;
+
+  if (!removeApi) {
+    ElMessage.error($t('components.crud.message.no_delete_api'));
+    return;
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      $t('components.crud.table.confirm_delete', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+      $t('components.crud.table.delete_confirm_title'),
+      { type: 'warning' },
+    );
+  } catch {
+    // 用户取消
+    return;
+  }
+
+  try {
+    crudInstance.setLoading(true);
+    await removeApi(id);
+    ElMessage.success(
+      $t('components.crud.message.delete_success', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+    );
+    crudInstance.refreshRemove();
+  } finally {
+    crudInstance.setLoading(false);
+  }
+}
+
+// 批量删除
+async function handleBatchDelete() {
+  const rowKey = tableConfig.value.rowKey || 'id';
+  const ids = readonlyState.selection.map((item: any) => item[rowKey]);
+
+  if (ids.length === 0) {
+    ElMessage.warning($t('components.crud.message.no_selection'));
+    return;
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      $t('components.crud.table.confirm_batch_delete', [
+        ids.length.toString(),
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+      $t('components.crud.table.batch_delete_confirm_title'),
+      { type: 'warning' },
+    );
+  } catch {
+    // 用户取消
+    return;
+  }
+
+  const pathParams = getPathParams();
+  const batchRemoveApi =
+    tableConfig.value.proxyConfig?.deleteBatch ||
+    (mergedCrudSchema.value.crudApi as any).batchRemove;
+
+  if (!batchRemoveApi) {
+    ElMessage.error($t('components.crud.message.no_batch_delete_api'));
+    return;
+  }
+
+  try {
+    crudInstance.setLoading(true);
+    await batchRemoveApi({ ids, ...pathParams });
+    ElMessage.success(
+      $t('components.crud.message.delete_success', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+    );
+    readonlyState.selection = [];
+    gridApi.grid?.clearCheckboxRow();
+    crudInstance.refreshRemove();
+  } finally {
+    crudInstance.setLoading(false);
+  }
+}
+
+// 保留原来的 handleDelete 逻辑，但区分单删和批量
+function handleDelete(row: any) {
+  if (row) {
+    handleSingleDelete(row);
+  } else {
+    handleBatchDelete();
+  }
+}
+
+const crudInstance: CrudApiInstance = {
+  query: (params?: any) => gridApi.query(params),
+  reload: (params?: any) => gridApi.reload(params),
+  setLoading: (loading: boolean) => gridApi.setLoading(loading),
+  getGridInstance: () => gridApi.grid,
+  getFormApi: () => gridApi.formApi,
+  getRowSelection: () => readonlyState.selection,
+  getReadonlyState: () => readonlyState,
+
+  refreshData: () => gridApi.reload(),
+  refreshSoft: () => queryWithReserve(),
+  refreshCreate: () => gridApi.reload(),
+  refreshUpdate: () => queryWithReserve(),
+  refreshRemove() {
+    const grid = gridApi.grid;
+    if (!grid) return;
+    const fullData = grid.getTableData()?.fullData;
+    if (
+      fullData?.length === 1 ||
+      fullData?.length === readonlyState.selection.length
+    ) {
+      const proxyInfo = grid.getProxyInfo();
+      if (proxyInfo?.pager && proxyInfo.pager.currentPage > 1) {
+        proxyInfo.pager.currentPage -= 1;
+      }
+    }
+    queryWithReserve();
+  },
+
+  openAddDialog: (data?: Record<string, any>) => {
+    dialogFormRef.value?.openAdd(data);
+  },
+  openEditDialog: (row: any) => {
+    dialogFormRef.value?.openEdit(row);
+  },
+  openViewDialog: (row: any) => {
+    dialogFormRef.value?.openView(row);
+  },
+
+  removeByApi: (row: any) => {
+    handleDelete(row);
+  },
+  executeRemove: (row: any) => {
+    handleDelete(row);
+  },
+  executeBatchRemove: () => {
+    handleBatchDelete();
+  },
+  setGridOptions: (options: Record<string, any>) => {
+    gridApi.setGridOptions(options);
+  },
+};
+
+// 创建 Grid
+const [VxeGrid, gridApi] = useVbenVxeGrid({
+  gridOptions: mergedGridOptions.value as any,
+  gridEvents: mergedGridEvents.value as any,
+  formOptions: mergedFormOptions.value,
+});
+
+emit('register', crudInstance);
+defineExpose(crudInstance);
+</script>
+
+<template>
+  <div class="bg-card h-full flex flex-col">
+    <VxeGrid
+      :grid-options="mergedGridOptions as any"
+      :form-options="mergedFormOptions"
+      v-bind="$attrs"
+    >
+      <template #toolbar-actions>
+        <slot
+          name="toolbar-actions"
+          :actions="finalToolbarActions"
+          :drop-down-toolbar-actions="finalDropDownToolbarActions"
+        >
+          <TableAction
+            :actions="finalToolbarActions"
+            :drop-down-actions="finalDropDownToolbarActions"
+          />
+        </slot>
+      </template>
+      <template #toolbar-tools>
+        <slot name="toolbar-tools" :actions="finalDropDownToolbarActions">
+          <TableAction
+            :actions="toolbarToolActions"
+            :drop-down-actions="finalDropDownToolbarActions"
+          />
+        </slot>
+      </template>
+      <template v-for="(_, name) in filteredSlots" #[name]="slotData">
+        <slot :name="name" v-bind="slotData ?? {}"></slot>
+      </template>
+    </VxeGrid>
+    <!-- 表单弹窗：仅在启用时渲染 -->
+    <FormDialogComponent
+      v-if="formDialogEnabled"
+      ref="dialogFormRef"
+      :options="getFormDialogOptions()"
+    />
+  </div>
+</template>

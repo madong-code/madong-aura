@@ -1,0 +1,33 @@
+{
+  "title": "文件管理",
+  "table": {
+    "columns": {
+      "filename": "文件名",
+      "original_filename": "原始文件名",
+      "size_info": "大小",
+      "ext": "扩展名",
+      "platform": "平台",
+      "created_date": "上传时间",
+      "created_name": "上传人"
+    },
+    "search": {
+      "filename": "文件名",
+      "original_filename": "原始文件名",
+      "ext": "扩展名",
+      "platform": "平台"
+    }
+  },
+  "list": {
+    "table": {
+      "columns": {
+        "actions": {
+          "delete": {
+            "label": "删除",
+            "title": "删除确认",
+            "confirm": "确定删除选中的文件吗？"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "title": "系统配置",
+  "tab": {
+    "site": "站点设置",
+    "web_site": "前台站点",
+    "baidu_tongji": "百度统计",
+    "upload": "上传设置",
+    "email": "邮箱设置",
+    "sms": "短信设置"
+  },
+  "save": "保存",
+  "save_success": "保存成功",
+  "site": {
+    "title": "站点设置",
+    "open": "站点开关",
+    "url": "站点URL",
+    "name": "站点名称",
+    "logo": "站点Logo",
+    "network_security": "公安备案号",
+    "keywords": "站点关键词",
+    "record_no": "备案号",
+    "icp_url": "备案查询URL",
+    "network_security_url": "公安备案查询URL",
+    "description": "站点描述",
+    "copyright": "版权信息",
+    "placeholder": {
+      "url": "请输入站点URL",
+      "name": "请输入站点名称",
+      "record_no": "请输入备案号",
+      "icp_url": "请输入备案查询URL",
+      "network_security": "请输入公安备案号",
+      "network_security_url": "请输入公安备案查询URL",
+      "keywords": "请输入站点关键词",
+      "description": "请输入站点描述",
+      "copyright": "请输入版权信息"
+    }
+  },
+  "web_site": {
+    "title": "前台站点",
+    "open": "前台开关",
+    "url": "站点URL",
+    "name": "站点名称",
+    "logo": "站点Logo",
+    "network_security": "公安备案号",
+    "record_no": "备案号",
+    "description": "站点描述",
+    "placeholder": {
+      "url": "请输入站点URL",
+      "name": "请输入站点名称",
+      "record_no": "请输入备案号",
+      "network_security": "请输入公安备案号",
+      "description": "请输入站点描述"
+    }
+  },
+  "baidu_tongji": {
+    "title": "百度统计",
+    "open": "是否启用",
+    "code": "统计代码",
+    "placeholder": {
+      "code": "请输入百度统计代码"
+    }
+  },
+  "upload": {
+    "title": "上传设置",
+    "mode": "上传模式",
+    "single_limit": "单文件大小(KB)",
+    "total_limit": "总大小限制(KB)",
+    "nums": "数量限制",
+    "exclude": "不允许文件类型",
+    "more": "更多设置",
+    "advanced": "高级设置"
+  },
+  "email": {
+    "title": "邮箱设置",
+    "host": "SMTP服务器",
+    "port": "SMTP端口",
+    "username": "邮箱账号",
+    "password": "邮箱密码",
+    "smtp_secure": "加密方式",
+    "from": "发件人邮箱",
+    "from_name": "发件人名称",
+    "placeholder": {
+      "host": "请输入SMTP服务器地址",
+      "port": "请输入SMTP端口",
+      "username": "请输入邮箱账号",
+      "password": "请输入邮箱密码",
+      "from": "请输入发件人邮箱",
+      "from_name": "请输入发件人名称"
+    }
+  },
+  "sms": {
+    "title": "短信设置",
+    "platform": "短信平台",
+    "platform_aliyun": "阿里云",
+    "platform_tencent": "腾讯云",
+    "app_id": "应用ID",
+    "app_key": "应用密钥",
+    "sign_name": "签名名称",
+    "template_code": "模板编码",
+    "placeholder": {
+      "app_id": "请输入应用ID",
+      "app_key": "请输入应用密钥",
+      "sign_name": "请输入签名名称",
+      "template_code": "请输入模板编码"
+    }
+  },
+  "common": {
+    "title": "通用配置",
+    "entry_desc": "管理系统中的自定义配置，支持新增、编辑、删除等操作",
+    "enter": "进入管理",
+    "columns": {
+      "name": "配置名称",
+      "code": "配置编码",
+      "content": "配置内容",
+      "enabled": "状态",
+      "updated_at": "更新时间"
+    },
+    "search": {
+      "keyword": "请输入关键词"
+    },
+    "form": {
+      "code": "配置编码",
+      "name": "配置名称",
+      "content": "配置内容",
+      "content_type": "内容类型",
+      "content_type_kv": "JSON 对象 (Key-Value)",
+      "content_type_string": "字符串",
+      "kv_label": "Key-Value 配置",
+      "add_kv": "添加 Key-Value",
+      "group_code": "配置分组",
+      "enabled": "启用状态",
+      "remark": "描述",
+      "placeholder": {
+        "code": "请输入配置编码",
+        "code_unique": "请输入配置代码（英文，唯一）",
+        "name": "请输入配置名称",
+        "content": "请输入配置内容",
+        "content_string": "请输入配置内容",
+        "group_code": "请选择配置分组",
+        "kv_key": "Key",
+        "kv_value": "Value",
+        "remark": "请输入配置描述"
+      }
+    },
+    "value_type": {
+      "string": "字符串",
+      "number": "数字",
+      "boolean": "布尔",
+      "json": "JSON"
+    },
+    "dialog": {
+      "edit_title": "编辑配置",
+      "create_title": "新增配置"
+    }
+  }
+}

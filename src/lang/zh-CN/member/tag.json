@@ -1,0 +1,83 @@
+{
+  "title": "会员标签",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "标签名称",
+      "description": "描述",
+      "member_count": "会员数",
+      "enabled": "状态",
+      "created_at": "创建时间"
+    },
+    "search": {
+      "name": "标签名称",
+      "enabled": "状态"
+    }
+  },
+  "form": {
+    "name": "标签名称",
+    "description": "描述",
+    "enabled": "状态",
+    "remark": "备注"
+  },
+  "table_actions": {
+    "auth_menu": "授权菜单",
+    "member_manage": "成员管理"
+  },
+  "auth": {
+    "title": "授权菜单",
+    "auth_manage": "「{name}」授权菜单",
+    "message": {
+      "auth_success": "授权成功"
+    },
+    "expand": {
+      "title": "展开操作",
+      "expand_all": "展开全部",
+      "expand_level1": "展开一级",
+      "expand_level2": "展开二级",
+      "collapse_all": "折叠全部"
+    },
+    "tag": {
+      "auth": "权限",
+      "public": "公共",
+      "nav_menu": "导航菜单",
+      "member_menu": "会员菜单",
+      "unknown": "未知"
+    }
+  },
+  "user": {
+    "list_title": "成员列表",
+    "member_manage": "「{name}」成员管理",
+    "add_title": "添加成员",
+    "search": {
+      "user_name": "用户名",
+      "real_name": "昵称",
+      "mobile_phone": "手机号",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "real_name": "请输入昵称",
+        "mobile_phone": "请输入手机号"
+      }
+    },
+    "table": {
+      "columns": {
+        "user_name": "用户名",
+        "real_name": "昵称",
+        "mobile_phone": "手机号"
+      }
+    },
+    "actions": {
+      "add_user": "添加成员",
+      "remove_user": "移除"
+    },
+    "confirm": {
+      "title": "移除成员",
+      "content": "确定要移除选中成员吗？"
+    },
+    "message": {
+      "delete_success": "移除成功",
+      "save_success": "添加成功",
+      "select_user": "请选择要添加的成员"
+    }
+  }
+}

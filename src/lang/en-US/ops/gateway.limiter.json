@@ -1,0 +1,31 @@
+{
+  "title": "Rate Limiting Rules",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Rule Name",
+      "ip": "IP",
+      "path": "Request Path",
+      "methods": "HTTP Method",
+      "limit_type": "Limit Type",
+      "limit_value": "Limit Value",
+      "period": "Period (seconds)",
+      "enabled": "Status"
+    }
+  },
+  "search": {
+    "name": "Rule Name"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Rule Name",
+    "ip": "IP",
+    "path": "Request Path",
+    "methods": "HTTP Method",
+    "limit_type": "Limit Type",
+    "limit_value": "Limit Value",
+    "period": "Period (seconds)",
+    "enabled": "Status",
+    "message": "Message"
+  }
+}

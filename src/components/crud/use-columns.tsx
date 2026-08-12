@@ -1,101 +1,85 @@
-import { ActionItem, TableAction } from '../table-action'
-import { viewColumnFormatter } from '../view/component-map'
-import { CrudSchema } from './types'
+import type { Ref } from 'vue';
+
+import type { ActionItem } from './components/table-action';
+import type { CrudColumn } from './types';
+
+import { computed } from 'vue';
+
+import { $t } from '#/locales';
+
+import { TableAction } from './components/table-action';
+
+/**
+ * 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中，其余继承全局 grid.align
+ */
+const BUILTIN_CENTER_COLUMNS = (col: CrudColumn) =>
+  col.cellRender?.name === 'CellDictTag' ||
+  col.cellRender?.name === 'CellDict' ||
+  /(_at|_time)$|^(created|updated|create|update|time|date)/i.test(
+    String(col.field ?? ''),
+  );
+
+interface UseColumnsOptions {
+  columns: CrudColumn[];
+  tableActionColumn?: Partial<CrudColumn>;
+}
 
 export function useColumns(
-  crudSchemaRef: Ref<CrudSchema>,
+  options: UseColumnsOptions,
   tableActions: Ref<ActionItem[]>,
   dropDownActions: Ref<ActionItem[]>,
-  handleActionItemClick: (record: any) => void
 ) {
-  if (crudSchemaRef.value?.useVxeTable) {
-    const columns =
-      (typeof crudSchemaRef.value.columns === 'function'
-        ? crudSchemaRef.value.columns()
-        : crudSchemaRef.value.columns) || []
-    const vxeTableColumns = columns.map((column) => {
-      return {
-        type: column.type === 'selection' ? 'checkbox' : column.type,
-        field: column.prop,
-        title: column.label,
-        align: column.align,
-        width: column.type === 'selection' ? 60 : column.width,
-        showOverflow: 'tooltip',
-        cellRender: {
-          name: column.component,
-          props: column.componentProps
-        },
-        ...column.vxeColumn
+  return computed(() => {
+    const rawColumns = options.columns || [];
+
+    const vxeColumns = rawColumns.map((col: CrudColumn) => {
+      const { viewComponent, viewComponentProps, vxeColumn, ...rest } = col;
+
+      const result: any = { ...rest };
+
+      // 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中
+      if (result.align === undefined && BUILTIN_CENTER_COLUMNS(col)) {
+        result.align = 'center';
       }
-    })
-    // 有操作列配置才添加操作列
-    if (
-      (tableActions.value && tableActions.value.length > 0) ||
-      (dropDownActions.value && dropDownActions.value.length > 0)
-    ) {
-      // @ts-nocheck 如果想忽略整个文件检查可使用此注释
-      vxeTableColumns.push({
-        type: 'default',
+
+      if (viewComponent) {
+        result.cellRender = {
+          name: viewComponent,
+          props: viewComponentProps,
+          // 同时透传到 attrs，兼容基于 attrs 读取配置的渲染器（如 CellDict / CellDictTag）
+          attrs: viewComponentProps,
+        };
+      }
+
+      if (vxeColumn) {
+        Object.assign(result, vxeColumn);
+      }
+
+      return result;
+    });
+
+    if (tableActions.value?.length || dropDownActions.value?.length) {
+      const actionCol = options.tableActionColumn || {};
+      vxeColumns.push({
         field: '__ACTION__',
-        title: '操作',
+        title: $t('components.crud.table.action'),
         width: 220,
         align: 'center',
-        showOverflow: 'tooltip', // 显式定义以避免类型错误
+        showOverflow: 'tooltip',
         slots: {
-          default: ({ row }: { row: any }) => {
-            return (
-              <TableAction
-                onActionItemClick={handleActionItemClick}
-                record={row}
-                actions={tableActions.value}
-                dropDownActions={dropDownActions.value}
-              />
-            )
-          }
+          default: ({ row }: { row: any }) => (
+            <TableAction
+              actions={tableActions.value}
+              dropDownActions={dropDownActions.value}
+              record={row}
+            />
+          ),
         },
-
-        ...crudSchemaRef.value.tableActionColumn?.vxeColumn
-      } as any)
+        ...actionCol,
+        ...actionCol.vxeColumn,
+      });
     }
-    return { columns: vxeTableColumns }
-  }
-  const columns = (
-    (typeof crudSchemaRef.value.columns === 'function'
-      ? crudSchemaRef.value.columns()
-      : crudSchemaRef.value.columns) || []
-  ).map((column) => {
-    const c = { ...column }
-    viewColumnFormatter(column)
-    c.formatter = column.formatter
-    delete c.component
-    delete c.componentProps
-    return c
-  })
-  // 有操作列配置才添加操作列
-  if (
-    (tableActions.value && tableActions.value.length > 0) ||
-    (dropDownActions.value && dropDownActions.value.length > 0)
-  ) {
-    columns.push({
-      prop: '__ACTION__',
-      label: '操作',
-      width: 220,
-      align: 'center',
-      fixed: 'right', // 固定列
-      formatter: (row: unknown) => {
-        return (
-          <TableAction
-            onActionItemClick={handleActionItemClick}
-            record={row}
-            actions={tableActions.value}
-            dropDownActions={dropDownActions.value}
-          />
-        )
-      },
-      ...crudSchemaRef.value.tableActionColumn
-    })
-  }
-  return {
-    columns
-  }
+
+    return vxeColumns;
+  });
 }

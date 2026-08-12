@@ -1,0 +1,26 @@
+{
+  "search_placeholder": "Enter module keywords",
+  "card_view": "Card View",
+  "table_view": "Table View",
+  "total_modules": "Total {count} modules",
+  "no_data_title": "No module data",
+  "no_data_description": "No matching modules found under current filter conditions",
+  "version": "Version: ",
+  "update_log": "Update Log",
+  "uninstall": "Uninstall",
+  "download": "Download Now",
+  "view_details": "Details",
+  "update_info": "Update Info",
+  "table_columns": {
+    "index": "No.",
+    "module_info": "Module Info",
+    "app_id": "App ID",
+    "version": "Version",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "status": {
+    "installed": "Installed",
+    "not_installed": "Not Installed"
+  }
+}

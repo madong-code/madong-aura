@@ -1,0 +1,52 @@
+{
+  "title": "Plugin",
+  "create": "Add Plugin",
+  "edit": "Edit Plugin",
+  "delete": "Delete Plugin",
+  "view": "View Plugin",
+  "create_success": "Plugin created successfully",
+  "create_fail": "Plugin creation failed",
+  "update_success": "Plugin updated successfully",
+  "update_fail": "Plugin update failed",
+  "delete_success": "Plugin deleted successfully",
+  "delete_fail": "Plugin deletion failed",
+  "list": {
+    "author": "Author",
+    "version": "Version",
+    "cover": "Cover",
+    "id": "Primary Key",
+    "key": "Plugin Key",
+    "desc": "Plugin Description",
+    "support_app": "Applications supported by the plugin, empty means general plugin",
+    "installed_at": "Installation Time",
+    "title": "Plugin Name",
+    "icon": "Plugin Icon",
+    "status": "Status",
+    "type": "Plugin type: app, plugin",
+    "variables": "Plugin Variables",
+    "created_at": "Creation Time"
+  },
+  "form": {
+    "author": "Author",
+    "version": "Version",
+    "cover": "Cover",
+    "id": "Primary Key",
+    "key": "Key",
+    "desc": "Description",
+    "support_app": "Applications supported by the plugin, empty means general plugin",
+    "installed_at": "Installation Time",
+    "title": "Name",
+    "icon": "Icon",
+    "status": "Status",
+    "type": "Type",
+    "type_options": {
+      "app": "App",
+      "module": "Module"
+    }
+  },
+  "search": {
+    "desc": "Plugin Description",
+    "title": "Plugin Name",
+    "status": "Status"
+  }
+}

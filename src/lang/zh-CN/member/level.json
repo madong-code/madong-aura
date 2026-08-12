@@ -1,0 +1,33 @@
+{
+  "title": "会员等级",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "level": "等级",
+      "name": "等级名称",
+      "min_points": "最低积分",
+      "discount": "折扣",
+      "member_count": "会员数",
+      "enabled": "状态",
+      "created_at": "创建时间"
+    },
+    "search": {
+      "name": "等级名称",
+      "enabled": "状态"
+    }
+  },
+  "form": {
+    "id": "ID",
+    "name": "等级名称",
+    "level": "等级",
+    "min_points": "最低积分",
+    "discount": "折扣",
+    "icon": "图标",
+    "enabled": "状态",
+    "description": "描述",
+    "rules_name": "请输入等级名称",
+    "rules_level": "请输入等级",
+    "rules_min_points": "请输入最低积分",
+    "rules_discount": "请输入折扣"
+  }
+}

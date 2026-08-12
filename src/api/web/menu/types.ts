@@ -19,7 +19,7 @@ export interface MenuMeta {
   target?: string;
   hidden?: boolean;
   disabled?: boolean;
-  badge?: string | number;
+  badge?: number | string;
   [key: string]: any;
 }
 

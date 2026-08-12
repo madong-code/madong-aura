@@ -1,0 +1,83 @@
+{
+  "title": "Member Tags",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Tag Name",
+      "description": "Description",
+      "member_count": "Members",
+      "enabled": "Status",
+      "created_at": "Created"
+    },
+    "search": {
+      "name": "Name",
+      "enabled": "Status"
+    }
+  },
+  "form": {
+    "name": "Tag Name",
+    "description": "Description",
+    "enabled": "Status",
+    "remark": "Remark"
+  },
+  "table_actions": {
+    "auth_menu": "Authorize Menu",
+    "member_manage": "Members"
+  },
+  "auth": {
+    "title": "Authorize Menu",
+    "auth_manage": "「{name}」Menu Authorization",
+    "message": {
+      "auth_success": "Authorization successful"
+    },
+    "expand": {
+      "title": "Expand",
+      "expand_all": "Expand All",
+      "expand_level1": "Expand Level 1",
+      "expand_level2": "Expand Level 2",
+      "collapse_all": "Collapse All"
+    },
+    "tag": {
+      "auth": "Auth",
+      "public": "Public",
+      "nav_menu": "Nav Menu",
+      "member_menu": "Member Menu",
+      "unknown": "Unknown"
+    }
+  },
+  "user": {
+    "list_title": "Members",
+    "member_manage": "「{name}」Members",
+    "add_title": "Add Member",
+    "search": {
+      "user_name": "Username",
+      "real_name": "Nickname",
+      "mobile_phone": "Phone",
+      "placeholder": {
+        "user_name": "Enter username",
+        "real_name": "Enter nickname",
+        "mobile_phone": "Enter phone"
+      }
+    },
+    "table": {
+      "columns": {
+        "user_name": "Username",
+        "real_name": "Nickname",
+        "mobile_phone": "Phone"
+      }
+    },
+    "actions": {
+      "add_user": "Add Member",
+      "remove_user": "Remove"
+    },
+    "confirm": {
+      "title": "Remove Member",
+      "content": "Are you sure you want to remove the selected members?"
+    },
+    "message": {
+      "delete_success": "Removed successfully",
+      "save_success": "Added successfully",
+      "select_user": "Please select members to add"
+    }
+  }
+}

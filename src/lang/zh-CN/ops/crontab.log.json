@@ -1,0 +1,20 @@
+{
+  "title": "任务日志",
+  "table": {
+    "columns": {
+      "target": "任务目标",
+      "running_time": "运行时间",
+      "return_code": "执行结果",
+      "log": "日志",
+      "created_date": "创建时间"
+    },
+    "search": {
+      "target": "任务目标",
+      "return_code": "执行结果",
+      "placeholder": {
+        "target": "请输入任务目标",
+        "return_code": "请选择执行结果"
+      }
+    }
+  }
+}

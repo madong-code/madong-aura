@@ -1,237 +1,215 @@
-import { computed, ref } from 'vue'
+import type { UnreadCountData } from '#/api/content/message/notify/types';
 
-import { defineStore } from 'pinia'
-import { ElNotification } from 'element-plus'
-//@ts-ignore
-import { Push } from '@/utils/push/push-vue.js'
-import { MessageService, type NotificationItem } from '@/api/setting/message'
-import { useUserStore } from './user'
-import { getApiBaseUrl } from '@/api/request'
-import { buildStaticUrl } from '@/utils/url/static-resource'
+import { ref } from 'vue';
 
-export const useNotifyStore = defineStore(
-  'app-notify',
-  () => {
-    /**
-     * return才会被持久化 存储全部消息
-     */
-    const notificationList = ref<NotificationItem[]>([])
+import { defineStore } from 'pinia';
 
-    const userStore = useUserStore()
-    const userId = computed(() => {
-      return userStore.info?.id || '0'
-    })
+import { CategoryService } from '#/api/content/message/category';
+import { NotifyService } from '#/api/content/message/notify';
+import { useUserStore } from '#/core/stores';
+// @ts-expect-error: push-vue.js has no type declarations
+import { Push } from '#/utils/push/push-vue.js';
 
-    const tenantId = computed(() => {
-      //@ts-ignore
-      return userStore.userInfo?.tenant?.tenant_id || '*'
-    })
+// 全局 Push 连接（Store 多次创建时复用）
+let pushClient: InstanceType<typeof Push> | null = null;
 
-    const notifications = computed(() => {
-      const currentUserId = String(userId.value)
-      return notificationList.value.filter((item) => String(item.uid) === currentUserId)
-    })
+export const useNotifyStore = defineStore('notify', () => {
+  // ========== 状态 ==========
+  const unreadCount = ref<UnreadCountData>({ total: 0, categories: [] });
+  const messageList = ref<any[]>([]);
+  const totalItems = ref(0);
+  const loading = ref(false);
+  const pushConnected = ref(false);
 
-    /**
-     * 是否已读
-     * @param action
-     * @returns
-     */
-    const isReadActionCaseInsensitive = function (action: any): boolean {
-      return typeof action === 'string' && action.toLowerCase() === 'read'
+  // ========== 订阅相关已移除：subscribe-page 直接调用 API ==========
+
+  // ========== Push 连接管理 ==========
+  function initPush() {
+    if (pushClient) return;
+
+    const wssEnabled = import.meta.env.VITE_GLOB_ENABLE_WSS === 'true';
+    if (!wssEnabled) return;
+
+    const wssUrl = import.meta.env.VITE_GLOB_WSS_URL;
+    const appKey = import.meta.env.VITE_GLOB_WSS_APPKEY;
+    if (!wssUrl || !appKey) {
+      console.warn('[NotifyStore] WSS 未配置');
+      return;
     }
 
-    /**
-     * 将新消息添加到持久化
-     * @param data
-     * @param uid
-     */
-    const addUniqueNotification = function (data: any) {
-      const currentUserId = String(userId.value)
-      const exists = notificationList.value.some(
-        (notification) =>
-          String(notification.id) === String(data.id) &&
-          String(notification.uid) === currentUserId &&
-          String(notification.channel === String(data.channel))
-      )
-      if (!exists) {
-        ElNotification.success({
-          message: data.title || '新消息提醒',
-          duration: 5,
-          description: data.content || ''
-        })
-        notificationList.value.unshift({
-          id: String(data.id),
-          avatar: data?.sender?.avatar ? buildStaticUrl(data.sender.avatar) : '',
-          date: data.created_date,
-          isRead: isReadActionCaseInsensitive(data.status),
-          message: data.content || '',
-          title: data.title,
-          related_id: data.related_id || '',
-          uid: data.receiver_id,
-          type: data?.type || '',
-          channel: data.channel || 'notice'
-        })
-      }
-    }
+    const userStore = useUserStore();
+    const userId = (userStore.userInfo as Record<string, any>)?.id || '0';
 
-    /**
-     * 开始监听消息
-     */
-    async function startListeningMessage() {
-      /**
-       * 未开启 不监听
-       */
-      const wssUrl = import.meta.env.VITE_GLOB_WSS_URL
-      const appKey = import.meta.env.VITE_GLOB_WSS_APPKEY
-      const sseEnable = import.meta.env.VITE_GLOB_ENABLE_WSS
-      if (!sseEnable) {
-        return
-      }
+    pushClient = new Push({
+      url: wssUrl,
+      app_key: appKey,
+      auth: '/adminapi/plugin/webman/push/auth',
+    });
 
-      const connection = new Push({
-        url: wssUrl, // websocket地址
-        app_key: appKey,
-        auth: `${getApiBaseUrl()}/plugin/webman/push/auth` // 订阅鉴权(仅限于私有频道)
-      })
-
-      // 公共订阅-弃用
-      // const notices_channel = connection.subscribe('backend-'+'admin-' + tenantId.value+'-*');
-      //公告订阅
-      // notices_channel.on('notice', function (message: any) {
-      //   if (Array.isArray(message)) {
-      //     message.forEach((data: any) => {
-      //       data['receiver_id'] = userId.value;//公告没有对应的接收人把本地登录的用户id追加到数据流
-      //       addUniqueNotification(data);
-      //     });
-      //   } else {
-      //     message['receiver_id'] = userId.value;//公告没有对应的接收人把本地登录的用户id追加到数据流
-      //     addUniqueNotification(message);
-      //   }
-      // });
-
-      /**
-       *
-       * 订阅后端消息通道（格式：backend-{模块}-{租户ID}-{用户ID}）
-       *
-       * 通道命名规则：
-       * - backend      : 固定前缀，标识后端服务通道（与前端其他通道区分）
-       * - admin         : 业务模块标识（此处为管理员模块，可替换为其他模块）
-       * - tenantId.value   : 当前租户的唯一ID
-       * - userId.value     : 当前用户的唯一ID
-       * 示例最终通道名：backend-admin-1-1
-       */
-      const message_channel = connection.subscribe(
-        'backend-' + 'admin-' + tenantId.value + '-' + userId.value
-      )
-      message_channel.on('message', function (data: any) {
-        const message = data.messages || {}
-        if (Array.isArray(message)) {
-          message.forEach((data: any) => {
-            //添加到列表
-            addUniqueNotification(data)
-          })
-        } else {
-          addUniqueNotification(message)
+    // 订阅个人消息通道 backend-admin-{userId}（单租户，无租户维度）
+    const channel = pushClient.subscribe(`backend-admin-${userId}`);
+    channel.on('message', (data: any) => {
+      const messages = data.messages || data;
+      const list = Array.isArray(messages) ? messages : [messages];
+      for (const msg of list) {
+        if (msg.type === 'unread_count' && msg.data) {
+          unreadCount.value = {
+            total: msg.data.total ?? 0,
+            categories: msg.data.categories ?? [],
+          };
         }
-      })
-    }
-
-    /**
-     * 设置全部已读
-     */
-    async function setAllRead() {
-      const currentUserId = String(userId.value)
-      // 公共过滤函数
-      const filterUserNotifications = (channel: string) =>
-        notificationList.value.filter(
-          (item) => String(item.uid) === currentUserId && item.channel === channel
-        )
-      try {
-        // 处理消息（需要后端同步）
-        const messages = filterUserNotifications('message')
-        const unreadMessages = messages.filter((item) => !item.isRead)
-
-        if (unreadMessages.length > 0) {
-          // 循环处理每个未读消息
-          for (const message of unreadMessages) {
-            //@ts-ignore
-            await MessageService.updateRead(message.id)
-            message.isRead = true
-          }
-        }
-
-        // 处理公告通知（无需后端同步）
-        const notices = filterUserNotifications('notice')
-        notices.forEach((item) => (item.isRead = true)) // 直接标记本地状态
-      } catch (error) {
-        console.error('标记已读失败:', error)
       }
-    }
+    });
 
-    /**
-     * 设置单条消息已读
-     * @param item 通知
-     */
-    async function setRead(item: NotificationItem) {
-      // 提前返回已读项，避免重复处理
-      if (item.isRead) return
+    pushConnected.value = true;
+    loadUnreadCount();
+  }
 
-      try {
-        // 公告通知本地标记
-        if (item.channel === 'notice') {
-          item.isRead = true
-          return
-        }
+  function destroyPush() {
+    // Push 连接由 Push 内部管理生命周期，不主动断开
+  }
 
-        // 消息类型同步标记后端
-        await MessageService.updateRead(String(item.id))
-        item.isRead = true
-      } catch (error) {
-        console.error(`标记消息[${item.id}]为已读失败:`, error)
-      }
-    }
-
-    /**
-     * 清空全部消息
-     */
-    function clearAllMessage() {
-      const currentUserId = String(userId.value)
-      notificationList.value = notificationList.value.filter(
-        (item: any) => String(item.uid) !== currentUserId
-      )
-    }
-
-    /**
-     * 只需要空实现即可
-     * 否则会在退出登录清空所有
-     */
-    function $reset() {
-      notificationList.value = []
-    }
-    /**
-     * 显示小圆点
-     */
-    const showDot = computed(() =>
-      notificationList.value
-        .filter((item: any) => item.uid === userId.value)
-        .some((item: any) => !item.isRead)
-    )
-
-    return {
-      $reset,
-      clearAllMessage,
-      notificationList,
-      notifications,
-      setAllRead,
-      setRead,
-      showDot,
-      startListeningMessage
-    }
-  },
-  {
-    persist: {
-      pick: ['notificationList']
+  // ========== 数据加载 ==========
+  async function loadMessages(params: {
+    category_id?: number;
+    definition_id?: number;
+    keyword?: string;
+    page: number;
+    pageSize: number;
+    status?: string;
+  }) {
+    loading.value = true;
+    try {
+      const resp = await NotifyService.getList({
+        page: params.page,
+        limit: params.pageSize,
+        status: params.status,
+        category_id: params.category_id,
+        definition_id: params.definition_id,
+        keyword: params.keyword,
+      });
+      messageList.value = (resp.list ?? []).map((item) => normalizeItem(item));
+      totalItems.value = resp.total ?? 0;
+    } catch (error) {
+      console.error('[NotifyStore] 加载消息列表失败:', error);
+    } finally {
+      loading.value = false;
     }
   }
-)
+
+  async function loadUnreadCount() {
+    try {
+      unreadCount.value = await NotifyService.getUnreadCount();
+    } catch (error) {
+      console.error('[NotifyStore] 加载未读数失败:', error);
+    }
+  }
+
+  async function loadCategories() {
+    try {
+      return await CategoryService.getAll();
+    } catch (error) {
+      console.error('[NotifyStore] 加载分类失败:', error);
+      return [];
+    }
+  }
+
+  // ========== 消息操作 ==========
+  async function markRead(id: number | string) {
+    try {
+      await NotifyService.markRead(id);
+      await loadUnreadCount();
+    } catch (error) {
+      console.error('[NotifyStore] 标记已读失败:', error);
+    }
+  }
+
+  async function batchMarkRead(ids: (number | string)[]) {
+    try {
+      await NotifyService.batchMarkRead(ids);
+      await loadUnreadCount();
+    } catch (error) {
+      console.error('[NotifyStore] 批量标记已读失败:', error);
+    }
+  }
+
+  async function markAllRead() {
+    try {
+      await NotifyService.markAllRead();
+      messageList.value.forEach((n) => (n.isRead = true));
+      await loadUnreadCount();
+    } catch (error) {
+      console.error('[NotifyStore] 全部标记已读失败:', error);
+    }
+  }
+
+  async function batchDelete(ids: (number | string)[]) {
+    try {
+      await NotifyService.batchDelete(ids);
+      messageList.value = messageList.value.filter((n) => !ids.includes(n.id));
+      await loadUnreadCount();
+    } catch (error) {
+      console.error('[NotifyStore] 批量删除失败:', error);
+    }
+  }
+
+  // ========== 重置状态（用于登出时清空） ==========
+  function $reset() {
+    unreadCount.value = { total: 0, categories: [] };
+    messageList.value = [];
+    totalItems.value = 0;
+    loading.value = false;
+    pushConnected.value = false;
+    pushClient = null;
+  }
+
+  // ========== 工具函数 ==========
+  function normalizeItem(item: any): any {
+    return {
+      id: item.id,
+      definition_id: item.definition_id,
+      category: item.category_id ?? 0,
+      category_name: item.category_name,
+      module_id: item.definition_id, // 兼容旧引用
+      module_name: item.definition_name ?? item.module_name,
+      title: item.title ?? '',
+      content: item.content ?? '',
+      date: item.created_at
+        ? new Date(item.created_at).toLocaleString('zh-CN', { hour12: false })
+        : '',
+      isRead: item.status === 'read',
+      link: item.action_url ?? '',
+      query: item.action_params
+        ? typeof item.action_params === 'string'
+          ? JSON.parse(item.action_params)
+          : item.action_params
+        : {},
+      actionText: '立即查看',
+      priority: item.priority,
+      sender_id: item.sender_id,
+      read_at: item.read_at,
+      created_at: item.created_at,
+    };
+  }
+
+  return {
+    $reset,
+    unreadCount,
+    messageList,
+    totalItems,
+    loading,
+    pushConnected,
+
+    initPush,
+    destroyPush,
+
+    loadMessages,
+    loadUnreadCount,
+    loadCategories,
+
+    markRead,
+    batchMarkRead,
+    markAllRead,
+    batchDelete,
+  };
+});

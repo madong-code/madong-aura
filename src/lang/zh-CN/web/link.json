@@ -1,0 +1,24 @@
+{
+  "title": "友情链接",
+  "table": {
+    "columns": {
+      "logo": "Logo",
+      "name": "链接名称",
+      "url": "链接地址",
+      "description": "描述",
+      "sort": "排序",
+      "enabled": "状态"
+    },
+    "search": { "name": "链接名称", "url": "链接地址", "enabled": "状态" }
+  },
+  "form": {
+    "name": "链接名称",
+    "url": "链接地址",
+    "logo": "Logo",
+    "sort": "排序",
+    "enabled": "状态",
+    "description": "描述",
+    "rules_name": "请输入链接名称",
+    "rules_url": "请输入链接地址"
+  }
+}

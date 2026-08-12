@@ -1,0 +1,27 @@
+{
+  "title": "登录日志",
+  "table": {
+    "columns": {
+      "user_name": "用户名",
+      "real_name": "昵称",
+      "status": "状态",
+      "os": "操作系统",
+      "browser": "浏览器",
+      "ip": "IP地址",
+      "ip_location": "IP归属地",
+      "login_date": "登录时间",
+      "remark": "备注"
+    },
+    "search": {
+      "user_name": "用户名",
+      "ip": "IP",
+      "status": "状态",
+      "created_date": "登录时间",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "ip": "请输入IP",
+        "status": "请选择状态"
+      }
+    }
+  }
+}

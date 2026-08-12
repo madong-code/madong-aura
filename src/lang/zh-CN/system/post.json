@@ -1,0 +1,37 @@
+{
+  "title": "岗位管理",
+  "table": {
+    "columns": {
+      "code": "岗位代码",
+      "name": "岗位名称",
+      "sort": "排序",
+      "enabled": "状态",
+      "remark": "备注"
+    },
+    "search": {
+      "code": "岗位代码",
+      "name": "岗位名称",
+      "enabled": "状态",
+      "placeholder": {
+        "code": "请输入岗位代码",
+        "name": "请输入岗位名称",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "dept_name": "所属部门",
+    "name": "岗位名称",
+    "code": "岗位代码",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注",
+    "placeholder": {
+      "dept_name": "请选择部门",
+      "name": "请输入岗位名称",
+      "code": "请输入岗位代码",
+      "remark": "请输入备注"
+    }
+  }
+}

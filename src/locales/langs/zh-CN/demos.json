@@ -1,0 +1,28 @@
+{
+  "title": "演示",
+  "elementPlus": "Element Plus",
+  "form": "表单演示",
+  "localeTest": {
+    "title": "语言包测试",
+    "description": "测试语言包是否正确加载",
+    "basicTest": "基础翻译测试",
+    "greeting": "问候语",
+    "login": "登录",
+    "password": "密码",
+    "currentLocale": "当前语言设置",
+    "switchLanguage": "切换语言",
+    "chinese": "中文",
+    "english": "英文",
+    "availableKeys": "可用翻译键"
+  },
+  "vben": {
+    "title": "项目",
+    "about": "关于",
+    "document": "文档",
+    "antdv": "Ant Design Vue 版本",
+    "antdv-next": "Antdv Next 版本",
+    "naive-ui": "Naive UI 版本",
+    "element-plus": "Element Plus 版本",
+    "tdesign": "TDesign Vue 版本"
+  }
+}

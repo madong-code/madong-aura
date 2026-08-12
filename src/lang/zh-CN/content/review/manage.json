@@ -1,0 +1,82 @@
+{
+  "title": "审核管理",
+  "detail": {
+    "title": "审核详情",
+    "archived_tip": "该审核已终结并归档，仅作只读展示。",
+    "reviewable_id": "业务ID",
+    "created_by": "创建人",
+    "flow_type": "审批模式",
+    "reason": "审批意见",
+    "cancel_reason": "取消原因",
+    "no_form": "无业务表单数据",
+    "no_events": "暂无操作事件",
+    "tabs": {
+      "info": "审核信息",
+      "form": "表单数据",
+      "status": "状态",
+      "events": "事件记录"
+    }
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "标题",
+      "summary": "摘要",
+      "type": "业务类型",
+      "applicant": "申请人",
+      "status": "状态",
+      "reviewer": "审核人",
+      "reviewed_at": "审核时间",
+      "created_at": "发起时间"
+    },
+    "search": {
+      "type": "业务类型",
+      "status": "状态",
+      "keyword": "关键字",
+      "keyword_placeholder": "标题 / 申请人 / 业务ID"
+    }
+  },
+  "status": {
+    "pending": "待审核",
+    "processing": "审核中",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "cancelled": "已取消",
+    "archived": "已归档"
+  },
+  "actions": {
+    "detail": "详情",
+    "review": "审核",
+    "approve": "通过",
+    "reject": "拒绝",
+    "cancel": "取消",
+    "batch_approve": "批量通过",
+    "batch_reject": "批量拒绝"
+  },
+  "audit": {
+    "action": "审核结果",
+    "reason": "审核意见",
+    "reason_placeholder": "请输入审核意见（拒绝时必填）",
+    "reject_reason_placeholder": "请填写拒绝原因（必填，限 {max} 字以内）",
+    "approve_reason_placeholder": "请填写审核意见（选填，限 {max} 字以内）",
+    "reason_too_long": "审核意见不能超过 {max} 字",
+    "reject_tip": "拒绝后将通过消息通知申请人，请认真填写拒绝原因"
+  },
+  "message": {
+    "approve_reason": "请输入通过意见（可留空）",
+    "reject_reason": "请输入拒绝原因",
+    "cancel_reason": "请输入取消原因",
+    "cancel_required": "取消原因不能为空",
+    "batch_approve_reason": "请输入批量通过意见（可留空）",
+    "batch_reject_reason": "请输入批量拒绝原因",
+    "approve_success": "审核通过",
+    "reject_success": "已拒绝",
+    "cancel_success": "已取消",
+    "reject_required": "拒绝原因不能为空",
+    "batch_approve_confirm": "确定批量通过选中的 {count} 条记录吗？",
+    "batch_approve_partial": "已通过 {done}/{total} 条，其余未处理",
+    "batch_reject_placeholder": "请填写拒绝原因（必填）",
+    "batch_reject_partial": "已拒绝 {done}/{total} 条，其余未处理",
+    "operation_failed": "操作失败"
+  }
+}

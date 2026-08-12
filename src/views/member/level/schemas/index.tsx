@@ -1,235 +1,168 @@
-import { CrudSchema } from '@/components/crud'
-import { MemberLevelService } from '@/api/member'
-import { $t } from '@/locales'
-import { DictEnum } from '@/enums'
-import { max } from 'xe-utils'
-import { Icon } from '@/components/icon'
-import { h } from 'vue'
-import { formatDateTime } from '@/utils'
-// crud配置
-export const crudSchema = (): CrudSchema => {
+import type { CrudSchema } from '#/components/crud/components/types';
+
+import { MemberLevelService } from '#/api/member';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
+export const useCrudSchema = (): CrudSchema => {
   return {
-    // 接口地址
-    api: MemberLevelService.list,
-    dialogTitle: $t('member.level.title'),
     crudApi: {
-      // 新增接口
+      list: MemberLevelService.list,
       add: MemberLevelService.create,
-      // 修改接口
       edit: MemberLevelService.update,
-      // 删除接口
-      remove: MemberLevelService.remove,
-      // 详情接口
-      view: MemberLevelService.get
+      remove: MemberLevelService.delete,
+      batchRemove: MemberLevelService.remove,
+      view: MemberLevelService.get,
     },
-    // 使用crud
-    useCrud: true,
-    // 是否有新增
+    // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    // 是否有删除
-    hasRemove: true,
-    // 是否有修改
     hasEdit: true,
-    // 是否有详情
     hasView: true,
-    // 新增权限码
-    addAuth: 'member:level:create',
-    // 删除权限码
-    removeAuth: 'member:level:delete',
-    // 修改权限码
-    editAuth: 'member:level:update',
-    // 详情权限码
-    viewAuth: 'member:level:read',
-    // 表格列定义
+    hasRemove: true,
+    permissions: {
+      add: 'member:level:create',
+      edit: 'member:level:update',
+      remove: 'member:level:delete',
+      view: 'member:level:read',
+    },
     columns: [
+      { type: 'checkbox', width: 60 },
       {
-        type: 'selection'
-      },
-      {
-        prop: 'id',
-        label: $t('member.level.table.columns.id'),
-        minWidth: 60,
-        visible: false
-      },
-      {
-        prop: 'level',
-        label: $t('member.level.table.columns.level'),
-        minWidth: 100
-      },
-      {
-        prop: 'name',
-        label: $t('member.level.table.columns.name'),
-        formatter: (row) => {
-          return row.icon
-            ? h('span', {}, [
-                h(Icon, {
-                  icon: row.icon
-                }),
-                h(
-                  'span',
-                  {
-                    style: {
-                      paddingLeft: '6px'
-                    }
-                  },
-                  row.name
-                )
-              ])
-            : h('span', {}, row.name)
-        },
-        minWidth: 200
-      },
-      {
-        prop: 'min_points',
-        label: $t('member.level.table.columns.min_points'),
-        minWidth: 100
-      },
-      {
-        prop: 'discount',
-        label: $t('member.level.table.columns.discount'),
+        field: 'level',
+        title: $t('member.level.table.columns.level'),
         minWidth: 100,
-        formatter: (row: any) => `${row.discount}%`
+        align: 'left',
       },
       {
-        prop: 'member_count',
-        label: $t('member.level.table.columns.member_count'),
-        minWidth: 100
+        field: 'name',
+        title: $t('member.level.table.columns.name'),
+        minWidth: 200,
+        align: 'left',
       },
       {
-        prop: 'enabled',
-        label: $t('member.level.table.columns.enabled'),
+        field: 'min_points',
+        title: $t('member.level.table.columns.min_points'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'discount',
+        title: $t('member.level.table.columns.discount'),
+        minWidth: 100,
+        align: 'left',
+        formatter: ({ cellValue }: any) => {
+          if (cellValue === null || cellValue === undefined) return '-';
+          return `${(cellValue * 100).toFixed(0)}%`;
+        },
+      },
+      {
+        field: 'member_count',
+        title: $t('member.level.table.columns.member_count'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'enabled',
+        title: $t('member.level.table.columns.enabled'),
         minWidth: 80,
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS
-        }
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
       {
-        prop: 'created_at',
-        label: $t('member.level.table.columns.created_at'),
+        field: 'created_at',
+        title: $t('member.level.table.columns.created_at'),
         minWidth: 160,
-        formatter: (row: any) => {
-          return formatDateTime(row.created_at)
-        }
-      }
+        align: 'center',
+        formatter: 'formatDateTime',
+      },
     ],
-    // 搜索表单配置
-    searchFormSchema: {
-      labelWidth: '100px',
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
       schema: [
         {
-          prop: 'LINK_name',
-          label: $t('member.level.search.name'),
-          component: 'Input'
+          component: 'Input',
+          fieldName: 'LINK_name',
+          label: $t('member.level.table.search.name'),
         },
         {
-          prop: 'EQ_enabled',
-          label: $t('member.level.search.enabled'),
           component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('member.level.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
-            clearable: true
-          }
-        }
-      ]
+            clearable: true,
+          },
+        },
+      ],
     },
-    // 表单配置
-    formSchema: {
-      labelWidth: 120,
-      gutter: 20,
+    formDialog: {
+      enabled: true,
+      title: $t('member.level.title'),
+      width: 'w-[40%]',
+      wrapperClass: 'grid-cols-1',
+      commonConfig: { labelWidth: 120 },
       schema: [
         {
-          prop: 'id',
+          fieldName: 'id',
           label: $t('member.level.form.id'),
           component: 'Input',
-          show: false,
-          ifDetail: false
+          dependencies: { show: false, triggerFields: ['id'] },
         },
         {
-          prop: 'name',
+          fieldName: 'name',
           label: $t('member.level.form.name'),
           component: 'Input',
-          rules: [{ required: true, message: $t('member.level.form.rules_name') }],
-          componentProps: {},
-          colSpan: 24
+          rules: 'required',
         },
         {
-          prop: 'level',
+          fieldName: 'level',
           label: $t('member.level.form.level'),
-          component: 'Input',
-          rules: [{ required: true, message: $t('member.level.form.rules_level') }],
+          component: 'InputNumber',
           defaultValue: 1,
-          componentProps: {
-            style: { width: '100%' },
-            type: 'number',
-            min: 1,
-            max: 9999,
-            precision: 0
-          },
-          colSpan: 24
+          rules: 'required',
+          componentProps: { min: 1, max: 9999 },
         },
         {
-          prop: 'min_points',
+          fieldName: 'min_points',
           label: $t('member.level.form.min_points'),
           component: 'InputNumber',
-          rules: [{ required: true, message: $t('member.level.form.rules_min_points') }],
-          componentProps: {
-            min: 0,
-            precision: 0
-          },
-          colSpan: 12
+          rules: 'required',
+          componentProps: { min: 0 },
         },
         {
-          prop: 'discount',
+          fieldName: 'discount',
           label: $t('member.level.form.discount'),
           component: 'InputNumber',
-          rules: [{ required: true, message: $t('member.level.form.rules_discount') }],
-          componentProps: {
-            min: 0,
-            max: 100,
-            precision: 0
-          },
-          colSpan: 12
+          rules: 'required',
+          componentProps: { min: 0, max: 100 },
         },
         {
+          fieldName: 'icon',
           label: $t('member.level.form.icon'),
-          prop: 'icon',
           component: 'IconPicker',
-          colSpan: 12,
-          componentProps: (__values: any) => {
-            return {
-              class: 'w-full',
-              clearable: true
-            }
-          }
         },
         {
-          prop: 'enabled',
+          fieldName: 'enabled',
           label: $t('member.level.form.enabled'),
           component: 'ApiDict',
+          defaultValue: 1,
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
             renderType: 'RadioGroup',
-            isBtn: true
+            isBtn: true,
           },
-          defaultValue: 1,
-          colSpan: 12
         },
-
         {
-          prop: 'description',
+          fieldName: 'description',
           label: $t('member.level.form.description'),
           component: 'Input',
-          componentProps: {
-            type: 'textarea',
-            rows: 3
-          },
-          colSpan: 24
-        }
-      ]
+          componentProps: { type: 'textarea', rows: 3 },
+        },
+      ],
     },
-    dialogProps: {
-      width: '40%'
-    }
-  }
-}
+  };
+};

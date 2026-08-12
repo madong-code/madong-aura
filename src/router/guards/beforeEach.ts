@@ -38,23 +38,21 @@
 import type { Router, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { nextTick } from 'vue'
 import NProgress from 'nprogress'
-import { useSettingStore } from '@/store/modules/setting'
-import { useUserStore } from '@/store/modules/user'
-import { useMenuStore } from '@/store/modules/menu'
-import { useSystemConfigStore } from '@/store/modules/site-config'
-import { setWorktab } from '@/utils/navigation'
-import { setPageTitle } from '@/utils/router'
+import { useSettingStore } from '#/core/stores/modules/setting'
+import { useUserStore } from '#/core/stores/modules/user'
+import { useMenuStore } from '#/core/stores/modules/menu'
+import { setWorktab } from '#/core/shared/art-utils/navigation'
+import { setPageTitle } from '#/core/shared/art-utils/router'
 import { RoutesAlias } from '../routesAlias'
 import { staticRoutes } from '../routes/staticRoutes'
-import { loadingService } from '@/utils/ui'
-import { useCommon } from '@/hooks/core/useCommon'
-import { useWorktabStore } from '@/store/modules/worktab'
-import { UserService } from '@/api/system/user'
-import { ApiStatus } from '@/utils/http/status'
-import { isHttpError } from '@/utils/http/error'
+import { loadingService } from '#/core/shared/art-utils/ui'
+import { useCommon } from '#/core/composables/art/useCommon'
+import { useWorktabStore } from '#/core/stores/modules/worktab'
+import { getUserInfoApi } from '#/api/core/user'
+import { ApiStatus } from '#/core/shared/art-utils/http/status'
+import { isHttpError } from '#/core/shared/art-utils/http/error'
 import { RouteRegistry, MenuProcessor, IframeRouteManager, RoutePermissionValidator } from '../core'
-import { useAppMode } from '@/hooks'
-const fetchGetUserInfo = UserService.getUserInfo
+
 // 路由注册器实例
 let routeRegistry: RouteRegistry | null = null
 
@@ -63,6 +61,13 @@ const menuProcessor = new MenuProcessor()
 
 // 跟踪是否需要关闭 loading
 let pendingLoading = false
+
+// 路由初始化失败标记，防止死循环
+// 一旦设置为 true，只有刷新页面或重新登录才能重置
+let routeInitFailed = false
+
+// 路由初始化进行中标记，防止并发请求
+let routeInitInProgress = false
 
 /**
  * 获取 pendingLoading 状态
@@ -76,6 +81,21 @@ export function getPendingLoading(): boolean {
  */
 export function resetPendingLoading(): void {
   pendingLoading = false
+}
+
+/**
+ * 获取路由初始化失败状态
+ */
+export function getRouteInitFailed(): boolean {
+  return routeInitFailed
+}
+
+/**
+ * 重置路由初始化状态（用于重新登录场景）
+ */
+export function resetRouteInitState(): void {
+  routeInitFailed = false
+  routeInitInProgress = false
 }
 
 /**
@@ -125,21 +145,10 @@ async function handleRouteGuard(
 ): Promise<void> {
   const settingStore = useSettingStore()
   const userStore = useUserStore()
-  const systemConfigStore = useSystemConfigStore()
 
   // 启动进度条
   if (settingStore.showNprogress) {
     NProgress.start()
-  }
-
-  // 在登录页或所有页面加载前获取系统配置（如果还没有配置数据）
-  // 这确保了登录前和浏览器刷新时都能获取到配置
-  // 使用 isLoaded 标志判断是否已经加载过，避免重复请求
-  if (!systemConfigStore.isLoaded && !systemConfigStore.loading) {
-    // 不等待配置加载完成，避免阻塞路由导航
-    systemConfigStore.fetchSystemConfig('site_setting').catch(err => {
-      console.warn('获取系统配置失败:', err)
-    })
   }
 
   // 1. 检查登录状态
@@ -147,18 +156,36 @@ async function handleRouteGuard(
     return
   }
 
-  // 2. 处理动态路由注册
+  // 2. 检查路由初始化是否已失败（防止死循环）
+  if (routeInitFailed) {
+    // 已经失败过，直接放行到错误页面，不再重试
+    if (to.matched.length > 0) {
+      next()
+    } else {
+      // 未匹配到路由，跳转到 500 页面
+      next({ name: 'Exception500', replace: true })
+    }
+    return
+  }
+
+  // 3. 处理动态路由注册
   if (!routeRegistry?.isRegistered() && userStore.isLogin) {
+    // 防止并发请求（快速连续导航场景）
+    if (routeInitInProgress) {
+      // 正在初始化中，等待完成后重新导航
+      next(false)
+      return
+    }
     await handleDynamicRoutes(to, next, router)
     return
   }
 
-  // 3. 处理根路径重定向
+  // 4. 处理根路径重定向
   if (handleRootPathRedirect(to, next)) {
     return
   }
 
-  // 4. 处理已匹配的路由
+  // 5. 处理已匹配的路由
   if (to.matched.length > 0) {
     setWorktab(to)
     setPageTitle(to)
@@ -166,8 +193,10 @@ async function handleRouteGuard(
     return
   }
 
-  // 5. 未匹配到路由，跳转到 404
-  next({ name: 'Exception404' })
+  // 6. 未匹配到路由，跳转到 404
+  // 用 path 跳转（而非 name），确保渲染完整路由树（AppLayout 父 + not-found 子），
+  // 让 404 在布局右侧内容区显示，而非独立全屏。
+  next({ path: '/400' })
 }
 
 /**
@@ -199,6 +228,12 @@ function handleLoginStatus(
 function isStaticRoute(path: string): boolean {
   const checkRoute = (routes: any[], targetPath: string): boolean => {
     return routes.some((route) => {
+      // 404 catch-all 路由不应视为可匿名访问的静态页，
+      // 否则未登录时手动输入任意地址会直接落到 404，无法跳转登录页。
+      if (route.name === 'NotFoundPage') {
+        return false
+      }
+
       // 处理动态路由参数匹配
       const routePath = route.path
       const pattern = routePath.replace(/:[^/]+/g, '[^/]+').replace(/\*/g, '.*')
@@ -225,6 +260,9 @@ async function handleDynamicRoutes(
   next: NavigationGuardNext,
   router: Router
 ): Promise<void> {
+  // 标记初始化进行中
+  routeInitInProgress = true
+
   // 显示 loading
   pendingLoading = true
   loadingService.showLoading()
@@ -255,6 +293,18 @@ async function handleDynamicRoutes(
     // 7. 验证工作标签页
     useWorktabStore().validateWorktabs(router)
 
+    // 8. 静态路由不依赖菜单权限，初始化后直接恢复目标地址。
+    if (isStaticRoute(to.path)) {
+      routeInitInProgress = false
+      next({
+        path: to.path,
+        query: to.query,
+        hash: to.hash,
+        replace: true
+      })
+      return
+    }
+
     // 8. 验证目标路径权限
     const { homePath } = useCommon()
     const { path: validatedPath, hasPermission } = RoutePermissionValidator.validatePath(
@@ -262,6 +312,9 @@ async function handleDynamicRoutes(
       menuList,
       homePath.value || '/'
     )
+
+    // 初始化成功，重置进行中标记
+    routeInitInProgress = false
 
     // 9. 重新导航到目标路由
     if (!hasPermission) {
@@ -288,51 +341,39 @@ async function handleDynamicRoutes(
   } catch (error) {
     console.error('[RouteGuard] 动态路由注册失败:', error)
 
+    // 关闭 loading
+    closeLoading()
+
     // 401 错误：axios 拦截器已处理退出登录，取消当前导航
     if (isUnauthorizedError(error)) {
-      closeLoading()
+      // 重置状态，允许重新登录后再次初始化
+      routeInitInProgress = false
       next(false)
       return
     }
 
-    // 404 错误：接口不存在，标记路由已注册避免重复请求
-    if (isNotFoundError(error)) {
-      console.error('[RouteGuard] 接口返回 404，请检查后端接口配置')
-      routeRegistry?.markAsRegistered()
-      closeLoading()
-      next({ name: 'Exception404' })
-      return
+    // 标记初始化失败，防止死循环
+    routeInitFailed = true
+    routeInitInProgress = false
+
+    // 输出详细错误信息，便于排查
+    if (isHttpError(error)) {
+      console.error(`[RouteGuard] 错误码: ${error.code}, 消息: ${error.message}`)
     }
 
-    // 其他错误：跳转到 500 页面
-    next({ name: 'Exception500' })
+    // 跳转到 500 页面，使用 replace 避免产生历史记录
+    next({ name: 'Exception500', replace: true })
   }
 }
 
 /**
  * 获取用户信息
- *
- * 注意：每次动态路由注册时都会重新获取用户信息，确保数据最新
- * 这样可以避免以下问题：
- * 1. 用户信息过期但仍使用 localStorage 中的旧数据
- * 2. 权限变更后不能及时更新
- * 3. 用户信息在后台被修改后前端不同步
  */
 async function fetchUserInfo(): Promise<void> {
   const userStore = useUserStore()
-  const data = await fetchGetUserInfo()
-  let permCode = data.buttons
-  const { isFrontendMode } = useAppMode()
-  if (
-    (isFrontendMode.value || import.meta.env.VITE_BACKEND_MODE_USE_CODE === 'true') &&
-    !permCode
-  ) {
-    permCode = await UserService.getPermCode()
-  }
-  userStore.setUserInfo({
-    ...data,
-    buttons: permCode
-  })
+  const data = await getUserInfoApi()
+  // art 的 userStore.setUserInfo 期望 art 自有 UserInfo 类型，与 admin getUserInfoApi 返回类型存在差异
+  userStore.setUserInfo(data as any)
   // 检查并清理工作台标签页（如果是不同用户登录）
   userStore.checkAndClearWorktabs()
 }
@@ -348,6 +389,9 @@ export function resetRouterState(delay: number): void {
     const menuStore = useMenuStore()
     menuStore.removeAllDynamicRoutes()
     menuStore.setMenuList([])
+
+    // 重置路由初始化状态，允许重新登录后再次初始化
+    resetRouteInitState()
   }, delay)
 }
 
@@ -374,11 +418,4 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
  */
 function isUnauthorizedError(error: unknown): boolean {
   return isHttpError(error) && error.code === ApiStatus.unauthorized
-}
-
-/**
- * 判断是否为 404 错误
- */
-function isNotFoundError(error: unknown): boolean {
-  return isHttpError(error) && error.code === ApiStatus.notFound
 }

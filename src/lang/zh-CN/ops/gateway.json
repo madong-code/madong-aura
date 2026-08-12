@@ -1,0 +1,109 @@
+{
+  "blacklist": {
+    "title": "黑名单管理",
+    "table": {
+      "columns": {
+        "priority": "优先级",
+        "name": "名称",
+        "ip": "IP地址",
+        "match_type": "匹配类型",
+        "methods": "请求方式",
+        "path": "路径",
+        "enabled": "状态",
+        "start_date": "开始时间",
+        "end_date": "结束时间",
+        "created_date": "创建时间"
+      },
+      "search": {
+        "name": "名称",
+        "ip": "IP",
+        "path": "路径",
+        "enabled": "状态",
+        "placeholder": {
+          "name": "请输入名称",
+          "ip": "请输入IP",
+          "path": "请输入路径",
+          "enabled": "请选择状态"
+        }
+      }
+    },
+    "form": {
+      "modal": {
+        "id": "ID",
+        "name": "名称",
+        "match_type": "匹配类型",
+        "priority": "优先级",
+        "ip": "IP地址",
+        "methods": "请求方式",
+        "path": "路径",
+        "start_time": "开始时间",
+        "end_time": "结束时间",
+        "enabled": "状态",
+        "message": "提示信息",
+        "remark": "备注",
+        "placeholder": {
+          "name": "请输入名称",
+          "match_type": "请选择匹配类型",
+          "priority": "请输入优先级",
+          "path": "请输入路径",
+          "start_time": "请选择开始时间",
+          "end_time": "请选择结束时间",
+          "message": "请输入提示信息",
+          "remark": "请输入备注"
+        }
+      }
+    }
+  },
+  "limiter": {
+    "title": "限流管理",
+    "table": {
+      "columns": {
+        "priority": "优先级",
+        "name": "名称",
+        "match_type": "匹配类型",
+        "methods": "请求方式",
+        "path": "路径",
+        "enabled": "状态",
+        "limit_type": "限流类型",
+        "limit_value": "限流值",
+        "period": "周期",
+        "ttl": "TTL"
+      },
+      "search": {
+        "name": "名称",
+        "path": "路径",
+        "enabled": "状态",
+        "placeholder": {
+          "name": "请输入名称",
+          "path": "请输入路径",
+          "enabled": "请选择状态"
+        }
+      }
+    },
+    "form": {
+      "modal": {
+        "name": "名称",
+        "match_type": "匹配类型",
+        "limit_type": "限流类型",
+        "methods": "请求方式",
+        "path": "路径",
+        "limit_value": "限流值",
+        "period": "周期",
+        "ttl": "TTL",
+        "enabled": "状态",
+        "message": "提示信息",
+        "placeholder": {
+          "name": "请输入名称",
+          "match_type": "请选择",
+          "limit_type": "请选择",
+          "methods": "请选择",
+          "path": "请输入路径",
+          "limit_value": "请输入限流值",
+          "period": "请输入周期",
+          "ttl": "请输入TTL",
+          "message": "请输入提示信息"
+        }
+      }
+    }
+  }
+}

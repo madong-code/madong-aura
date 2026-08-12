@@ -1,8 +1,9 @@
-import BaseService from '@/api/core/base'
-import request from '@/utils/http'
-import type { MemberPointsLog } from './types'
+import type { MemberPointsLog } from './types';
 
-const baseUrl = '/member/points'
+import BaseService from '#/api/core/base';
+import { requestClient } from '#/api/request';
+
+const baseUrl = '/member/points';
 
 export const MemberPointsService = {
   ...BaseService<MemberPointsLog>({
@@ -12,26 +13,29 @@ export const MemberPointsService = {
   }),
 
   operate(data: Record<string, any>): Promise<any> {
-    return request.post({ url: `${baseUrl}/operate`, data });
+    return requestClient.post(`${baseUrl}/operate`, data);
   },
 
   batchOperate(data: Record<string, any>): Promise<any> {
-    return request.post({ url: `${baseUrl}/batch-operate`, data })
+    return requestClient.post(`${baseUrl}/batch-operate`, data);
   },
 
   getStatistics(params?: Record<string, any>): Promise<any> {
-    return request.get({ url: `${baseUrl}/statistics`, params })
+    return requestClient.get(`${baseUrl}/statistics`, { params });
   },
 
   exportLogs(params?: Record<string, any>): Promise<any> {
-    return request.get({ url: `${baseUrl}/export`, params, responseType: 'blob' })
+    return requestClient.get(`${baseUrl}/export`, {
+      params,
+      responseType: 'blob',
+    } as any);
   },
 
   setRules(data: Record<string, any>): Promise<any> {
-    return request.post({ url: `${baseUrl}/rules`, data })
+    return requestClient.post(`${baseUrl}/rules`, data);
   },
 
   getRules(): Promise<any> {
-    return request.get({ url: `${baseUrl}/rules` })
-  }
+    return requestClient.get(`${baseUrl}/rules`);
+  },
 };

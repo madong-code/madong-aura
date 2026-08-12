@@ -1,0 +1,52 @@
+{
+  "title": "Command Terminal",
+  "status": {
+    "waiting": "Waiting for execution",
+    "connecting": "Connecting",
+    "executing": "Executing",
+    "success": "Execution successful",
+    "failed": "Execution failed",
+    "unknown": "Unknown"
+  },
+  "empty": "No running tasks",
+  "block_on_failure": "Failure of this command will block queue execution",
+  "not_refresh_browser": "Do not refresh the browser",
+  "task_blocking": "Task blocking, added tasks will never be executed",
+  "actions": {
+    "command_run_log": "Command run log",
+    "retry": "Retry",
+    "delete": "Delete",
+    "test": "Test",
+    "install": {
+      "title": "Install dependencies",
+      "pnpm_install": "pnpm install",
+      "composer_update": "composer update"
+    },
+    "republish": "Republish",
+    "empty_task": "Clear tasks",
+    "setting": "Terminal settings",
+    "return_terminal": "Return to terminal"
+  },
+  "form": {
+    "title": "Terminal settings",
+    "npm_registry": "NPM Registry",
+    "composer_registry": "Composer Registry",
+    "package_manager": "NPM Package Manager",
+    "automatic_cleanup_task": "Clean up successful tasks",
+    "placeholder": {
+      "npm_registry": "Please select NPM Registry",
+      "composer_registry": "Please select Composer Registry",
+      "package_manager": "Please select package manager"
+    },
+    "confirm": {
+      "title": "Warm reminder",
+      "source_command": "Cannot modify source command, please try again manually.",
+      "packaging_build": "Please confirm whether to republish"
+    }
+  },
+  "messages": {
+    "has_tasks": "Please clear tasks before changing configuration",
+    "config_saved": "Configuration saved",
+    "config_save_failed": "Failed to save configuration"
+  }
+}

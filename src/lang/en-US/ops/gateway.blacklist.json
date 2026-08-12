@@ -1,0 +1,29 @@
+{
+  "title": "Blacklist Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Name",
+      "ip": "IP",
+      "path": "Path",
+      "methods": "HTTP Method",
+      "enabled": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date"
+    }
+  },
+  "search": {
+    "name": "Name"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Name",
+    "ip": "IP",
+    "path": "Path",
+    "methods": "HTTP Method",
+    "enabled": "Status",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "remark": "Remark"
+  }
+}

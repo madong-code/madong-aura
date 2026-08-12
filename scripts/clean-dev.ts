@@ -172,10 +172,7 @@ const targets = [
   'src/assets/images/safeguard',
   'src/assets/images/3d',
   'src/components/core/charts/art-map-chart',
-  'src/api/sys',
-  'src/api/dictApi.ts',
-  'src/api/auth.ts',
-  'src/api/system-manage.ts',
+  'src/components/business/comment-widget'
 ]
 
 // 递归统计文件数量
@@ -727,8 +724,8 @@ async function showStats() {
     `${fmt.info('涉及路径')}: ${fmt.highlight(stats.deletedPaths.toString())} 个目录/文件`,
     ...(stats.failedPaths > 0
       ? [
-        `${icons.error} ${fmt.error('删除失败')}: ${fmt.highlight(stats.failedPaths.toString())} 个路径`
-      ]
+          `${icons.error} ${fmt.error('删除失败')}: ${fmt.highlight(stats.failedPaths.toString())} 个路径`
+        ]
       : []),
     `${fmt.info('耗时')}: ${fmt.highlight(seconds)} 秒`
   ])

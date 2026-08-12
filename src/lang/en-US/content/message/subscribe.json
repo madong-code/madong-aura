@@ -1,0 +1,13 @@
+{
+  "title": "Notification Subscription",
+  "search": {
+    "keyword": "Search",
+    "placeholder": "Search notification types..."
+  },
+  "columns": {
+    "title": "Title",
+    "content": "Content",
+    "type": "Type",
+    "notification": "Notification"
+  }
+}

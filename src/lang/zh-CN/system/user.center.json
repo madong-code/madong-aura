@@ -1,0 +1,60 @@
+{
+  "title": "个人中心",
+  "base_setting": {
+    "title": "基础设置",
+    "real_name": "昵称",
+    "mobile_phone": "手机",
+    "email": "邮箱",
+    "sex": "性别",
+    "address": "地址",
+    "signed": "签名",
+    "button": {
+      "submit": "更新"
+    }
+  },
+  "secure_setting": {
+    "title": "安全设置",
+    "old_password": "旧密码",
+    "new_password": "新密码",
+    "confirm_password": "确认密码",
+    "placeholder": {
+      "old_password": "请输入用户密码",
+      "new_password": "请输入新密码",
+      "confirm_password": "请输入确认密码"
+    },
+    "rules": {
+      "min_password": "密码长度不能小于{0}字符",
+      "max_password": "密码长度不能超过{0}字符",
+      "differ_password": "两次密码不一致",
+      "degree_password": "新旧密码不能相同"
+    },
+    "button": {
+      "submit": "修改密码"
+    }
+  },
+  "online_device": {
+    "title": "在线设备",
+    "query": {
+      "ipaddr": "ip地址",
+      "user_name": "用户账号"
+    },
+    "table": {
+      "title": "我的在线设备",
+      "columns": {
+        "user_name": "登录账号",
+        "ip": "IP地址",
+        "ip_location": "登录地址",
+        "browser": "浏览器",
+        "os": "系统",
+        "login_time": "登录时间",
+        "operation": "操作",
+        "actions": {
+          "force_offline": {
+            "label": "强制下线",
+            "confirm": "确认强制下线{0}?"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,290 @@
+@import 'tailwindcss';
+/* 【art-admin 修复】引入 tw-animate-css 以生成 animate-out/animate-in/slide-out-* 等
+ * 动画工具类。admin 组件的 drawer/modal 依赖 data-[state=closed]:animate-out 等类做关闭动画，
+ * 但这些类原本随 @vben/tailwind-config/theme 引入，而 art-admin 为规避 utilities 重复输出
+ * 与颜色 token 冲突，移除了对 theme 的 @import（见 design/index.ts）。这里单独引入
+ * tw-animate-css（Tailwind v4 版 tailwindcss-animate），补齐关闭/进入动画，让抽屉、弹窗
+ * 关闭时平滑滑出/淡出，并让 animationend 正常触发 @closed 事件。
+ * 注意：不能直接 @import '@vben/tailwind-config/theme'，否则会把整份 vben utilities 重复
+ * 输出并覆盖 art 的主题色。 */
+@import 'tw-animate-css';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 扫描 src/ 下的所有 Vue/TS 文件以生成 admin 业务层（src/core/**）所用到的
+ * 工具类（text-destructive / text-foreground / bg-primary / border-border 等）。
+ * 缺少这一行会导致 text-destructive label/错误提示、bg-primary 按钮等
+ * Tailwind utility 不会产出，对应 class 命中的元素使用默认或继承的样式（黑色）。
+ * 路径基准：src/assets/styles/core/tailwind.css -> ../../../ 为 src/。
+ */
+@source '../../../**/*.{vue,ts,tsx,html,css,scss}';
+
+/* ==================== Light Mode Variables ==================== */
+:root {
+  /* Base Colors */
+  --art-color: #ffffff;
+  --theme-color: var(--main-color);
+
+  /* Theme Colors - OKLCH Format */
+  --art-primary: oklch(0.7 0.23 260);
+  --art-secondary: oklch(0.72 0.19 231.6);
+  --art-error: oklch(0.73 0.15 25.3);
+  --art-info: oklch(0.58 0.03 254.1);
+  --art-success: oklch(0.78 0.17 166.1);
+  --art-warning: oklch(0.78 0.14 75.5);
+  --art-danger: oklch(0.68 0.22 25.3);
+
+  /* Gray Scale - Light Mode */
+  --art-gray-100: #f9fafb;
+  --art-gray-200: #f2f4f5;
+  --art-gray-300: #e6eaeb;
+  --art-gray-400: #dbdfe1;
+  --art-gray-500: #949eb7;
+  --art-gray-600: #7987a1;
+  --art-gray-700: #4d5875;
+  --art-gray-800: #383853;
+  --art-gray-900: #323251;
+
+  /* Border Colors */
+  --art-card-border: rgba(0, 0, 0, 0.08);
+
+  --default-border: #e2e8ee;
+  --default-border-dashed: #dbdfe9;
+
+  /* Background Colors */
+  --default-bg-color: #fafbfc;
+  --default-box-color: #ffffff;
+
+  /* Hover Color */
+  --art-hover-color: #edeff0;
+
+  /* Active Color */
+  --art-active-color: #f2f4f5;
+
+  /* Element Component Active Color */
+  --art-el-active-color: #f2f4f5;
+}
+
+/* ==================== Dark Mode Variables ==================== */
+.dark {
+  /* Base Colors */
+  --art-color: #000000;
+
+  /* Gray Scale - Dark Mode */
+  --art-gray-100: #110f0f;
+  --art-gray-200: #17171c;
+  --art-gray-300: #393946;
+  --art-gray-400: #505062;
+  --art-gray-500: #73738c;
+  --art-gray-600: #8f8fa3;
+  --art-gray-700: #ababba;
+  --art-gray-800: #c7c7d1;
+  --art-gray-900: #e3e3e8;
+
+  /* Border Colors */
+  --art-card-border: rgba(255, 255, 255, 0.08);
+
+  --default-border: rgba(255, 255, 255, 0.1);
+  --default-border-dashed: #363843;
+
+  /* Background Colors */
+  --default-bg-color: #070707;
+  --default-box-color: #161618;
+
+  /* Hover Color */
+  --art-hover-color: #252530;
+
+  /* Active Color */
+  --art-active-color: #202226;
+
+  /* Element Component Active Color */
+  --art-el-active-color: #2e2e38;
+}
+
+/* ==================== Tailwind Theme Configuration ==================== */
+@theme {
+  /* Box Color (Light: white / Dark: black) */
+  --color-box: var(--default-box-color);
+
+  /* System Theme Color */
+  --color-theme: var(--theme-color);
+
+  /* Hover Color */
+  --color-hover-color: var(--art-hover-color);
+
+  /* Active Color */
+  --color-active-color: var(--art-active-color);
+
+  /* Active Color */
+  --color-el-active-color: var(--art-active-color);
+
+  /* ElementPlus Theme Colors */
+  --color-primary: var(--art-primary);
+  --color-secondary: var(--art-secondary);
+  --color-error: var(--art-error);
+  --color-info: var(--art-info);
+  --color-success: var(--art-success);
+  --color-warning: var(--art-warning);
+  --color-danger: var(--art-danger);
+
+  /* Gray Scale Colors (Auto-adapts to dark mode) */
+  --color-g-100: var(--art-gray-100);
+  --color-g-200: var(--art-gray-200);
+  --color-g-300: var(--art-gray-300);
+  --color-g-400: var(--art-gray-400);
+  --color-g-500: var(--art-gray-500);
+  --color-g-600: var(--art-gray-600);
+  --color-g-700: var(--art-gray-700);
+  --color-g-800: var(--art-gray-800);
+  --color-g-900: var(--art-gray-900);
+
+  /* ===== shadcn-ui Semantic Colors ===== */
+  /* 【art-admin 补充】admin 业务层（src/core/**）的组件依赖 bg-card / text-foreground /
+   * border-border / bg-muted 等 shadcn-ui 语义色工具类。这些类需要 Tailwind 的
+   * --color-card / --color-foreground / --color-border 等主题变量才能生成。
+   * 原本由 @vben/tailwind-config/theme 的 @theme inline 提供，但 art-admin
+   * 移除了 global.css（@import '@vben/tailwind-config/theme'），导致这些变量缺失。
+   * 此处从 design-tokens/default.css 的 HSL 变量（--card / --foreground / --border 等）
+   * 映射出 Tailwind 主题变量，确保 admin 组件的语义色工具类正常生效。 */
+  --color-background: hsl(var(--background));
+  --color-background-deep: hsl(var(--background-deep));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-hover: hsl(var(--accent-hover));
+  --color-accent-lighter: hsl(var(--accent-lighter));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-input-background: hsl(var(--input-background));
+  --color-ring: hsl(var(--ring));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-desc: hsl(var(--secondary-desc));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  /* ===== vben 语义色（admin 组件用 text-destructive / bg-primary 等） =====
+   * art-admin 的 src/assets/styles/core/tailwind.css 移除了
+   * `@import '@vben/tailwind-config/theme'`，导致这些变量缺失。
+   * 这里从 design-tokens/default.css 的 HSL 变量补齐 Tailwind 主题变量，
+   * 让 admin 业务层的工具类（text-destructive / text-foreground / bg-card ...）正常生成。 */
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-foreground-hover: hsl(var(--foreground-hover));
+  --color-foreground-disabled: hsl(var(--foreground-disabled));
+  --color-foreground-50: hsl(var(--foreground-50));
+  --color-foreground-100: hsl(var(--foreground-100));
+  --color-foreground-200: hsl(var(--foreground-200));
+  --color-foreground-300: hsl(var(--foreground-300));
+  --color-foreground-400: hsl(var(--foreground-400));
+  --color-foreground-500: hsl(var(--foreground-500));
+  --color-foreground-600: hsl(var(--foreground-600));
+  --color-foreground-700: hsl(var(--foreground-700));
+  --color-foreground-800: hsl(var(--foreground-800));
+  --color-foreground-900: hsl(var(--foreground-900));
+
+  /* Custom Semantic Colors */
+  --color-header: hsl(var(--header));
+  --color-heavy: hsl(var(--heavy));
+  --color-heavy-foreground: hsl(var(--heavy-foreground));
+  --color-main: hsl(var(--main));
+  --color-overlay: hsl(var(--overlay));
+  --color-overlay-content: hsl(var(--overlay-content));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-deep: hsl(var(--sidebar-deep));
+
+  /* Border Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ==================== Custom Border Radius Utilities ==================== */
+@utility rounded-custom-xs {
+  border-radius: calc(var(--custom-radius) / 2);
+}
+
+@utility rounded-custom-sm {
+  border-radius: calc(var(--custom-radius) / 2 + 2px);
+}
+
+/* ==================== Custom Utility Classes ==================== */
+@layer utilities {
+  /* Flexbox Layout Utilities */
+  .flex-c {
+    @apply flex items-center;
+  }
+
+  .flex-b {
+    @apply flex justify-between;
+  }
+
+  .flex-cc {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-cb {
+    @apply flex items-center justify-between;
+  }
+
+  /* Transition Utilities */
+  .tad-200 {
+    @apply transition-all duration-200;
+  }
+
+  .tad-300 {
+    @apply transition-all duration-300;
+  }
+
+  /* Border Utilities */
+  .border-full-d {
+    @apply border border-[var(--default-border)];
+  }
+
+  .border-b-d {
+    @apply border-b border-[var(--default-border)];
+  }
+
+  .border-t-d {
+    @apply border-t border-[var(--default-border)];
+  }
+
+  .border-l-d {
+    @apply border-l border-[var(--default-border)];
+  }
+
+  .border-r-d {
+    @apply border-r border-[var(--default-border)];
+  }
+
+  /* Cursor Utilities */
+  .c-p {
+    @apply cursor-pointer;
+  }
+}
+
+/* ==================== Custom Component Classes ==================== */
+@layer components {
+  /* Art Card Header Component */
+  .art-card-header {
+    @apply flex justify-between pr-6 pb-1;
+
+    .title {
+      h4 {
+        @apply text-lg font-medium text-g-900;
+      }
+
+      p {
+        @apply mt-1 text-sm text-g-600;
+
+        span {
+          @apply ml-2 font-medium;
+        }
+      }
+    }
+  }
+}

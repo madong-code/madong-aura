@@ -1,0 +1,27 @@
+{
+  "title": "Login Logs",
+  "table": {
+    "columns": {
+      "user_name": "Username",
+      "real_name": "Nickname",
+      "status": "Status",
+      "os": "OS",
+      "browser": "Browser",
+      "ip": "IP",
+      "ip_location": "Location",
+      "login_date": "Login Time",
+      "remark": "Remark"
+    },
+    "search": {
+      "user_name": "Username",
+      "ip": "IP",
+      "status": "Status",
+      "created_date": "Login Time",
+      "placeholder": {
+        "user_name": "Please enter username",
+        "ip": "Please enter IP",
+        "status": "Please select status"
+      }
+    }
+  }
+}

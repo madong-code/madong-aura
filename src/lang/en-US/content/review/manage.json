@@ -1,0 +1,82 @@
+{
+  "title": "Review Management",
+  "detail": {
+    "title": "Review Detail",
+    "archived_tip": "This review has been finalized and archived (read-only).",
+    "reviewable_id": "Biz ID",
+    "created_by": "Creator",
+    "flow_type": "Flow Type",
+    "reason": "Review Note",
+    "cancel_reason": "Cancel Reason",
+    "no_form": "No form data",
+    "no_events": "No events yet",
+    "tabs": {
+      "info": "Review Info",
+      "form": "Form Data",
+      "status": "Status",
+      "events": "Events"
+    }
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "summary": "Summary",
+      "type": "Biz Type",
+      "applicant": "Applicant",
+      "status": "Status",
+      "reviewer": "Reviewer",
+      "reviewed_at": "Reviewed At",
+      "created_at": "Initiated"
+    },
+    "search": {
+      "type": "Biz Type",
+      "status": "Status",
+      "keyword": "Keyword",
+      "keyword_placeholder": "Title / Applicant / Biz ID"
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "archived": "Archived"
+  },
+  "actions": {
+    "detail": "Detail",
+    "review": "Review",
+    "approve": "Approve",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "batch_approve": "Batch Approve",
+    "batch_reject": "Batch Reject"
+  },
+  "audit": {
+    "action": "Review Result",
+    "reason": "Review Note",
+    "reason_placeholder": "Enter review note (required when rejecting)",
+    "reject_reason_placeholder": "Enter rejection reason (required, max {max} chars)",
+    "approve_reason_placeholder": "Enter review note (optional, max {max} chars)",
+    "reason_too_long": "Review note cannot exceed {max} characters",
+    "reject_tip": "The applicant will be notified after rejection. Please fill in the reason carefully."
+  },
+  "message": {
+    "approve_reason": "Enter approval note (optional)",
+    "reject_reason": "Enter rejection reason",
+    "cancel_reason": "Enter cancel reason",
+    "cancel_required": "Cancel reason is required",
+    "batch_approve_reason": "Enter batch approval note (optional)",
+    "batch_reject_reason": "Enter batch rejection reason",
+    "approve_success": "Approved",
+    "reject_success": "Rejected",
+    "cancel_success": "Cancelled",
+    "reject_required": "Reject reason is required",
+    "batch_approve_confirm": "Confirm to approve {count} selected records?",
+    "batch_approve_partial": "Approved {done}/{total} records, the rest are not processed",
+    "batch_reject_placeholder": "Enter rejection reason (required)",
+    "batch_reject_partial": "Rejected {done}/{total} records, the rest are not processed",
+    "operation_failed": "Operation failed"
+  }
+}

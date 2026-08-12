@@ -1,0 +1,53 @@
+{
+  "title": "审核记录",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "标题",
+      "summary": "摘要",
+      "type": "业务类型",
+      "status": "状态",
+      "reason": "审核意见",
+      "applicant": "发起人",
+      "reviewer": "审核人",
+      "reviewed_at": "审核时间",
+      "created_at": "发起时间"
+    },
+    "search": {
+      "type": "业务类型",
+      "type_placeholder": "请选择业务类型",
+      "status": "状态",
+      "status_placeholder": "请选择状态",
+      "keyword": "关键词",
+      "keyword_placeholder": "标题 / 摘要 / 发起人",
+      "date_range": "发起时间"
+    }
+  },
+  "actions": {
+    "detail": "详情"
+  },
+  "status": {
+    "pending": "待审核",
+    "processing": "审核中",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "cancelled": "已取消"
+  },
+  "detail": {
+    "title": "审核记录详情",
+    "archived_tip": "该审核已归档",
+    "tabs": {
+      "info": "审核信息",
+      "form": "表单数据",
+      "status": "状态",
+      "events": "事件记录"
+    },
+    "reviewable_id": "业务ID",
+    "created_by": "发起人ID",
+    "flow_type": "流程类型",
+    "reason": "审核意见",
+    "cancel_reason": "取消原因",
+    "no_form": "暂无表单数据",
+    "no_events": "暂无事件记录"
+  }
+}

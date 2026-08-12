@@ -1,0 +1,29 @@
+{
+  "title": "Plugin Market",
+  "description": "Browse all modules from remote market",
+  "saasDescription": "View authorized plugins and install/uninstall",
+  "tabs": {
+    "all": "All",
+    "installed": "Installed",
+    "uninstalled": "Not Installed",
+    "purchased": "Purchased",
+    "updatable": "Updatable"
+  },
+  "install": "Install",
+  "uninstall": "Uninstall",
+  "upgrade": "Upgrade",
+  "installing": "Installing...",
+  "uninstalling": "Uninstalling...",
+  "installSuccess": "✅ Installed successfully",
+  "uninstallSuccess": "✅ Uninstalled successfully",
+  "installFailed": "Install failed",
+  "uninstallFailed": "Uninstall failed",
+  "empty": "No plugins available",
+  "saasEmpty": "No plugins available",
+  "search": {
+    "keyword": "Search",
+    "placeholder": {
+      "keyword": "Search plugin name/key"
+    }
+  }
+}

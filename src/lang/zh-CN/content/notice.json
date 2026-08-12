@@ -1,0 +1,26 @@
+{
+  "title": "通知管理",
+  "table": {
+    "columns": {
+      "type": "类型",
+      "title": "标题",
+      "content": "内容",
+      "enabled": "状态",
+      "created_date": "创建时间"
+    },
+    "search": {
+      "title": "标题",
+      "type": "类型",
+      "placeholder": { "title": "请输入标题", "type": "请选择类型" }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "type": "类型",
+      "title": "标题",
+      "content": "内容",
+      "enabled": "状态"
+    }
+  }
+}

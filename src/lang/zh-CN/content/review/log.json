@@ -1,0 +1,36 @@
+{
+  "title": "审核操作日志",
+  "action": {
+    "submit": "发起",
+    "approve": "通过",
+    "reject": "拒绝",
+    "cancel": "取消"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "review_id": "审核ID",
+      "title": "标题",
+      "content": "摘要",
+      "action": "操作类型",
+      "operator": "操作人",
+      "reason": "操作意见",
+      "created_at": "操作时间"
+    },
+    "search": {
+      "review_id": "审核ID",
+      "review_id_placeholder": "请输入审核ID",
+      "action": "操作类型",
+      "action_placeholder": "请选择操作类型"
+    }
+  },
+  "clean": {
+    "confirm_text": "将删除指定天数之前的所有操作日志，不可恢复，确认执行？",
+    "title": "日志清理",
+    "confirm_button": "确认清理",
+    "input_placeholder": "保留最近 N 天的日志（默认 {default} 天）",
+    "input_error": "请输入正整数",
+    "cleaning": "清理中…",
+    "success": "已清理 {count} 条 {days} 天前的日志"
+  }
+}

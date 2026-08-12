@@ -1,0 +1,33 @@
+{
+  "title": "Files",
+  "table": {
+    "columns": {
+      "filename": "Filename",
+      "original_filename": "Original Name",
+      "size_info": "Size",
+      "ext": "Extension",
+      "platform": "Platform",
+      "created_date": "Upload Date",
+      "created_name": "Uploader"
+    },
+    "search": {
+      "filename": "Filename",
+      "original_filename": "Original Name",
+      "ext": "Extension",
+      "platform": "Platform"
+    }
+  },
+  "list": {
+    "table": {
+      "columns": {
+        "actions": {
+          "delete": {
+            "label": "Delete",
+            "title": "Confirm Delete",
+            "confirm": "Are you sure to delete the selected files?"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "title": "菜单管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "type": "菜单类型",
+      "path": "路由地址",
+      "component": "组件路径",
+      "icon": "图标",
+      "sort": "排序",
+      "is_show": "是否显示",
+      "enabled": "是否启用"
+    },
+    "search": {
+      "type": "菜单类型",
+      "enabled": "是否启用",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "path": "路由地址",
+      "placeholder": {
+        "type": "请选择菜单类型",
+        "enabled": "请选择启用状态",
+        "title": "请输入菜单名称",
+        "code": "请输入权限标识",
+        "path": "请输入路由地址"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "pid": "上级菜单",
+    "title": "菜单名称",
+    "code": "权限标识",
+    "type": "菜单类型",
+    "path": "路由地址",
+    "component": "组件地址",
+    "icon": "图标",
+    "sort": "排序",
+    "is_show": "是否显示",
+    "enabled": "状态",
+    "is_cache": "是否缓存",
+    "modal": {
+      "id": "菜单ID",
+      "type": "菜单类型",
+      "app": "所属应用",
+      "pid": "所属上级",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "path": "路由/接口地址",
+      "component": "组件路径",
+      "open_type": "打开方式",
+      "icon": "图标",
+      "link_url": "内外链地址",
+      "sort": "排序",
+      "enabled": "启用",
+      "is_show": "显示",
+      "is_sync": "同步",
+      "is_cache": "缓存"
+    },
+    "placeholder": {
+      "type": "请选择菜单类型",
+      "app": "请选择所属应用",
+      "pid": "请选择上级菜单",
+      "title": "请输入菜单名称",
+      "code": "请输入权限标识",
+      "path": "请输入路由/接口地址",
+      "component": "请输入组件路径",
+      "open_type": "请选择打开方式",
+      "icon": "请选择图标",
+      "link_url": "请输入内外链地址",
+      "sort": "请输入排序值",
+      "enabled": "请选择启用状态",
+      "is_show": "请选择显示状态",
+      "is_sync": "请选择同步状态",
+      "is_cache": "请选择缓存状态"
+    },
+    "help": {
+      "path": "路由地址必须以 / 开头，接口地址无需填写",
+      "link_url": "内外链地址仅在打开方式为外链或内嵌时生效"
+    }
+  },
+  "api": {
+    "title": "选择接口",
+    "search": "搜索",
+    "refresh_cache": "刷新缓存",
+    "tips": {
+      "1": "1.接口可多选，可重复添加；",
+      "2": "2.开发者按照后端路由规则进行添加路由定义；",
+      "3": "3.添加后即可在此选择对应的接口；"
+    },
+    "route_info": {
+      "name": "接口名称",
+      "method": "接口方式",
+      "path": "接口地址",
+      "code": "权限标识"
+    }
+  }
+}

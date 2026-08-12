@@ -1,0 +1,50 @@
+{
+  "title": "Dictionary",
+  "table": {
+    "columns": {
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "data_type": "Data Type",
+      "sort": "Sort",
+      "enabled": "Status"
+    },
+    "search": {
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "enabled": "Status",
+      "placeholder": {
+        "group_code": "Please select group",
+        "name": "Please enter name",
+        "code": "Please enter code",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "data_type": "Data Type",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark",
+      "placeholder": {
+        "group_code": "Please select group",
+        "name": "Please enter name",
+        "code": "Please enter code",
+        "remark": "Please enter remark"
+      }
+    }
+  },
+  "table_actions": {
+    "dict_item": "Items"
+  },
+  "drop_down_actions": {
+    "edit": "Edit",
+    "delete": "Delete"
+  }
+}

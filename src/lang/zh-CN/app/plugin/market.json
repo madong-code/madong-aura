@@ -1,0 +1,151 @@
+{
+  "categories": {
+    "all": "全部",
+    "installed": "已安装",
+    "un_installed": "未安装",
+    "purchased": "已授权",
+    "updatable": "可更新"
+  },
+  "uncategorized": "未分类",
+  "search_placeholder": "搜索模块名称…",
+  "card_view": "卡片",
+  "table_view": "表格",
+  "total_count": "共 {count} 个模块",
+  "empty_title": "暂无模块",
+  "empty_desc": "当前没有可用的模块数据",
+  "version": "版本 {ver}",
+  "new_module": "新模块",
+  "hot": "热门",
+  "installed_tag": "已安装",
+  "uninstalled_tag": "未安装",
+  "update_log": "更新日志",
+  "install_menu": "安装菜单",
+  "uninstall_menu": "卸载菜单",
+  "update_db": "更新数据库",
+  "update_info": "更新信息",
+  "column_seq": "#",
+  "column_module": "模块信息",
+  "column_version": "版本",
+  "column_status": "状态",
+  "column_action": "操作",
+  "detail": {
+    "title": "模块详情",
+    "version": "版本: {ver}",
+    "update_time": "更新时间: {time}",
+    "intro": "模块简介",
+    "no_desc": "暂无描述",
+    "detail_desc": "详细说明",
+    "close": "关闭"
+  },
+  "install": {
+    "title": "安装模块",
+    "dialog_title": "安装模块菜单",
+    "confirm_msg": "即将为模块 {name} 安装菜单",
+    "installing": "正在安装菜单...",
+    "cancel": "取消",
+    "confirm": "确认安装",
+    "success": "模块 {name} 菜单安装成功",
+    "fail": "安装菜单失败",
+    "invalid": "模块信息不完整"
+  },
+  "uninstall": {
+    "title": "卸载模块",
+    "dialog_title": "卸载模块菜单",
+    "confirm_msg": "确定要卸载模块 {name} 的菜单吗？",
+    "warning": "卸载后将移除该模块的所有菜单项",
+    "uninstalling": "正在卸载菜单...",
+    "cancel": "取消",
+    "confirm": "确认卸载",
+    "success": "模块 {name} 菜单卸载成功",
+    "fail": "卸载菜单失败"
+  },
+  "update": {
+    "success": "模块 {name} 数据库更新成功",
+    "fail": "更新数据库失败"
+  },
+  "upgrade_log": {
+    "title": "更新信息",
+    "no_records": "暂无版本更新记录",
+    "important": "重要更新"
+  },
+  "standalone": {
+    "categories": {
+      "purchased": "已购买"
+    },
+    "download": {
+      "start": "开始下载模块: {name}",
+      "fail": "下载模块失败",
+      "immediate": "下载"
+    },
+    "update": {
+      "immediate": "更新"
+    },
+    "install": {
+      "immediate": "安装",
+      "title": "安装模块",
+      "step1": "信息确认",
+      "step2": "选择安装文件",
+      "step3": "执行安装",
+      "path": "路径",
+      "requirement": "要求",
+      "status": "状态",
+      "cancel": "取消",
+      "install": "开始安装",
+      "log_title": "安装执行日志",
+      "close": "关闭",
+      "retry": "重试安装",
+      "refresh": "刷新列表",
+      "select_file": "选择并上传插件安装包",
+      "upload_tip": "支持的格式：.zip，文件大小不超过 50MB",
+      "select_install_file": "选择安装文件",
+      "uploading": "正在上传...",
+      "installing": "正在安装...",
+      "prev": "上一步",
+      "next": "下一步",
+      "success": "模块 {name} 安装成功",
+      "fail": "安装模块失败",
+      "invalid": "模块信息不完整"
+    },
+    "delete": {
+      "confirm_title": "删除确认",
+      "confirm_msg": "删除插件会把插件目录连同文件全部删除，确定要删除 {name} 吗？",
+      "immediate": "删除",
+      "confirm": "确定",
+      "cancel": "取消",
+      "success": "模块 {name} 删除成功"
+    },
+    "detail": {
+      "category": "分类",
+      "support_app": "支持应用",
+      "no_support": "通用插件",
+      "app_identity": "应用标识",
+      "keywords": "关键词",
+      "no_keywords": "无"
+    },
+    "uninstall": {
+      "immediate": "卸载",
+      "title": "卸载模块",
+      "step1": "信息确认",
+      "step2": "确认卸载",
+      "step3": "卸载完成",
+      "confirm_msg": "即将卸载模块 {name}，此操作将移除菜单、删除文件和数据",
+      "operations_title": "卸载将执行以下操作：",
+      "op1": "移除模块菜单及其子菜单",
+      "op2": "删除模块数据表及数据",
+      "op3": "删除模块文件目录及资源",
+      "op4": "清理模块关联的配置信息",
+      "op5": "清除模块相关缓存及日志",
+      "irreversible": "此操作不可撤销，请谨慎操作！",
+      "uninstalling": "正在卸载...",
+      "cancel": "取消",
+      "prev": "上一步",
+      "confirm_uninstall": "确认卸载",
+      "uninstall": "确认卸载",
+      "log_title": "卸载日志",
+      "close": "关闭",
+      "refresh": "刷新列表",
+      "success": "模块 {name} 卸载成功",
+      "fail": "卸载模块失败"
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "title": "用户管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "user_name": "账号",
+      "real_name": "用户昵称",
+      "nick_name": "用户昵称",
+      "sex": "性别",
+      "dept": "部门",
+      "post": "职位",
+      "depts": "所属部门",
+      "posts": "所属职位",
+      "roles": "角色",
+      "is_locked": "是否锁定",
+      "mobile_phone": "手机号码",
+      "email": "邮箱",
+      "enabled": "状态",
+      "login_time": "登录时间",
+      "operation": "操作"
+    },
+    "search": {
+      "user_name": "用户名",
+      "real_name": "姓名",
+      "mobile_phone": "手机号码",
+      "is_locked": "锁定状态",
+      "placeholder": {
+        "user_name": "请输入用户名",
+        "real_name": "请输入姓名",
+        "mobile_phone": "请输入手机号码",
+        "is_locked": "请选择锁定状态"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "base_info": "基本信息",
+    "outher_info": "其他信息",
+    "user_name": "账号",
+    "real_name": "用户昵称",
+    "nick_name": "用户昵称",
+    "mobile_phone": "手机号码",
+    "email": "邮箱",
+    "password": "用户密码",
+    "confirm_password": "确认密码",
+    "sex": "性别",
+    "dept_name": "所属部门",
+    "post_name": "所属职位",
+    "main_dept_name": "主要部门",
+    "main_post_name": "主要职位",
+    "role_name": "角色",
+    "enabled": "状态",
+    "remark": "备注",
+    "avatar": "头像",
+    "signed": "签名",
+    "modal": {
+      "id": "ID",
+      "real_name": "用户昵称",
+      "nick_name": "用户昵称",
+      "mobile_phone": "手机号码",
+      "email": "邮箱",
+      "sex": "性别",
+      "signed": "签名",
+      "address": "地址",
+      "user_name": "账号",
+      "password": "用户密码",
+      "confirm_password": "确认密码",
+      "dept_name": "所属部门",
+      "post_name": "所属职位",
+      "role_name": "角色",
+      "enabled": "状态",
+      "remark": "备注",
+      "avatar": "头像"
+    },
+    "placeholder": {
+      "user_name": "请输入账号",
+      "real_name": "请输入用户昵称",
+      "nick_name": "请输入用户昵称",
+      "mobile_phone": "请输入手机号码",
+      "email": "请输入邮箱",
+      "password": "请输入用户密码",
+      "confirm_password": "请输入确认密码",
+      "dept_name": "请选择部门",
+      "post_name": "请选择岗位",
+      "role_name": "请选择角色",
+      "remark": "请输入备注"
+    }
+  },
+  "action": {
+    "edit": "编辑",
+    "delete": "删除",
+    "detail": "详情",
+    "reset_password": "重置密码",
+    "play_user": "扮演用户",
+    "unplay_user": "取消扮演",
+    "grant_role": "授权角色",
+    "locked": "锁定",
+    "unlocked": "解锁"
+  },
+  "confirm": {
+    "delete": "确定删除该用户吗？",
+    "reset_password": "确定重置该用户密码吗？",
+    "play_user": "确定扮演该用户吗？",
+    "unplay_user": "确定取消扮演该用户吗？",
+    "locked": "确定锁定该用户吗？",
+    "unlocked": "确定解锁该用户吗？",
+    "grant_role_success": "授权成功"
+  }
+}

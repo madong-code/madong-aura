@@ -1,0 +1,42 @@
+{
+  "select_dept": {
+    "placeholder": "请选择部门",
+    "modal_button": "选择",
+    "modal_title": "选择部门",
+    "search_placeholder": "搜索部门",
+    "tree_operation": "树操作",
+    "expand_all": "展开全部",
+    "collapse_all": "折叠全部",
+    "select_all": "全选",
+    "cancel_select_all": "取消全选"
+  },
+  "select_position": {
+    "placeholder": "请选择职位",
+    "modal_button": "选择",
+    "modal_title": "选择职位",
+    "search_placeholder": "搜索职位",
+    "tree_operation": "树操作",
+    "expand_all": "展开全部",
+    "collapse_all": "折叠全部",
+    "select_all": "全选",
+    "cancel_select_all": "取消全选"
+  },
+  "select_role": {
+    "placeholder": "请选择角色",
+    "modal_button": "选择",
+    "modal_title": "选择角色",
+    "search_placeholder": "搜索角色",
+    "empty_description": "暂无角色数据"
+  },
+  "image_picker": {
+    "title": "选择图片",
+    "select": "选择图片",
+    "select_success": "选择成功",
+    "search_placeholder": "搜索图片名称",
+    "upload": "上传图片",
+    "upload_success": "上传成功",
+    "upload_error": "上传失败",
+    "load_error": "加载图片失败",
+    "empty": "暂无图片"
+  }
+}

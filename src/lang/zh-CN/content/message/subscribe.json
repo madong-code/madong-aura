@@ -1,0 +1,13 @@
+{
+  "title": "消息订阅设置",
+  "search": {
+    "keyword": "搜索",
+    "placeholder": "搜索通知类型..."
+  },
+  "columns": {
+    "title": "消息标题",
+    "content": "消息内容",
+    "type": "消息类型",
+    "notification": "消息通知"
+  }
+}

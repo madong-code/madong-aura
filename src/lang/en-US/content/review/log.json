@@ -1,0 +1,36 @@
+{
+  "title": "Review Operation Log",
+  "action": {
+    "submit": "Submit",
+    "approve": "Approved",
+    "reject": "Rejected",
+    "cancel": "Cancelled"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "review_id": "Review ID",
+      "title": "Title",
+      "content": "Summary",
+      "action": "Action",
+      "operator": "Operator",
+      "reason": "Note",
+      "created_at": "Operated At"
+    },
+    "search": {
+      "review_id": "Review ID",
+      "review_id_placeholder": "Enter review ID",
+      "action": "Action",
+      "action_placeholder": "Select action"
+    }
+  },
+  "clean": {
+    "confirm_text": "All operation logs before the specified days will be deleted permanently. Confirm to proceed?",
+    "title": "Clean Logs",
+    "confirm_button": "Confirm Clean",
+    "input_placeholder": "Keep logs of the last N days (default {default} days)",
+    "input_error": "Please enter a positive integer",
+    "cleaning": "Cleaning…",
+    "success": "Cleaned {count} logs from {days} days ago"
+  }
+}

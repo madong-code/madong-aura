@@ -1,0 +1,29 @@
+{
+  "title": "Redis Monitor",
+  "uptime": "Uptime",
+  "connected_clients": "Connected Clients",
+  "used_memory": "Used Memory",
+  "used_memory_peak": "Peak Memory",
+  "ops_per_sec": "Ops/sec",
+  "memory_analysis": "Memory Analysis",
+  "cache_efficiency": "Cache Efficiency",
+  "hit_rate": "Hit Rate",
+  "db_size": "DB Size",
+  "command_stats": "Command Stats",
+  "columns": {
+    "redis_version": "Redis Version",
+    "redis_mode": "Redis Mode",
+    "os": "OS",
+    "arch_bits": "Architecture",
+    "process_id": "Process ID",
+    "tcp_port": "TCP Port",
+    "uptime_in_days": "Uptime (days)",
+    "connected_clients": "Connected Clients",
+    "used_memory_human": "Used Memory",
+    "used_memory_peak_human": "Peak Memory",
+    "instantaneous_ops_per_sec": "Ops/sec",
+    "keyspace_hits": "Hits",
+    "keyspace_misses": "Misses",
+    "expired_keys": "Expired Keys"
+  }
+}

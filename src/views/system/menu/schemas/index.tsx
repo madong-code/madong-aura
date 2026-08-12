@@ -1,255 +1,291 @@
-import { MenuService } from '@/api/system/menu'
-import { CrudSchema } from '@/components/crud'
-import { Icon } from '@/components/icon'
-import { DictEnum } from '@/enums'
-import { $t } from '@/locales'
-import { request } from 'http'
-import { h } from 'vue'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-// crud配置
-export const crudSchema = (): CrudSchema => {
-  return {
-    // 接口地址
-    api: MenuService.list,
-    dialogTitle: $t('system.menu.form.modal.title'),
-    tree: {
-      id: 'id',
-      pid: 'pid'
-    },
-    crudApi: {
-      // 新增接口
-      add: MenuService.create,
-      // 修改接口
-      edit: MenuService.update,
-      // 删除接口
-      remove: MenuService.remove,
-      // 详情接口
-      view: MenuService.get
-    },
-    // 使用crud
-    useCrud: true,
-    // 是否有新增
-    hasAdd: true,
-    // 是否有删除
-    hasRemove: true,
-    // 是否有修改
-    hasEdit: true,
-    // 是否有详情
-    hasView: true,
-    // 新增权限码
-    addAuth: 'system:menu:create',
-    // 删除权限码
-    removeAuth: 'system:menu:delete',
-    // 修改权限码
-    editAuth: 'system:menu:update',
-    // 详情权限码
-    viewAuth: 'system:menu:read',
-    rowKey: 'id',
-    // 表格列定义
-    columns: [
-      {
-        prop: 'title',
-        label: $t('system.menu.list.table.columns.title'),
-        formatter: (row) => {
-          return row.icon
-            ? h('span', {}, [
-                h(Icon, {
-                  icon: row.icon
-                }),
-                h(
-                  'span',
-                  {
-                    style: {
-                      paddingLeft: '6px'
-                    }
-                  },
-                  row.title
-                )
-              ])
-            : h('span', {}, row.title)
-        },
-        minWidth: 150
-      },
-      {
-        prop: 'code',
-        label: $t('system.menu.list.table.columns.code'),
-        width: 150
-      },
-      {
-        prop: 'type',
-        label: $t('system.menu.list.table.columns.type'),
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_MENU_TYPE
-        }
-      },
-      {
-        prop: 'path',
-        label: $t('system.menu.list.table.columns.path'),
-        width: 200
-      },
-      {
-        prop: 'component',
-        label: $t('system.menu.list.table.columns.component')
-      },
-      {
-        prop: 'sort',
-        label: $t('system.menu.list.table.columns.sort'),
-        width: 90,
-        visible: false
-      },
-      {
-        prop: 'enabled',
-        label: $t('system.menu.list.table.columns.enabled'),
-        component: 'ApiDict',
-        componentProps: {
-          code: 'yes_no',
-          typeMap: {
-            1: 'success',
-            0: 'danger'
-          },
-          useColorList: false
-        }
+import { MenuService } from '#/api/system';
+import { Icon } from '#/components/icon';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
+function arrayToTree(
+  data: any[],
+  idKey = 'id',
+  pidKey = 'pid',
+  childrenKey = 'children',
+): any[] {
+  const map = new Map<any, any>();
+  const roots: any[] = [];
+
+  data.forEach((item) => {
+    map.set(item[idKey], { ...item, [childrenKey]: [] });
+  });
+
+  data.forEach((item) => {
+    const node = map.get(item[idKey]);
+    if (
+      item[pidKey] === null ||
+      item[pidKey] === undefined ||
+      item[pidKey] === 0
+    ) {
+      roots.push(node);
+    } else {
+      const parent = map.get(item[pidKey]);
+      if (parent) {
+        parent[childrenKey].push(node);
+      } else {
+        roots.push(node);
       }
-    ],
-    // 树型是全量数据，不需要搜索
-    useSearchForm: true,
-    // 内置弹窗配置
-    dialogProps: {
-      width: '60%',
-      dialogType: 'drawer'
+    }
+  });
+
+  return roots;
+}
+
+export const useCrudSchema = (): CrudSchema => {
+  return {
+    crudApi: {
+      list: MenuService.list,
+      add: MenuService.create,
+      edit: MenuService.update,
+      remove: MenuService.delete,
+      batchRemove: MenuService.remove,
+      view: MenuService.get,
     },
-    searchFormSchema: {
+
+    // ========== 扁平化表格配置 ==========
+    rowKey: 'id',
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    hasBatchRemove: true,
+    permissions: {
+      add: 'system:menu:create',
+      edit: 'system:menu:update',
+      remove: 'system:menu:delete',
+      view: 'system:menu:read',
+    },
+    tree: { id: 'id', pid: 'pid', children: 'children', reserve: true },
+    beforeFetch: (params: any) => {
+      return { ...params, page: 1, limit: 999 };
+    },
+    afterFetch: (res: { items?: any[]; total?: number }) => {
+      const items = res?.items || [];
+      return {
+        items: arrayToTree(items),
+        total: res?.total ?? items.length,
+      };
+    },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      {
+        field: 'id',
+        title: $t('system.menu.table.columns.id'),
+        minWidth: 60,
+        visible: false,
+      },
+      {
+        field: 'title',
+        title: $t('system.menu.table.columns.title'),
+        minWidth: 200,
+        treeNode: true,
+        align: 'left',
+        slots: {
+          default: ({ row }: any) => (
+            <span>
+              <Icon class="mr-1" icon={row.icon} />
+              {row.title}
+            </span>
+          ),
+        },
+      },
+      {
+        field: 'code',
+        title: $t('system.menu.table.columns.code'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'type',
+        title: $t('system.menu.table.columns.type'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_MENU_TYPE },
+        },
+      },
+      {
+        field: 'path',
+        title: $t('system.menu.table.columns.path'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'component',
+        title: $t('system.menu.table.columns.component'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'sort',
+        title: $t('system.menu.table.columns.sort'),
+        minWidth: 60,
+      },
+      {
+        field: 'is_show',
+        title: $t('system.menu.table.columns.is_show'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_YES_NO },
+        },
+      },
+      {
+        field: 'enabled',
+        title: $t('system.menu.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
+      },
+    ],
+
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
       schema: [
         {
           component: 'ApiDict',
-          prop: 'EQ_type',
-          label: $t('system.menu.list.query.type'),
+          fieldName: 'EQ_type',
+          label: $t('system.menu.table.search.type'),
           componentProps: {
             code: DictEnum.SYS_MENU_TYPE,
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.type')
-          }
+            placeholder: $t('system.menu.table.search.placeholder.type'),
+          },
         },
         {
-          component: 'Select',
-          prop: 'EQ_plugin',
-          label: $t('system.menu.list.query.enabled'),
+          component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('system.menu.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.enabled')
-          }
+            placeholder: $t('system.menu.table.search.placeholder.enabled'),
+          },
         },
         {
           component: 'ApiSelect',
-          prop: 'EQ_app',
+          fieldName: 'EQ_app',
           label: $t('system.menu.form.modal.app'),
           defaultValue: 'admin',
           componentProps: {
             api: '/system/menu/app/list',
             requestMethod: 'GET',
             placeholder: $t('system.menu.form.placeholder.app'),
-            clearable: true
-          }
-        },
-        {
-          component: 'Input',
-          prop: 'LIKE_title',
-          label: $t('system.menu.list.query.title'),
-          componentProps: {
             clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.title')
-          }
-        },
-        {
-          component: 'Input',
-          prop: 'LIKE_code',
-          label: $t('system.menu.list.query.code'),
-          componentProps: {
-            clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.code')
-          }
-        },
-        {
-          component: 'Input',
-          prop: 'LIKE_path',
-          label: $t('system.menu.list.query.path'),
-          componentProps: {
-            clearable: true,
-            placeholder: $t('system.menu.list.query.placeholder.path')
-          }
-        },
-        {
-          component: 'ApiDict',
-          componentProps: {
-            clearable: true,
-            code: DictEnum.SYS_ENABLED_STATUS,
-            placeholder: $t('system.menu.list.query.placeholder.enabled')
           },
-          prop: 'enabled',
-          label: $t('system.menu.list.query.enabled')
-        }
-      ]
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_title',
+          label: $t('system.menu.table.search.title'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.title'),
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_code',
+          label: $t('system.menu.table.search.code'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.code'),
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_path',
+          label: $t('system.menu.table.search.path'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.path'),
+          },
+        },
+      ],
     },
-    // crud表单配置
-    formSchema: {
-      showDefaultActions: false,
-      labelWidth: '130px',
+
+    formDialog: {
+      enabled: true,
+      title: $t('system.menu.title'),
+      width: 'w-[60%]',
+      dialogType: 'drawer',
+      wrapperClass: 'grid-cols-2',
+      commonConfig: {
+        labelWidth: 80,
+        labelAlign: 'right',
+      },
       schema: [
-        // 菜单ID（隐藏字段）
         {
           label: $t('system.menu.form.modal.id'),
-          prop: 'id',
+          fieldName: 'id',
           component: 'Input',
-          colSpan: 24,
-          show: false,
-          ifDetail: false
+          formItemClass: 'col-span-2',
+          dependencies: {
+            triggerFields: ['id'],
+            show: false,
+          },
         },
         {
           label: $t('system.menu.form.modal.type'),
-          prop: 'type',
+          fieldName: 'type',
           component: 'ApiDict',
           defaultValue: 1,
-          colSpan: 24,
-          rules: [],
-          componentProps: {
-            placeholder: $t('system.menu.form.placeholder.type'),
-            code: DictEnum.SYS_MENU_TYPE,
-            isBtn: true,
-            renderType: 'RadioGroup'
-          }
+          formItemClass: 'col-span-2',
+          rules: 'required',
+          componentProps: (_value) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.type'),
+              code: DictEnum.SYS_MENU_TYPE,
+              isBtn: true,
+              renderType: 'RadioGroup',
+              onChange: (val: any) => {
+                if (val !== 2) {
+                  _value.openType = 0;
+                }
+              },
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.app'),
-          prop: 'app',
+          fieldName: 'app',
           component: 'ApiTreeSelect',
           defaultValue: 'admin',
-          colSpan: 24,
-          rules: [],
+          formItemClass: 'col-span-2',
+          rules: 'required',
           componentProps: (_value) => {
             return {
               api: '/system/menu/app/list',
               requestMethod: 'get',
               placeholder: $t('system.menu.form.placeholder.app'),
               style: {
-                width: '330px'
+                width: '330px',
               },
-               labelField: 'label',
+              labelField: 'label',
               valueField: 'value',
-                onChange: (_values: any) => {
-                _value.pid = ''
-              }
-            }
-          }
+              onChange: (_values: any) => {
+                _value.pid = '';
+              },
+            };
+          },
         },
-
-        // 所属上级
         {
           label: $t('system.menu.form.modal.pid'),
-          prop: 'pid',
+          fieldName: 'pid',
           component: 'ApiTreeSelect',
-          colSpan: 12,
+          formItemClass: 'col-span-1',
           componentProps: (_value) => {
             return {
               placeholder: $t('system.menu.form.placeholder.pid'),
@@ -260,210 +296,182 @@ export const crudSchema = (): CrudSchema => {
               requestMethod: 'get',
               params: {
                 format: 'tree',
-                app: _value.app || 'admin' // 根据当前选择的应用过滤上级菜单
+                app: _value.app || 'admin',
               },
               labelField: 'name',
-              valueField: 'id'
-            }
-          }
+              valueField: 'id',
+            };
+          },
         },
-
-        // 菜单名称
         {
           label: $t('system.menu.form.modal.title'),
-          prop: 'title',
+          fieldName: 'title',
           component: 'Input',
-          colSpan: 12,
-          rules: [
-            {
-              required: true,
-              message: $t('system.menu.form.placeholder.title')
-            }
-          ],
+          formItemClass: 'col-span-1',
+          rules: 'required',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.title'),
-            clearable: true
-          }
+            clearable: true,
+          },
         },
-
-        // 唯一编码
         {
           label: $t('system.menu.form.modal.code'),
-          prop: 'code',
+          fieldName: 'code',
           component: 'Input',
-          colSpan: 12,
-          rules: [
-            {
-              required: true,
-              message: $t('system.menu.form.placeholder.code')
-            }
-          ],
+          formItemClass: 'col-span-1',
+          rules: 'required',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.code'),
-            clearable: true
-          }
+            clearable: true,
+          },
         },
-
-        // 路由/接口地址
         {
           label: $t('system.menu.form.modal.path'),
-          prop: 'path',
+          fieldName: 'path',
           component: 'Input',
-          colSpan: 12,
-          helpMessage: $t('system.menu.form.help.path'),
+          formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.path'),
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.path'),
               clearable: true,
-              disabled: ![1, 2, 4].includes(values.type)
-            }
-          }
+              disabled: ![1, 2, 4].includes(values.type),
+            };
+          },
         },
-
-        // 组件地址
         {
           label: $t('system.menu.form.modal.component'),
-          prop: 'component',
+          fieldName: 'component',
           component: 'Input',
-          colSpan: 12,
+          formItemClass: 'col-span-1',
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.component'),
               clearable: true,
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
-
-        // 打开方式
         {
           label: $t('system.menu.form.modal.open_type'),
-          prop: 'openType',
+          fieldName: 'openType',
           component: 'ApiDict',
           defaultValue: 1,
-          colSpan: 12,
+          formItemClass: 'col-span-1',
+          rules: 'required',
+          dependencies: {
+            triggerFields: ['type'],
+            rules: (value: any) => (value.type === 2 ? 'required' : null),
+          },
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.open_type'),
-              code: 'sys_menu_open_type',
+              code: DictEnum.SYS_MENU_OPEN_TYPE,
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: values.type !== 2
-            }
-          }
+              disabled: values.type !== 2,
+            };
+          },
         },
-
-        // 图标
         {
           label: $t('system.menu.form.modal.icon'),
-          prop: 'icon',
+          fieldName: 'icon',
           component: 'IconPicker',
-          colSpan: 12,
+          formItemClass: 'col-span-1',
           componentProps: (values) => {
             return {
               class: 'w-full',
               placeholder: $t('system.menu.form.placeholder.icon'),
               clearable: true,
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
-
-        // 内外链地址
         {
           label: $t('system.menu.form.modal.link_url'),
-          prop: 'url',
+          fieldName: 'url',
           component: 'Input',
-          colSpan: 12,
-          helpMessage: $t('system.menu.form.help.link_url'),
+          formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.link_url'),
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.link_url'),
               clearable: true,
-              disabled: ![2, 3].includes(values.openType)
-            }
-          }
+              disabled: ![2, 3].includes(values.openType),
+            };
+          },
         },
-
-        // 排序
         {
           label: $t('system.menu.form.modal.sort'),
-          prop: 'sort',
+          fieldName: 'sort',
           component: 'InputNumber',
-          colSpan: 12,
+          formItemClass: 'col-span-1',
           defaultValue: 999,
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.sort'),
-            clearable: true
-          }
+            clearable: true,
+            min: 0,
+          },
         },
-
-        // 是否启用
         {
           label: $t('system.menu.form.modal.enabled'),
-          prop: 'enabled',
+          fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
-          colSpan: 6,
+          formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.enabled'),
-            code: 'yes_no',
+            code: DictEnum.SYS_ENABLED_STATUS,
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+            renderType: 'RadioGroup',
+          },
         },
-
-        // 是否显示
         {
           label: $t('system.menu.form.modal.is_show'),
-          prop: 'isShow',
+          fieldName: 'isShow',
           component: 'ApiDict',
           defaultValue: 1,
-          colSpan: 6,
+          formItemClass: 'col-span-1',
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_show'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
-
-        // 是否同步
         {
           label: $t('system.menu.form.modal.is_sync'),
-          prop: 'isSync',
+          fieldName: 'isSync',
           component: 'ApiDict',
           defaultValue: 0,
-          colSpan: 6,
+          formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.is_sync'),
-            code: 'yes_no',
+            code: DictEnum.SYS_YES_NO,
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+            renderType: 'RadioGroup',
+          },
         },
-
-        // 是否缓存
         {
           label: $t('system.menu.form.modal.is_cache'),
-          prop: 'isCache',
+          fieldName: 'isCache',
           component: 'ApiDict',
           defaultValue: 0,
-          colSpan: 6,
+          formItemClass: 'col-span-1',
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_cache'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
+        },
+      ],
+    },
+  };
+};

@@ -1,0 +1,57 @@
+{
+  "title": "Plugin Development",
+  "description": "Create and manage local plugins, supports packaging and publishing",
+  "edit": "Edit",
+  "list": {
+    "title": "Plugin Name",
+    "key": "Plugin Key",
+    "type": "Type",
+    "author": "Author",
+    "version": "Version",
+    "status": "Status",
+    "install_status": "Install Status",
+    "installed": "Installed",
+    "uninstalled": "Uninstalled",
+    "updated_at": "Updated At",
+    "created_at": "Created At"
+  },
+  "search": {
+    "desc": "Plugin Description",
+    "title": "Plugin Name",
+    "status": "Status"
+  },
+  "form": {
+    "icon": "Plugin Icon",
+    "cover": "Cover",
+    "title": "Name",
+    "title_placeholder": "Please enter the plugin name",
+    "key": "Key",
+    "key_required": "Please enter the plugin key",
+    "key_pattern": "Start with lowercase letter, only lowercase letters, numbers, and underscores",
+    "key_placeholder": "Please enter the plugin key, e.g. my_plugin",
+    "key_disabled": "Cannot be modified after creation",
+    "author": "Author",
+    "author_placeholder": "Please enter the author",
+    "version": "Version",
+    "version_placeholder": "Please enter the version, e.g. 1.0.0",
+    "type": "Type",
+    "type_placeholder": "Please select a type",
+    "type_options": {
+      "app": "App",
+      "module": "Module"
+    },
+    "desc": "Description",
+    "desc_placeholder": "Please enter a description"
+  },
+  "action": {
+    "package": "Package Plugin",
+    "package_success": "Package Successful",
+    "package_plugin": "Plugin",
+    "package_zip_path": "ZIP Path",
+    "package_has_frontend": "Includes Frontend",
+    "package_confirm_title": "Confirm Package",
+    "package_confirm_message": "Are you sure you want to package this plugin?",
+    "package_confirm": "Confirm",
+    "package_cancel": "Cancel"
+  }
+}

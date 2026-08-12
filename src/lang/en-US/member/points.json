@@ -1,0 +1,34 @@
+{
+  "title": "Points",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "Username",
+      "nickname": "Nickname",
+      "type": "Type",
+      "points": "Points",
+      "balance": "Balance",
+      "source": "Source",
+      "remark": "Remark",
+      "operator": "Operator",
+      "create_time": "Created"
+    },
+    "search": {
+      "username": "Username",
+      "nickname": "Nickname",
+      "type": "Type",
+      "date_range": "Date Range"
+    }
+  },
+  "form": {
+    "member_id": "Member",
+    "type": "Type",
+    "points": "Points",
+    "source": "Source",
+    "remark": "Remark",
+    "rules_member_id": "Please select member",
+    "rules_type": "Please select type",
+    "rules_points": "Please enter points",
+    "rules_source": "Please select source"
+  }
+}

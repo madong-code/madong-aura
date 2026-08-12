@@ -7,7 +7,7 @@
  * @author Art Design Pro Team
  */
 
-import type { AppRouteRecord } from '@/types/router'
+import type { AppRouteRecord } from '#/core/types/router'
 import { RoutesAlias } from '../routesAlias'
 
 export interface ValidationResult {
@@ -182,6 +182,7 @@ export class RouteValidator {
    * 路径解析
    */
   private resolvePath(parent: string, child: string): string {
-    return [parent.replace(/\/$/, ''), child.replace(/^\//, '')].filter(Boolean).join('/')
+    const parts = [parent.replace(/\/$/, ''), child.replace(/^\//, '')].filter(Boolean)
+    return parts.length > 0 ? parts.join('/') : '/'
   }
 }

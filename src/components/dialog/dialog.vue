@@ -1,74 +1,11 @@
-<template>
-  <component
-    :is="dialogComponent"
-    :class="customClass"
-    :destroy-on-close="dialogPropsRef.destroyOnClose ?? true"
-    :close-on-click-modal="dialogPropsRef.closeOnClickModal ?? false"
-    :close-on-press-escape="dialogPropsRef.closeOnPressEscape ?? true"
-    v-model="dialogVisible"
-    :width="dialogPropsRef.width ?? '60%'"
-    :title="dialogPropsRef.title ?? '操作'"
-    :fullscreen="fullscreen"
-    :show-close="dialogPropsRef.showClose ?? true"
-    :direction="dialogPropsRef.direction ?? 'rtl'"
-    :size="dialogPropsRef.width ?? '40%'"
-    :modal="dialogPropsRef.modal ?? true"
-    :append-to-body="true"
-    :draggable="dialogPropsRef.draggable ?? true"
-  >
-    <template #header="{ close, titleId, titleClass }">
-      <div class="el-dialog__header-inner">
-        <span :id="titleId" :class="titleClass">{{
-          dialogPropsRef.title ?? "操作"
-        }}</span>
-        <div class="dialog-header-actions">
-          <ElButton
-            v-if="dialogPropsRef.dialogType === 'dialog'"
-            class="dialog-header-btn"
-            @click="toggleFullscreen"
-            link
-          >
-            <template #icon>
-              <Icon
-                :icon="fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'"
-              />
-            </template>
-          </ElButton>
-          <ElButton class="dialog-header-btn" @click="close" link>
-            <Icon icon="ri:close-large-line" />
-          </ElButton>
-        </div>
-      </div>
-    </template>
-    <div class="m-dialog-body" v-loading="dialogPropsRef.loading ?? false">
-      <slot></slot>
-    </div>
-    <template #footer v-if="dialogPropsRef.footer">
-      <slot name="footer">
-        <slot name="prepend-footer"></slot>
-        <div class="footer-right">
-          <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel"
-            >取消</ElButton
-          >
-          <slot name="center-footer"></slot>
-          <ElButton
-            v-if="dialogPropsRef.showConfirmButton"
-            type="primary"
-            @click="handleSubmit"
-            v-loading="dialogPropsRef.confirmLoading ?? false"
-            >确定</ElButton
-          >
-        </div>
-        <slot name="append-footer"></slot>
-      </slot>
-    </template>
-  </component>
-</template>
-
 <script setup lang="ts">
-import { Icon } from "@/components/icon";
-import { DialogEmits, MyDialogInstance, MyDialogProps } from "./types";
-import { ElDialog, ElDrawer } from "element-plus";
+import type { DialogEmits, MyDialogInstance, MyDialogProps } from './types';
+
+import { computed, nextTick, onMounted, ref } from 'vue';
+
+import { ElButton, ElDialog, ElDrawer } from 'element-plus';
+
+import { Icon } from '#/components/icon';
 
 const props = withDefaults(defineProps<MyDialogProps>(), {
   loading: false,
@@ -76,7 +13,7 @@ const props = withDefaults(defineProps<MyDialogProps>(), {
   showConfirmButton: true,
   showCancelButton: true,
   footer: true,
-  dialogType: "dialog",
+  dialogType: 'dialog',
   draggable: false,
 });
 
@@ -86,13 +23,13 @@ const fullscreen = ref(false);
 
 // 根据 dialogType 决定使用哪个组件
 const dialogComponent = computed(() => {
-  return props.dialogType === "drawer" ? ElDrawer : ElDialog;
+  return props.dialogType === 'drawer' ? ElDrawer : ElDialog;
 });
 
 // 根据 dialogType 设置不同的 customClass
 const customClass = computed(() => {
-  const baseClass = dialogPropsRef.value.customClass ?? "m-dialog";
-  return props.dialogType === "drawer"
+  const baseClass = dialogPropsRef.value.customClass ?? 'm-dialog';
+  return props.dialogType === 'drawer'
     ? `${baseClass} m-drawer`
     : `${baseClass} m-dialog-box`;
 });
@@ -106,14 +43,14 @@ const handleCancel = () => {
   if (props.onCancel) {
     props.onCancel();
   } else {
-    emit("cancel");
+    emit('cancel');
   }
 };
 const handleSubmit = () => {
   if (props.onConfirm) {
     props.onConfirm();
   } else {
-    emit("confirm");
+    emit('confirm');
   }
 };
 const methods: MyDialogInstance = {
@@ -142,16 +79,90 @@ const methods: MyDialogInstance = {
   },
 };
 onMounted(() => {
-  emit("register", methods);
+  emit('register', methods);
 });
 defineExpose(methods);
 </script>
 
+<template>
+  <component
+    :is="dialogComponent"
+    :class="customClass"
+    :destroy-on-close="dialogPropsRef.destroyOnClose ?? true"
+    :close-on-click-modal="dialogPropsRef.closeOnClickModal ?? false"
+    :close-on-press-escape="dialogPropsRef.closeOnPressEscape ?? true"
+    v-model="dialogVisible"
+    :width="dialogPropsRef.width ?? '60%'"
+    :title="dialogPropsRef.title ?? '操作'"
+    :fullscreen="fullscreen"
+    :show-close="dialogPropsRef.showClose ?? true"
+    :direction="dialogPropsRef.direction ?? 'rtl'"
+    :size="dialogPropsRef.width ?? '40%'"
+    :modal="dialogPropsRef.modal ?? true"
+    :append-to-body="true"
+    :draggable="dialogPropsRef.draggable ?? true"
+    :z-index="dialogPropsRef.zIndex"
+  >
+    <template #header="{ close, titleId, titleClass }">
+      <div class="el-dialog__header-inner">
+        <span :id="titleId" :class="titleClass">{{
+          dialogPropsRef.title ?? '操作'
+        }}</span>
+        <div class="dialog-header-actions">
+          <ElButton
+            v-if="dialogPropsRef.dialogType === 'dialog'"
+            class="dialog-header-btn"
+            @click="toggleFullscreen"
+            link
+          >
+            <template #icon>
+              <Icon
+                :icon="
+                  fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'
+                "
+              />
+            </template>
+          </ElButton>
+          <ElButton class="dialog-header-btn" @click="close" link>
+            <Icon icon="ri:close-large-line" />
+          </ElButton>
+        </div>
+      </div>
+    </template>
+    <div class="m-dialog-body" v-loading="dialogPropsRef.loading ?? false">
+      <slot></slot>
+    </div>
+    <template #footer v-if="dialogPropsRef.footer">
+      <slot name="footer">
+        <slot name="prepend-footer"></slot>
+        <div class="footer-right">
+          <ElButton
+            v-if="dialogPropsRef.showCancelButton"
+            @click="handleCancel"
+          >
+            取消
+          </ElButton>
+          <slot name="center-footer"></slot>
+          <ElButton
+            v-if="dialogPropsRef.showConfirmButton"
+            type="primary"
+            @click="handleSubmit"
+            v-loading="dialogPropsRef.confirmLoading ?? false"
+          >
+            确定
+          </ElButton>
+        </div>
+        <slot name="append-footer"></slot>
+      </slot>
+    </template>
+  </component>
+</template>
+
 <style lang="scss" scoped>
 .el-dialog__header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .dialog-header-actions {
@@ -160,15 +171,16 @@ defineExpose(methods);
 }
 
 .dialog-header-btn {
-  margin-left: 10px;
-  padding: 0;
   width: 24px;
   height: 24px;
+  padding: 0;
+  margin-left: 10px;
 
   :deep(.el-icon) {
     font-size: 16px;
   }
 }
+
 :deep(.el-dialog__header) {
   display: block !important;
 }
@@ -190,18 +202,19 @@ defineExpose(methods);
   }
 
   .m-dialog-body {
-    background-color: var(--el-bg-color);
     padding: 0;
+    background-color: var(--el-bg-color);
   }
 
   .el-dialog__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 20px !important;
     // background-color: var(--el-color-primary-light-6);
     border-top: 1px solid var(--el-border-color);
-    padding: 15px 20px !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
   }
+
   .el-dialog__body {
     padding: 0 !important;
   }
@@ -216,19 +229,26 @@ defineExpose(methods);
   }
 
   .m-dialog-body {
-    background-color: var(--el-bg-color);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
     padding: 0;
+    background-color: var(--el-bg-color);
   }
 
   .el-drawer__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 20px !important;
     // background-color: var(--el-color-primary-light-6);
     border-top: 1px solid var(--el-border-color);
-    padding: 15px 20px !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
   }
+
   .el-drawer__body {
+    display: flex;
+    flex-direction: column;
     padding: 0 !important;
   }
 }

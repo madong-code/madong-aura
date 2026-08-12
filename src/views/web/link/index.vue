@@ -1,14 +1,10 @@
-<template>
-  <div class="web-link-page art-full-height">
-    <BasicCrud />
-  </div>
-</template>
+<script setup lang="ts">
+import { useCrud } from '#/adapter/crud';
+import { Page } from '#/components/page';
 
-<script setup lang="tsx">
-import { useCrud } from "@/components/crud";
-import { crudSchema } from "./schemas";
-
-const [BasicCrud] = useCrud({
-  ...crudSchema(),
-});
+import { useCrudSchema } from './schemas';
+const [BasicCrud] = useCrud(useCrudSchema());
 </script>
+<template>
+  <Page auto-content-height><BasicCrud /></Page>
+</template>

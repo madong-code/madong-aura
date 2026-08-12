@@ -1,0 +1,100 @@
+{
+  "title": "Menu Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "type": "Menu Type",
+      "path": "Route Path",
+      "component": "Component Path",
+      "icon": "Icon",
+      "sort": "Sort",
+      "is_show": "Visible",
+      "enabled": "Enabled"
+    },
+    "search": {
+      "type": "Menu Type",
+      "enabled": "Enabled",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route Path",
+      "placeholder": {
+        "type": "Please select menu type",
+        "enabled": "Please select enabled status",
+        "title": "Please enter menu name",
+        "code": "Please enter permission code",
+        "path": "Please enter route path"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "pid": "Parent Menu",
+    "title": "Menu Name",
+    "code": "Permission Code",
+    "type": "Menu Type",
+    "path": "Route Address",
+    "component": "Component Address",
+    "icon": "Icon",
+    "sort": "Sort",
+    "is_show": "Show",
+    "enabled": "Status",
+    "is_cache": "Cache",
+    "modal": {
+      "id": "Menu ID",
+      "type": "Menu Type",
+      "app": "Application",
+      "pid": "Parent Menu",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route/API Path",
+      "component": "Component Path",
+      "open_type": "Open Type",
+      "icon": "Icon",
+      "link_url": "Link URL",
+      "sort": "Sort Order",
+      "enabled": "Enabled",
+      "is_show": "Visible",
+      "is_sync": "Sync",
+      "is_cache": "Cache"
+    },
+    "placeholder": {
+      "type": "Please select menu type",
+      "app": "Please select application",
+      "pid": "Please select parent menu",
+      "title": "Please enter menu name",
+      "code": "Please enter permission code",
+      "path": "Please enter route/API path",
+      "component": "Please enter component path",
+      "open_type": "Please select open type",
+      "icon": "Please select icon",
+      "link_url": "Please enter link URL",
+      "sort": "Please enter sort order",
+      "enabled": "Please select enabled status",
+      "is_show": "Please select visibility",
+      "is_sync": "Please select sync status",
+      "is_cache": "Please select cache status"
+    },
+    "help": {
+      "path": "Route path must start with /, API path is not required",
+      "link_url": "Link URL only applies when open type is external or embedded"
+    }
+  },
+  "api": {
+    "title": "API Management",
+    "search": "Search",
+    "refresh_cache": "Refresh Cache",
+    "tips": {
+      "1": "1. Multiple APIs can be selected and added repeatedly.",
+      "2": "2. Developers should define routes according to the backend routing rules.",
+      "3": "3. After adding, you can select the corresponding API here."
+    },
+    "route_info": {
+      "name": "Name",
+      "method": "Method",
+      "path": "Path",
+      "code": "Permission Code"
+    }
+  }
+}

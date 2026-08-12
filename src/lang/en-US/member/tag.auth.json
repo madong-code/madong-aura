@@ -1,0 +1,21 @@
+{
+  "title": "Auth Menu",
+  "auth_manage": "【{name}】Auth Menu",
+  "expand": {
+    "title": "Expand/Collapse",
+    "expand_all": "Expand All",
+    "expand_level1": "Expand Level 1",
+    "expand_level2": "Expand Level 2",
+    "collapse_all": "Collapse All"
+  },
+  "tag": {
+    "nav_menu": "Nav Menu",
+    "member_menu": "Member Menu",
+    "unknown": "Unknown",
+    "auth": "Auth",
+    "public": "Public"
+  },
+  "message": {
+    "auth_success": "Auth successfully"
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "list": {
+    "title": "代码生成",
+    "table_name": "表名",
+    "table_content": "描述",
+    "plugin_name": "所属模块",
+    "class_name": "类名",
+    "package_name": "包名",
+    "author": "作者",
+    "remark": "备注",
+    "features_name": "功能名称",
+    "delete_type": "删除类型",
+    "edit_mode": "编辑模式",
+    "sort_field": "排序字段",
+    "sort_order": "排序顺序",
+    "parent_menu": "父菜单",
+    "generate_files": "生成文件",
+    "generate": "生成代码",
+    "preview": "预览代码",
+    "download": "下载代码",
+    "created_date": "创建时间",
+    "updated_date": "更新时间",
+    "query": {
+      "name": "查询名称",
+      "placeholder": "请输入查询名称",
+      "features_name": "所属模块",
+      "placeholder_features_name": "请选择所属模块",
+      "table_name": "表名",
+      "placeholder_table_name": "请输入表名"
+    }
+  },
+  "basic": {
+    "table_name": "表名称",
+    "description": "描述",
+    "plugin": "所属插件",
+    "module_name": "模块名称",
+    "class_name": "类名称",
+    "table_name_placeholder": "请输入表名称",
+    "description_placeholder": "请输入描述",
+    "plugin_placeholder": "请选择插件",
+    "module_name_placeholder": "请输入模块名称",
+    "class_name_placeholder": "请输入类名称",
+    "module_tip_1": "生成代码所属功能模块，对应路由名称，例如会员模块，充值模块，订单模块等",
+    "module_tip_2": "命名规范，小写，多个单词使用下划线连接,例如: member，article_category",
+    "class_tip_1": "生成代码所属文件名称，controller，model，service，等类型文件名",
+    "class_tip_2": "命名规范，小写，多个单词使用下划线连接,例如: article_category"
+  },
+  "field": {
+    "operation": "操作",
+    "column_name": "字段名称",
+    "column_comment": "字段描述",
+    "column_type": "字段类型",
+    "primary_key": "主键",
+    "required": "必填",
+    "insert": "添加",
+    "update": "编辑",
+    "lists": "列表",
+    "search": "搜索",
+    "search_method": "搜索方式",
+    "form_type": "表单类型",
+    "validation_type": "验证类型",
+    "placeholder": {
+      "column_comment": "请输入字段描述",
+      "select": "请选择",
+      "setup": "设置"
+    },
+    "validation": {
+      "max": "最大输入字符",
+      "min": "最小输入字符",
+      "between": "输入字符区间"
+    }
+  },
+  "config": {
+    "delete_type": "删除类型",
+    "physical_delete": "物理删除",
+    "soft_delete": "软删除",
+    "delete_type_tip": "物理删除：直接从数据库删除记录；软删除：通过字段标记删除状态",
+    "delete_field": "删除字段",
+    "delete_field_tip": "选择用于标记删除状态的字段",
+    "edit_mode": "编辑模式",
+    "dialog": "弹窗",
+    "drawer": "抽屉",
+    "edit_mode_tip": "选择编辑数据时的界面展示方式",
+    "sort_field": "排序字段",
+    "sort_field_tip": "选择用于排序的字段，留空则不排序",
+    "sort_order": "排序顺序",
+    "asc": "升序",
+    "desc": "降序",
+    "sort_order_tip": "选择排序方式",
+    "parent_menu": "父菜单",
+    "placeholder": {
+      "select": "请选择",
+      "select_edit_mode": "请选择编辑模式",
+      "enter_sort_field": "请输入排序字段",
+      "select_sort_order": "请选择排序顺序"
+    }
+  },
+  "relation": {
+    "title": "关联设置",
+    "type": "关联类型",
+    "method_name": "关联方法名称",
+    "app": "关联应用",
+    "model": "关联模型",
+    "local_key": "关联键",
+    "foreign_key": "外键",
+    "add_relation": "新增关联",
+    "edit_relation": "编辑",
+    "delete_relation": "删除",
+    "operation": "操作",
+    "type_options": {
+      "one_to_one": "一对一",
+      "one_to_many": "一对多",
+      "many_to_many": "多对多"
+    },
+    "placeholder": {
+      "relation_type": "请选择关联类型",
+      "relation_method": "请输入关联方法名称",
+      "relation_app": "请输入关联应用",
+      "relation_model": "请输入关联模型",
+      "relation_key": "请输入关联键",
+      "foreign_key": "请输入外键"
+    },
+    "validation": {
+      "relation_type_required": "请选择关联类型",
+      "relation_method_required": "请输入关联方法名称",
+      "relation_model_required": "请输入关联模型",
+      "relation_key_required": "请输入关联键",
+      "foreign_key_required": "请输入外键"
+    }
+  },
+  "import_table": {
+    "title": "导入数据表",
+    "table_name": "表名称",
+    "table_comment": "表注释",
+    "engine": "引擎",
+    "charset": "编码",
+    "create_time": "创建时间",
+    "confirm": "确认选择",
+    "reset": "重置",
+    "select_table": "选择数据表",
+    "single_select_tip": "只能选择一张数据表",
+    "no_selection": "请先选择数据表",
+    "search_placeholder": "请输入表名"
+  },
+  "preview": {
+    "dialog_title": "代码预览",
+    "copy_button": "复制",
+    "copy_success": "代码已复制到剪贴板",
+    "copy_error": "复制失败，请手动复制",
+    "fetch_error": "获取预览数据失败"
+  }
+}

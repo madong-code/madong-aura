@@ -1,0 +1,9 @@
+{
+  "switch": {
+    "enabled": "启用",
+    "disabled": "禁用"
+  },
+  "dict": {
+    "empty": "-"
+  }
+}

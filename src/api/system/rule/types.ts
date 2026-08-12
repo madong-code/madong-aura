@@ -1,8 +1,5 @@
-export type HttpMethod = "get" | "post" | "put" | "delete" | "patch";
+export type HttpMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
 
-/**
- * 路由列表
- */
 export interface RouteRow {
   name: string;
   method: Uppercase<HttpMethod>;

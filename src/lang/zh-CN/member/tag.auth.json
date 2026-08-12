@@ -1,0 +1,21 @@
+{
+  "title": "授权菜单",
+  "auth_manage": "【{name}】授权菜单",
+  "expand": {
+    "title": "展开/折叠",
+    "expand_all": "展开所有",
+    "expand_level1": "展开一级",
+    "expand_level2": "展开二级",
+    "collapse_all": "折叠所有"
+  },
+  "tag": {
+    "nav_menu": "导航菜单",
+    "member_menu": "会员菜单",
+    "unknown": "未知",
+    "auth": "授权",
+    "public": "公开"
+  },
+  "message": {
+    "auth_success": "授权成功"
+  }
+}

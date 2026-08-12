@@ -1,74 +1,67 @@
-<template>
-  <div class="member-tag-page art-full-height">
-    <BasicCrud />
-    <AuthMenu ref="authMenuRef" />
-    <UserRole ref="userRoleRef" />
-  </div>
-</template>
+<script setup lang="ts">
+import { ref } from 'vue';
 
-<script setup lang="tsx">
-import { useCrud } from "@/components/crud";
-import { crudSchema } from "./schemas";
-import AuthMenu from "./auth-menu.vue";
-import UserRole from "./user-tag.vue";
+import { useCrud } from '#/adapter/crud';
+import { Page } from '#/components/page';
+import { $t } from '#/locales';
+
+import AuthMenu from './components/auth-menu.vue';
+import UserTag from './components/user-tag.vue';
+import { useCrudSchema } from './schemas';
 
 const authMenuRef = ref();
-const userRoleRef = ref();
+const userTagRef = ref();
 
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema(),
+  ...useCrudSchema(),
   tableActionColumn: {
     width: 320,
   },
-  tableActions: [
+  dropDownActions: [
     {
-      label: "授权菜单",
-      type: "primary",
-      sort: 1010,
-      link: true,
-      icon: "ant-design:setting-outlined",
-      auth: "member:auth:save_tag_menu",
-      dialogRef: authMenuRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
-      },
-    },
-    {
-      label: "成员管理",
-      type: "primary",
-      sort: 1010,
-      link: true,
-      icon: "ant-design:team-outlined",
-      auth: "member:auth:user_list_by_tab_id",
-      dialogRef: userRoleRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
+      label: $t('common.crud.edit'),
+      auth: 'member:tag:update',
+      icon: 'ant-design:edit-outlined',
+      onClick: (_e: any, row: any) => {
+        crudApi.openEditDialog(row);
       },
     },
   ],
-  // 表格行操作-下拉菜单
-  dropDownActions: [
+  tableActions: [
     {
-      label: crudSchema.editButtonText || "编辑",
-      type: "primary",
-      sort: 10,
+      label: $t('member.tag.table_actions.auth_menu'),
+      type: 'primary',
       link: true,
-      icon: "ant-design:edit-outlined",
-      auth: crudSchema.editAuth,
-      onClick() {
-        crudApi.openEditDialog();
+      auth: 'member:tag:assign_permissions',
+      icon: 'ant-design:setting-outlined',
+      onClick: (_e: any, row: any) => {
+        authMenuRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
+      },
+    },
+    {
+      label: $t('member.tag.table_actions.member_manage'),
+      type: 'primary',
+      link: true,
+      auth: 'member:tag:member_list',
+      icon: 'ant-design:team-outlined',
+      onClick: (_e: any, row: any) => {
+        userTagRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
       },
     },
   ],
 });
 </script>
+
+<template>
+  <Page auto-content-height>
+    <BasicCrud />
+    <AuthMenu ref="authMenuRef" @success="crudApi?.refreshCreate()" />
+    <UserTag ref="userTagRef" />
+  </Page>
+</template>

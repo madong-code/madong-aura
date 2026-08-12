@@ -1,84 +1,100 @@
-<template>
-  <Dialog>
-    <BasicForm />
-  </Dialog>
-</template>
-
 <script setup lang="ts">
-import { UserService } from "@/api/system/user";
-import { CrudMethods } from "@/components/crud";
-import { useDialog } from "@/components/dialog";
-import { useForm } from "@/components/form";
-import { request } from "http";
+import type { CrudApiInstance } from '#/components/crud/components/types';
+
+import { ref } from 'vue';
+
+import { ElMessage } from 'element-plus';
+
+import { useVbenForm as useForm } from '#/adapter/form';
+import { UserService } from '#/api/system/user';
+import { useDialog } from '#/components/dialog';
+import { $t } from '#/locales';
+
+const emit = defineEmits<{
+  success: [];
+}>();
+
+const record = ref<Record<string, any>>({});
+const crudApi = ref<CrudApiInstance>();
+const formKey = ref(0);
+
 const [BasicForm, formApi] = useForm({
-  labelWidth: "100px",
+  commonConfig: {
+    labelWidth: 100,
+  },
+  showDefaultActions: false,
+  wrapperClass: 'grant-role-form',
   schema: [
     {
-      label: "选择角色",
-      prop: "role_id_list",
-      component: "ApiSelect",
+      label: $t('system.user.form.role_name'),
+      fieldName: 'role_id_list',
+      component: 'ApiSelect',
       componentProps: {
-        api: "/system/role",
-        params: { format: "select" },
-        placeholder: "请选择角色",
+        api: '/system/role',
+        params: { format: 'select' },
+        resultField: 'data',
         multiple: true,
+        placeholder: $t('system.user.form.placeholder.role_name'),
       },
     },
   ],
 });
-const record = ref<any>({});
-const crudApi = ref<CrudMethods>();
+
 const [Dialog, dialogApi] = useDialog({
-  title: "授权角色",
-  // dialogType: 'drawer',
-  // direction: 'rtl', // 从右侧滑入
-  width: "50%",
+  title: $t('system.user.action.grant_role'),
+  width: '50%',
+  draggable: true,
   onConfirm: async () => {
-    formApi.validate().then(async () => {
+    try {
+      dialogApi.setState({ loading: true, confirmLoading: true });
       const values = await formApi.getValues();
-      dialogApi.setState({
-        loading: true,
-        confirmLoading: true,
-      });
-      UserService.grantRole({
+      await UserService.grantRole({
         id: record.value.id,
         role_id_list: values?.role_id_list || [],
-      })
-        .then(() => {
-          ElMessage.success("授权成功");
-          crudApi.value?.refreshUpdate();
-          dialogApi.close();
-        })
-        .finally(() => {
-          dialogApi.setState({
-            loading: false,
-            confirmLoading: false,
-          });
-        });
-    });
+      });
+      ElMessage.success($t('system.user.confirm.grant_role_success'));
+      crudApi.value?.refreshUpdate();
+      emit('success');
+      dialogApi.close();
+    } catch {
+      // error handled by service
+    } finally {
+      dialogApi.setState({ loading: false, confirmLoading: false });
+    }
   },
 });
 
+function parseRoleIds(data: any): (number | string)[] {
+  if (Array.isArray(data?.roles)) {
+    return data.roles.map((role: any) => role.id);
+  }
+  if (typeof data?.roles === 'string') {
+    return data.roles.split(',').filter(Boolean);
+  }
+  return [];
+}
+
 defineExpose({
-  show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudMethods }) {
+  show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudApiInstance }) {
     record.value = data;
     crudApi.value = getCrudApi();
+    formKey.value++;
+    formApi.setValues({ role_id_list: parseRoleIds(data) });
     dialogApi.open();
-    nextTick(() => {
-      // 修改这里：将对象数组转换为ID数组
-      let roleIds = [];
-      if (Array.isArray(data.roles)) {
-        // 如果data.roles是对象数组，提取每个对象的id
-        roleIds = data.roles.map((role: { id: any }) => role.id);
-      } else if (typeof data.roles === "string") {
-        // 保持原有逻辑，兼容字符串格式
-        roleIds = data.roles.split(",") || [];
-      }
-
-      formApi.setValues({
-        role_id_list: roleIds,
-      });
-    });
   },
 });
 </script>
+
+<template>
+  <Dialog>
+    <div class="grant-role-form-wrap" :key="formKey">
+      <BasicForm />
+    </div>
+  </Dialog>
+</template>
+
+<style scoped>
+.grant-role-form-wrap {
+  padding: 48px 20px;
+}
+</style>

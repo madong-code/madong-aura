@@ -1,0 +1,75 @@
+{
+  "title": "定时任务",
+  "table": {
+    "columns": {
+      "type": "类型",
+      "title": "任务名称",
+      "rule": "Cron规则",
+      "singleton": "单例",
+      "rule_name": "规则名称",
+      "target": "目标",
+      "parameter": "参数",
+      "enabled": "状态",
+      "source": "来源",
+      "last_running_time": "最后运行时间"
+    },
+    "search": {
+      "title": "任务名称",
+      "type": "类型",
+      "source": "来源",
+      "enabled": "状态",
+      "placeholder": {
+        "title": "请输入任务名称",
+        "type": "请选择类型",
+        "source": "请选择来源",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "title": "任务名称",
+    "type": "类型",
+    "task_cycle": "任务周期",
+    "second": "秒",
+    "week": "周",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "hour": "时",
+    "minute": "分",
+    "rule": "Cron规则",
+    "target": "目标",
+    "parameter": "参数",
+    "singleton": "单例",
+    "enabled": "状态",
+    "remark": "备注",
+    "placeholder": {
+      "title": "请输入任务名称",
+      "rule": "请输入Cron规则",
+      "target": "请输入目标",
+      "parameter": "请输入参数",
+      "singleton": "请选择单例",
+      "enabled": "请选择状态",
+      "type": "请选择类型",
+      "task_cycle": "请选择任务周期",
+      "remark": "请输入备注",
+      "hour": "请输入时",
+      "minute": "请输入分",
+      "second": "请输入秒",
+      "week": "请输入周",
+      "year": "请输入年",
+      "month": "请输入月",
+      "day": "请输入日"
+    },
+    "suffix": {
+      "second": "秒",
+      "week": "周",
+      "year": "年",
+      "month": "月",
+      "day": "日",
+      "hour": "时",
+      "minute": "分"
+    }
+  }
+}

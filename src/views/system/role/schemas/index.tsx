@@ -1,215 +1,189 @@
-import { RoleService } from '@/api/system/role'
-import { CrudSchema } from '@/components/crud'
-import { DictEnum } from '@/enums'
-import { $t } from '@/locales'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-// crud配置
-export const crudSchema = (): CrudSchema => {
+import { RoleService } from '#/api/system';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
+export const useCrudSchema = (): CrudSchema => {
   return {
-    // 接口地址
-    api: RoleService.list,
-    dialogTitle: $t('system.role.list.title'),
     crudApi: {
-      // 新增接口
+      list: RoleService.list,
       add: RoleService.create,
-      // 修改接口
       edit: RoleService.update,
-      // 删除接口
-      remove: RoleService.remove,
-      // 详情接口
-      view: RoleService.get
+      remove: RoleService.delete,
+      batchRemove: RoleService.remove,
+      view: RoleService.get,
     },
-    // 使用crud
-    useCrud: true,
-    // 是否有新增
+
+    // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    // 是否有删除
-    hasRemove: true,
-    // 是否有修改
-    hasEdit: true,
-    // 是否有详情
+    hasEdit: false,
     hasView: true,
-    // 新增权限码
-    addAuth: 'system:role:create',
-    // 删除权限码
-    removeAuth: 'system:role:delete',
-    // 修改权限码
-    editAuth: 'system:role:update',
-    // 详情权限码
-    viewAuth: 'system:role:read',
-    // 表格列定义
+    hasRemove: true,
+    permissions: {
+      add: 'system:role:create',
+      edit: 'system:role:update',
+      remove: 'system:role:delete',
+      view: 'system:role:read',
+    },
     columns: [
+      { type: 'checkbox', width: 60 },
       {
-        type: 'selection'
+        field: 'id',
+        title: $t('system.role.table.columns.id'),
+        minWidth: 60,
+        visible: false,
       },
       {
-        prop: 'name',
-        label: $t('system.role.list.table.columns.role_name')
+        field: 'name',
+        title: $t('system.role.table.columns.name'),
+        minWidth: 120,
+        align: 'left',
       },
       {
-        prop: 'code',
-        label: $t('system.role.list.table.columns.code')
+        field: 'code',
+        title: $t('system.role.table.columns.code'),
+        minWidth: 120,
+        align: 'left',
       },
       {
-        prop: 'role_type',
-        label: $t('system.role.list.table.columns.role_type'),
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_ROLE_TYPE
-        }
+        field: 'role_type',
+        title: $t('system.role.table.columns.role_type'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ROLE_TYPE },
+        },
       },
       {
-        prop: 'enabled',
-        label: $t('system.role.list.table.columns.enabled'),
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          typeMap: {
-            1: 'success',
-            0: 'danger'
-          },
-          useColorList: false
-        }
+        field: 'data_scope',
+        title: $t('system.role.table.columns.data_scope'),
+        minWidth: 100,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_DATA_PERMISSION },
+        },
       },
       {
-        prop: 'remark',
-        label: $t('system.role.list.table.columns.remark')
-      }
+        field: 'enabled',
+        title: $t('system.role.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
+      },
+      {
+        field: 'sort',
+        title: $t('system.role.table.columns.sort'),
+        minWidth: 60,
+      },
+      {
+        field: 'remark',
+        title: $t('system.role.table.columns.remark'),
+        minWidth: 160,
+        align: 'left',
+        visible: false,
+      },
+      {
+        field: 'created_at',
+        title: $t('system.role.table.columns.created_at'),
+        formatter: 'formatDateTime',
+        minWidth: 160,
+        visible: false,
+      },
+      {
+        field: 'updated_at',
+        title: $t('system.role.table.columns.updated_at'),
+        formatter: 'formatDateTime',
+        minWidth: 160,
+        visible: false,
+      },
     ],
-    // 搜索表单定义
-    searchFormSchema: {
+
+    // 搜索表单配置
+    searchForm: {
+      enabled: true,
       schema: [
         {
-          prop: 'LIKE_code',
-          label: $t('system.role.list.query.code'),
+          fieldName: 'LIKE_name',
+          label: $t('system.role.search.name'),
           component: 'Input',
-          componentProps: {
-            clearable: true,
-            placeholder: $t('system.role.list.query.placeholder.code')
-          },
-          colSpan: 6
         },
         {
-          prop: 'LIKE_name',
-          label: $t('system.role.list.query.name'),
+          fieldName: 'LIKE_code',
+          label: $t('system.role.search.code'),
           component: 'Input',
-          componentProps: {
-            clearable: true,
-            placeholder: $t('system.role.list.query.placeholder.name')
-          },
-          colSpan: 6
         },
         {
-          prop: 'EQ_enabled',
-          label: $t('system.role.list.query.enabled'),
+          fieldName: 'LIKE_enabled',
+          label: $t('system.role.search.enabled'),
           component: 'ApiDict',
           componentProps: {
-            clearable: true,
             code: DictEnum.SYS_ENABLED_STATUS,
-            placeholder: $t('system.role.list.query.placeholder.enabled'),
-            renderType: 'Select'
+            clearable: true,
           },
-          colSpan: 6
-        }
-      ]
+        },
+      ],
     },
-    // 内置弹窗配置
-    dialogProps: {
-      width: '40%'
-      // dialogType: 'drawer'
-    },
-    // crud表单配置
-    formSchema: {
-      showDefaultActions: false,
-      labelWidth: '100px',
+
+    // 表单弹窗配置
+    formDialog: {
+      enabled: true,
+      dialogType: 'modal',
+
       schema: [
-        // 角色ID（隐藏字段）
         {
-          label: $t('system.role.form.modal.id'),
-          prop: 'id',
+          fieldName: 'id',
+          label: $t('system.role.form.id'),
           component: 'Input',
-          colSpan: 24,
-          show: false,
-          ifDetail: false
+          dependencies: { triggerFields: ['id'], show: false },
         },
-
-        // 角色名称
         {
-          label: $t('system.role.form.modal.name'),
-          prop: 'name',
+          fieldName: 'name',
+          label: $t('system.role.form.name'),
           component: 'Input',
-          colSpan: 24,
-          rules: [
-            {
-              required: true,
-              message: $t('system.role.form.modal.placeholder.name')
-            }
-          ],
-          componentProps: {
-            placeholder: $t('system.role.form.modal.placeholder.name'),
-            clearable: true
-          }
+          rules: 'required',
         },
-
-        // 唯一编码
         {
-          label: $t('system.role.form.modal.code'),
-          prop: 'code',
+          fieldName: 'code',
+          label: $t('system.role.form.code'),
           component: 'Input',
-          colSpan: 24,
-          rules: [
-            {
-              required: true,
-              message: $t('system.role.form.modal.placeholder.code')
-            }
-          ],
-          componentProps: {
-            placeholder: $t('system.role.form.modal.placeholder.code'),
-            clearable: true
-          }
+          rules: 'required',
         },
-
-        // 角色类型
         {
-          label: $t('system.role.form.modal.role_type'),
-          prop: 'role_type',
+          fieldName: 'role_type',
+          label: $t('system.role.form.role_type'),
           component: 'ApiDict',
-          colSpan: 24,
-          componentProps: {
-            placeholder: $t('system.role.form.modal.placeholder.role_type'),
-            code: DictEnum.SYS_ROLE_TYPE,
-            clearable: true
-          }
+          componentProps: { code: DictEnum.SYS_ROLE_TYPE, clearable: true },
         },
-
-        // 是否启用
         {
-          label: $t('system.role.form.modal.enabled'),
-          prop: 'enabled',
+          fieldName: 'enabled',
+          label: $t('system.role.form.enabled'),
           component: 'ApiDict',
-          defaultValue: 1,
-          colSpan: 24,
-          rules: [],
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
+            renderType: 'RadioGroup',
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+          },
+          defaultValue: 1,
+          formItemClass: 'cols-span-6',
         },
-
-        // 备注
         {
-          label: $t('system.role.form.modal.remark'),
-          prop: 'remark',
+          fieldName: 'remark',
+          label: $t('system.role.form.remark'),
           component: 'Input',
-          colSpan: 24,
-          componentProps: {
-            type: 'textarea',
-            rows: 4,
-            placeholder: $t('system.role.form.modal.placeholder.remark')
-          }
-        }
-      ]
-    }
-  }
-}
+          componentProps: { type: 'textarea', rows: 3 },
+          formItemClass: 'cols-span-6',
+        },
+      ],
+      title: $t('system.role.title'),
+      width: 'w-[40%]',
+      wrapperClass: 'grid-cols-1',
+      commonConfig: {
+        labelWidth: 80,
+        labelAlign: 'right',
+      },
+    },
+  };
+};

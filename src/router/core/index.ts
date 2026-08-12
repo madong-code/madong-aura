@@ -12,6 +12,3 @@ export { RouteTransformer } from './RouteTransformer'
 export { IframeRouteManager } from './IframeRouteManager'
 export { MenuProcessor } from './MenuProcessor'
 export { RoutePermissionValidator } from './RoutePermissionValidator'
-// 功能模块路由相关
-export { AppsModuleScanner } from './AppsModuleScanner'
-export { AppsRouteManager } from './AppsRouteManager'

@@ -1,6 +1,3 @@
-/**
- * 会员标签模型
- */
 export interface MemberTag {
   id?: number;
   name?: string;

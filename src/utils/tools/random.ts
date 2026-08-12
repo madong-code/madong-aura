@@ -1,6 +1,6 @@
-const hexList: string[] = []
+const hexList: string[] = [];
 for (let i = 0; i <= 15; i++) {
-    hexList[i] = i.toString(16)
+  hexList[i] = i.toString(16);
 }
 
 /**
@@ -28,23 +28,36 @@ for (let i = 0; i <= 15; i++) {
  * @returns uuid
  */
 export function uuid(): string {
-    let uuid = ''
-    for (let i = 1; i <= 36; i++) {
-        if (i === 9 || i === 14 || i === 19 || i === 24) {
-            uuid += '-'
-        } else if (i === 15) {
-            uuid += 4
-        } else if (i === 20) {
-            uuid += hexList[(Math.random() * 4) | 8]
-        } else {
-            uuid += hexList[(Math.random() * 16) | 0]
-        }
+  let uuid = '';
+  for (let i = 1; i <= 36; i++) {
+    switch (i) {
+      case 9:
+      case 14:
+      case 19:
+      case 24: {
+        uuid += '-';
+
+        break;
+      }
+      case 15: {
+        uuid += 4;
+
+        break;
+      }
+      case 20: {
+        uuid += hexList[(Math.random() * 4) | 8];
+
+        break;
+      }
+      default: {
+        uuid += hexList[Math.trunc(Math.random() * 16)];
+      }
     }
-    return uuid
+  }
+  return uuid;
 }
 
-
-let uniqueCounter = 0
+let uniqueCounter = 0;
 
 /**
  * 生成唯一标识
@@ -52,8 +65,8 @@ let uniqueCounter = 0
  * @returns 唯一标识
  */
 export function shortUuid(prefix = ''): string {
-    const time = Date.now()
-    const random = Math.floor(Math.random() * 1000000000)
-    uniqueCounter++
-    return prefix + '_' + random + uniqueCounter + String(time)
+  const time = Date.now();
+  const random = Math.floor(Math.random() * 1_000_000_000);
+  uniqueCounter++;
+  return `${prefix}_${random}${uniqueCounter}${String(time)}`;
 }

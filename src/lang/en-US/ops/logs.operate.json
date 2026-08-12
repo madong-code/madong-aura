@@ -1,0 +1,40 @@
+{
+  "title": "Operation Logs",
+  "table": {
+    "columns": {
+      "user_name": "Account",
+      "name": "Section",
+      "app": "App",
+      "ip": "IP",
+      "ip_location": "Location",
+      "os": "OS",
+      "browser": "Browser",
+      "url": "URL",
+      "param": "Params",
+      "created_at": "Time",
+      "created_date": "Time"
+    },
+    "search": {
+      "user_name": "Username",
+      "ip": "IP",
+      "url": "URL",
+      "created_date": "Time",
+      "placeholder": {
+        "user_name": "Please enter username",
+        "ip": "Please enter IP",
+        "url": "Please enter URL"
+      }
+    }
+  },
+  "form": {
+    "app": "App",
+    "ip": "IP",
+    "class_name": "Class",
+    "method": "Method",
+    "action": "Action",
+    "created_date": "Time",
+    "user_name": "User",
+    "param": "Params",
+    "result": "Result"
+  }
+}

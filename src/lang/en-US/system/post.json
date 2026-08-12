@@ -1,0 +1,37 @@
+{
+  "title": "Position",
+  "table": {
+    "columns": {
+      "code": "Code",
+      "name": "Position Name",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark"
+    },
+    "search": {
+      "code": "Code",
+      "name": "Position Name",
+      "enabled": "Status",
+      "placeholder": {
+        "code": "Please enter code",
+        "name": "Please enter name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "dept_name": "Department",
+    "name": "Position Name",
+    "code": "Code",
+    "sort": "Sort",
+    "enabled": "Status",
+    "remark": "Remark",
+    "placeholder": {
+      "dept_name": "Please select dept",
+      "name": "Please enter name",
+      "code": "Please enter code",
+      "remark": "Please enter remark"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "search": {
+    "toggle": "Search",
+    "reset": "Reset"
+  },
+  "table": {
+    "action": "Action",
+    "delete_confirm_title": "Confirm Delete",
+    "batch_delete_confirm_title": "Confirm Batch Delete",
+    "confirm_delete": "Are you sure to delete {0}?",
+    "confirm_batch_delete": "Are you sure to delete {0} selected {1}?"
+  },
+  "action": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "export": "Export",
+    "refresh": "Refresh",
+    "batch_delete": "Batch Delete",
+    "print": "Print",
+    "add_child": "Child Node",
+    "more": "More",
+    "confirm_title": "Confirm",
+    "confirm_content": "Are you sure to proceed?"
+  },
+  "message": {
+    "no_delete_api": "No delete API configured",
+    "no_batch_delete_api": "No batch delete API configured",
+    "no_selection": "Please select data to delete",
+    "delete_success": "Delete {0} success"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "title": "Message Management",
+  "table": {
+    "columns": {
+      "name": "Name",
+      "key": "Key",
+      "category_name": "Category",
+      "is_enabled": "Status",
+      "sort": "Sort"
+    },
+    "search": {
+      "name": "Name",
+      "category_id": "Category",
+      "is_enabled": "Status",
+      "type": "Template Type"
+    },
+    "typeOptions": {
+      "system": "System",
+      "sms": "SMS",
+      "email": "Email",
+      "webhook": "Webhook"
+    },
+    "isEnabledOptions": {
+      "1": "Enabled",
+      "0": "Disabled"
+    }
+  },
+  "form": {
+    "basic_info": "Basic Info",
+    "template": "Template Config",
+    "category_id": "Category",
+    "key": "Key",
+    "name": "Name",
+    "description": "Description",
+    "default_on": "Default Subscribe",
+    "nav_type": "Nav Type",
+    "nav_value": "Nav Value",
+    "sort": "Sort Order",
+    "is_enabled": "Status",
+    "dialog_title": "Message",
+    "default_on_options": {
+      "1": "On",
+      "0": "Off"
+    },
+    "nav_type_options": {
+      "router": "Internal Route",
+      "url": "External Link",
+      "none": "No Navigation"
+    }
+  },
+  "btn": {
+    "add": "Add Message",
+    "edit": "Edit",
+    "settings": "Settings"
+  },
+  "drop_down": {
+    "edit": "Edit Message",
+    "remove": "Delete",
+    "link_template": "Link Template"
+  },
+  "template_selector": {
+    "title": "Link Template",
+    "title_desc": "Select templates for \"{name}\"",
+    "all_types": "All Types",
+    "search_placeholder": "Search template name...",
+    "search_btn": "Search",
+    "loading": "Loading...",
+    "no_results": "No matching templates found",
+    "no_templates": "No templates available, please create one first",
+    "assigned_badge": "Linked",
+    "selected_tags_label": "Selected",
+    "selected_count": "{count} templates selected",
+    "save_btn": "Save",
+    "cancel_btn": "Cancel",
+    "save_success": "Template link saved",
+    "save_failed": "Save failed"
+  }
+}

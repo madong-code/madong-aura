@@ -8,485 +8,174 @@
  */
 
 import { h } from 'vue'
-import { RoutesAlias } from '../routesAlias'
 
-// 缓存项接口
-interface CacheItem {
-  loader: () => Promise<any>
-  timestamp: number
-  hitCount: number
+// ---------------------------------------------------------------------------
+// 【art-admin 改造 · 对齐 vben 方案】
+//
+// 原生 art 的 ComponentLoader 在每次 transform() 时都 `new ComponentLoader()`
+// 重建 3 个惰性 import.meta.glob，且 load() 对每个 component 推导出多个候选
+// 路径逐个查 map + 试错动态 import —— 登录后一次性注册几十个路由时会层层
+// await 懒加载，造成明显卡顿，且候选试错容易漏配/拼错路径导致 404。
+//
+// 此处改为对齐 template/admin（vben）的 buildPageMap 思路：
+//   - 一次性（模块加载期）把全部页面用 import.meta.glob 预构建成全局映射表
+//     pageMap（key 为去除前缀、可预测的物理路径）；
+//   - load() 仅做 map 查找 + 多策略兜底，零候选试错、零重复 glob 构建，
+//     因此注册路由时不再有逐个动态 import 的开销。
+//
+// 相对基准：本文件位于 `src/router/core/`，
+//   ../../views   -> src/views（admin 业务页面 + _core 基础视图/iframe）
+//   ../../plugin  -> src/plugin（admin 插件页面）
+// 说明：art 原生演示页面（原 src/core/ui/demos/art）已按 _core/plugin 模式
+//      迁移，不再从 core/ui/demos 加载，故不再 glob core/ui/demos。
+// ---------------------------------------------------------------------------
+
+// 预构建全局页面映射表（一次构建，模块加载期完成）
+const PAGES = import.meta.glob([
+  '../../views/**/*.vue',
+  '../../plugin/**/*.vue',
+])
+
+/**
+ * 把 glob 的物理路径（'../../views/system/user/index.vue'）规范成可预测的
+ * 查询 key（'views/system/user/index' / 'views/system/user/index/index' 等）。
+ * 用于后续的精确匹配与多策略兜底。
+ */
+function normalizeGlobKey(globPath: string): string {
+  return globPath
+    .replace(/^\.\.\/\.\.\//, '') // 去 '../../'
+    .replace(/\.vue$/, '') // 去 '.vue'
 }
 
-// 性能统计接口
-interface PerformanceStats {
-  totalLoads: number
-  cacheHits: number
-  averageLoadTime: number
-  slowLoads: number
+// 反向索引：物理路径 -> loader，构建一次
+const PAGE_MAP = new Map<string, () => Promise<any>>()
+Object.keys(PAGES).forEach((globPath) => {
+  PAGE_MAP.set(normalizeGlobKey(globPath), PAGES[globPath] as () => Promise<any>)
+})
+
+/**
+ * 【art-admin 改造】布局容器路径别名
+ *
+ * 后端菜单沿用 art 原生约定，用这些路径表示"布局容器"而非真实页面。
+ * 迁移后统一指向 `src/core/ui/layout/AppLayout.vue`。
+ */
+const LAYOUT_ALIASES = new Set(['index/index', 'index', 'Layout', 'layout'])
+
+/**
+ * 多策略兜底解析（对齐 vben 的 findMatchingComponent）。
+ *
+ * 【关键】PAGE_MAP 的 key 带 glob 物理前缀（`views/`、`plugin/`），
+ * 而后端下发的 component（经 adapter 归一化）去掉了这些前缀（如 `system/user/index`、
+ * `examples/tables/basic`、`plugin/portal/views/xxx`）。因此所有候选都必须补回
+ * 对应前缀，才能与 PAGE_MAP 的 key 同构命中。
+ *
+ *  1. 精确匹配（含 .vue / index，补前缀）
+ *  2. 模块级模糊（'system/user/index' -> 命中 'views/system/user/index/index'）
+ *  3. 路径后缀模糊（'system/user' -> 命中 'views/system/user/index'）
+ */
+function resolveComponentPath(raw: string): string | undefined {
+  const cleaned = raw.replace(/^\//, '').replace(/\.vue$/, '')
+
+  // 候选前缀集合：业务页/基础视图走 views/，plugin 页已是 plugin/ 开头（无需再补）。
+  const prefixes = cleaned.startsWith('plugin/')
+    ? ['']
+    : ['views/']
+
+  // 1. 精确匹配（含 .vue / index）
+  const exactCandidates: string[] = []
+  for (const p of prefixes) {
+    exactCandidates.push(`${p}${cleaned}`)
+    exactCandidates.push(`${p}${cleaned}/index`)
+    exactCandidates.push(`${p}${cleaned}.vue`)
+    exactCandidates.push(`${p}${cleaned}/index.vue`)
+  }
+  for (const c of exactCandidates) {
+    if (PAGE_MAP.has(c)) return c
+  }
+
+  // 2. 模块级模糊：去掉最后一段作为模块入口
+  const segs = cleaned.split('/')
+  if (segs.length >= 2) {
+    const moduleKey = segs.slice(0, -1).join('/')
+    const last = segs[segs.length - 1]
+    const moduleCandidates: string[] = []
+    for (const p of prefixes) {
+      moduleCandidates.push(`${p}${moduleKey}/${last}/index`)
+      moduleCandidates.push(`${p}${moduleKey}/${last}`)
+      moduleCandidates.push(`${p}${moduleKey}/index`)
+    }
+    for (const c of moduleCandidates) {
+      if (PAGE_MAP.has(c)) return c
+    }
+  }
+
+  // 3. 路径后缀模糊：'system/user' -> 'views/system/user/index'
+  for (const p of prefixes) {
+    const prefixCleaned = `${p}${cleaned}`
+    for (const key of PAGE_MAP.keys()) {
+      if (key === `${prefixCleaned}/index` || key.startsWith(`${prefixCleaned}/`)) {
+        return key
+      }
+    }
+  }
+
+  return undefined
 }
 
 export class ComponentLoader {
-  private viewsModules: Record<string, () => Promise<any>> = {}
-  private appsModules: Record<string, () => Promise<any>> = {}
-  private layoutModules: Record<string, () => Promise<any>> = {}
-
-  // 组件缓存
-  private componentCache: Map<string, CacheItem> = new Map()
-
-  // 性能统计
-  private performanceStats: PerformanceStats = {
-    totalLoads: 0,
-    cacheHits: 0,
-    averageLoadTime: 0,
-    slowLoads: 0
-  }
-
-  // 缓存配置
-  private cacheConfig = {
-    maxSize: 100, // 最大缓存数量
-    ttl: 5 * 60 * 1000, // 缓存有效期 5分钟
-    enableStats: import.meta.env.DEV, // 开发环境启用统计
-    enabled: !import.meta.env.DEV, // 开发环境禁用缓存
-    devCacheTTL: 2000 // 开发环境短暂缓存 2秒，避免频繁热更新
-  }
-
-  constructor() {
-    // 初始化模块映射
-    this.refreshModulesMap()
-
-    // 生产环境下定期清理过期缓存
-    if (!import.meta.env.DEV) {
-      setInterval(() => this.cleanupExpiredCache(), 60 * 1000) // 每分钟清理一次
-    }
-
-    // 开发环境下添加热更新支持
-    if (import.meta.env.DEV && import.meta.hot) {
-      this.setupHMR()
-    }
-  }
-
   /**
-   * 刷新模块映射
+   * 加载组件
+   *
+   * componentPath 支持以下格式：
+   *  - admin 业务页：'views/system/user/index' 或 '/system/user/index'（去前缀后在 src/views 找）
+   *  - admin 插件页：'plugin/portal/views/xxx'（在 src/plugin 找，保留 plugin 前缀）
+   *  - art 原生页：'/examples/tables/basic' 或 'examples/tables/basic'（在 src/art/views 找）
    */
-  private refreshModulesMap(): void {
-    // 动态导入 views 目录下所有 .vue 组件
-    this.viewsModules = import.meta.glob('../../views/**/*.vue')
-    // 动态导入 apps 模块下所有 .vue 组件
-    this.appsModules = import.meta.glob('../../apps/**/views/**/*.vue')
-    // 动态导入 layout 目录下所有 .vue 组件
-    this.layoutModules = import.meta.glob('../../layout/**/*.vue')
-  }
-
-  /**
-   * 设置热更新支持
-   */
-  private setupHMR(): void {
-    if (import.meta.hot) {
-      // 监听组件文件变化
-      import.meta.hot.on('vite:beforeUpdate', (payload: any) => {
-        const updates = Array.isArray(payload) ? payload : [payload]
-        const componentChanges = updates
-          .filter(u => u.url?.includes('.vue'))
-          .map(u => u.url)
-        
-        if (componentChanges.length > 0) {
-          console.log(`[ComponentLoader] 检测到 ${componentChanges.length} 个组件文件变化`)
-          // 刷新模块映射，确保能够捕获到文件变化
-          this.refreshModulesMap()
-          // 清除缓存，确保下次加载时使用新的模块
-          this.clearCache()
-        }
-      })
-
-      // 监听错误事件，防止热更新失败导致页面崩溃
-      import.meta.hot.on('vite:error', (error) => {
-        console.warn('[ComponentLoader] 热更新错误:', error)
-      })
-    }
-  }
-
-  /**
-   * 加载组件（带缓存）
-   */
-  load(componentPath: string, moduleName?: string): () => Promise<any> {
+  load(componentPath: string): () => Promise<any> {
     if (!componentPath) {
       return this.createEmptyComponent()
     }
 
-    const finalModuleName = moduleName || 'app'
-    const cacheKey = this.generateCacheKey(finalModuleName, componentPath)
-
-    // 性能监控开始时间
-    const startTime = this.cacheConfig.enableStats ? performance.now() : 0
-
-    // 开发环境使用短暂缓存，避免频繁热更新闪烁
-    const shouldUseCache = this.cacheConfig.enabled || (import.meta.env.DEV && this.cacheConfig.devCacheTTL > 0)
-
-    if (shouldUseCache) {
-      const cachedItem = this.getFromCache(cacheKey, import.meta.env.DEV ? this.cacheConfig.devCacheTTL : undefined)
-      if (cachedItem) {
-        if (this.cacheConfig.enableStats) {
-          this.recordPerformance(true, performance.now() - startTime)
-        }
-        return cachedItem
-      }
+    // 布局容器别名拦截
+    if (LAYOUT_ALIASES.has(componentPath.replace(/^\//, '').replace(/\.vue$/, ''))) {
+      return this.loadLayout()
     }
 
-    // 只在开发环境下输出日志
-    if (import.meta.env.DEV) {
-      console.log(`[ComponentLoader] 加载组件: ${finalModuleName}/${componentPath}`)
+    // 统一交给 resolveComponentPath（内部按前缀补 views/plugin）
+    const raw = componentPath.replace(/^\//, '').replace(/\.vue$/, '')
+    const resolved = resolveComponentPath(raw)
+    if (resolved && PAGE_MAP.has(resolved)) {
+      return PAGE_MAP.get(resolved)!
     }
 
-    let componentLoader: () => Promise<any>
-
-    // 检查是否为布局组件路径
-    if (this.isLayoutComponent(componentPath)) {
-      componentLoader = this.loadLayoutComponent(componentPath)
-    }
-    // 如果有模块名且不是app，优先从模块的 views 目录加载
-    else if (finalModuleName && finalModuleName !== 'app') {
-      componentLoader = this.loadAppsComponent(componentPath, finalModuleName)
-    }
-    // 默认从 app/views 目录加载
-    else {
-      componentLoader = this.loadComponent(componentPath)
-    }
-
-    // 缓存组件加载器
-    if (shouldUseCache) {
-      this.addToCache(cacheKey, componentLoader)
-    }
-
-    if (this.cacheConfig.enableStats) {
-      this.recordPerformance(false, performance.now() - startTime)
-    }
-
-    return componentLoader
-  }
-
-  /**
-   * 生成缓存键
-   */
-  private generateCacheKey(moduleName: string, componentPath: string): string {
-    return `${moduleName}:${componentPath}`
-  }
-
-  /**
-   * 从缓存获取组件
-   */
-  private getFromCache(cacheKey: string, customTTL?: number): (() => Promise<any>) | null {
-    const cachedItem = this.componentCache.get(cacheKey)
-
-    if (!cachedItem) {
-      return null
-    }
-
-    // 检查缓存是否过期
-    const ttl = customTTL ?? this.cacheConfig.ttl
-    if (Date.now() - cachedItem.timestamp > ttl) {
-      this.componentCache.delete(cacheKey)
-      return null
-    }
-
-    // 更新命中次数和时间戳
-    cachedItem.hitCount++
-    cachedItem.timestamp = Date.now()
-
-    return cachedItem.loader
-  }
-
-  /**
-   * 添加组件到缓存
-   */
-  private addToCache(cacheKey: string, loader: () => Promise<any>): void {
-    // 检查缓存大小，如果超过限制则清理最旧的缓存
-    if (this.componentCache.size >= this.cacheConfig.maxSize) {
-      this.evictOldestCache()
-    }
-
-    const cacheItem: CacheItem = {
-      loader,
-      timestamp: Date.now(),
-      hitCount: 0
-    }
-
-    this.componentCache.set(cacheKey, cacheItem)
-  }
-
-  /**
-   * 清理过期缓存
-   */
-  private cleanupExpiredCache(): void {
-    const now = Date.now()
-    for (const [key, item] of this.componentCache.entries()) {
-      if (now - item.timestamp > this.cacheConfig.ttl) {
-        this.componentCache.delete(key)
-      }
-    }
-  }
-
-  /**
-   * 淘汰最旧的缓存项
-   */
-  private evictOldestCache(): void {
-    let oldestKey: string | null = null
-    let oldestTime = Date.now()
-
-    for (const [key, item] of this.componentCache.entries()) {
-      if (item.timestamp < oldestTime) {
-        oldestTime = item.timestamp
-        oldestKey = key
-      }
-    }
-
-    if (oldestKey) {
-      this.componentCache.delete(oldestKey)
-    }
-  }
-
-  /**
-   * 记录性能统计
-   */
-  private recordPerformance(isCacheHit: boolean, loadTime: number): void {
-    this.performanceStats.totalLoads++
-
-    if (isCacheHit) {
-      this.performanceStats.cacheHits++
-    } else {
-      // 计算平均加载时间
-      const previousTotal = this.performanceStats.averageLoadTime * (this.performanceStats.totalLoads - this.performanceStats.cacheHits - 1)
-      this.performanceStats.averageLoadTime = (previousTotal + loadTime) / (this.performanceStats.totalLoads - this.performanceStats.cacheHits)
-
-      // 记录慢加载
-      if (loadTime > 100) { // 超过100ms认为是慢加载
-        this.performanceStats.slowLoads++
-        console.warn(`组件加载较慢: ${loadTime.toFixed(2)}ms`)
-      }
-    }
-
-    // 开发环境下定期输出统计信息
-    if (import.meta.env.DEV && this.performanceStats.totalLoads % 50 === 0) {
-      this.logPerformanceStats()
-    }
-  }
-
-  /**
-   * 输出性能统计信息
-   */
-  private logPerformanceStats(): void {
-    const hitRate = this.performanceStats.totalLoads > 0
-      ? (this.performanceStats.cacheHits / this.performanceStats.totalLoads * 100).toFixed(2)
-      : '0.00'
-
-    console.group('🚀 ComponentLoader 性能统计')
-    console.log(`📊 总加载次数: ${this.performanceStats.totalLoads}`)
-    console.log(`🎯 缓存命中率: ${hitRate}%`)
-    console.log(`⏱️ 平均加载时间: ${this.performanceStats.averageLoadTime.toFixed(2)}ms`)
-    console.log(`🐌 慢加载次数: ${this.performanceStats.slowLoads}`)
-    console.log(`💾 当前缓存大小: ${this.componentCache.size}`)
-    console.groupEnd()
-  }
-
-  /**
-   * 手动清理缓存
-   */
-  clearCache(): void {
-    this.componentCache.clear()
-    if (import.meta.env.DEV) {
-      console.log('🧹 组件缓存已清理')
-    }
-  }
-
-  /**
-   * 获取性能统计
-   */
-  getPerformanceStats(): PerformanceStats {
-    return { ...this.performanceStats }
-  }
-
-  /**
-   * 获取缓存信息
-   */
-  getCacheInfo(): { size: number; keys: string[] } {
-    return {
-      size: this.componentCache.size,
-      keys: Array.from(this.componentCache.keys())
-    }
-  }
-
-  // ... existing code (保持原有的私有方法不变) ...
-
-  /**
-   * 标准化路径格式
-   */
-  private normalizePath(path: string): string {
-    // 确保路径以/开头，并且没有连续的斜杠
-    return '/' + path.replace(/^\/*|\/*$/g, '').replace(/\/+\//g, '/')
-  }
-
-  /**
-   * 检查是否为布局组件路径
-   */
-  private isLayoutComponent(componentPath: string): boolean {
-    const normalizedPath = this.normalizePath(componentPath)
-    const layoutPaths = [
-      '/layout', '/outside', '/default',
-      RoutesAlias.Layout, RoutesAlias.Outside
-    ].map(path => this.normalizePath(path))
-
-    return layoutPaths.some(path =>
-      normalizedPath === path ||
-      normalizedPath.startsWith(path + '/')
-    )
+    console.error(`[ComponentLoader] 未找到组件: ${componentPath}`)
+    return this.createErrorComponent(componentPath)
   }
 
   /**
    * 加载布局组件
    */
-  private loadLayoutComponent(componentPath: string): () => Promise<any> {
-    // 处理路由别名映射
-    const mappedPath = this.mapRoutesAlias(componentPath)
-    const normalizedPath = this.normalizePath(mappedPath)
-
-    // 构建可能的布局路径
-    const fullPath = `../../layout${normalizedPath}.vue`
-    const fullPathWithIndex = `../../layout${normalizedPath}/index.vue`
-
-    // 先尝试直接路径，再尝试添加/index的路径
-    const module = this.layoutModules[fullPath] || this.layoutModules[fullPathWithIndex]
-
-    if (!module) {
-      console.error(
-        `[ComponentLoader] 未找到布局组件: ${componentPath}，映射路径: ${normalizedPath}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
-      )
-      return this.createErrorComponent(componentPath)
-    }
-
-    // 包装模块加载函数，添加错误处理
-    return () => {
-      return module().catch(error => {
-        console.error(`[ComponentLoader] 加载布局组件失败: ${componentPath}`, error)
-        return {
-          render() {
-            return h('div', { class: 'route-error' }, `布局组件加载失败: ${componentPath}`)
-          }
-        }
-      })
-    }
-  }
-
-  /**
-   * 映射路由别名到实际路径
-   */
-  private mapRoutesAlias(componentPath: string): string {
-    // 处理 RoutesAlias.Layout -> /default
-    if (componentPath === RoutesAlias.Layout || componentPath === '/layout') {
-      return '/default'
-    }
-    // 处理 RoutesAlias.Outside -> /outside
-    if (componentPath === RoutesAlias.Outside || componentPath === '/outside') {
-      return '/outside'
-    }
-    return componentPath
-  }
-
-  /**
-   * 从 views 目录加载组件
-   */
-  private loadComponent(componentPath: string): () => Promise<any> {
-    const normalizedPath = this.normalizePath(componentPath)
-
-    // 构建可能的路径
-    const fullPath = `../../views${normalizedPath}.vue`
-    const fullPathWithIndex = `../../views${normalizedPath}/index.vue`
-
-    // 先尝试直接路径，再尝试添加/index的路径
-    const module = this.viewsModules[fullPath] || this.viewsModules[fullPathWithIndex]
-
-    if (!module) {
-      console.error(
-        `[ComponentLoader] 未找到组件: ${componentPath}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
-      )
-      return this.createErrorComponent(componentPath)
-    }
-
-    // 包装模块加载函数，添加错误处理
-    return () => {
-      return module().catch(error => {
-        console.error(`[ComponentLoader] 加载组件失败: ${componentPath}`, error)
-        return {
-          render() {
-            return h('div', { class: 'route-error' }, `组件加载失败: ${componentPath}`)
-          }
-        }
-      })
-    }
-  }
-
-  /**
-   * 从 features 模块的 views 目录加载组件
-   */
-  private loadAppsComponent(componentPath: string, moduleName: string): () => Promise<any> {
-    const normalizedPath = this.normalizePath(componentPath)
-
-    // 构建可能的路径
-    const fullPath = `../../apps/${moduleName}/views${normalizedPath}.vue`
-    const fullPathWithIndex = `../../apps/${moduleName}/views${normalizedPath}/index.vue`
-
-    // 先尝试直接路径，再尝试添加/index的路径
-    const module = this.appsModules[fullPath] || this.appsModules[fullPathWithIndex]
-
-    if (!module) {
-      console.error(
-        `[ComponentLoader] 未找到模块 ${moduleName} 的组件: ${componentPath}，尝试过的路径: ${fullPath} 和 ${fullPathWithIndex}`
-      )
-      // 如果模块中找不到，尝试从 app/views 目录加载
-      return this.loadComponent(componentPath)
-    }
-
-    // 包装模块加载函数，添加错误处理
-    return () => {
-      return module().catch(error => {
-        console.error(`[ComponentLoader] 加载模块 ${moduleName} 的组件失败: ${componentPath}`, error)
-        return {
-          render() {
-            return h('div', { class: 'route-error' }, `模块 ${moduleName} 的组件加载失败: ${componentPath}`)
-          }
-        }
-      })
-    }
-  }
-
-  /**
-   * 加载默认布局组件
-   */
   loadLayout(): () => Promise<any> {
-    return () => {
-      return import('@/layout/index.vue').catch(error => {
-        console.error('[ComponentLoader] 加载默认布局组件失败', error)
-        return {
-          render() {
-            return h('div', { class: 'route-error' }, '默认布局组件加载失败')
-          }
-        }
-      })
-    }
+    return () => import('#/core/ui/layout/AppLayout.vue')
+  }
+
+  /**
+   * 加载 RouterView 容器组件
+   *
+   * 用于目录型路由（有 children 但无具体页面组件），
+   * 对齐 admin 的 generateRoutesByBackend 中
+   * `if (!component && route.children) route.component = layoutMap.RouteView` 逻辑。
+   * 缺少这一步会导致父级渲染链断裂，子路由无法挂载 → 404。
+   */
+  loadRouteView(): () => Promise<any> {
+    return () => import('vue-router').then((m) => m.RouterView)
   }
 
   /**
    * 加载 iframe 组件
    */
   loadIframe(): () => Promise<any> {
-    return () => {
-      return import('@/layout/outside/index.vue').catch(error => {
-        console.error('[ComponentLoader] 加载 iframe 组件失败', error)
-        return {
-          render() {
-            return h('div', { class: 'route-error' }, 'iframe 组件加载失败')
-          }
-        }
-      })
-    }
+    return () => import('#/views/_core/iframe.vue')
   }
 
   /**

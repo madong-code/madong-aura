@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -13,14 +14,12 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "#/*": ["src/*"],
+      "#lib/*": ["lib/*"],
       "@/*": ["src/*"],
-      "@views/*": ["src/views/*"],
       "@imgs/*": ["src/assets/images/*"],
       "@icons/*": ["src/assets/icons/*"],
-      "@utils/*": ["src/utils/*"],
-      "@stores/*": ["src/store/*"],
       "@plugins/*": ["src/plugins/*"],
-      "@features/*": ["src/apps/*"],
       "@styles/*": ["src/assets/styles/*"]
     }
   },

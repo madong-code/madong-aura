@@ -1,0 +1,78 @@
+{
+  "title": "消息管理",
+  "table": {
+    "columns": {
+      "name": "消息名称",
+      "key": "消息标识",
+      "category_name": "所属分类",
+      "is_enabled": "状态",
+      "sort": "排序"
+    },
+    "search": {
+      "name": "消息名称",
+      "category_id": "所属分类",
+      "is_enabled": "启用状态",
+      "type": "模板类型"
+    },
+    "typeOptions": {
+      "system": "系统内",
+      "sms": "短信",
+      "email": "邮件",
+      "webhook": "Webhook"
+    },
+    "isEnabledOptions": {
+      "1": "启用",
+      "0": "禁用"
+    }
+  },
+  "form": {
+    "basic_info": "基本信息",
+    "template": "模版配置",
+    "category_id": "所属分类",
+    "key": "消息标识",
+    "name": "消息名称",
+    "description": "描述",
+    "default_on": "默认开启订阅",
+    "nav_type": "导航类型",
+    "nav_value": "导航值",
+    "sort": "排序",
+    "is_enabled": "启用状态",
+    "dialog_title": "消息",
+    "default_on_options": {
+      "1": "开启",
+      "0": "关闭"
+    },
+    "nav_type_options": {
+      "router": "内部路由",
+      "url": "外部链接",
+      "none": "无导航"
+    }
+  },
+  "btn": {
+    "add": "新增消息",
+    "edit": "编辑",
+    "settings": "设置"
+  },
+  "drop_down": {
+    "edit": "编辑消息",
+    "remove": "删除",
+    "link_template": "关联模板"
+  },
+  "template_selector": {
+    "title": "关联模板",
+    "title_desc": "为 \"{name}\" 选择关联的消息模板",
+    "all_types": "全部类型",
+    "search_placeholder": "搜索模板名称...",
+    "search_btn": "搜索",
+    "loading": "加载中...",
+    "no_results": "未搜索到匹配的模板",
+    "no_templates": "暂无可用模板，请先创建消息模板",
+    "assigned_badge": "已关联",
+    "selected_tags_label": "已选",
+    "selected_count": "已选择 {count} 个模板",
+    "save_btn": "保存",
+    "cancel_btn": "取消",
+    "save_success": "模板关联已保存",
+    "save_failed": "保存失败"
+  }
+}

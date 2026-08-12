@@ -1,0 +1,12 @@
+{
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "close": "Close",
+  "add": "Add",
+  "edit": "Edit",
+  "view": "Details",
+  "success": {
+    "add": "Created successfully",
+    "edit": "Updated successfully"
+  }
+}

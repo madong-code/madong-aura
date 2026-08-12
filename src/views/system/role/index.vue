@@ -1,104 +1,81 @@
-<template>
-  <div class="role-page art-full-height">
-    <BasicCrud />
-    <AuthMenu ref="authMenuRef" />
-    <UserRole ref="userRoleRef" />
-    <DataScope ref="dataScopeRef" />
-  </div>
-</template>
-<script setup lang="tsx">
-import { useCrud } from "@/components/crud";
-import DataScope from "./data-scope.vue";
-import { crudSchema } from "./schemas";
-import AuthMenu from "./auth-menu.vue";
-import UserRole from "./user-role.vue";
+<script setup lang="ts">
+import { ref } from 'vue';
+
+import { useCrud } from '#/adapter/crud';
+import { Page } from '#/components/page';
+import { $t } from '#/locales';
+
+import AuthMenu from './components/auth-menu.vue';
+import DataScope from './components/data-scope.vue';
+import UserRole from './components/user-role.vue';
+import { useCrudSchema } from './schemas';
+
 const authMenuRef = ref();
 const userRoleRef = ref();
 const dataScopeRef = ref();
+
 const [BasicCrud, crudApi] = useCrud({
-  ...crudSchema(),
+  ...useCrudSchema(),
   tableActionColumn: {
     width: 320,
   },
-  // 是否有修改
-  hasEdit: false,
-  // hasAdd: true,
-  // 左侧工具栏
-  toolbarActions: [],
-  // 左侧栏工具-下拉菜单
-  dropDownToolbarActions: [],
-  // 表格行操作
   tableActions: [
     {
-      label: "授权菜单",
-      type: "primary",
-      sort: 1010,
+      label: $t('system.role.table_actions.auth_menu'),
+      type: 'primary',
       link: true,
-      icon: "ant-design:setting-outlined",
-      auth: "system:auth:save_role_menu",
-      dialogRef: authMenuRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
+      auth: 'system:auth:role_menu',
+      icon: 'ant-design:safety-certificate-outlined',
+      onClick: (_e: any, row: any) => {
+        authMenuRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
       },
     },
     {
-      label: "成员管理",
-      type: "primary",
-      sort: 1010,
+      label: $t('system.role.table_actions.member_manage'),
+      type: 'primary',
       link: true,
-      icon: "ant-design:team-outlined",
-      auth: "system:auth:user_list_by_role_id",
-      dialogRef: userRoleRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
+      auth: 'system:auth:role_user_list',
+      icon: 'ant-design:team-outlined',
+      onClick: (_e: any, row: any) => {
+        userRoleRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
       },
     },
   ],
-  // 表格行操作-下拉菜单
   dropDownActions: [
     {
-      label: crudSchema.editButtonText || "编辑",
-      type: "primary",
-      sort: 10,
-      link: true,
-      icon: "ant-design:edit-outlined",
-      auth: crudSchema.editAuth,
-      onClick() {
-        crudApi.openEditDialog();
+      label: $t('system.role.drop_down_actions.edit'),
+      auth: 'system:role:update',
+      icon: 'ant-design:edit-outlined',
+      onClick: (_e: any, row: any) => {
+        crudApi.openEditDialog(row);
       },
     },
     {
-      label: "分配权限",
-      type: "primary",
-      sort: 10,
-      link: true,
-      icon: "ant-design:edit-outlined",
-      auth: "system:auth:data_scope",
-      dialogRef: dataScopeRef,
-      dialogParams(record) {
-        return {
-          data: record,
-          getCrudApi() {
-            return crudApi;
-          },
-        };
-      }
+      label: $t('system.role.drop_down_actions.assign_permission'),
+      auth: 'system:role:data_scope',
+      icon: 'ant-design:safety-outlined',
+      onClick: (_e: any, row: any) => {
+        dataScopeRef.value?.show({
+          data: row,
+          getCrudApi: () => crudApi,
+        });
+      },
     },
   ],
 });
-
-
-
-
 </script>
-<style lang="scss" scoped></style>
+
+<template>
+  <Page auto-content-height>
+    <BasicCrud />
+    <AuthMenu ref="authMenuRef" @success="crudApi?.refreshCreate()" />
+    <UserRole ref="userRoleRef" />
+    <DataScope ref="dataScopeRef" @success="crudApi?.refreshCreate()" />
+  </Page>
+</template>

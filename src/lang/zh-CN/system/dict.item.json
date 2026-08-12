@@ -1,0 +1,41 @@
+{
+  "title": "字典项管理",
+  "table": {
+    "columns": {
+      "code": "字典编码",
+      "label": "标签",
+      "value": "值",
+      "sort": "排序",
+      "enabled": "状态"
+    },
+    "search": {
+      "label": "标签",
+      "value": "值",
+      "placeholder": {
+        "label": "请输入标签",
+        "value": "请输入值"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "dict_id": "字典ID",
+      "code": "字典编码",
+      "color": "颜色",
+      "label": "标签",
+      "value": "值",
+      "other_class": "扩展样式",
+      "enabled": "状态",
+      "sort": "排序",
+      "remark": "备注",
+      "placeholder": {
+        "label": "请输入标签",
+        "value": "请输入值",
+        "other_class": "请输入扩展样式",
+        "sort": "请输入排序",
+        "remark": "请输入备注"
+      }
+    }
+  }
+}

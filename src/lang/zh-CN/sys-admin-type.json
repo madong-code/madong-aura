@@ -1,0 +1,23 @@
+{
+  "title": "SysAdminType",
+  "table": {
+    "columns": {
+      "code": "类型编码: platform-平台管理员",
+      "name": "类型名称",
+      "id": "主键ID",
+      "sort": "排序"
+    }
+  },
+  "form": {
+    "code": "类型编码: platform-平台管理员",
+    "name": "类型名称",
+    "id": "主键ID",
+    "sort": "排序",
+    "placeholder": {
+      "code": "请类型编码: platform-平台管理员",
+      "name": "请类型名称",
+      "id": "请主键ID",
+      "sort": "请排序"
+    }
+  }
+}

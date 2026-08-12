@@ -1,0 +1,38 @@
+{
+  "title": "Message Template",
+  "table": {
+    "columns": {
+      "type": "Type",
+      "title": "Template Name",
+      "template_id": "External Template ID",
+      "enabled": "Status",
+      "push_rule": "Push Rule",
+      "minute": "Delay(Min)",
+      "created_at": "Created At",
+      "updated_at": "Updated At"
+    },
+    "search": {
+      "type": "Type"
+    },
+    "typeOptions": {
+      "system": "System",
+      "sms": "SMS",
+      "email": "Email",
+      "webhook": "Webhook"
+    }
+  },
+  "form": {
+    "type": "Type",
+    "title": "Template Name",
+    "template_id": "External Template ID",
+    "content_template": "Content Template",
+    "button_template": "Button Template (JSON)",
+    "url": "PC URL",
+    "uni_url": "Mobile URL",
+    "webhook_url": "Webhook URL",
+    "enabled": "Status",
+    "push_rule": "Push Rule",
+    "minute": "Delay Minutes",
+    "dialog_title": "Message Template"
+  }
+}

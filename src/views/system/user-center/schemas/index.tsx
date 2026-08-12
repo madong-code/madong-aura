@@ -1,20 +1,17 @@
-import { CrudSchema } from '@/components/crud'
-import { $t } from '@/locales'
-import {} from '@/api/setting/gateway'
-import { dayjs } from 'element-plus'
-import ProfileService from '@/api/system/profile'
-import { formatDateTime } from '@/utils'
+import type { CrudSchema } from '#/adapter/crud';
 
+import { ProfileService } from '#/api/auth/profile';
+import { $t } from '#/locales';
+import { formatDate } from '#/utils';
 // crud配置
-export const crudSchema = (): CrudSchema => {
+export const useCrudSchema = (): CrudSchema => {
   return {
     // 接口地址
-    api: ProfileService.getOnlineDevices,
-    dialogTitle: $t('system.user.center.online_device.table.title'),
-    crudApi: {},
-    rowKey:'jti',
+    crudApi: {
+      list: ProfileService.getOnlineDevices,
+    },
+    rowKey: 'jti',
     // 使用crud
-    useCrud: true,
     // 是否有新增
     hasAdd: false,
     // 是否有删除
@@ -23,51 +20,45 @@ export const crudSchema = (): CrudSchema => {
     hasEdit: false,
     // 是否有详情
     hasView: false,
-    // 新增权限码
-    addAuth: 'system:user_center:create',
-    // 删除权限码
-    removeAuth: 'system:user_center:delete',
-    // 修改权限码
-    editAuth: 'system:user_center:update',
-    // 详情权限码
-    viewAuth: 'system:user_center:read',
+    permissions: {
+      view: 'system:user_center:read',
+    },
     // 表格列定义
+    // 注意：表格列用 title/field（vxe-table 字段），不要用 label/fieldName
+    // （label/fieldName 是表单字段专用），否则表头会渲染为空。
     columns: [
       // {
       //   type: 'selection'
       // },
 
       {
-        label: $t('system.user.center.online_device.table.columns.user_name'),
-        prop: 'user_name'
+        title: $t('system.user.center.online_device.table.columns.user_name'),
+        field: 'user_name',
       },
       {
-        label: $t('system.user.center.online_device.table.columns.ip'),
-        prop: 'ip'
+        title: $t('system.user.center.online_device.table.columns.ip'),
+        field: 'ip',
       },
       {
-        label: $t('system.user.center.online_device.table.columns.ip_location'),
-        prop: 'ip_location'
+        title: $t('system.user.center.online_device.table.columns.ip_location'),
+        field: 'ip_location',
       },
       {
-        label: $t('system.user.center.online_device.table.columns.browser'),
-        prop: 'browser'
+        title: $t('system.user.center.online_device.table.columns.browser'),
+        field: 'browser',
       },
       {
-        label: $t('system.user.center.online_device.table.columns.os'),
-        prop: 'os'
+        title: $t('system.user.center.online_device.table.columns.os'),
+        field: 'os',
       },
       {
-        label: $t('system.user.center.online_device.table.columns.login_time'),
-        prop: 'login_time',
+        title: $t('system.user.center.online_device.table.columns.login_time'),
+        field: 'login_time',
         minWidth: 170,
-        formatter: (row) => {
-          return formatDateTime(row.login_time)
-        }
-      }
+        formatter: (row: any) => {
+          return formatDate(row.login_time);
+        },
+      },
     ],
-    useSearchForm: false,
-    // 搜索表单定义
-    searchFormSchema: {}
-  }
-}
+  };
+};

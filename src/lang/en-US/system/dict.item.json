@@ -1,0 +1,41 @@
+{
+  "title": "Dict Items",
+  "table": {
+    "columns": {
+      "code": "Code",
+      "label": "Label",
+      "value": "Value",
+      "sort": "Sort",
+      "enabled": "Status"
+    },
+    "search": {
+      "label": "Label",
+      "value": "Value",
+      "placeholder": {
+        "label": "Please enter label",
+        "value": "Please enter value"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "dict_id": "Dict ID",
+      "code": "Code",
+      "color": "Color",
+      "label": "Label",
+      "value": "Value",
+      "other_class": "Class",
+      "enabled": "Status",
+      "sort": "Sort",
+      "remark": "Remark",
+      "placeholder": {
+        "label": "Please enter label",
+        "value": "Please enter value",
+        "other_class": "Please enter class",
+        "sort": "Please enter sort",
+        "remark": "Please enter remark"
+      }
+    }
+  }
+}

@@ -1,6 +1,4 @@
-import { MemberService } from './user';
-import { MemberTagService } from './tag';
-import { MemberLevelService } from './level';
-import { MemberPointsService } from './points';
-
-export { MemberService, MemberTagService, MemberLevelService, MemberPointsService };
+export { MemberLevelService } from './level';
+export { MemberPointsService } from './points';
+export { MemberTagService } from './tag';
+export { MemberService } from './user';

@@ -1,0 +1,26 @@
+{
+  "title": "Recycle Bin",
+  "table": {
+    "columns": {
+      "table_name": "Table",
+      "data": "Data",
+      "is_restore": "Restore",
+      "created_date": "Deleted"
+    },
+    "search": {
+      "table_name": "Table",
+      "enabled": "Status"
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "table_name": "Table",
+      "operate_name": "Operator",
+      "ip": "IP",
+      "created_date": "Created",
+      "enabled": "Status",
+      "data": "Data"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Links",
+  "table": {
+    "columns": {
+      "logo": "Logo",
+      "name": "Name",
+      "url": "URL",
+      "description": "Description",
+      "sort": "Sort",
+      "enabled": "Status"
+    },
+    "search": { "name": "Name", "url": "URL", "enabled": "Status" }
+  },
+  "form": {
+    "name": "Name",
+    "url": "URL",
+    "logo": "Logo",
+    "sort": "Sort",
+    "enabled": "Status",
+    "description": "Description",
+    "rules_name": "Please enter name",
+    "rules_url": "Please enter URL"
+  }
+}

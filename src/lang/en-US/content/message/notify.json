@@ -1,0 +1,38 @@
+{
+  "title": "Notifications",
+  "tabs": {
+    "all": "All",
+    "unread": "Unread"
+  },
+  "sidebar": {
+    "all_types": "All Types",
+    "subscribe_settings": "Notification Settings"
+  },
+  "table": {
+    "columns": {
+      "view": "View",
+      "title": "Title",
+      "content": "Content",
+      "type": "Type",
+      "priority": "Priority",
+      "created_date": "Sent At",
+      "action": "Actions"
+    },
+    "search": {
+      "title": "Title",
+      "content": "Content",
+      "category": "Category",
+      "placeholder": "Search title, content..."
+    },
+    "action": {
+      "view": "View",
+      "mark_read": "Mark as Read",
+      "mark_all_read": "Mark All Read",
+      "batch_delete": "Batch Delete"
+    },
+    "pagination": {
+      "total": "Total {total} items",
+      "selected": "{count} selected"
+    }
+  }
+}

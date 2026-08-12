@@ -1,0 +1,29 @@
+{
+  "title": "Notice",
+  "table": {
+    "columns": {
+      "type": "Type",
+      "title": "Title",
+      "content": "Content",
+      "enabled": "Status",
+      "created_date": "Created"
+    },
+    "search": {
+      "title": "Title",
+      "type": "Type",
+      "placeholder": {
+        "title": "Please enter title",
+        "type": "Please select type"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "type": "Type",
+      "title": "Title",
+      "content": "Content",
+      "enabled": "Status"
+    }
+  }
+}

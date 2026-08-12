@@ -1,0 +1,25 @@
+{
+  "title": "Server Monitoring",
+  "columns": {
+    "key": "Property",
+    "value": "Value",
+    "filesystem": "Filesystem",
+    "size": "Total Size",
+    "available": "Available Space",
+    "used": "Used Space",
+    "use_percentage": "Usage Percentage",
+    "mounted_on": "Mounted On"
+  },
+  "cpu": {
+    "title": "CPU"
+  },
+  "memory": {
+    "title": "Memory"
+  },
+  "server": {
+    "title": "Server Details"
+  },
+  "disk": {
+    "title": "Disk Status"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "title": "插件开发",
+  "description": "创建和管理本地插件，支持打包发布",
+  "edit": "编辑",
+  "list": {
+    "title": "插件名称",
+    "key": "插件标识",
+    "type": "类型",
+    "author": "作者",
+    "version": "版本号",
+    "status": "状态",
+    "install_status": "安装状态",
+    "installed": "已安装",
+    "uninstalled": "未安装",
+    "updated_at": "更新时间",
+    "created_at": "创建时间"
+  },
+  "search": {
+    "desc": "插件描述",
+    "title": "插件名称",
+    "status": "状态"
+  },
+  "form": {
+    "icon": "插件图标",
+    "cover": "封面",
+    "title": "名称",
+    "title_placeholder": "请输入插件名称",
+    "key": "标识",
+    "key_required": "请输入插件标识",
+    "key_pattern": "以小写字母开头，包含小写字母、数字、下划线",
+    "key_placeholder": "请输入插件标识，如 my_plugin",
+    "key_disabled": "创建后不可修改",
+    "author": "作者",
+    "author_placeholder": "请输入作者",
+    "version": "版本号",
+    "version_placeholder": "请输入版本号，如 1.0.0",
+    "type": "类型",
+    "type_placeholder": "请选择类型",
+    "type_options": {
+      "app": "应用",
+      "module": "模块"
+    },
+    "desc": "描述",
+    "desc_placeholder": "请输入插件描述"
+  },
+  "action": {
+    "package": "打包插件",
+    "package_success": "打包成功",
+    "package_plugin": "插件",
+    "package_zip_path": "ZIP 路径",
+    "package_has_frontend": "包含前端",
+    "package_confirm_title": "确认打包",
+    "package_confirm_message": "确认要打包此插件吗？",
+    "package_confirm": "确认",
+    "package_cancel": "取消"
+  }
+}

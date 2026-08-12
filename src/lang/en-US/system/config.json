@@ -1,0 +1,156 @@
+{
+  "title": "System Config",
+  "tab": {
+    "site": "Site Settings",
+    "web_site": "Website",
+    "baidu_tongji": "Baidu Analytics",
+    "upload": "Upload Settings",
+    "email": "Email Settings",
+    "sms": "SMS Settings"
+  },
+  "save": "Save",
+  "save_success": "Saved successfully",
+  "site": {
+    "title": "Site Settings",
+    "open": "Site Switch",
+    "url": "Site URL",
+    "name": "Site Name",
+    "logo": "Site Logo",
+    "network_security": "Security Record No.",
+    "keywords": "Site Keywords",
+    "record_no": "ICP Record No.",
+    "icp_url": "ICP Query URL",
+    "network_security_url": "Security Query URL",
+    "description": "Site Description",
+    "copyright": "Copyright",
+    "placeholder": {
+      "url": "Enter site URL",
+      "name": "Enter site name",
+      "record_no": "Enter ICP record number",
+      "icp_url": "Enter ICP query URL",
+      "network_security": "Enter security record number",
+      "network_security_url": "Enter security query URL",
+      "keywords": "Enter site keywords",
+      "description": "Enter site description",
+      "copyright": "Enter copyright text"
+    }
+  },
+  "web_site": {
+    "title": "Website",
+    "open": "Website Switch",
+    "url": "Site URL",
+    "name": "Site Name",
+    "logo": "Site Logo",
+    "network_security": "Security Record No.",
+    "record_no": "ICP Record No.",
+    "description": "Site Description",
+    "placeholder": {
+      "url": "Enter site URL",
+      "name": "Enter site name",
+      "record_no": "Enter ICP record number",
+      "network_security": "Enter security record number",
+      "description": "Enter site description"
+    }
+  },
+  "baidu_tongji": {
+    "title": "Baidu Analytics",
+    "open": "Enable",
+    "code": "Analytics Code",
+    "placeholder": {
+      "code": "Enter Baidu analytics code"
+    }
+  },
+  "upload": {
+    "title": "Upload Settings",
+    "mode": "Upload Mode",
+    "single_limit": "Max File Size (KB)",
+    "total_limit": "Total Limit (KB)",
+    "nums": "File Count Limit",
+    "exclude": "Excluded File Types",
+    "more": "More Settings",
+    "advanced": "Advanced Settings"
+  },
+  "email": {
+    "title": "Email Settings",
+    "host": "SMTP Server",
+    "port": "SMTP Port",
+    "username": "Email Account",
+    "password": "Email Password",
+    "smtp_secure": "Encryption",
+    "from": "Sender Email",
+    "from_name": "Sender Name",
+    "placeholder": {
+      "host": "Enter SMTP server address",
+      "port": "Enter SMTP port",
+      "username": "Enter email account",
+      "password": "Enter email password",
+      "from": "Enter sender email",
+      "from_name": "Enter sender name"
+    }
+  },
+  "sms": {
+    "title": "SMS Settings",
+    "platform": "SMS Platform",
+    "platform_aliyun": "Aliyun",
+    "platform_tencent": "Tencent",
+    "app_id": "App ID",
+    "app_key": "App Key",
+    "sign_name": "Sign Name",
+    "template_code": "Template Code",
+    "placeholder": {
+      "app_id": "Enter App ID",
+      "app_key": "Enter App Key",
+      "sign_name": "Enter sign name",
+      "template_code": "Enter template code"
+    }
+  },
+  "common": {
+    "title": "Config Items",
+    "entry_desc": "Manage custom system configurations, supports add, edit, delete and more",
+    "enter": "Manage",
+    "columns": {
+      "name": "Config Name",
+      "code": "Config Code",
+      "content": "Config Content",
+      "enabled": "Status",
+      "updated_at": "Updated At"
+    },
+    "search": {
+      "keyword": "Enter keyword"
+    },
+    "form": {
+      "code": "Config Code",
+      "name": "Config Name",
+      "content": "Config Content",
+      "content_type": "Content Type",
+      "content_type_kv": "JSON Object (Key-Value)",
+      "content_type_string": "String",
+      "kv_label": "Key-Value Config",
+      "add_kv": "Add Key-Value",
+      "group_code": "Config Group",
+      "enabled": "Status",
+      "remark": "Description",
+      "placeholder": {
+        "code": "Enter config code",
+        "code_unique": "Enter config code (English, unique)",
+        "name": "Enter config name",
+        "content": "Enter config content",
+        "content_string": "Enter config content",
+        "group_code": "Select config group",
+        "kv_key": "Key",
+        "kv_value": "Value",
+        "remark": "Enter description"
+      }
+    },
+    "value_type": {
+      "string": "String",
+      "number": "Number",
+      "boolean": "Boolean",
+      "json": "JSON"
+    },
+    "dialog": {
+      "edit_title": "Edit Config",
+      "create_title": "Create Config"
+    }
+  }
+}

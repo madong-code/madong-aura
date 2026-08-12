@@ -1,4 +1,4 @@
-import { MenuService } from './menu';
-import { LinkService } from './link';
-
-export { MenuService, LinkService };
+export * from './link';
+export type * from './link/types';
+export * from './menu';
+export type * from './menu/types';

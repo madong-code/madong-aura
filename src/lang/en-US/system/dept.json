@@ -1,0 +1,39 @@
+{
+  "title": "Department",
+  "table": {
+    "columns": {
+      "name": "Department Name",
+      "code": "Code",
+      "sort": "Sort",
+      "leader": "Leader",
+      "enabled": "Status"
+    },
+    "search": {
+      "code": "Code",
+      "name": "Department Name",
+      "enabled": "Status",
+      "placeholder": {
+        "code": "Please enter code",
+        "name": "Please enter name",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "id": "ID",
+    "parent_dept": "Parent Dept",
+    "name": "Dept Name",
+    "code": "Code",
+    "sort": "Sort",
+    "enabled": "Status",
+    "leader": "Leader",
+    "remark": "Remark",
+    "placeholder": {
+      "parent_dept": "Please select parent",
+      "name": "Please enter name",
+      "code": "Please enter code",
+      "leader": "Please select leader",
+      "remark": "Please enter remark"
+    }
+  }
+}

@@ -1,200 +1,125 @@
-import { CrudSchema } from '@/components/crud'
-import { MemberTagService } from '@/api/member'
-import { $t } from '@/locales'
-import { DictEnum } from '@/enums'
-import { formatter } from 'element-plus'
-import { formatISODate } from '@/utils'
-import { fa } from 'element-plus/es/locale'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-// crud配置
-export const crudSchema = (): CrudSchema => {
+import { MemberTagService } from '#/api/member';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
+export const useCrudSchema = (): CrudSchema => {
   return {
-    // 接口地址
-    api: MemberTagService.list,
-    dialogTitle: $t('member.tag.title'),
     crudApi: {
-      // 新增接口
+      list: MemberTagService.list,
       add: MemberTagService.create,
-      // 修改接口
-      edit: MemberTagService.update,
-      // 删除接口
+      edit: MemberTagService.update as any,
       remove: MemberTagService.remove,
-      // 详情接口
-      view: MemberTagService.get
+      batchRemove: MemberTagService.remove as any,
+      view: MemberTagService.get,
     },
-    // 使用crud
-    useCrud: true,
-    // 是否有新增
+    // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    // 是否有删除
-    hasRemove: true,
-    // 是否有修改
     hasEdit: false,
-    // 是否有详情
     hasView: true,
-    // 新增权限码
-    addAuth: 'member:tag:create',
-    // 删除权限码
-    removeAuth: 'member:tag:delete',
-    // 修改权限码
-    editAuth: 'member:tag:update',
-    // 详情权限码
-    viewAuth: 'member:tag:read',
-    // 表格列定义
-    columns: [
-      {
-        type: 'selection'
-      },
-      // {
-      //   prop: 'id',
-      //   label: $t('member.tag.table.columns.id'),
-      //   minWidth: 60
-      // },
-      {
-        prop: 'name',
-        label: $t('member.tag.table.columns.name'),
-        minWidth: 120
-      },
-      {
-        prop: 'color',
-        label: $t('member.tag.table.columns.color'),
-        minWidth: 100,
-        visible: false,
-        cellRender: {
-          name: 'CellTag',
-          props: {
-            type: 'info',
-            value: (row: any) => row.name,
-            style: (row: any) => ({
-              backgroundColor: row.color,
-              color: '#fff'
-            })
-          }
-        }
-      },
-      {
-        prop: 'member_count',
-        label: $t('member.tag.table.columns.member_count'),
-        minWidth: 100,
-        visible: false
-      },
-      {
-        prop: 'description',
-        label: $t('member.tag.table.columns.description'),
-        minWidth: 200,
-        showOverflowTooltip: true
-      },
-      {
-        prop: 'sort',
-        label: $t('member.tag.table.columns.sort'),
-        minWidth: 80
-      },
-      {
-        prop: 'enabled',
-        label: $t('member.tag.table.columns.enabled'),
-        minWidth: 80,
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          clearable: true
-        }
-      },
-      {
-        prop: 'created_at',
-        label: $t('member.tag.table.columns.create_time'),
-        minWidth: 160,
-        formatter: (row: any) => {
-          return formatISODate(row.created_at)
-        }
-      }
-    ],
-
-    dialogProps: {
-      width: '500px'
+    hasRemove: true,
+    permissions: {
+      add: 'member:tag:create',
+      edit: 'member:tag:update',
+      remove: 'member:tag:delete',
+      view: 'member:tag:read',
     },
-    // 搜索表单配置
-    searchFormSchema: {
-      labelWidth: '100px',
+    columns: [
+      { type: 'checkbox', width: 60 },
+      {
+        field: 'name',
+        title: $t('member.tag.table.columns.name'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'description',
+        title: $t('member.tag.table.columns.description'),
+        minWidth: 200,
+        align: 'left',
+      },
+      {
+        field: 'member_count',
+        title: $t('member.tag.table.columns.member_count'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'enabled',
+        title: $t('member.tag.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
+      },
+      {
+        field: 'created_at',
+        title: $t('member.tag.table.columns.created_at'),
+        minWidth: 160,
+        align: 'center',
+        formatter: 'formatDateTime',
+      },
+    ],
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
       schema: [
         {
-          prop: 'LIKE_name',
-          label: $t('member.tag.search.name'),
-          component: 'Input'
+          component: 'Input',
+          fieldName: 'LINK_name',
+          label: $t('member.tag.table.search.name'),
         },
         {
-          prop: 'EQ_enabled',
-          label: $t('member.tag.search.enabled'),
           component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('member.tag.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
-            clearable: true
-          }
-        }
-      ]
+            clearable: true,
+          },
+        },
+      ],
     },
-    // 表单配置
-    formSchema: {
-      labelWidth: 120,
-      gutter: 20,
+    formDialog: {
+      enabled: true,
+      title: $t('member.tag.title'),
+      width: 'w-[40%]',
+      wrapperClass: 'grid-cols-1',
+      commonConfig: { labelWidth: 100 },
       schema: [
         {
-          prop: 'id',
-          label: $t('member.tag.form.id'),
+          fieldName: 'id',
+          label: 'ID',
           component: 'Input',
-          show: false,
-          ifDetail: false
+          dependencies: { show: false, triggerFields: ['id'] },
         },
         {
-          prop: 'name',
+          fieldName: 'name',
           label: $t('member.tag.form.name'),
           component: 'Input',
-          rules: [{ required: true, message: $t('member.tag.form.rules_name') }],
-          componentProps: {},
-          colSpan: 24
-        },
-        // {
-        //   prop: 'color',
-        //   label: $t('member.tag.form.color'),
-        //   component: 'ColorPicker',
-        //   show: false,
-        //   rules: [{ required: true, message: $t('member.tag.form.rules_color') }],
-        //   componentProps: {},
-        //   colSpan: 24
-        // },
-        {
-          prop: 'description',
-          label: $t('member.tag.form.description'),
-          component: 'Input',
-          componentProps: {
-            type: 'textarea',
-            rows: 3
-          },
-          colSpan: 24
+          rules: 'required',
         },
         {
-          prop: 'sort',
-          label: $t('member.tag.form.sort'),
-          component: 'InputNumber',
-          componentProps: {
-            min: 0,
-            precision: 0
-          },
-          defaultValue: 0,
-          colSpan: 24
-        },
-        {
-          prop: 'enabled',
+          fieldName: 'enabled',
           label: $t('member.tag.form.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
-            isBtn: true,
+            code: DictEnum.SYS_ENABLED_STATUS,
             renderType: 'RadioGroup',
-            code: DictEnum.SYS_ENABLED_STATUS
+            isBtn: true,
           },
-          colSpan: 24
-        }
-      ]
-    }
-  }
-}
+        },
+        {
+          fieldName: 'description',
+          label: $t('member.tag.form.description'),
+          component: 'Textarea',
+          componentProps: { rows: 4 },
+        },
+      ],
+    },
+  };
+};

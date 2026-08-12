@@ -1,0 +1,25 @@
+{
+  "title": "Message Categories",
+  "table": {
+    "columns": {
+      "name": "Name",
+      "key": "Key",
+      "icon": "Icon",
+      "sort": "Sort",
+      "is_enabled": "Status"
+    },
+    "search": {
+      "name": "Name"
+    }
+  },
+  "form": {
+    "dialog_title": "Category",
+    "name": "Name",
+    "key": "Key",
+    "icon": "Icon",
+    "description": "Description",
+    "sort": "Sort",
+    "is_enabled": "Status",
+    "is_show": "Visible"
+  }
+}

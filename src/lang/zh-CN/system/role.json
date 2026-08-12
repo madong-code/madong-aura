@@ -1,0 +1,85 @@
+{
+  "title": "角色管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "角色",
+      "code": "角色代码",
+      "role_type": "角色类型",
+      "data_scope": "数据权限",
+      "enabled": "状态",
+      "sort": "排序",
+      "remark": "备注",
+      "created_date": "创建时间",
+      "created_at": "创建时间",
+      "updated_at": "更新时间"
+    }
+  },
+  "search": {
+    "name": "角色名称",
+    "code": "角色代码",
+    "enabled": "状态"
+  },
+  "form": {
+    "id": "ID",
+    "name": "角色名称",
+    "code": "角色代码",
+    "role_type": "角色类型",
+    "data_scope": "数据权限",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注",
+    "data_scope_form": {
+      "role_code": "角色编码",
+      "role_name": "角色名称",
+      "data_permission": "数据权限",
+      "dept_list": "部门列表",
+      "assign_permission": "分配数据权限",
+      "assign_success": "分配成功"
+    }
+  },
+  "member": {
+    "manage": "【{name}】成员管理",
+    "add_user": "添加用户",
+    "remove_user": "移除用户",
+    "add_user_title": "添加用户",
+    "confirm": {
+      "title": "提示",
+      "content": "确定删除吗？"
+    },
+    "message": {
+      "delete_success": "删除成功",
+      "save_success": "保存成功",
+      "select_user": "请选择用户"
+    }
+  },
+  "table_actions": {
+    "auth_menu": "授权菜单",
+    "member_manage": "成员管理"
+  },
+  "drop_down_actions": {
+    "edit": "编辑",
+    "assign_permission": "分配权限"
+  },
+  "auth_menu": {
+    "title": "授权菜单",
+    "success": "授权成功",
+    "title_template": "【{name}】授权菜单",
+    "type_labels": {
+      "dir": "目录",
+      "menu": "菜单",
+      "button": "按钮",
+      "api": "接口"
+    },
+    "toolbar": {
+      "operation": "操作",
+      "expand_all": "展开全部",
+      "expand_level_1": "展开一级",
+      "expand_level_2": "展开二级",
+      "collapse_all": "折叠全部",
+      "select_all": "全选",
+      "select_none": "取消全选",
+      "select_inverse": "反选"
+    }
+  }
+}

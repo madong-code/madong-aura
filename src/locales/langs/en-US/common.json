@@ -1,0 +1,89 @@
+{
+  "message": {
+    "tips": "Tips",
+    "success": "Operation successful",
+    "fail": "Operation failed",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "loading": "Loading...",
+    "network_error": "Network error, please try again later",
+    "request_timeout": "Request timeout, please try again later",
+    "unauthorized": "Login expired, please login again",
+    "forbidden": "Access denied",
+    "no_data": "No data"
+  },
+
+  "operate": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "close": "Close",
+    "open": "Open",
+    "retry": "Retry",
+    "copy": "Copy",
+    "copy_success": "Copied successfully",
+    "copied": "Copied"
+  },
+
+  "crud": {
+    "create": "Create",
+    "add": "Add",
+    "edit": "Edit",
+    "update": "Update",
+    "modify": "Modify",
+    "delete": "Delete",
+    "view": "View",
+    "detail": "Detail",
+    "batch_delete": "Batch Delete",
+    "batch_set": "Batch Set",
+    "remove": "Remove"
+  },
+
+  "action": {
+    "search": "Search",
+    "reset": "Reset",
+    "clear": "Clear",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "export": "Export",
+    "import": "Import",
+    "upload": "Upload",
+    "download": "Download",
+    "preview": "Preview",
+    "print": "Print",
+    "share": "Share",
+    "sort": "Sort",
+    "move_up": "Move up",
+    "move_down": "Move down",
+    "move_top": "Move to top",
+    "move_bottom": "Move to bottom"
+  },
+
+  "state": {
+    "enable": "Enable",
+    "disable": "Disable",
+    "status": "Status",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No"
+  },
+
+  "operation": "Operations",
+  "operation_success": "Operation successful",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+
+  "confirm_dialog": {
+    "delete": "Are you sure you want to delete?",
+    "delete_desc": "Data cannot be recovered after deletion. Proceed with caution.",
+    "batch_delete": "Are you sure you want to batch delete the selected {count} items?",
+    "enable": "Are you sure you want to enable?",
+    "disable": "Are you sure you want to disable?"
+  }
+}

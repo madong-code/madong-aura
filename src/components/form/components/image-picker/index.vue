@@ -1,121 +1,90 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useVModel } from "@vueuse/core";
-import { ElMessage, ElIcon } from "element-plus";
-import { Edit, Delete, Plus } from "@element-plus/icons-vue";
-import { buildStaticUrl, extractRelativePath } from "@/utils/url/static-resource";
-import defaultImage from "@/assets/images/avatar/default-avatar.webp";
-import ImageSelectorDialog from "./image-picker-dialog.vue";
-import { $t } from "@/locales";
+import { computed, ref, watch } from 'vue';
+
+import { useVModel } from '@vueuse/core';
+import { ElMessage } from 'element-plus';
+
+import { $t } from '#/locales';
+
+import ImageSelectorDialog from './image-picker-dialog.vue';
 
 interface Props {
-  value?: string | string[] | null;
-  autoHandleBaseUrl?: boolean;
+  modelValue?: null | string | string[];
   multiple?: boolean;
   disabled?: boolean;
-  shape?: "circle" | "square";
-  size?: "small" | "medium" | "large";
+  shape?: 'circle' | 'square';
+  size?: 'large' | 'medium' | 'small';
   accept?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  value: null,
-  autoHandleBaseUrl: true,
+  modelValue: null,
   multiple: false,
   disabled: false,
-  shape: "square",
-  size: "medium",
-  accept: "image/*",
+  shape: 'square',
+  size: 'medium',
+  accept: 'image/*',
 });
 
 const emit = defineEmits<{
-  "update:value": [value: string | string[] | null];
-  change: [value: string | string[] | null];
-  confirm: [value: string | string[]];
+  change: [modelValue: null | string | string[]];
+  confirm: [modelValue: string | string[]];
+  'update:modelValue': [modelValue: null | string | string[]];
 }>();
 
 const dialogVisible = ref(false);
 
-// 使用 v-model 进行双向绑定
-const mValue = useVModel(props, "value", emit, {
-  defaultValue: props.value,
+const mValue = useVModel(props, 'modelValue', emit, {
+  defaultValue: props.modelValue,
   passive: true,
 });
 
-// 监听外部 value 变化
 watch(
-  () => props.value,
+  () => props.modelValue,
   (newValue) => {
     if (JSON.stringify(newValue) !== JSON.stringify(mValue.value)) {
       mValue.value = newValue;
     }
-  }
+  },
 );
 
-// 计算显示的图片URL
-const displayImages = computed(() => {
+const displayImages = computed<string[]>(() => {
   if (!mValue.value) return [];
-
   const values = Array.isArray(mValue.value) ? mValue.value : [mValue.value];
-
-  return values.map((url) => {
-    if (!props.autoHandleBaseUrl || !url) return url;
-    return buildStaticUrl(url);
-  });
+  return values.filter(Boolean) as string[];
 });
 
-// 获取默认图片
-const getDefaultImage = () => {
-  return defaultImage;
-};
+const defaultSelected = computed<string | string[]>(() => {
+  return (mValue.value as string | string[]) || (props.multiple ? [] : '');
+});
 
-// 打开图片选择器
 const openSelector = () => {
   if (props.disabled) return;
   dialogVisible.value = true;
 };
 
-// 处理图片选择确认
 const handleConfirm = (selected: string | string[]) => {
-  mValue.value = selected;
-  emit("change", selected);
-  emit("confirm", selected);
-  ElMessage.success($t("image-picker.selector.select_success"));
+  mValue.value = selected as any;
+  emit('change', selected as string | string[]);
+  emit('confirm', selected as string | string[]);
+  ElMessage.success($t('components.form.image_picker.select_success'));
 };
 
-// 移除图片
 const removeImage = (index: number) => {
   if (props.disabled) return;
-
   if (props.multiple && Array.isArray(mValue.value)) {
     const newValue = [...mValue.value];
     newValue.splice(index, 1);
-    mValue.value = newValue;
+    mValue.value = newValue as any;
   } else {
     mValue.value = null;
   }
-  emit("change", mValue.value);
+  emit('change', mValue.value as null | string | string[]);
 };
-
-// 计算组件尺寸
-const componentSize = computed(() => {
-  const sizeMap = {
-    small: "80px",
-    medium: "120px",
-    large: "160px",
-  };
-  return sizeMap[props.size];
-});
-
-// 计算默认选中值（传递给弹窗）
-const defaultSelected = computed(() => {
-  return mValue.value || (props.multiple ? [] : "");
-});
 </script>
 
 <template>
   <div class="image-selector">
-    <!-- 单选模式 -->
     <template v-if="!multiple">
       <div
         class="image-preview-wrapper"
@@ -127,32 +96,30 @@ const defaultSelected = computed(() => {
           :src="displayImages[0]"
           class="preview-image"
         />
-        <img v-else :src="getDefaultImage()" class="preview-image default-image" />
+        <div
+          v-else
+          class="preview-image default-image flex items-center justify-center text-gray-400"
+        >
+          <Icon icon="lucide:image-plus" :size="32" />
+        </div>
 
-        <!-- 悬停遮罩 -->
         <div v-if="!disabled" class="image-overlay">
-          <ElIcon class="text-white text-2xl">
-            <Edit />
-          </ElIcon>
+          <Icon icon="lucide:pencil" class="text-white text-2xl" />
           <div class="overlay-text">
-            {{ $t("image-picker.selector.select") }}
+            {{ $t('components.form.image_picker.select') }}
           </div>
         </div>
 
-        <!-- 移除按钮 -->
         <div
           v-if="!disabled && displayImages.length > 0"
           class="remove-btn"
           @click.stop="removeImage(0)"
         >
-          <ElIcon>
-            <Delete />
-          </ElIcon>
+          <Icon icon="lucide:trash-2" />
         </div>
       </div>
     </template>
 
-    <!-- 多选模式 -->
     <template v-else>
       <div class="image-grid-wrapper">
         <div
@@ -162,31 +129,29 @@ const defaultSelected = computed(() => {
           :class="`is-${size}`"
         >
           <img :src="image" class="preview-image" />
-          <div v-if="!disabled" class="remove-btn" @click.stop="removeImage(index)">
-            <ElIcon class="text-white">
-              <Delete />
-            </ElIcon>
+          <div
+            v-if="!disabled"
+            class="remove-btn"
+            @click.stop="removeImage(index)"
+          >
+            <Icon icon="lucide:trash-2" />
           </div>
         </div>
 
-        <!-- 添加按钮 -->
         <div
           v-if="!disabled"
           class="image-preview-wrapper is-square add-btn"
           :class="`is-${size}`"
           @click="openSelector"
         >
-          <ElIcon class="text-g-500 text-2xl">
-            <Plus />
-          </ElIcon>
+          <Icon icon="lucide:plus" class="text-2xl" />
           <div class="add-text">
-            {{ $t("image-picker.selector.select") }}
+            {{ $t('components.form.image_picker.select') }}
           </div>
         </div>
       </div>
     </template>
 
-    <!-- 图片选择弹窗 -->
     <ImageSelectorDialog
       v-model="dialogVisible"
       :multiple="multiple"
@@ -206,114 +171,106 @@ const defaultSelected = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--art-gray-100);
-  border: 2px dashed var(--art-gray-300);
-  cursor: pointer;
-  transition: all 0.3s;
   overflow: hidden;
+  cursor: pointer;
+  background: var(--el-fill-color-light);
+  border: 2px dashed var(--el-border-color);
+  transition: all 0.3s;
+}
 
-  &:hover:not(.add-btn) {
-    border-color: var(--el-color-primary);
+.image-preview-wrapper:hover:not(.add-btn) {
+  border-color: var(--el-color-primary);
 
-    .image-overlay {
-      opacity: 1;
-    }
-
-    .remove-btn {
-      display: flex;
-    }
+  .image-overlay {
+    opacity: 1;
   }
 
-  // 形状
-  &.is-circle {
-    border-radius: 50%;
+  .remove-btn {
+    display: flex;
   }
+}
 
-  &.is-square {
-    border-radius: 8px;
-  }
+.image-preview-wrapper.is-circle {
+  border-radius: 50%;
+}
 
-  // 尺寸
-  &.is-small {
-    width: 80px;
-    height: 80px;
-  }
+.image-preview-wrapper.is-square {
+  border-radius: 8px;
+}
 
-  &.is-medium {
-    width: 120px;
-    height: 120px;
-  }
+.image-preview-wrapper.is-small {
+  width: 80px;
+  height: 80px;
+}
 
-  &.is-large {
-    width: 160px;
-    height: 160px;
-  }
+.image-preview-wrapper.is-medium {
+  width: 120px;
+  height: 120px;
+}
 
-  &.add-btn {
-    border-style: dashed;
-    flex-direction: column;
-    gap: 4px;
+.image-preview-wrapper.is-large {
+  width: 160px;
+  height: 160px;
+}
 
-    &:hover {
-      border-color: var(--el-color-primary);
-      background: var(--el-color-primary-light-9);
-    }
-  }
+.image-preview-wrapper.add-btn {
+  flex-direction: column;
+  gap: 4px;
+  border-style: dashed;
+}
+
+.image-preview-wrapper.add-btn:hover {
+  background: var(--el-color-primary-light-9);
+  border-color: var(--el-color-primary);
 }
 
 .preview-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
 
-  &.default-image {
-    opacity: 0.5;
-    filter: grayscale(50%);
-  }
+.preview-image.default-image {
+  opacity: 0.5;
 }
 
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: white;
+  background: rgb(0 0 0 / 60%);
   opacity: 0;
   transition: opacity 0.3s;
-  color: white;
 }
 
 .overlay-text {
-  font-size: 12px;
   margin-top: 4px;
+  font-size: 12px;
 }
 
 .remove-btn {
   position: absolute;
   bottom: 8px;
   left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
   display: none;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
+  transform: translateX(-50%);
   transition: all 0.3s;
-
-  .el-icon {
-    font-size: 14px;
-    color: var(--el-color-danger);
-  }
-
-  &:hover {
-    transform: translateX(-50%) scale(1.1);
-  }
 }
 
-// 悬停时显示删除按钮
+.remove-btn .el-icon {
+  font-size: 14px;
+  color: var(--el-color-danger);
+}
+
 .image-preview-wrapper:hover .remove-btn {
   display: flex;
 }
@@ -323,7 +280,6 @@ const defaultSelected = computed(() => {
   color: var(--el-text-color-secondary);
 }
 
-// 多选网格
 .image-grid-wrapper {
   display: flex;
   flex-wrap: wrap;

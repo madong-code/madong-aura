@@ -1,253 +1,202 @@
-import { h } from 'vue'
-import { ElTag } from 'element-plus'
-import { CrudSchema } from '@/components/crud'
-import { MemberService } from '@/api/member'
-import { $t } from '@/locales'
-import { DictEnum } from '@/enums'
-import { formatDateTime } from '@/utils'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-// crud配置
-export const crudSchema = (): CrudSchema => {
+import { MemberService } from '#/api/member';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
+export const useCrudSchema = (): CrudSchema => {
   return {
-    // 接口地址
-    api: MemberService.list,
-    dialogTitle: $t('member.user.title'),
     crudApi: {
-      // 新增接口
+      list: MemberService.list,
       add: MemberService.create,
-      // 修改接口
       edit: MemberService.update,
-      // 删除接口
-      remove: MemberService.remove,
-      // 详情接口
-      view: MemberService.get
+      remove: MemberService.delete,
+      batchRemove: MemberService.remove,
+      view: MemberService.get,
     },
-    // 使用crud
-    useCrud: true,
-    // 是否有新增
+    // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    // 是否有删除
-    hasRemove: true,
-    // 是否有修改
     hasEdit: true,
-    // 是否有详情
     hasView: true,
-    // 新增权限码
-    addAuth: 'member:user:create',
-    // 删除权限码
-    removeAuth: 'member:user:delete',
-    // 修改权限码
-    editAuth: 'member:user:update',
-    // 详情权限码
-    viewAuth: 'member:user:read',
-    // 表格列定义
-    columns: [
-      {
-        type: 'selection'
-      },
-      // {
-      //   prop: 'id',
-      //   label: $t('member.user.table.columns.id'),
-      //   minWidth: 60
-      // },
-      {
-        prop: 'username',
-        label: $t('member.user.table.columns.username'),
-        minWidth: 100
-      },
-      {
-        prop: 'nickname',
-        label: $t('member.user.table.columns.nickname'),
-        minWidth: 100
-      },
-      {
-        prop: 'phone',
-        label: $t('member.user.table.columns.phone'),
-        minWidth: 120
-      },
-      {
-        prop: 'email',
-        label: $t('member.user.table.columns.email'),
-        minWidth: 150
-      },
-      {
-        prop: 'level.name',
-        label: $t('member.user.table.columns.level_name')
-      },
-      {
-        prop: 'balance',
-        label: $t('member.user.table.columns.balance'),
-        visible: false
-      },
-      {
-        prop: 'points',
-        label: $t('member.user.table.columns.points')
-      },
-      {
-        prop: 'tag',
-        label: $t('member.user.table.columns.tags'),
-        visible: false,
-        minWidth: 200,
-        formatter(row) {
-          return h(
-            'div',
-            {
-              class: 'flex flex-wrap gap-2'
-            },
-            row.tags.map((item: any) =>
-              h(
-                ElTag,
-                {
-                  size: 'small',
-                  type: 'primary'
-                },
-                () => item.name
-              )
-            )
-          )
-        }
-      },
-      {
-        prop: 'enabled',
-        label: $t('member.user.table.columns.enabled'),
-        component: 'ApiDict',
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          clearable: true
-        }
-      },
-      {
-        prop: 'created_at',
-        label: $t('member.user.table.columns.created_at'),
-        minWidth: 170,
-        formatter: (row: any) => {
-          return formatDateTime(row.created_at)
-        }
-      }
-    ],
-    dialogProps: {
-      width: '500px'
+    hasRemove: true,
+    permissions: {
+      add: 'member:user:create',
+      edit: 'member:user:update',
+      remove: 'member:user:delete',
+      view: 'member:user:read',
     },
-    // 搜索表单配置
-    searchFormSchema: {
-      labelWidth: '200px',
+    columns: [
+      { type: 'checkbox', width: 60 },
+      {
+        field: 'username',
+        title: $t('member.user.table.columns.username'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'nickname',
+        title: $t('member.user.table.columns.nickname'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'phone',
+        title: $t('member.user.table.columns.phone'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'email',
+        title: $t('member.user.table.columns.email'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'level.name',
+        title: $t('member.user.table.columns.level_name'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'points',
+        title: $t('member.user.table.columns.points'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'enabled',
+        title: $t('member.user.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
+      },
+      {
+        field: 'created_at',
+        title: $t('member.user.table.columns.created_at'),
+        minWidth: 160,
+        align: 'center',
+        formatter: 'formatDateTime',
+      },
+    ],
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
       schema: [
         {
-          prop: 'username',
-          label: $t('member.user.search.username'),
-          component: 'Input'
+          component: 'Input',
+          fieldName: 'username',
+          label: $t('member.user.table.search.username'),
         },
         {
-          prop: 'phone',
-          label: $t('member.user.search.phone'),
-          component: 'Input'
+          component: 'Input',
+          fieldName: 'nickname',
+          label: $t('member.user.table.search.nickname'),
         },
         {
-          prop: 'enabled',
-          label: $t('member.user.search.enabled'),
+          component: 'Input',
+          fieldName: 'phone',
+          label: $t('member.user.table.search.phone'),
+        },
+        {
           component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('member.user.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
-            clearable: true
+            clearable: true,
           },
-          colSpan: 6
-        }
-      ]
+        },
+      ],
     },
-    // 表单配置
-    formSchema: {
-      labelWidth: 120,
-      gutter: 20,
+    formDialog: {
+      enabled: true,
+      title: $t('member.user.title'),
+      width: 'w-[50%]',
+      wrapperClass: 'grid-cols-2',
+      commonConfig: { labelWidth: 100 },
       schema: [
         {
-          prop: 'id',
-          label: $t('member.user.form.id'),
+          fieldName: 'id',
+          label: 'ID',
           component: 'Input',
-          show: false,
-          ifDetail: false,
-          componentProps: {},
-          colSpan: 24
+          dependencies: {
+            triggerFields: ['id'],
+            show: false,
+          },
         },
         {
-          prop: 'username',
+          fieldName: 'username',
           label: $t('member.user.form.username'),
           component: 'Input',
-          rules: [{ required: true, message: $t('member.user.form.rules_username') }],
-          componentProps: {},
-          colSpan: 24
+          rules: 'required',
+          formItemClass: 'col-span-2',
         },
         {
-          prop: 'nickname',
+          fieldName: 'password',
+          label: $t('member.user.form.password'),
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: { type: 'password' },
+          dependencies: {
+            triggerFields: ['id'],
+            if(v: any) {
+              return !v.id;
+            },
+          },
+        },
+        {
+          fieldName: 'nickname',
           label: $t('member.user.form.nickname'),
           component: 'Input',
-          colSpan: 24,
-          componentProps: {}
+          formItemClass: 'col-span-2',
         },
         {
-          prop: 'password',
-          label: $t('member.user.form.password'),
-          component: 'Input',
-          defaultValue: '',
-          colSpan: 24,
-          show: (_values: any) => _values.id === undefined || _values.id === '',
-          componentProps: {
-            type: 'password',
-            showPassword: true
-          }
-        },
-        {
-          prop: 'phone',
+          fieldName: 'phone',
           label: $t('member.user.form.phone'),
           component: 'Input',
-          colSpan: 24,
-          componentProps: {}
+          formItemClass: 'col-span-2',
+          rules: 'required',
         },
         {
-          prop: 'email',
+          fieldName: 'email',
           label: $t('member.user.form.email'),
           component: 'Input',
-          colSpan: 24,
-          componentProps: {}
+          formItemClass: 'col-span-2',
         },
         {
-          prop: 'password',
-          label: $t('member.user.form.password'),
-          component: 'Input',
-          ifDetail: false,
+          fieldName: 'level_id',
+          label: $t('member.user.form.level_id'),
+          component: 'ApiSelect',
+          formItemClass: 'col-span-2',
           componentProps: {
-            type: 'password',
-
-            showPassword: true
+            api: '/member/level',
+            requestMethod: 'get',
+            params: { format: 'select' },
           },
-
-          colSpan: 24,
-          show: (formType: string) => formType === 'add'
         },
-        // {
-        //   prop: 'level_id',
-        //   label: $t('member.user.form.level_id'),
-        //   component: 'ApiSelect',
-        //   colSpan: 24,
-        //   componentProps: {
-        //     api: '/member/level',
-        //     requestMethod: 'GET',
-
-        //     params: { format: 'select' }
-        //   }
-        // },
         {
-          prop: 'enabled',
+          fieldName: 'enabled',
           label: $t('member.user.form.enabled'),
           component: 'ApiDict',
-          colSpan: 24,
           defaultValue: 1,
+          formItemClass: 'col-span-2',
           componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
             renderType: 'RadioGroup',
             isBtn: true,
-            code: DictEnum.SYS_ENABLED_STATUS
-          }
-        }
-      ]
-    }
-  }
-}
+          },
+        },
+        {
+          fieldName: 'remark',
+          label: $t('member.user.form.remark'),
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: { type: 'textarea', rows: 3 },
+        },
+      ],
+    },
+  };
+};

@@ -1,6 +1,3 @@
-/**
- * 会员等级模型
- */
 export interface MemberLevel {
   id?: number;
   name?: string;

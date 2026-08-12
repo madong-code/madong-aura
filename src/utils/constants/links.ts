@@ -3,7 +3,7 @@
  * 集中管理便于维护和更新链接地址
  *
  * @module utils/constants/links
- * @author Art Design Pro Team
+ * @author Madong Team
  */
 export const WEB_LINKS = {
   // Github 主页
@@ -18,7 +18,6 @@ export const WEB_LINKS = {
   // 项目文档
   DOCS: 'https://madong.tech/docs/framework',
 
-
   // 项目社区
   COMMUNITY: 'https://madong.tech/',
 
@@ -26,5 +25,5 @@ export const WEB_LINKS = {
   BILIBILI: '',
 
   // 项目介绍
-  INTRODUCE: 'https://madong.tech/docs/framework/297061518217330688'
-}
+  INTRODUCE: 'https://madong.tech/docs/framework/297061518217330688',
+};

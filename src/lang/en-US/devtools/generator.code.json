@@ -1,0 +1,152 @@
+{
+  "list": {
+    "title": "Code Generation",
+    "table_name": "Table Name",
+    "table_content": "Description",
+    "plugin_name": "Module",
+    "class_name": "Class Name",
+    "package_name": "Package Name",
+    "author": "Author",
+    "remark": "Remark",
+    "features_name": "Feature Name",
+    "delete_type": "Delete Type",
+    "edit_mode": "Edit Mode",
+    "sort_field": "Sort Field",
+    "sort_order": "Sort Order",
+    "parent_menu": "Parent Menu",
+    "generate_files": "Generate Files",
+    "generate": "Generate Code",
+    "preview": "Preview Code",
+    "download": "Download Code",
+    "created_date": "Creation Time",
+    "updated_date": "Update Time",
+    "query": {
+      "name": "Query Name",
+      "placeholder": "Please enter query name",
+      "features_name": "Module",
+      "placeholder_features_name": "Please select module",
+      "table_name": "Table Name",
+      "placeholder_table_name": "Please enter table name"
+    }
+  },
+  "basic": {
+    "table_name": "Table Name",
+    "description": "Description",
+    "plugin": "Plugin",
+    "module_name": "Module Name",
+    "class_name": "Class Name",
+    "table_name_placeholder": "Please enter table name",
+    "description_placeholder": "Please enter description",
+    "plugin_placeholder": "Please select plugin",
+    "module_name_placeholder": "Please enter module name",
+    "class_name_placeholder": "Please enter class name",
+    "module_tip_1": "The functional module to which the generated code belongs, corresponding to the route name, such as member module, recharge module, order module, etc.",
+    "module_tip_2": "Naming convention: lowercase, multiple words connected with underscores, e.g.: member, article_category",
+    "class_tip_1": "The file name of the generated code, controller, model, service, etc.",
+    "class_tip_2": "Naming convention: lowercase, multiple words connected with underscores, e.g.: article_category"
+  },
+  "field": {
+    "operation": "Operation",
+    "column_name": "Field Name",
+    "column_comment": "Field Description",
+    "column_type": "Field Type",
+    "primary_key": "Primary Key",
+    "required": "Required",
+    "insert": "Add",
+    "update": "Edit",
+    "lists": "List",
+    "search": "Search",
+    "search_method": "Search Method",
+    "form_type": "Form Type",
+    "validation_type": "Validation Type",
+    "placeholder": {
+      "column_comment": "Please enter field description",
+      "select": "Please select",
+      "setup": "Setup"
+    },
+    "validation": {
+      "max": "Maximum input characters",
+      "min": "Minimum input characters",
+      "between": "Input character range"
+    }
+  },
+  "config": {
+    "delete_type": "Delete Type",
+    "physical_delete": "Physical Delete",
+    "soft_delete": "Soft Delete",
+    "delete_type_tip": "Physical deletion: directly delete records from the database; Soft deletion: mark deletion status through fields",
+    "delete_field": "Delete Field",
+    "delete_field_tip": "Select the field used to mark the deletion status",
+    "edit_mode": "Edit Mode",
+    "dialog": "Dialog",
+    "drawer": "Drawer",
+    "edit_mode_tip": "Select the interface display method when editing data",
+    "sort_field": "Sort Field",
+    "sort_field_tip": "Select the field for sorting, leave blank for no sorting",
+    "sort_order": "Sort Order",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "sort_order_tip": "Select sort method",
+    "parent_menu": "Parent Menu",
+    "placeholder": {
+      "select": "Please select",
+      "select_edit_mode": "Please select edit mode",
+      "enter_sort_field": "Please enter sort field",
+      "select_sort_order": "Please select sort order"
+    }
+  },
+  "relation": {
+    "title": "Relation Settings",
+    "type": "Relation Type",
+    "method_name": "Relation Method Name",
+    "app": "Relation App",
+    "model": "Relation Model",
+    "local_key": "Relation Key",
+    "foreign_key": "Foreign Key",
+    "add_relation": "Add Relation",
+    "edit_relation": "Edit",
+    "delete_relation": "Delete",
+    "operation": "Operation",
+    "type_options": {
+      "one_to_one": "One to One",
+      "one_to_many": "One to Many",
+      "many_to_many": "Many to Many"
+    },
+    "placeholder": {
+      "relation_type": "Please select relation type",
+      "relation_method": "Please enter relation method name",
+      "relation_app": "Please enter relation app",
+      "relation_model": "Please enter relation model",
+      "relation_key": "Please enter relation key",
+      "foreign_key": "Please enter foreign key"
+    },
+    "validation": {
+      "relation_type_required": "Please select relation type",
+      "relation_method_required": "Please enter relation method name",
+      "relation_model_required": "Please enter relation model",
+      "relation_key_required": "Please enter relation key",
+      "foreign_key_required": "Please enter foreign key"
+    }
+  },
+  "import_table": {
+    "title": "Import Data Table",
+    "table_name": "Table Name",
+    "table_comment": "Table Comment",
+    "engine": "Engine",
+    "charset": "Charset",
+    "create_time": "Creation Time",
+    "confirm": "Confirm Selection",
+    "reset": "Reset",
+    "select_table": "Select Data Table",
+    "single_select_tip": "Only one data table can be selected",
+    "no_selection": "Please select data table first",
+    "search_placeholder": "Please enter table name"
+  },
+  "preview": {
+    "dialog_title": "Code Preview",
+    "copy_button": "Copy",
+    "copy_success": "Code copied to clipboard",
+    "copy_error": "Copy failed, please copy manually",
+    "fetch_error": "Failed to get preview data"
+  }
+}

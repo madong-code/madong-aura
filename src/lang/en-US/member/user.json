@@ -1,0 +1,34 @@
+{
+  "title": "Members",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "Username",
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "email": "Email",
+      "level_name": "Level",
+      "balance": "Balance",
+      "points": "Points",
+      "tags": "Tags",
+      "enabled": "Status",
+      "created_at": "Registered"
+    },
+    "search": {
+      "username": "Username",
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "enabled": "Status"
+    }
+  },
+  "form": {
+    "username": "Username",
+    "password": "Password",
+    "nickname": "Nickname",
+    "phone": "Phone",
+    "email": "Email",
+    "level_id": "Level",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}

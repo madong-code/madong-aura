@@ -14,7 +14,7 @@ export const Push = function (options) {
 }
 
 Push.prototype.checkoutPing = function () {
-    var _this = this;
+    const _this = this;
     setTimeout(function () {
         if (_this.connection.state === 'connected') {
             _this.connection.send('{"event":"pusher:ping","data":{}}');
@@ -44,10 +44,10 @@ Push.prototype.createConnection = function () {
     if (this.connection) {
         throw Error('Connection already exist');
     }
-    var _this = this;
-    var url = this.config.url;
+    const _this = this;
+    const url = this.config.url;
     function updateSubscribed() {
-        for (var i in _this.channels) {
+        for (let i in _this.channels) {
             _this.channels[i].subscribed = false;
         }
     }
@@ -66,8 +66,8 @@ Push.prototype.createConnection = function () {
             }
 
             params = JSON.parse(params.data);
-            var event = params.event;
-            var channel_name = params.channel;
+            const event = params.event;
+            const channel_name = params.channel;
 
             if (event === 'pusher:pong') {
                 _this.checkoutPing();
@@ -76,7 +76,7 @@ Push.prototype.createConnection = function () {
             if (event === 'pusher:error') {
                 throw Error(params.data.message);
             }
-            var data = JSON.parse(params.data), channel;
+            let data = JSON.parse(params.data), channel;
             if (event === 'pusher_internal:subscription_succeeded') {
                 channel = _this.channels[channel_name];
                 channel.subscribed = true;
@@ -90,7 +90,7 @@ Push.prototype.createConnection = function () {
                 _this.subscribeAll();
             }
             if (event.indexOf('pusher_internal') !== -1) {
-                console.log("Event '" + event + "' not implement");
+                console.log(`Event '${  event  }' not implement`);
                 return;
             }
             channel = _this.channels[channel_name];
@@ -115,7 +115,7 @@ Push.prototype.subscribeAll = function () {
     if (this.connection.state !== 'connected') {
         return;
     }
-    for (var channel_name in this.channels) {
+    for (let channel_name in this.channels) {
         //this.connection.send(JSON.stringify({event:"pusher:subscribe", data:{channel:channel_name}}));
         this.channels[channel_name].processSubscribe();
     }
@@ -130,10 +130,10 @@ Push.prototype.unsubscribe = function (channel_name) {
     }
 };
 Push.prototype.unsubscribeAll = function () {
-    var channels = Object.keys(this.channels);
+    const channels = Object.keys(this.channels);
     if (channels.length) {
         if (this.connection.state === 'connected') {
-            for (var channel_name in this.channels) {
+            for (let channel_name in this.channels) {
                 this.unsubscribe(channel_name);
             }
         }
@@ -155,7 +155,7 @@ Push.prototype.subscribe = function (channel_name) {
 Push.instances = [];
 
 function createChannel(channel_name, push) {
-    var channel = new Channel(push.connection, channel_name);
+    const channel = new Channel(push.connection, channel_name);
     push.channels[channel_name] = channel;
     channel.subscribeCb = function () {
         push.connection.send(JSON.stringify({ event: "pusher:subscribe", data: { channel: channel_name } }));
@@ -165,7 +165,7 @@ function createChannel(channel_name, push) {
 }
 
 function createPrivateChannel(channel_name, push) {
-    var channel = new Channel(push.connection, channel_name);
+    const channel = new Channel(push.connection, channel_name);
     push.channels[channel_name] = channel;
     channel.subscribeCb = function () {
         __ajax({
@@ -193,8 +193,8 @@ function createPresenceChannel(channel_name, push) {
 function Connection(options) {
     this.dispatcher = new Dispatcher();
     __extends(this, this.dispatcher);
-    var properies = ['on', 'off', 'emit'];
-    for (var i in properies) {
+    const properies = ['on', 'off', 'emit'];
+    for (let i in properies) {
         this[properies[i]] = this.dispatcher[properies[i]];
     }
     this.options = options;
@@ -207,7 +207,7 @@ function Connection(options) {
 }
 
 Connection.prototype.updateNetworkState = function (state) {
-    var old_state = this.state;
+    const old_state = this.state;
     this.state = state;
     if (old_state !== state) {
         this.emit('state_change', { previous: old_state, current: state });
@@ -217,7 +217,7 @@ Connection.prototype.updateNetworkState = function (state) {
 Connection.prototype.connect = function () {
     this.doNotConnect = 0;
     if (this.state === 'connected') {
-        console.log('networkState is "' + this.state + '" and do not need connect');
+        console.log(`networkState is "${  this.state  }" and do not need connect`);
         return;
     }
     if (this.reconnectTimer) {
@@ -227,12 +227,12 @@ Connection.prototype.connect = function () {
 
     this.closeAndClean();
 
-    var options = this.options;
-    var websocket = new WebSocket(options.url + '/app/' + options.app_key);
+    const options = this.options;
+    const websocket = new WebSocket(options.url + '/app/' + options.app_key);
 
     this.updateNetworkState('connecting');
 
-    var _this = this;
+    const _this = this;
     websocket.onopen = function (res) {
         _this.reconnectInterval = 1;
         if (_this.doNotConnect) {
@@ -274,7 +274,7 @@ Connection.prototype.connect = function () {
 
 Connection.prototype.closeAndClean = function () {
     if (this.connection) {
-        var websocket = this.connection;
+        const websocket = this.connection;
         websocket.onmessage = websocket.onopen = websocket.onclose = websocket.onerror = null;
         try {
             websocket.close();
@@ -289,7 +289,7 @@ Connection.prototype.waitReconnect = function () {
     }
     if (!this.doNotConnect) {
         this.updateNetworkState('connecting');
-        var _this = this;
+        const _this = this;
         if (this.reconnectTimer) {
             clearTimeout(this.reconnectTimer);
         }
@@ -311,7 +311,7 @@ Connection.prototype.waitReconnect = function () {
 
 Connection.prototype.send = function (data) {
     if (this.state !== 'connected') {
-        console.trace('networkState is "' + this.state + '", can not send ' + data);
+        console.trace(`networkState is "${  this.state  }", can not send ${  data}`);
         return;
     }
     this.connection.send(data);
@@ -322,7 +322,7 @@ Connection.prototype.close = function () {
     this.connection.close();
 }
 
-var __extends = (this && this.__extends) || function (d, b) {
+const __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) { d[p] = b[p]; }
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -336,8 +336,8 @@ function Channel(connection, channel_name) {
     this.subscribeCb = null;
     this.queue = [];
     __extends(this, this.dispatcher);
-    var properies = ['on', 'off', 'emit'];
-    for (var i in properies) {
+    const properies = ['on', 'off', 'emit'];
+    for (let i in properies) {
         this[properies[i]] = this.dispatcher[properies[i]];
     }
 }
@@ -353,7 +353,7 @@ Channel.prototype.processQueue = function () {
     if (this.connection.state !== 'connected' || !this.subscribed) {
         return;
     }
-    for (var i in this.queue) {
+    for (let i in this.queue) {
         this.queue[i]();
     }
     this.queue = [];
@@ -361,9 +361,9 @@ Channel.prototype.processQueue = function () {
 
 Channel.prototype.trigger = function (event, data) {
     if (event.indexOf('client-') !== 0) {
-        throw new Error("Event '" + event + "' should start with 'client-'");
+        throw new Error(`Event '${  event  }' should start with 'client-'`);
     }
-    var _this = this;
+    const _this = this;
     this.queue.push(function () {
         _this.connection.send(JSON.stringify({ event: event, data: data, channel: _this.channelName }));
     });
@@ -371,7 +371,7 @@ Channel.prototype.trigger = function (event, data) {
 };
 
 ////////////////
-var Collections = (function () {
+const Collections = (function () {
     var exports = {};
     function extend(target) {
         var sources = [];
@@ -602,7 +602,7 @@ var Collections = (function () {
     return exports;
 })();
 
-var Dispatcher = (function () {
+const Dispatcher = (function () {
     function Dispatcher(failThrough) {
         this.callbacks = new CallbackRegistry();
         this.global_callbacks = [];
@@ -639,7 +639,7 @@ var Dispatcher = (function () {
     return Dispatcher;
 }());
 
-var CallbackRegistry = (function () {
+const CallbackRegistry = (function () {
     function CallbackRegistry() {
         this._callbacks = {};
     }
@@ -687,16 +687,16 @@ var CallbackRegistry = (function () {
 }());
 
 function prefix(name) {
-    return "_" + name;
+    return `_${  name}`;
 }
 
 function __ajax(options) {
     options = options || {};
     options.type = (options.type || 'GET').toUpperCase();
     options.dataType = options.dataType || 'json';
-    var params = formatParams(options.data);
+    const params = formatParams(options.data);
 
-    var xhr;
+    let xhr;
     if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
     } else {
@@ -705,7 +705,7 @@ function __ajax(options) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var status = xhr.status;
+            const status = xhr.status;
             if (status >= 200 && status < 300) {
                 options.success && options.success(xhr.responseText, xhr.responseXML);
             } else {
@@ -715,7 +715,7 @@ function __ajax(options) {
     }
 
     if (options.type === 'GET') {
-        xhr.open('GET', options.url + '?' + params, true);
+        xhr.open('GET', `${options.url  }?${  params}`, true);
         xhr.send(null);
     } else if (options.type === 'POST') {
         xhr.open('POST', options.url, true);
@@ -725,9 +725,9 @@ function __ajax(options) {
 }
 
 function formatParams(data) {
-    var arr = [];
-    for (var name in data) {
-        arr.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+    const arr = [];
+    for (let name in data) {
+        arr.push(`${encodeURIComponent(name)  }=${  encodeURIComponent(data[name])}`);
     }
     return arr.join('&');
 }

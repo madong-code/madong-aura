@@ -1,0 +1,38 @@
+{
+  "title": "消息模板",
+  "table": {
+    "columns": {
+      "type": "模板类型",
+      "title": "模版名称",
+      "template_id": "外部模板ID",
+      "enabled": "状态",
+      "push_rule": "推送规则",
+      "minute": "延迟(Min)",
+      "created_at": "创建时间",
+      "updated_at": "更新时间"
+    },
+    "search": {
+      "type": "模板类型"
+    },
+    "typeOptions": {
+      "system": "系统内",
+      "sms": "短信",
+      "email": "邮件",
+      "webhook": "Webhook"
+    }
+  },
+  "form": {
+    "type": "模板类型",
+    "title": "模版名称",
+    "template_id": "外部模板ID",
+    "content_template": "内容模板",
+    "button_template": "按钮模板(JSON)",
+    "url": "PC端跳转链接",
+    "uni_url": "移动端跳转链接",
+    "webhook_url": "Webhook地址",
+    "enabled": "开启状态",
+    "push_rule": "推送规则",
+    "minute": "延迟推送分钟数",
+    "dialog_title": "消息模板"
+  }
+}

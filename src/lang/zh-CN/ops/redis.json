@@ -1,0 +1,29 @@
+{
+  "title": "Redis监控",
+  "uptime": "运行时间",
+  "connected_clients": "客户端连接数",
+  "used_memory": "已用内存",
+  "used_memory_peak": "峰值内存",
+  "ops_per_sec": "每秒操作数",
+  "memory_analysis": "内存分析",
+  "cache_efficiency": "缓存效率",
+  "hit_rate": "命中率",
+  "db_size": "数据库大小",
+  "command_stats": "命令统计",
+  "columns": {
+    "redis_version": "Redis版本",
+    "redis_mode": "Redis模式",
+    "os": "操作系统",
+    "arch_bits": "架构位数",
+    "process_id": "进程ID",
+    "tcp_port": "TCP端口",
+    "uptime_in_days": "运行时间(天)",
+    "connected_clients": "客户端数量",
+    "used_memory_human": "已使用内存",
+    "used_memory_peak_human": "峰值已使用内存",
+    "instantaneous_ops_per_sec": "每秒操作数",
+    "keyspace_hits": "命中次数",
+    "keyspace_misses": "未命中次数",
+    "expired_keys": "过期Key数"
+  }
+}

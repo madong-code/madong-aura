@@ -1,0 +1,151 @@
+{
+  "categories": {
+    "all": "All",
+    "installed": "Installed",
+    "un_installed": "Uninstalled",
+    "purchased": "Granted",
+    "updatable": "Updatable"
+  },
+  "uncategorized": "Uncategorized",
+  "search_placeholder": "Search module name…",
+  "card_view": "Card",
+  "table_view": "Table",
+  "total_count": "{count} modules",
+  "empty_title": "No Modules",
+  "empty_desc": "No module data available",
+  "version": "Version {ver}",
+  "new_module": "New",
+  "hot": "Hot",
+  "installed_tag": "Installed",
+  "uninstalled_tag": "Uninstalled",
+  "update_log": "Changelog",
+  "install_menu": "Install Menu",
+  "uninstall_menu": "Uninstall Menu",
+  "update_db": "Update Database",
+  "update_info": "Update Info",
+  "column_seq": "#",
+  "column_module": "Module Info",
+  "column_version": "Version",
+  "column_status": "Status",
+  "column_action": "Actions",
+  "detail": {
+    "title": "Module Detail",
+    "version": "Version: {ver}",
+    "update_time": "Updated: {time}",
+    "intro": "Introduction",
+    "no_desc": "No description",
+    "detail_desc": "Details",
+    "close": "Close"
+  },
+  "install": {
+    "title": "Install Module",
+    "dialog_title": "Install Module Menu",
+    "confirm_msg": "About to install menu for module {name}",
+    "installing": "Installing menu...",
+    "cancel": "Cancel",
+    "confirm": "Confirm Install",
+    "success": "Module {name} menu installed successfully",
+    "fail": "Failed to install menu",
+    "invalid": "Incomplete module info"
+  },
+  "uninstall": {
+    "title": "Uninstall Module",
+    "dialog_title": "Uninstall Module Menu",
+    "confirm_msg": "Are you sure to uninstall the menu of module {name}?",
+    "warning": "All menu items of this module will be removed",
+    "uninstalling": "Uninstalling menu...",
+    "cancel": "Cancel",
+    "confirm": "Confirm Uninstall",
+    "success": "Module {name} menu uninstalled successfully",
+    "fail": "Failed to uninstall menu"
+  },
+  "update": {
+    "success": "Module {name} database updated successfully",
+    "fail": "Failed to update database"
+  },
+  "upgrade_log": {
+    "title": "Update Info",
+    "no_records": "No version update records",
+    "important": "Important Update"
+  },
+  "standalone": {
+    "categories": {
+      "purchased": "Purchased"
+    },
+    "download": {
+      "start": "Downloading module: {name}",
+      "fail": "Failed to download module",
+      "immediate": "Download"
+    },
+    "update": {
+      "immediate": "Update"
+    },
+    "install": {
+      "immediate": "Install",
+      "title": "Install Module",
+      "step1": "Confirm Info",
+      "step2": "Select File",
+      "step3": "Install",
+      "path": "Path",
+      "requirement": "Requirement",
+      "status": "Status",
+      "cancel": "Cancel",
+      "install": "Start Install",
+      "log_title": "Install Log",
+      "close": "Close",
+      "retry": "Retry Install",
+      "refresh": "Refresh List",
+      "select_file": "Select and upload plugin package",
+      "upload_tip": "Supported format: .zip, max size 50MB",
+      "select_install_file": "Select Install File",
+      "uploading": "Uploading...",
+      "installing": "Installing...",
+      "prev": "Previous",
+      "next": "Next",
+      "success": "Module {name} installed successfully",
+      "fail": "Failed to install module",
+      "invalid": "Incomplete module info"
+    },
+    "delete": {
+      "confirm_title": "Confirm Delete",
+      "confirm_msg": "Deleting the plugin will remove the directory and all files. Are you sure to delete {name}?",
+      "immediate": "Delete",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "success": "Module {name} deleted successfully"
+    },
+    "detail": {
+      "category": "Category",
+      "support_app": "Supported Apps",
+      "no_support": "General Plugin",
+      "app_identity": "App Identity",
+      "keywords": "Keywords",
+      "no_keywords": "None"
+    },
+    "uninstall": {
+      "immediate": "Uninstall",
+      "title": "Uninstall Module",
+      "step1": "Confirm Info",
+      "step2": "Confirm Uninstall",
+      "step3": "Uninstall Complete",
+      "confirm_msg": "About to uninstall module {name}. This will remove menus, files, and data.",
+      "operations_title": "The following operations will be performed:",
+      "op1": "Remove module menu and sub-menus",
+      "op2": "Delete module data tables and data",
+      "op3": "Delete module file directories and resources",
+      "op4": "Clean up module-related configuration",
+      "op5": "Clear module caches and logs",
+      "irreversible": "This operation cannot be undone. Proceed with caution!",
+      "uninstalling": "Uninstalling...",
+      "cancel": "Cancel",
+      "prev": "Previous",
+      "confirm_uninstall": "Confirm Uninstall",
+      "uninstall": "Confirm Uninstall",
+      "log_title": "Uninstall Log",
+      "close": "Close",
+      "refresh": "Refresh List",
+      "success": "Module {name} uninstalled successfully",
+      "fail": "Failed to uninstall module"
+    }
+  }
+}

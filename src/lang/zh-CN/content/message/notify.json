@@ -1,0 +1,38 @@
+{
+  "title": "消息通知",
+  "tabs": {
+    "all": "全部",
+    "unread": "未读"
+  },
+  "sidebar": {
+    "all_types": "全部类型",
+    "subscribe_settings": "消息订阅设置"
+  },
+  "table": {
+    "columns": {
+      "view": "查看",
+      "title": "消息标题",
+      "content": "消息内容",
+      "type": "类型",
+      "priority": "优先级",
+      "created_date": "发送时间",
+      "action": "操作"
+    },
+    "search": {
+      "title": "标题",
+      "content": "内容",
+      "category": "分类",
+      "placeholder": "搜索消息标题、内容..."
+    },
+    "action": {
+      "view": "立即查看",
+      "mark_read": "标记为已读",
+      "mark_all_read": "全部已读",
+      "batch_delete": "批量删除"
+    },
+    "pagination": {
+      "total": "共 {total} 条",
+      "selected": "已选 {count} 项"
+    }
+  }
+}

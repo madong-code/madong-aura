@@ -1,0 +1,32 @@
+{
+  "title": "MemberSign",
+  "table": {
+    "columns": {
+      "points": "签到积分",
+      "member_id": "会员ID",
+      "device_ip": "",
+      "id": "雪花ID",
+      "sign_date": "签到日期",
+      "device_ua": "",
+      "continuous_days": "连续签到天数"
+    }
+  },
+  "form": {
+    "points": "签到积分",
+    "member_id": "会员ID",
+    "device_ip": "",
+    "id": "雪花ID",
+    "sign_date": "签到日期",
+    "device_ua": "",
+    "continuous_days": "连续签到天数",
+    "placeholder": {
+      "points": "请签到积分",
+      "member_id": "请会员ID",
+      "device_ip": "请",
+      "id": "请雪花ID",
+      "sign_date": "请签到日期",
+      "device_ua": "请",
+      "continuous_days": "请连续签到天数"
+    }
+  }
+}

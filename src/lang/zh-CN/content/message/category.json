@@ -1,0 +1,25 @@
+{
+  "title": "消息分类",
+  "table": {
+    "columns": {
+      "name": "分类名称",
+      "key": "分类标识",
+      "icon": "图标",
+      "sort": "排序",
+      "is_enabled": "状态"
+    },
+    "search": {
+      "name": "分类名称"
+    }
+  },
+  "form": {
+    "dialog_title": "消息分类",
+    "name": "分类名称",
+    "key": "分类标识",
+    "icon": "图标",
+    "description": "描述",
+    "sort": "排序",
+    "is_enabled": "状态",
+    "is_show": "是否显示"
+  }
+}

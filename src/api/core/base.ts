@@ -1,127 +1,96 @@
-import request from '@/utils/http'
+import { requestClient } from '#/api/request';
 
-type Method = 'list' | 'get' | 'create' | 'update' | 'patch' | 'remove' | 'delete' | 'export' | 'changStatus'
+type Method =
+  | 'changStatus'
+  | 'create'
+  | 'delete'
+  | 'export'
+  | 'get'
+  | 'list'
+  | 'remove'
+  | 'update';
 
 interface BaseApiOptions {
-    baseUrl: string
-    forbiddenMethods?: Method[]
-    allowedMethods?: Method[]
+  baseUrl: string;
+  forbiddenMethods?: Method[];
+  allowedMethods?: Method[];
 }
 
-function BaseService<T = any>(options: BaseApiOptions) {
-    const { baseUrl, forbiddenMethods = [], allowedMethods = [] } = options
+function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
+  const { baseUrl, forbiddenMethods = [], allowedMethods = [] } = options;
 
-    function checkMethod(method: Method) {
-        if (forbiddenMethods.includes(method)) {
-            throw new Error(`${method} method is forbidden.`)
-        }
-        if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
-            throw new Error(`${method} method is not allowed.`)
-        }
+  function checkMethod(method: Method) {
+    if (forbiddenMethods.includes(method)) {
+      throw new Error(`${method} method is forbidden.`);
     }
-
-    return {
-        async list(params?: Record<string, any>): Promise<T[]> {
-            checkMethod('list')
-            return request.get<T[]>({
-                url: baseUrl,
-                params,
-            })
-        },
-
-        get(id: string | number): Promise<T> {
-            checkMethod('get')
-            return request.get<T>({
-                url: `${baseUrl}/${id}`,
-            })
-        },
-
-        create(params: Omit<T, 'id'>): Promise<T> {
-            checkMethod('create')
-            return request.post<T>({
-                url: baseUrl,
-                params,
-            })
-        },
-
-        // update(params: Partial<T>): Promise<T> {
-        //     checkMethod('update')
-        //     return request.put<T>({
-        //         url: baseUrl,
-        //         params,
-        //     })
-        // },
-        update(id: string | number | Partial<T>, params?: Partial<T>): Promise<T> {
-            checkMethod('update');
-            if (typeof id === 'object' && id !== null) {
-                //@ts-expect-error
-                const { id: extractedId, ...extractedParams } = id;
-                if (extractedId !== undefined) {
-                    return request.put<T>({
-                        url: `${baseUrl}/${extractedId}`,
-                        params: extractedParams,
-                    });
-                } else {
-                    return request.put<T>({
-                        url: baseUrl,
-                        params: id,
-                    });
-                }
-            } else {
-                return request.put<T>({
-                    url: `${baseUrl}/${id}`,
-                    params,
-                });
-            }
-        },
-
-        patch(id: string | number, params: Partial<T>): Promise<T> {
-            checkMethod('patch')
-            return request.patch<T>({
-                url: `${baseUrl}/${id}`,
-                params,
-            })
-        },
-
-        remove(params?: Record<string, any>): Promise<T> {
-            checkMethod('remove')
-            return request.del({
-                url: `${baseUrl}`,
-                params,
-            })
-        },
-
-        delete(id: string | number, params?: Record<string, any>): Promise<T> {
-            checkMethod('delete')
-            return request.del({
-                url: `${baseUrl}/${id}`,
-                params,
-            })
-        },
-
-        export(params: any) {
-            checkMethod('export')
-            return request.post({
-                url: `${baseUrl}/export`,
-                params,
-            })
-        },
-
-        changStatus(id: string | number, params: Partial<T>): Promise<T> {
-            checkMethod('changStatus')
-            return request.put<T>({
-                url: `${baseUrl}/${id}/change-status`,
-                params,
-            })
-        },
-        detail(params: any): Promise<T> {
-            checkMethod('get')
-            const { id } = params;
-            return request.get<T>({
-                url: `${baseUrl}/${id}`,
-            })
-        },
+    if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
+      throw new Error(`${method} method is not allowed.`);
     }
+  }
+
+  return {
+    async list(params?: Record<string, any>): Promise<any> {
+      checkMethod('list');
+      return requestClient.get(baseUrl, { params });
+    },
+
+    get(id: number | string): Promise<any> {
+      checkMethod('get');
+      return requestClient.get(`${baseUrl}/${id}`);
+    },
+
+    create(params: Record<string, any>): Promise<any> {
+      checkMethod('create');
+      return requestClient.post(baseUrl, params);
+    },
+
+    update(
+      id: number | Record<string, any> | string,
+      params?: Record<string, any>,
+    ): Promise<any> {
+      checkMethod('update');
+      if (typeof id === 'object' && id !== null) {
+        const { id: extractedId, ...extractedParams } = id as any;
+        if (extractedId !== undefined) {
+          return requestClient.put(
+            `${baseUrl}/${extractedId}`,
+            extractedParams,
+          );
+        }
+        return requestClient.put(baseUrl, id);
+      }
+      return requestClient.put(`${baseUrl}/${id}`, params);
+    },
+
+    remove(params?: Record<string, any>): Promise<any> {
+      checkMethod('remove');
+      return requestClient.delete(baseUrl, { params });
+    },
+
+    delete(id: number | string, params?: Record<string, any>): Promise<any> {
+      checkMethod('delete');
+      return requestClient.delete(`${baseUrl}/${id}`, { params });
+    },
+
+    export(params: any) {
+      checkMethod('export');
+      return requestClient.post(`${baseUrl}/export`, params);
+    },
+
+    changStatus(
+      id: number | string,
+      params: Record<string, any>,
+    ): Promise<any> {
+      checkMethod('changStatus');
+      return requestClient.put(`${baseUrl}/${id}/change-status`, params);
+    },
+
+    detail(params: any): Promise<any> {
+      checkMethod('get');
+      const { id } = params;
+      return requestClient.get(`${baseUrl}/${id}`);
+    },
+  };
 }
 
-export default BaseService
+export default BaseService;
