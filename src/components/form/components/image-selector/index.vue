@@ -195,7 +195,7 @@ const handleDialogConfirm = () => {
 
 const customUpload = async (e: any) => {
   try {
-    await FilesService.uploadFile({
+    await FilesService.uploadImage({
       file: e.file,
       sub_dir: props.objectType || 'default',
     });

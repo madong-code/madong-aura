@@ -1,10 +1,10 @@
 <!-- 登录页面 -->
 <template>
   <div class="flex w-full h-screen">
-    <LoginLeftView />
+    <AppLoginAside />
 
     <div class="relative flex-1">
-      <AuthTopBar />
+      <AppAuthTopBar />
 
       <div class="auth-right-wrap">
         <div class="form">
@@ -54,11 +54,11 @@
                 class="relative z-[2] overflow-hidden select-none rounded-lg border border-transparent tad-300"
                 :class="{ '!border-[#FF4E4F]': !isPassing && isClickPass }"
               >
-                <ArtDragVerify
+                <AppDragVerify
                   ref="dragVerify"
                   v-model:value="isPassing"
                   :text="$t('login.sliderText')"
-                  textColor="var(--art-gray-700)"
+                  textColor="var(--app-gray-700)"
                   :successText="$t('login.sliderSuccessText')"
                   progressBarBg="var(--main-color)"
                   :background="isDark ? '#26272F' : '#F1F1F4'"
@@ -74,12 +74,12 @@
             </div>
 
             <div class="flex-cb mt-2 text-sm">
-              <ElCheckbox v-model="formData.rememberPassword">
-                {{ $t('login.rememberPwd') }}
-              </ElCheckbox>
-              <RouterLink class="text-theme" :to="{ name: 'ForgetPassword' }">
-                {{ $t('login.forgetPwd') }}
-              </RouterLink>
+              <ElCheckbox v-model="formData.rememberPassword">{{
+                $t('login.rememberPwd')
+              }}</ElCheckbox>
+              <RouterLink class="text-theme" :to="{ name: 'ForgetPassword' }">{{
+                $t('login.forgetPwd')
+              }}</RouterLink>
             </div>
 
             <div style="margin-top: 30px">
@@ -88,6 +88,7 @@
                 type="primary"
                 @click="handleSubmit"
                 :loading="loading"
+                v-ripple
               >
                 {{ $t('login.btnText') }}
               </ElButton>
@@ -95,9 +96,9 @@
 
             <div class="mt-5 text-sm text-gray-600">
               <span>{{ $t('login.noAccount') }}</span>
-              <RouterLink class="text-theme" :to="{ name: 'Register' }">
-                {{ $t('login.register') }}
-              </RouterLink>
+              <RouterLink class="text-theme" :to="{ name: 'Register' }">{{
+                $t('login.register')
+              }}</RouterLink>
             </div>
           </ElForm>
         </div>
@@ -107,12 +108,14 @@
 </template>
 
 <script setup lang="ts">
-  import { ElNotification, type FormInstance, type FormRules } from 'element-plus'
+  import AppConfig from '#/core/config'
+  import { useUserStore } from '@/store/modules/user'
   import { useI18n } from 'vue-i18n'
-  import { HttpError } from '#/core/shared/art-utils/http/error'
-  import { loginApi } from '#/api/auth/login'
-  import { useUserStore } from '#/core/stores/modules/user'
-  import { useSettingStore } from '#/core/stores/modules/setting'
+  import { getAccessCodesApi, loginApi } from '@/api'
+  import { useAccessStore } from '#/core/stores'
+  import { useSiteConfigStore } from '@/store/modules/site-config'
+  import { ElNotification, type FormInstance, type FormRules } from 'element-plus'
+  import { useSettingStore } from '@/store/modules/setting'
 
   defineOptions({ name: 'Login' })
 
@@ -126,9 +129,9 @@
     formKey.value++
   })
 
-  type AccountKey = 'super' | 'admin' | 'user'
+  type AccountKey = 'admin'
 
-  interface Account {
+  export interface Account {
     key: AccountKey
     label: string
     userName: string
@@ -138,25 +141,11 @@
 
   const accounts = computed<Account[]>(() => [
     {
-      key: 'super',
-      label: t('login.roles.super'),
-      userName: 'admin',
-      password: '123456',
-      roles: ['R_SUPER']
-    },
-    {
       key: 'admin',
       label: t('login.roles.admin'),
       userName: 'admin',
       password: '123456',
       roles: ['R_ADMIN']
-    },
-    {
-      key: 'user',
-      label: t('login.roles.user'),
-      userName: 'user',
-      password: '123456',
-      roles: ['R_USER']
     }
   ])
 
@@ -168,10 +157,11 @@
   const isPassing = ref(false)
   const isClickPass = ref(false)
 
+  const systemName = AppConfig.systemInfo.name
   const formRef = ref<FormInstance>()
 
   const formData = reactive({
-    account: '' as AccountKey | '',
+    account: '',
     username: '',
     password: '',
     rememberPassword: true
@@ -185,7 +175,7 @@
   const loading = ref(false)
 
   onMounted(() => {
-    setupAccount('super')
+    setupAccount('admin')
   })
 
   // 设置账号
@@ -213,21 +203,43 @@
 
       loading.value = true
 
-      // 登录请求（art-admin 后端实际 key：请求 user_name，响应 access_token/refresh_token）
+      // 登录请求（madong 契约：POST /adminapi/auth/login）
       const { username, password } = formData
 
-      const { access_token, refresh_token } = await loginApi({
+      const loginResult = await loginApi({
         user_name: username,
         password
       })
 
+      const accessToken = loginResult?.access_token
+      const refreshToken = loginResult?.refresh_token
+
       // 验证token
-      if (!access_token) {
+      if (!accessToken) {
         throw new Error('Login failed - no token received')
       }
 
-      // 存储 token 和登录状态
-      userStore.setToken(access_token, refresh_token)
+      // 业务侧 token（#/api/request 拦截器与 v-access 权限码读取此 store）
+      const accessStore = useAccessStore()
+      accessStore.setAccessToken(accessToken)
+      accessStore.setRefreshToken(refreshToken)
+
+      // 预加载权限码，避免首屏按钮因权限码未就绪被 v-access 隐藏；失败由路由守卫补偿
+      try {
+        accessStore.setAccessCodes(await getAccessCodesApi())
+      } catch (error) {
+        console.warn('[Login] 权限码预加载失败，将由路由守卫补偿:', error)
+      }
+
+      // 站点配置同步到 preferences（logo/标题/favicon），失败不阻塞登录
+      try {
+        await useSiteConfigStore().syncSitePreferences()
+      } catch (error) {
+        console.warn('[Login] 站点配置同步失败:', error)
+      }
+
+      // 容器侧登录态（守卫与布局读取此 store）
+      userStore.setToken(accessToken, refreshToken)
       userStore.setLoginStatus(true)
 
       // 登录成功处理
@@ -237,12 +249,8 @@
       const redirect = route.query.redirect as string
       router.push(redirect || '/')
     } catch (error) {
-      // 处理 HttpError
-      if (error instanceof HttpError) {
-        // 处理错误
-      } else {
-        console.error('[Login] Unexpected error:', error)
-      }
+      // 业务错误提示已由 requestClient 拦截器统一处理，这里仅记录意外错误
+      console.error('[Login] Unexpected error:', error)
     } finally {
       loading.value = false
       resetDragVerify()
@@ -251,7 +259,7 @@
 
   // 重置拖拽验证
   const resetDragVerify = () => {
-    dragVerify.value?.reset()
+    dragVerify.value.reset()
   }
 
   // 登录成功提示
@@ -262,89 +270,18 @@
         type: 'success',
         duration: 2500,
         zIndex: 10000,
-        message: `${t('login.success.message')}`
+        message: `${t('login.success.message')}, ${systemName}!`
       })
     }, 1000)
   }
 </script>
 
+<style scoped>
+  @import './style.css';
+</style>
+
 <style lang="scss" scoped>
-  /* 授权页右侧区域 */
-  .auth-right-wrap {
-    position: absolute;
-    inset: 0;
-    width: 440px;
-    height: 650px;
-    padding: 5px;
-    margin: auto;
-    overflow: hidden;
-    animation: slideInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-
-    @media only screen and (width <= 768px) {
-      padding: 0 28px;
-      width: 100%;
-      animation: none;
-    }
-
-    .form {
-      height: 100%;
-      padding: 40px 0;
-    }
-
-    .title {
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--art-gray-900, #1a1a1a);
-      line-height: 1.2;
-
-      @media only screen and (width <= 768px) {
-        font-size: 1.5rem;
-        padding-top: 40px;
-      }
-    }
-
-    .sub-title {
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--art-gray-600, #666);
-    }
-
-    .custom-height {
-      height: 40px !important;
-    }
-  }
-
-  /* 滑入动画 */
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  /* 移动端隐藏左侧大图，由 LoginLeftView 内部 media query 处理 */
-  @media only screen and (width <= 1180px) {
-    :deep(.login-left-view) {
-      width: auto;
-      height: auto;
-      padding: 0;
-      background: transparent;
-
-      .left-img,
-      .text-wrap,
-      .geometric-decorations,
-      .logo {
-        display: none;
-      }
-    }
-
-    .auth-right-wrap {
-      animation: none;
-    }
+  :deep(.el-select__wrapper) {
+    height: 40px !important;
   }
 </style>

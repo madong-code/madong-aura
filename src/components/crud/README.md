@@ -37,10 +37,10 @@ const crudSchemaDef = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'system:user:create',
-      edit: 'system:user:update',
-      remove: 'system:user:delete',
-      view: 'system:user:read',
+      add: 'system:admin:create',
+      edit: 'system:admin:update',
+      remove: 'system:admin:delete',
+      view: 'system:admin:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
@@ -168,10 +168,10 @@ interface FormDialogConfig {
 
 ```typescript
 permissions: {
-  add: 'system:user:create',
-  edit: 'system:user:update',
-  remove: 'system:user:delete',
-  view: 'system:user:read',
+  add: 'system:admin:create',
+  edit: 'system:admin:update',
+  remove: 'system:admin:delete',
+  view: 'system:admin:read',
 }
 ```
 
@@ -184,7 +184,7 @@ dropDownActions: [
   {
     label: '编辑',
     icon: 'ant-design:edit-outlined',
-    auth: 'system:user:update',
+    auth: 'system:admin:update',
     onClick: ({ row, crudApi }) => {
       crudApi.openEditDialog(row);
     },
@@ -193,7 +193,7 @@ dropDownActions: [
     label: '删除',
     icon: 'ant-design:delete-outlined',
     type: 'danger',
-    auth: 'system:user:delete',
+    auth: 'system:admin:delete',
     onClick: ({ row, crudApi }) => {
       crudApi.openDeleteConfirm(row);
     },

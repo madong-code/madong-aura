@@ -24,10 +24,10 @@ export function useCrudSchema(): CrudSchema {
     stripe: true,
     pagerConfig: { enabled: true, pageSize: 15 },
     permissions: {
-      add: 'content:message:manage:create',
-      edit: 'content:message:manage:update',
-      remove: 'content:message:manage:delete',
-      view: 'content:message:manage:read',
+      add: 'message:manage:create',
+      edit: 'message:manage:update',
+      remove: 'message:manage:delete',
+      view: 'message:manage:read',
     },
     searchForm: {
       enabled: true,

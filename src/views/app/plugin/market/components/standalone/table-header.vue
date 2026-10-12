@@ -16,7 +16,7 @@ import { LayoutGrid, List, Search } from 'lucide-vue-next';
 
 import { $t } from '#/locales';
 
-import { moduleCategories } from './store';
+import { getCategoryIcon, moduleCategories } from './store';
 
 defineOptions({ name: 'TableHeader' });
 
@@ -67,7 +67,7 @@ onMounted(() => {
     </ElCol>
     <ElCol :xs="8" :sm="8" :md="12" :lg="12" class="button-group">
       <div style="display: flex; gap: 10px; justify-content: flex-end">
-        <ElRadioGroup v-model="viewMode" size="small" class="view-mode-switch">
+        <ElRadioGroup v-model="viewMode" size="default" class="view-mode-switch">
           <ElRadioButton label="card">
             <ElIcon style="margin-right: 4px; vertical-align: middle">
               <LayoutGrid />
@@ -98,10 +98,36 @@ onMounted(() => {
         <ElTabPane
           v-for="category in categories"
           :key="category.key"
-          :label="$t(`app.plugin.market.categories.${category.key}`)"
           :name="category.key"
-        />
+        >
+          <template #label>
+            <span class="tab-label">
+              <ElIcon><component :is="getCategoryIcon(category.key)" /></ElIcon>
+              {{ $t(`app.plugin.market.categories.${category.key}`) }}
+            </span>
+          </template>
+        </ElTabPane>
       </ElTabs>
     </ElCol>
   </ElRow>
 </template>
+
+<style scoped>
+.category-tabs {
+  margin-bottom: 8px;
+}
+.category-tabs :deep(.el-tabs__nav-wrap::after) {
+  display: none;
+}
+.tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+.view-mode-switch :deep(.el-radio-button__inner) {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+</style>

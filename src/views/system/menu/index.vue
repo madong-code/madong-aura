@@ -14,7 +14,7 @@ const [BasicCrud, crudApi] = useCrud({
       label: '选择权限',
       type: 'primary',
       link: true,
-      auth: 'system:auth:save_role_menu',
+      auth: 'system:menu:batch_store',
       icon: 'ant-design:link-outlined',
       onClick: (_e: any, row: any) => {
         interfaceListSelectorRef.value?.show({

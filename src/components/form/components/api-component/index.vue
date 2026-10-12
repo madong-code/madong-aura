@@ -254,7 +254,7 @@ watch(
   { deep: true, immediate: props.immediate },
 );
 
-function emitChange() {
+async function emitChange() {
   if (
     modelValue.value === undefined &&
     props.autoSelect &&
@@ -284,6 +284,20 @@ function emitChange() {
     if (firstOption) modelValue.value = firstOption.value;
   }
   emit('optionsChange', unref(getOptions));
+
+  // 异步 options 加载完成后，若当前已有选中值（如编辑回填），
+  // 部分 element-plus 组件（ElTreeSelect）不会用新数据重新解析 label，
+  // 这里通过“先置空再还原”强制触发一次匹配，确保回填正确回显。
+  if (
+    modelValue.value !== undefined &&
+    modelValue.value !== null &&
+    modelValue.value !== ''
+  ) {
+    const cached = modelValue.value;
+    modelValue.value = undefined;
+    await nextTick();
+    modelValue.value = cached;
+  }
 }
 
 const componentRef = ref();

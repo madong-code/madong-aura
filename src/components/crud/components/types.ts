@@ -272,6 +272,16 @@ export interface TreeConfig {
   children?: string;
   /** 刷新后是否保持展开状态，默认 false */
   reserve?: boolean;
+  /**
+   * 是否启用懒加载树（展开节点时按 pid 异步加载子级）
+   * 启用后分页不禁用，顶层走分页查询，子级由 loadMethod 加载
+   */
+  lazy?: boolean;
+  /**
+   * 懒加载回调：展开节点时调用，应返回该节点的直接子级数组
+   * 签名 (params: { row: Record<string, any> }) => Promise<any[]>
+   */
+  loadMethod?: (params: { row: Record<string, any> }) => Promise<any[]>;
 }
 
 /**
@@ -410,6 +420,8 @@ export interface TableConfig {
   hasBatchRemove?: boolean;
   /** 操作按钮权限配置 */
   permissions?: TablePermissionConfig;
+  /** 无权限时按钮表现：hide=隐藏（默认，保持旧版行为）；disable=渲染但禁用，操作栏对齐 */
+  authMode?: 'disable' | 'hide';
   /** 表格列定义 */
   columns?: (() => CrudColumn[]) | CrudColumn[];
   /** 请求前处理参数 */
@@ -420,6 +432,8 @@ export interface TableConfig {
   tableActions?: ActionItem[];
   /** 表格行下拉操作 */
   dropDownActions?: ActionItem[];
+  /** 行操作平铺按钮上限，超出部分自动并入「更多」下拉（不设置则不限制） */
+  maxVisibleActions?: number;
   /** 工具栏操作按钮 */
   toolbarActions?: ActionItem[];
   /** 工具栏下拉操作按钮 */

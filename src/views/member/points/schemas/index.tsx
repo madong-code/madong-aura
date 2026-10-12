@@ -19,7 +19,7 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: false,
     hasView: true,
     hasRemove: false,
-    permissions: { add: 'member:points:operate', view: 'member:points:read' },
+    permissions: { add: 'member:points:create', view: 'member:points:read' },
     columns: [
       { type: 'checkbox', width: 60 },
       {

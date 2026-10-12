@@ -331,7 +331,7 @@ onBeforeUnmount(() => {
         v-for="item in coreMetrics"
         :key="item.title"
       >
-        <div class="card art-custom-card">
+        <div class="card app-custom-card">
           <div class="metric-content">
             <div class="metric-text">
               <div class="metric-title">{{ item.title }}</div>
@@ -511,8 +511,11 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .redis-monitor {
+  // 未使用 Page 组件的页面：内容边距由根容器统一提供 20px，
+  // 与 analytics/workspace 及 Page(p-5) 对齐；行只保留间距。
+  padding: 20px;
+
   .mb-20 {
-    padding: 15px;
     margin-bottom: 20px;
   }
 
@@ -547,7 +550,7 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
   background-color: transparent !important;
 
-  .art-custom-card {
+  .app-custom-card {
     $icon-size: 48px;
 
     position: relative;
@@ -558,7 +561,7 @@ onBeforeUnmount(() => {
     width: 100%;
     height: 120px;
     padding: 0 18px;
-    background: var(--art-main-bg-color, #f5f7fa);
+    background: var(--app-main-bg-color, #f5f7fa);
     border-radius: 8px !important;
     transition: all 0.3s ease;
 
@@ -693,7 +696,7 @@ onBeforeUnmount(() => {
 
 // 深色模式
 :deep(.dark) {
-  .card-list .art-custom-card {
+  .card-list .app-custom-card {
     background: #1f1f1f !important;
 
     .metric-text .metric-value,

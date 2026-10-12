@@ -50,7 +50,7 @@ const hideAuthCode = (code: string) => {
 };
 
 const handleNavigateToMarket = () => {
-  window.open('https://www.madong.tech/apps');
+  window.open('https://www.madong.tech/marketplace');
 };
 
 const handlePermissionCodeClose = () => {

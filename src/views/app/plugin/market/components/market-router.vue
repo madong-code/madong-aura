@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import { requestClient } from '#/api/request';
 
-import GrantedModuleMarket from './granted/granted-module-market.vue';
+
 import StandaloneModuleMarket from './standalone/standalone-module-market.vue';
 
 defineOptions({ name: 'MarketRouter' });
@@ -28,7 +28,6 @@ const isSaasMode = computed(() => mode.value === 'saas');
 
 <template>
   <div v-loading="loading" class="h-full flex flex-col">
-    <GrantedModuleMarket v-if="isSaasMode" class="flex-1" />
-    <StandaloneModuleMarket v-else-if="!loading" class="flex-1" />
+    <StandaloneModuleMarket v-if="!loading" class="flex-1" />
   </div>
 </template>

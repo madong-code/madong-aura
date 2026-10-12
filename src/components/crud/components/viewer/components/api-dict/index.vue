@@ -28,7 +28,8 @@ const displayValue = computed(() => {
     return undefined;
   }
   const option = options.value.find(
-    (opt) => opt[props.valueField] === props.value,
+    // 后端字段可能为字符串（如 varchar 存的枚举值），字典项为数字，统一按字符串比较
+    (opt) => String(opt[props.valueField]) === String(props.value),
   );
   return option ? option[props.labelField] : props.value;
 });

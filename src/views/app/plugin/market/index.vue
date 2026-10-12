@@ -11,8 +11,6 @@ defineOptions({ name: 'AppPluginMarket' });
 
 <template>
   <Page auto-content-height>
-    <ElCard class="h-full flex flex-col">
       <MarketRouter />
-    </ElCard>
   </Page>
 </template>

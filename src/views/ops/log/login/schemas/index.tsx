@@ -20,10 +20,8 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'system:logs_login:create',
-      edit: 'system:logs_login:update',
-      remove: 'system:logs_login:delete',
-      view: 'system:logs_login:read',
+      remove: 'logs:login:delete',
+      view: 'logs:login:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },

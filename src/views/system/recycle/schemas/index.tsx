@@ -19,8 +19,6 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: false,
     permissions: {
-      add: 'system:recycle:create',
-      edit: 'system:recycle:update',
       remove: 'system:recycle:delete',
       view: 'system:recycle:read',
     },

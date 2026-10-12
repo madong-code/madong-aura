@@ -50,6 +50,8 @@ export interface ActionItem {
   ifShow?: ((action: ActionItem, record: any) => boolean) | boolean;
   /** 权限编码 */
   auth?: string | string[];
+  /** 无权限时的表现：hide=隐藏按钮（默认），disable=渲染但禁用（保持操作栏对齐） */
+  authMode?: 'disable' | 'hide';
   /** 排序 */
   sort?: number;
   /** 点击事件 */

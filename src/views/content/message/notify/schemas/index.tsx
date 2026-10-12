@@ -22,12 +22,6 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: false,
     hasView: false,
     hasRemove: false,
-    permissions: {
-      add: 'system:message:create',
-      edit: 'system:message:update',
-      remove: 'system:message:delete',
-      view: 'system:message:read',
-    },
     columns: [
       { type: 'checkbox', width: 60 },
       {

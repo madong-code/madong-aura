@@ -21,10 +21,10 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'system:user:create',
-      edit: 'system:user:update',
-      remove: 'system:user:delete',
-      view: 'system:user:read',
+      add: 'system:admin:create',
+      edit: 'system:admin:update',
+      remove: 'system:admin:delete',
+      view: 'system:admin:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
@@ -111,17 +111,7 @@ export const useCrudSchema = (): CrudSchema => {
     searchForm: {
       enabled: true,
       collapsed: true,
-      // 默认收起时只显示 1 行（VbenForm 自动隐藏超出项）；
-      // 配合 collapsed: true 让"展开/收起"按钮真正生效，
-      // 避免之前 collapsedRows:2 时所有字段都能放下导致展开/收起视觉一致。
-      collapsedRows: 1,
-      // 让搜索栏在 xl 屏宽下排成 4 列（默认 md:3 列），4 个搜索项默认 1 行全显。
-      // VbenForm 收起行数 ≤ 实际行数时，"展开/收起"按钮会自动隐藏，
-      // 避免之前"按钮点了没效果"的体验。
-      commonConfig: {
-        wrapperClass:
-          'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4',
-      },
+      collapsedRows: 2,
       schema: [
         {
           component: 'Input',

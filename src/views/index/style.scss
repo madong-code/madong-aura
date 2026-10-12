@@ -1,0 +1,71 @@
+.app-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--default-bg-color);
+
+  #app-sidebar {
+    flex-shrink: 0;
+  }
+
+  #app-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    height: 100vh;
+    overflow: auto;
+
+    #app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    // 内容区零边距：内容 padding 统一由业务页的 Page 组件（p-4）提供，
+    // 与 madong-single 一致，避免「布局外距 + Page 内边距」双层容器。
+    #app-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    // position:relative 为根节点 absolute inset:0 的全屏插件页
+    // （VForm 表单设计器、流程设计器等）提供定位上下文，
+    // 否则其会一路相对到视口，覆盖侧边菜单与顶部栏。
+    // 全屏页（meta.isFullPage）的 inline fixed 会覆盖此 relative。
+    .layout-content {
+      position: relative;
+      min-height: 100%;
+    }
+  }
+}
+
+@media only screen and (width <= 1180px) {
+  .app-layout {
+    #app-main {
+      height: 100dvh;
+    }
+  }
+}
+
+@media only screen and (width <= 800px) {
+  .app-layout {
+    position: relative;
+
+    #app-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 300;
+      height: 100vh;
+    }
+
+    #app-main {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+  }
+}

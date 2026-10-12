@@ -1,10 +1,10 @@
-<!-- 500 服务器错误页面（样式与 art-design-pro 原版一致） -->
+<!-- 500页面 -->
 <template>
-  <ArtException
+  <AppExceptionPage
     :data="{
       title: '500',
-      desc: $t('exception-page.500'),
-      btnText: $t('exception-page.gohome'),
+      desc: $t('exceptionPage.500'),
+      btnText: $t('exceptionPage.gohome'),
       imgUrl
     }"
   />

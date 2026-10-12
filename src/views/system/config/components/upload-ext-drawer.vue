@@ -8,6 +8,7 @@ import {
   ElFormItem,
   ElInput,
   ElMessage,
+  ElSwitch,
 } from 'element-plus';
 
 import { ConfigService } from '#/api/system/config';
@@ -18,6 +19,10 @@ import { convertStringNumbers, templateField } from '../schemas';
 const visible = ref(false);
 const formData = reactive<Record<string, any>>({});
 const currentMode = ref('');
+
+/** 兼容布尔、'true'、1 等写法 */
+const isTrue = (value: any) =>
+  value === true || value === 1 || value === '1' || value === 'true';
 
 const fieldLabelMap: Record<string, Record<string, string>> = {
   root: { root: '根目录' },
@@ -35,6 +40,7 @@ const fieldLabelMap: Record<string, Record<string, string>> = {
   secret: { secret: 'Secret' },
   version: { version: 'Version' },
   acl: { acl: 'ACL' },
+  is_private: { is_private: '私有空间（非公开读）' },
 };
 
 const currentGroupFields = computed(() => {
@@ -61,6 +67,10 @@ const show = async (values: Record<string, any>) => {
       }
     });
   }
+  // 私有开关为布尔值，缺省视为公开桶
+  if (templateField(currentMode.value).includes('is_private')) {
+    formData.is_private = isTrue(record?.is_private);
+  }
   visible.value = true;
 };
 
@@ -75,7 +85,7 @@ const handleSave = async () => {
     const fieldKeys = templateField(currentMode.value);
     fieldKeys.forEach((key) => {
       if (formData[key] !== undefined) {
-        config[key] = formData[key];
+        config[key] = key === 'is_private' ? isTrue(formData[key]) : formData[key];
       }
     });
     await ConfigService.update(currentMode.value, {
@@ -110,7 +120,13 @@ defineExpose({ show });
         :key="key"
         :label="label"
       >
-        <ElInput v-model="formData[key]" :placeholder="label" clearable />
+        <template v-if="key === 'is_private'">
+          <ElSwitch v-model="formData[key]" />
+          <div class="is-private-tip">
+            开启后该空间为非公开读，图片在内的所有资源均由后端签发带签名的临时直链
+          </div>
+        </template>
+        <ElInput v-else v-model="formData[key]" :placeholder="label" clearable />
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -121,3 +137,12 @@ defineExpose({ show });
     </template>
   </ElDrawer>
 </template>
+
+<style scoped>
+.is-private-tip {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
+}
+</style>

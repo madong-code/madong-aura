@@ -19,8 +19,6 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'logs:operate:create',
-      edit: 'logs:operate:update',
       remove: 'logs:operate:delete',
       view: 'logs:operate:read',
     },

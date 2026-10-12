@@ -114,19 +114,18 @@ defineExpose({ openDialog });
               :color="item.is_important ? '#409EFF' : '#909399'"
             >
               <div class="relative">
-                <span class="text-foreground text-[14px] absolute">{{
+                <span class="text-[#333333] text-[14px] absolute">{{
                   formatTimestamp(item.release_time)[0]
                 }}</span>
                 <br />
                 <span
-                  class="text-muted-foreground text-[14px] w-[78px] block mt-[10px] absolute text-right"
-                  >{{ formatTimestamp(item.release_time)[1] }}</span
-                >
+                  class="text-[#999999] text-[14px] w-[78px] block mt-[10px] absolute text-right"
+                  >{{ formatTimestamp(item.release_time)[1] }}</span>
               </div>
               <ElCollapse v-model="activeName" accordion>
                 <ElCollapseItem :name="index">
                   <template #title>
-                    <span class="text-foreground text-[14px]">
+                    <span class="text-[#333] text-[14px]">
                       v{{ item.version_no }}
                       <ElTag
                         v-if="item.is_important"
@@ -135,8 +134,7 @@ defineExpose({ openDialog });
                         class="ml-2"
                         >{{
                           $t('app.plugin.market.upgrade_log.important')
-                        }}</ElTag
-                      >
+                        }}</ElTag>
                     </span>
                   </template>
                   <div
@@ -144,7 +142,7 @@ defineExpose({ openDialog });
                     style="background: rgb(25 103 249 / 3%)"
                   >
                     <div
-                      class="text-foreground text-[14px] leading-6"
+                      class="text-[#333] text-[14px] leading-6"
                       v-html="item.upgrade_log"
                     ></div>
                   </div>
@@ -197,16 +195,16 @@ defineExpose({ openDialog });
   padding: 10px 20px;
   line-height: 25px;
   text-align: left;
-  background: var(--el-bg-color-overlay);
-  border-bottom: solid 1px var(--el-border-color-lighter);
+  background: #fff;
+  border-bottom: solid 1px #e4e7ed;
 }
 
 :deep(.el-dialog__headerbtn .el-dialog__close) {
-  color: var(--el-text-color-regular);
+  color: #666;
 }
 
 :deep(.el-dialog__headerbtn:hover .el-dialog__close) {
-  color: var(--el-text-color-primary);
+  color: #666;
 }
 
 :deep(.el-dialog__headerbtn) {

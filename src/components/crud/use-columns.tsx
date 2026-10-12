@@ -66,6 +66,8 @@ export function useColumns(
         width: 220,
         align: 'center',
         showOverflow: 'tooltip',
+        // 操作栏默认固定显示在右侧，可通过 tableActionColumn.fixed 显式覆盖（如 fixed: false）
+        fixed: 'right',
         slots: {
           default: ({ row }: { row: any }) => (
             <TableAction

@@ -20,40 +20,35 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: false,
     // 是否有详情
     hasView: false,
-    permissions: {
-      view: 'system:user_center:read',
-    },
     // 表格列定义
-    // 注意：表格列用 title/field（vxe-table 字段），不要用 label/fieldName
-    // （label/fieldName 是表单字段专用），否则表头会渲染为空。
     columns: [
       // {
       //   type: 'selection'
       // },
 
       {
-        title: $t('system.user.center.online_device.table.columns.user_name'),
-        field: 'user_name',
+        label: $t('system.user.center.online_device.table.columns.user_name'),
+        fieldName: 'user_name',
       },
       {
-        title: $t('system.user.center.online_device.table.columns.ip'),
-        field: 'ip',
+        label: $t('system.user.center.online_device.table.columns.ip'),
+        fieldName: 'ip',
       },
       {
-        title: $t('system.user.center.online_device.table.columns.ip_location'),
-        field: 'ip_location',
+        label: $t('system.user.center.online_device.table.columns.ip_location'),
+        fieldName: 'ip_location',
       },
       {
-        title: $t('system.user.center.online_device.table.columns.browser'),
-        field: 'browser',
+        label: $t('system.user.center.online_device.table.columns.browser'),
+        fieldName: 'browser',
       },
       {
-        title: $t('system.user.center.online_device.table.columns.os'),
-        field: 'os',
+        label: $t('system.user.center.online_device.table.columns.os'),
+        fieldName: 'os',
       },
       {
-        title: $t('system.user.center.online_device.table.columns.login_time'),
-        field: 'login_time',
+        label: $t('system.user.center.online_device.table.columns.login_time'),
+        fieldName: 'login_time',
         minWidth: 170,
         formatter: (row: any) => {
           return formatDate(row.login_time);

@@ -11,6 +11,7 @@ export { default as ApiTreeSelect } from './api-tree-select/index.vue';
 export { default as Avatar } from './avatar/index.vue';
 export { default as CheckboxGroup } from './checkbox-group/index.vue';
 export { default as DatePicker } from './date-picker/index.vue';
+export { default as DeptUserPicker } from './dept-user-picker/index.vue';
 export { default as Divider } from './divider/index.vue';
 export { default as Editor } from './editor/index.vue';
 export { default as IconPicker } from './icon-picker/index.vue';

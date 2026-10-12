@@ -1,10 +1,10 @@
-<!-- 403 无权限页面（样式与 art-design-pro 原版一致） -->
+<!-- 403页面 -->
 <template>
-  <ArtException
+  <AppExceptionPage
     :data="{
       title: '403',
-      desc: $t('exception-page.403'),
-      btnText: $t('exception-page.gohome'),
+      desc: $t('exceptionPage.403'),
+      btnText: $t('exceptionPage.gohome'),
       imgUrl
     }"
   />

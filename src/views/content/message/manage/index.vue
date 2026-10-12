@@ -29,7 +29,7 @@ const crudConfig: CrudSchema = {
     {
       label: $t('content.message.manage.drop_down.link_template'),
       icon: 'ant-design:link-outlined',
-      auth: 'content:message:manage:update',
+      auth: 'message:manage:update',
       onClick: (_e: any, row: any) => {
         openTemplateDialog(row);
       },

@@ -292,23 +292,8 @@ const handlePwdEdit = async () => {
 
 const [BasicCrud, crudApi] = useCrud({
   ...useCrudSchema(),
-  // 左侧工具栏
-  toolbarActions: [
-    {
-      label: $t('system.files.list.table.columns.actions.delete.label'),
-      type: 'danger',
-      icon: 'ant-design:delete-outlined',
-      auth: 'system:files:delete',
-      ifShow: () => crudApi.getReadonlyState().selection.length > 0,
-      confirm: {
-        title: $t('system.files.list.table.columns.actions.delete.title'),
-        content: $t('system.files.list.table.columns.actions.delete.confirm'),
-        ok() {
-          crudApi.removeByApi({});
-        },
-      },
-    },
-  ],
+  // 左侧工具栏（在线设备列表无删除接口，仅支持下线）
+  toolbarActions: [],
   // 左侧栏工具-下拉菜单
   dropDownToolbarActions: [],
   // 表格行操作
@@ -349,7 +334,7 @@ onMounted(() => {
     <div class="flex h-full gap-5 p-5 max-md:flex-col" v-if="userInfo">
       <!-- 左侧用户信息卡片 -->
       <div class="w-80 shrink-0 max-md:w-full">
-        <div class="art-card-sm relative p-6 pb-6 overflow-hidden text-center">
+        <div class="app-card-sm relative p-6 pb-6 overflow-hidden text-center">
           <div
             class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-blue-500 to-purple-600"
           ></div>
@@ -409,7 +394,7 @@ onMounted(() => {
       <!-- 右侧表单区域 -->
       <div class="flex-1 min-w-0 overflow-auto">
         <!-- 基本设置 -->
-        <div class="art-card-sm mb-5">
+        <div class="app-card-sm mb-5">
           <h1 class="p-4 text-lg font-semibold border-b border-gray-200 mb-4">
             {{ $t('system.user.center.base_setting.title') }}
           </h1>
@@ -508,7 +493,7 @@ onMounted(() => {
         </div>
 
         <!-- 安全设置 -->
-        <div class="art-card-sm mb-5">
+        <div class="app-card-sm mb-5">
           <h1 class="p-4 text-lg font-semibold border-b border-gray-200 mb-4">
             {{ $t('system.user.center.secure_setting.title') }}
           </h1>
@@ -569,7 +554,7 @@ onMounted(() => {
         </div>
 
         <!-- 在线设备 -->
-        <div class="art-card-sm">
+        <div class="app-card-sm">
           <h1 class="p-4 text-lg font-semibold border-b border-gray-200 mb-4">
             {{ $t('system.user.center.online_device.table.title') }}
           </h1>

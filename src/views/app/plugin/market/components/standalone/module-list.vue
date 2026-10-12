@@ -1,11 +1,20 @@
 <script setup lang="ts">
 /** 模块列表：卡片/表格视图 + 分页 + 操作弹窗 */
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
-import { ElButton, ElIcon, ElPagination, ElTag } from 'element-plus';
+import {
+  ElButton,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElIcon,
+  ElPagination,
+  ElTag,
+} from 'element-plus';
 import { Info, Key, Package } from 'lucide-vue-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Icon } from '#/components/icon';
 import { $t } from '#/locales';
 
 import ModuleInstallDialog from './module-install-dialog.vue';
@@ -14,7 +23,11 @@ import UpgradeLog from './upgrade-log.vue';
 
 defineOptions({ name: 'ModuleList' });
 
-const props = defineProps<{ modules: any[]; viewMode: 'card' | 'table' }>();
+const props = defineProps<{
+  loading?: boolean;
+  modules: any[];
+  viewMode: 'card' | 'table';
+}>();
 const emit = defineEmits<{
   delete: [module: any];
   download: [module: any];
@@ -32,28 +45,42 @@ const currentPageModules = computed(() => {
   return props.modules.slice(start, start + pageSize.value);
 });
 
+// 数据变化（搜索 / 切 Tab）后若当前页越界则回到第一页，避免列表空白
+watch(
+  () => props.modules,
+  () => {
+    const maxPage = Math.max(
+      1,
+      Math.ceil(props.modules.length / pageSize.value),
+    );
+    if (currentPage.value > maxPage) {
+      currentPage.value = 1;
+    }
+  },
+);
+
 // ── vxe-grid 配置（表格模式，使用内置分页）──
 const tableGridOptions = computed<any>(() => ({
   data: props.modules,
   columns: [
-    { type: 'seq', title: '#', width: 60, align: 'center' },
+    { type: 'seq', title: $t('app.plugin.market.column_seq'), width: 60, align: 'center' },
     {
       field: 'name',
-      title: '模块信息',
+      title: $t('app.plugin.market.column_module'),
       minWidth: 200,
       slots: { default: 'name' },
     },
-    { field: 'version', title: '版本', width: 100, align: 'center' },
+    { field: 'version', title: $t('app.plugin.market.column_version'), width: 100, align: 'center' },
     {
       field: 'is_installed',
-      title: '状态',
+      title: $t('app.plugin.market.column_status'),
       width: 100,
       align: 'center',
       slots: { default: 'status' },
     },
     {
-      title: '操作',
-      minWidth: 280,
+      title: $t('app.plugin.market.column_action'),
+      width: 160,
       align: 'center',
       fixed: 'right',
       slots: { default: 'action' },
@@ -105,6 +132,30 @@ const showUpdateLog = (mod: any) => {
   upgradeLogRef.value?.openDialog(mod);
 };
 
+/** 表格「更多」下拉命令：与 CRUD TableAction 行为对齐 */
+const handleMore = (mod: any, cmd: string) => {
+  switch (cmd) {
+    case 'delete': {
+      deleteModule(mod);
+      break;
+    }
+    case 'install':
+    case 'download':
+    case 'update': {
+      downloadModule(mod);
+      break;
+    }
+    case 'log': {
+      showUpdateLog(mod);
+      break;
+    }
+    case 'uninstall': {
+      uninstallModule(mod);
+      break;
+    }
+  }
+};
+
 // ── 分页回调 ────────────────────────────────
 const handleSizeChange = (size: number) => {
   pageSize.value = size;
@@ -117,8 +168,30 @@ const handleCurrentChange = (page: number) => {
 
 <template>
   <div class="module-list-container">
+    <!-- 首次加载骨架屏：占位高度，避免 loading 白遮罩 + 内容区塌陷抖动 -->
+    <div
+      v-if="loading && currentPageModules.length === 0"
+      class="skeleton-grid"
+    >
+      <div v-for="i in 8" :key="i" class="skeleton-card">
+        <div class="skeleton-card-header">
+          <div class="skeleton-logo skeleton-block"></div>
+          <div class="skeleton-text">
+            <div class="skeleton-block skeleton-line"></div>
+            <div class="skeleton-block skeleton-line is-short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card-body">
+          <div class="skeleton-block skeleton-tag"></div>
+        </div>
+        <div class="skeleton-card-footer">
+          <div class="skeleton-block skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- 空状态 -->
-    <div v-if="currentPageModules.length === 0" class="empty-state">
+    <div v-else-if="currentPageModules.length === 0" class="empty-state">
       <div class="empty-icon">
         <ElIcon :size="48" class="text-gray-300 dark:text-gray-600">
           <Package />
@@ -135,7 +208,7 @@ const handleCurrentChange = (page: number) => {
     </div>
 
     <!-- 卡片视图模式 -->
-    <div v-else-if="viewMode === 'card'" class="card-view pb-5">
+    <div v-else-if="viewMode === 'card'" class="card-view">
       <div class="card-grid">
         <div
           v-for="mod in currentPageModules"
@@ -153,9 +226,7 @@ const handleCurrentChange = (page: number) => {
                     alt=""
                     class="w-full h-full object-contain"
                   />
-                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl"
-                    >📦</span
-                  >
+                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl">📦</span>
                 </div>
               </div>
               <div class="card-info-text">
@@ -188,8 +259,7 @@ const handleCurrentChange = (page: number) => {
                 size="small"
                 @click.stop="showUpdateLog(mod)"
               >
-                <ElIcon :size="14"><Info /></ElIcon
-                >{{ $t('app.plugin.market.update_log') }}
+                <ElIcon :size="14"><Info /></ElIcon>{{ $t('app.plugin.market.update_log') }}
               </ElButton>
             </div>
           </div>
@@ -268,9 +338,7 @@ const handleCurrentChange = (page: number) => {
               alt=""
               class="w-full h-full object-contain"
             />
-            <span v-else class="text-blue-600 dark:text-blue-400 text-base"
-              >📦</span
-            >
+            <span v-else class="text-blue-600 dark:text-blue-400 text-base">📦</span>
           </div>
           <div>
             <div class="text-sm font-medium">{{ row.name }}</div>
@@ -295,67 +363,65 @@ const handleCurrentChange = (page: number) => {
       </template>
       <template #action="{ row }">
         <div class="table-actions">
-          <ElButton
-            v-if="row.is_installed"
-            type="danger"
-            size="small"
-            @click.stop="uninstallModule(row)"
-          >
-            {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
-          </ElButton>
-          <template v-else>
-            <ElButton
-              v-if="row.purchased"
-              type="primary"
-              size="small"
-              @click.stop="downloadModule(row)"
-            >
-              {{
-                row.has_update
-                  ? $t('app.plugin.market.standalone.update.immediate')
-                  : $t('app.plugin.market.standalone.download.immediate')
-              }}
-            </ElButton>
-            <ElButton
-              v-else
-              type="primary"
-              size="small"
-              @click.stop="downloadModule(row)"
-            >
-              {{ $t('app.plugin.market.standalone.install.immediate') }}
-            </ElButton>
-            <ElButton
-              v-if="!row.purchased"
-              type="danger"
-              size="small"
-              @click.stop="deleteModule(row)"
-            >
-              {{ $t('app.plugin.market.standalone.delete.immediate') }}
-            </ElButton>
-          </template>
-          <ElButton type="text" size="small" @click.stop="showUpdateLog(row)">
+          <!-- 固定列：更新信息 (每行都有, 置于首位保证纵向对齐) -->
+          <ElButton type="primary" link size="small" @click.stop="showUpdateLog(row)">
             {{ $t('app.plugin.market.update_info') }}
           </ElButton>
+
+          <!-- 更多下拉：与 CRUD TableAction 一致 (ant-design:bars-outlined) -->
+          <ElDropdown
+            trigger="hover"
+            @command="(cmd: string) => handleMore(row, cmd)"
+          >
+            <ElButton type="primary" link size="small">
+              {{ $t('app.plugin.market.more') }}
+              <template #icon>
+                <Icon icon="ant-design:bars-outlined" />
+              </template>
+            </ElButton>
+            <template #dropdown>
+              <ElDropdownMenu>
+                <ElDropdownItem v-if="row.is_installed" command="uninstall">
+                  {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
+                </ElDropdownItem>
+                <ElDropdownItem
+                  v-else-if="row.purchased && row.has_update"
+                  command="update"
+                >
+                  {{ $t('app.plugin.market.standalone.update.immediate') }}
+                </ElDropdownItem>
+                <ElDropdownItem v-else-if="row.purchased" command="download">
+                  {{ $t('app.plugin.market.standalone.download.immediate') }}
+                </ElDropdownItem>
+                <ElDropdownItem v-else command="install">
+                  {{ $t('app.plugin.market.standalone.install.immediate') }}
+                </ElDropdownItem>
+                <ElDropdownItem
+                  v-if="!row.purchased"
+                  command="delete"
+                  divided
+                >
+                  {{ $t('app.plugin.market.standalone.delete.immediate') }}
+                </ElDropdownItem>
+              </ElDropdownMenu>
+            </template>
+          </ElDropdown>
         </div>
       </template>
     </VxeGrid>
 
-    <!-- 分页 - 仅卡片模式且数据超过一页时显示 -->
-    <div
-      v-if="viewMode === 'card' && total > pageSize"
-      class="pagination-footer"
-    >
-      <div class="pagination-container">
-        <ElPagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[12, 24, 48, 96]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+    <!-- 分页 - 卡片模式下常驻右下角 -->
+    <div v-if="viewMode === 'card' && total > 0" class="pagination-footer">
+      <ElPagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[12, 24, 48, 96]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 安装弹窗 -->
@@ -402,35 +468,50 @@ const handleCurrentChange = (page: number) => {
 }
 
 /* ── 卡片网格 ───────────────────────────── */
+.card-view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  /* 固定每行 4 张卡片, 与平台端「我的应用」保持一致 */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .module-card {
+  position: relative;
   overflow: hidden;
   background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--el-border-color-lighter);
   border-radius: 8px;
-  transition: all 0.25s;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .module-card:hover {
-  border-color: var(--el-border-color-hover);
-  box-shadow: var(--el-box-shadow-light);
-  transform: translateY(-2px);
+  border-color: var(--el-color-primary);
+  box-shadow: 0 4px 12px rgb(79 140 255 / 12%);
+  transform: translateY(-1px);
 }
 
 .card-header {
-  padding: 16px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
 }
 
 .card-info-row {
   display: flex;
+  flex: 1;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  min-width: 0;
 }
 
 .card-logo-wrap {
@@ -438,14 +519,14 @@ const handleCurrentChange = (page: number) => {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   background: linear-gradient(
     135deg,
     var(--el-color-primary-light-9) 0%,
     var(--el-color-primary-light-8) 100%
   );
-  border: 1px solid var(--el-color-primary-light-7);
+  color: var(--el-color-primary);
   border-radius: 8px;
 }
 
@@ -453,8 +534,8 @@ const handleCurrentChange = (page: number) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   overflow: hidden;
   border-radius: 4px;
 }
@@ -465,7 +546,7 @@ const handleCurrentChange = (page: number) => {
 }
 
 .card-title {
-  margin-bottom: 6px;
+  margin-bottom: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 15px;
@@ -483,8 +564,8 @@ const handleCurrentChange = (page: number) => {
 }
 
 .card-body {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  padding: 8px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
 }
 
 .card-meta {
@@ -500,6 +581,7 @@ const handleCurrentChange = (page: number) => {
 
 .card-footer {
   padding: 12px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
 }
 
 .action-row {
@@ -522,10 +604,10 @@ const handleCurrentChange = (page: number) => {
 
 .table-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  white-space: nowrap;
 }
 
 .vxe-grid-wrapper {
@@ -534,26 +616,119 @@ const handleCurrentChange = (page: number) => {
   min-height: 0;
 }
 
+/* 明亮主题：给 vxe-grid 表头追加浅色背景，与内容行区分（暗黑主题保持原样） */
+html:not(.dark) .vxe-grid-wrapper :deep(.vxe-table--header-wrapper),
+html:not(.dark) .vxe-grid-wrapper :deep(.vxe-table--header),
+html:not(.dark) .vxe-grid-wrapper :deep(.vxe-header--column) {
+  background-color: var(--el-color-primary-light-9, #ecf5ff) !important;
+}
+
 /* ── 分页 ──────────────────────────────── */
 .pagination-footer {
-  flex-shrink: 0;
-  padding: 12px 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 0 0;
+  margin-top: auto;
   border-top: 1px solid var(--el-border-color-lighter);
 }
 
-.pagination-container {
+/* ── 骨架屏（首次加载占位）────────────── */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.skeleton-card {
+  overflow: hidden;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 8px;
+}
+.skeleton-card-header {
   display: flex;
-  justify-content: center;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+}
+.skeleton-logo {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+.skeleton-text {
+  flex: 1;
+  min-width: 0;
+}
+.skeleton-line {
+  height: 14px;
+  margin-bottom: 8px;
+}
+.skeleton-line.is-short {
+  width: 45%;
+  margin-bottom: 0;
+}
+.skeleton-card-body {
+  padding: 8px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+.skeleton-tag {
+  width: 84px;
+  height: 22px;
+  border-radius: 4px;
+}
+.skeleton-card-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+.skeleton-btn {
+  height: 32px;
+  border-radius: 4px;
+}
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    var(--el-fill-color) 25%,
+    var(--el-fill-color-light) 37%,
+    var(--el-fill-color) 63%
+  );
+  background-size: 400% 100%;
+  border-radius: 4px;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
 }
 
 /* ── 响应式 ──────────────────────────────── */
-@media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 1280px) {
+  .card-grid,
+  .skeleton-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
 
-  .pagination-footer {
-    padding: 12px 0;
+@media (max-width: 1024px) {
+  .card-grid,
+  .skeleton-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .card-grid,
+  .skeleton-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

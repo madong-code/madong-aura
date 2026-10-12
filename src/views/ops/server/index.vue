@@ -277,7 +277,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .performance-monitor {
-  padding: 15px;
+  padding: 20px;
 
   .monitor-card {
     margin-bottom: 20px;
@@ -378,7 +378,7 @@ onMounted(() => {
 // 深色模式支持
 :deep(.dark) {
   :root {
-    --art-main-bg-color: #141414;
+    --app-main-bg-color: #141414;
   }
 
   .extensions-container {

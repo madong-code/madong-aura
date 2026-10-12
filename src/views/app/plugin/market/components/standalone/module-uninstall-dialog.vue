@@ -35,7 +35,7 @@ let sseConn: null | { close: () => void } = null;
 
 const openDialog = async () => {
   if (!props.plugin?.code) {
-    ElMessage.error('模块信息不完整，无法进行卸载');
+    ElMessage.error($t('app.plugin.market.invalid_uninstall'));
     return;
   }
   dialogApi.open();
@@ -63,7 +63,7 @@ const scrollToBottom = () => {
 const startUninstall = async () => {
   currentStep.value = 2;
   uninstallProgress.value = 0;
-  uninstallLogs.value = ['开始卸载...'];
+  uninstallLogs.value = [$t('app.plugin.market.standalone.uninstall.log_start')];
   startSseUninstall();
 };
 
@@ -98,7 +98,11 @@ const startSseUninstall = () => {
       // warning 处理器：插件已安装等提示信息
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        uninstallLogs.value.push(`警告: ${eventData.message}`);
+        uninstallLogs.value.push(
+          $t('app.plugin.market.standalone.uninstall.log_warn_prefix', {
+            msg: eventData.message,
+          }),
+        );
         scrollToBottom();
       }
       uninstallStatus.value = 'warning';
@@ -111,7 +115,11 @@ const startSseUninstall = () => {
       // error 处理器仅在服务器主动发送 event: error 时触发
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        uninstallLogs.value.push(`错误: ${eventData.message}`);
+        uninstallLogs.value.push(
+          $t('app.plugin.market.standalone.uninstall.log_error_prefix', {
+            msg: eventData.message,
+          }),
+        );
         uninstallStatus.value = 'exception';
         currentStep.value = 3;
         uninstallResult.value = 'error';
@@ -122,7 +130,9 @@ const startSseUninstall = () => {
     onError: () => {
       // onError 仅在连接意外断开时触发，completed/error 已处理时不覆盖
       if (currentStep.value < 3) {
-        uninstallLogs.value.push('SSE连接错误');
+        uninstallLogs.value.push(
+          $t('app.plugin.market.standalone.uninstall.sse_error'),
+        );
         uninstallStatus.value = 'exception';
         currentStep.value = 3;
         uninstallResult.value = 'error';
@@ -320,15 +330,15 @@ defineExpose({ openDialog });
   height: 32px;
   margin-bottom: 8px;
   font-weight: bold;
-  color: var(--el-text-color-regular);
-  background-color: var(--el-fill-color);
+  color: #666;
+  background-color: #e0e0e0;
   border-radius: 50%;
   transition: all 0.3s;
 }
 
 .step-label {
   font-size: 14px;
-  color: var(--el-text-color-regular);
+  color: #666;
   transition: all 0.3s;
 }
 
@@ -355,7 +365,7 @@ defineExpose({ openDialog });
   flex: 1;
   height: 2px;
   margin: 0 10px 24px;
-  background-color: var(--el-fill-color);
+  background-color: #e0e0e0;
   transition: all 0.3s;
 }
 

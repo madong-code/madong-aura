@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from 'vue';
 
 import { requestClient } from '#/api/request';
-import { Page } from '#/components/page';
 
 import SaaSDelegation from './SaaSDelegation.vue';
 import StandaloneDelegation from './StandaloneDelegation.vue';
@@ -27,10 +26,8 @@ const isSaasMode = computed(() => mode.value === 'saas');
 </script>
 
 <template>
-  <div v-loading="loading" class="h-full">
-    <Page v-if="!loading" auto-content-height>
-      <SaaSDelegation v-if="isSaasMode" />
-      <StandaloneDelegation v-else />
-    </Page>
+  <div v-loading="loading" class="h-full p-5">
+    <SaaSDelegation v-if="isSaasMode" />
+    <StandaloneDelegation v-else-if="!loading" />
   </div>
 </template>

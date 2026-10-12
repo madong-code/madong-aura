@@ -47,6 +47,8 @@ export function useAction(
       hasView: crudSchema.hasView ?? false,
       hasRemove: crudSchema.hasRemove ?? true,
       tree: crudSchema.tree,
+      // 行操作按钮默认平铺 2 个，超出自动并入「更多」下拉（页面可显式覆盖）
+      maxVisibleActions: crudSchema.maxVisibleActions ?? 2,
     };
   });
 
@@ -56,6 +58,11 @@ export function useAction(
     return selection.length > 0;
   });
 
+  /** 无权限时按钮表现（hide=隐藏 / disable=禁用），schema 级统一注入默认按钮 */
+  const authMode = crudSchema.authMode;
+
+  const withAuthMode = (action: any) => ({ authMode, ...action });
+
   // toolbarActions：主工具栏按钮（新增、批量删除等）
   const toolbarActions = computed(() => {
     const actions: ActionItem[] = [];
@@ -64,17 +71,19 @@ export function useAction(
     const defaultActions: ActionItem[] = [];
 
     if (tableConfig.value.hasAdd && formDialogEnabled.value) {
-      defaultActions.push({
-        key: 'add',
-        label: crudSchema.buttonText?.add || $t('components.crud.action.add'),
-        type: 'primary',
-        icon: 'ant-design:plus-outlined',
-        auth: crudSchema.permissions?.add,
-        dialogRef: dialogFormRef,
-        dialogParams: {
-          type: 'add',
-        },
-      });
+      defaultActions.push(
+        withAuthMode({
+          key: 'add',
+          label: crudSchema.buttonText?.add || $t('components.crud.action.add'),
+          type: 'primary',
+          icon: 'ant-design:plus-outlined',
+          auth: crudSchema.permissions?.add,
+          dialogRef: dialogFormRef,
+          dialogParams: {
+            type: 'add',
+          },
+        }),
+      );
     }
 
     if (tableConfig.value.hasBatchRemove && formDialogEnabled.value) {
@@ -84,17 +93,19 @@ export function useAction(
         crudSchema.dropDownToolbarActions &&
         crudSchema.dropDownToolbarActions.length > 0;
       if (!hasDropDownActions) {
-        defaultActions.push({
-          key: 'batchRemove',
-          label: $t('components.crud.action.batch_delete'),
-          type: 'danger',
-          icon: 'ant-design:delete-outlined',
-          auth: crudSchema.permissions?.remove,
-          ifShow: () => hasSelection.value,
-          onClick: () => {
-            crudApi.executeBatchRemove();
-          },
-        });
+        defaultActions.push(
+          withAuthMode({
+            key: 'batchRemove',
+            label: $t('components.crud.action.batch_delete'),
+            type: 'danger',
+            icon: 'ant-design:delete-outlined',
+            auth: crudSchema.permissions?.remove,
+            ifShow: () => hasSelection.value,
+            onClick: () => {
+              crudApi.executeBatchRemove();
+            },
+          }),
+        );
       }
     }
 
@@ -162,17 +173,19 @@ export function useAction(
       formDialogEnabled.value &&
       hasDropDownActions
     ) {
-      defaultActions.push({
-        key: 'batchRemove',
-        label: $t('components.crud.action.batch_delete'),
-        type: 'danger',
-        icon: 'ant-design:delete-outlined',
-        auth: crudSchema.permissions?.remove,
-        ifShow: () => hasSelection.value,
-        onClick: () => {
-          crudApi.executeBatchRemove();
-        },
-      });
+      defaultActions.push(
+        withAuthMode({
+          key: 'batchRemove',
+          label: $t('components.crud.action.batch_delete'),
+          type: 'danger',
+          icon: 'ant-design:delete-outlined',
+          auth: crudSchema.permissions?.remove,
+          ifShow: () => hasSelection.value,
+          onClick: () => {
+            crudApi.executeBatchRemove();
+          },
+        }),
+      );
     }
 
     // 如果没有配置 dropDownToolbarActions 或为空数组，直接返回
@@ -207,35 +220,39 @@ export function useAction(
       const defaultActions: ActionItem[] = [];
 
       if (tableConfig.value.hasView) {
-        defaultActions.push({
-          key: 'view',
-          label:
-            crudSchema.buttonText?.view || $t('components.crud.action.view'),
-          type: 'primary',
-          link: true,
-          icon: 'ant-design:eye-outlined',
-          auth: crudSchema.permissions?.view,
-          dialogRef: dialogFormRef,
-          dialogParams() {
-            return { type: 'view' };
-          },
-        });
+        defaultActions.push(
+          withAuthMode({
+            key: 'view',
+            label:
+              crudSchema.buttonText?.view || $t('components.crud.action.view'),
+            type: 'primary',
+            link: true,
+            icon: 'ant-design:eye-outlined',
+            auth: crudSchema.permissions?.view,
+            dialogRef: dialogFormRef,
+            dialogParams() {
+              return { type: 'view' };
+            },
+          }),
+        );
       }
 
       if (tableConfig.value.hasEdit) {
-        defaultActions.push({
-          key: 'edit',
-          label:
-            crudSchema.buttonText?.edit || $t('components.crud.action.edit'),
-          type: 'primary',
-          link: true,
-          icon: 'ant-design:edit-outlined',
-          auth: crudSchema.permissions?.edit,
-          dialogRef: dialogFormRef,
-          dialogParams: {
-            type: 'edit',
-          },
-        });
+        defaultActions.push(
+          withAuthMode({
+            key: 'edit',
+            label:
+              crudSchema.buttonText?.edit || $t('components.crud.action.edit'),
+            type: 'primary',
+            link: true,
+            icon: 'ant-design:edit-outlined',
+            auth: crudSchema.permissions?.edit,
+            dialogRef: dialogFormRef,
+            dialogParams: {
+              type: 'edit',
+            },
+          }),
+        );
       }
 
       // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
@@ -267,36 +284,40 @@ export function useAction(
 
       // 新增子节点（树形）
       if (tableConfig.value.hasAdd && tableConfig.value.tree) {
-        defaultActions.push({
-          key: 'addChild',
-          label:
-            (crudSchema.buttonText?.add || $t('components.crud.action.add')) +
-            $t('components.crud.action.add_child'),
-          icon: 'ant-design:plus-outlined',
-          size: 'small',
-          auth: crudSchema.permissions?.add,
-          dialogRef: dialogFormRef,
-          dialogParams: {
-            type: 'add',
-            tree: tableConfig.value.tree,
-          },
-        });
+        defaultActions.push(
+          withAuthMode({
+            key: 'addChild',
+            label:
+              (crudSchema.buttonText?.add || $t('components.crud.action.add')) +
+              $t('components.crud.action.add_child'),
+            icon: 'ant-design:plus-outlined',
+            size: 'small',
+            auth: crudSchema.permissions?.add,
+            dialogRef: dialogFormRef,
+            dialogParams: {
+              type: 'add',
+              tree: tableConfig.value.tree,
+            },
+          }),
+        );
       }
 
       if (tableConfig.value.hasRemove) {
-        defaultActions.push({
-          key: 'remove',
-          label:
-            crudSchema.buttonText?.remove ||
-            $t('components.crud.action.delete'),
-          type: 'danger',
-          icon: 'ant-design:delete-outlined',
-          size: 'small',
-          auth: crudSchema.permissions?.remove,
-          onClick: (_action: any, _record: any) => {
-            crudApi.executeRemove(_record);
-          },
-        });
+        defaultActions.push(
+          withAuthMode({
+            key: 'remove',
+            label:
+              crudSchema.buttonText?.remove ||
+              $t('components.crud.action.delete'),
+            type: 'danger',
+            icon: 'ant-design:delete-outlined',
+            size: 'small',
+            auth: crudSchema.permissions?.remove,
+            onClick: (_action: any, _record: any) => {
+              crudApi.executeRemove(_record);
+            },
+          }),
+        );
       }
 
       // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
@@ -319,11 +340,31 @@ export function useAction(
     return actions;
   });
 
+  // 行操作平铺上限：超出部分自动并入「更多」下拉（行级 auth/ifShow 过滤在渲染层仍然生效）
+  const visibleTableActions = computed(() => {
+    const max = tableConfig.value.maxVisibleActions;
+    const list = tableActions.value;
+    if (!max || list.length <= max) return list;
+    return [...list]
+      .sort((a, b) => (a.sort ?? 1000) - (b.sort ?? 1000))
+      .slice(0, max);
+  });
+
+  const mergedDropDownActions = computed(() => {
+    const max = tableConfig.value.maxVisibleActions;
+    const list = tableActions.value;
+    if (!max || list.length <= max) return dropDownActions.value;
+    const extra = [...list]
+      .sort((a, b) => (a.sort ?? 1000) - (b.sort ?? 1000))
+      .slice(max);
+    return [...dropDownActions.value, ...extra];
+  });
+
   return {
     toolbarActions,
     toolbarToolActions,
     dropDownToolbarActions,
-    tableActions,
-    dropDownActions,
+    tableActions: visibleTableActions,
+    dropDownActions: mergedDropDownActions,
   };
 }

@@ -38,7 +38,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       link: true,
       icon: 'ant-design:play-circle-outlined',
-      auth: 'crontab:task:start',
+      auth: 'crontab:task:resume',
       ifShow: (_action: any, record: any) => {
         return record.enabled === 0;
       },
@@ -86,7 +86,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:info-circle-outlined',
       link: true,
-      auth: 'crontab:task:logs',
+      auth: 'crontab:log:list',
       onClick: (_e: Event, row: any) => {
         crontabLogsWrapRef.value.show(row);
       },

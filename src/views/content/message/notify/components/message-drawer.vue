@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { useVbenDrawer } from '#/core/ui/common';
 import { $t } from '#/locales';
 import { useNotifyStore } from '#/store/modules/notify';
 import MessageCenter from '#/views/content/message/notify/index.vue';
 
+const route = useRoute();
 const notifyStore = useNotifyStore();
 const drawerActiveTab = ref<'all' | 'unread'>('unread');
 
@@ -15,6 +17,14 @@ const [Drawer, drawerApi] = useVbenDrawer({
   closeOnClickModal: true,
   closeOnPressEscape: true,
 });
+
+// 保险：抽屉打开期间发生任何路由跳转自动关闭（覆盖阅读面板、订阅设置等所有跳转路径）
+watch(
+  () => route.fullPath,
+  () => {
+    drawerApi.close();
+  },
+);
 
 // 每次打开抽屉时递增，强制 MessageCenter 重建，重新执行 onMounted
 const messageKey = ref(0);
@@ -76,6 +86,7 @@ defineExpose({ open, close });
       :key="messageKey"
       :active-tab="drawerActiveTab"
       @update:active-tab="drawerActiveTab = $event"
+      @navigate="close"
     />
   </Drawer>
 </template>

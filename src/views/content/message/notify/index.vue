@@ -2,12 +2,13 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Mail, Search, Settings, Trash2 } from 'lucide-vue-next';
+import { ChevronLeft, Mail, Search, Settings, Trash2 } from 'lucide-vue-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { NotifyService } from '#/api/content/message/notify';
 import { $t } from '#/locales';
 import { useNotifyStore } from '#/store/modules/notify';
+import { canAccessRoute, isExternalLink, navigateToTarget } from '#/utils/navigation';
 
 const props = withDefaults(
   defineProps<{
@@ -20,6 +21,8 @@ const props = withDefaults(
 );
 const emit = defineEmits<{
   (e: 'update:activeTab', value: 'all' | 'unread'): void;
+  /** 路由跳转成功后通知父级（Drawer 模式下关闭抽屉自身） */
+  (e: 'navigate'): void;
 }>();
 
 const router = useRouter();
@@ -31,6 +34,11 @@ const activeCategory = ref<number | string>(0); // 0=全部, string=雪花ID
 const searchKeyword = ref('');
 const selectedCount = ref(0);
 const selectedRecords = ref<any[]>([]); // 从 gridEvents 维护，避免依赖 gridApi.grid
+
+/** 文本阅读面板：当前阅读的消息（null=列表模式） */
+const detailItem = ref<any | null>(null);
+/** 打开阅读面板时该消息是否未读（关闭时用于刷新列表） */
+const detailWasUnread = ref(false);
 
 /** 当前使用的 tab（优先外部 props） */
 const currentTab = computed(() => props.activeTab ?? internalActiveTab.value);
@@ -124,6 +132,7 @@ const gridOptions = {
     },
     {
       field: 'title',
+      slots: { default: 'title' },
       title: $t('content.message.notify.table.columns.title'),
       minWidth: 150,
       align: 'left' as const,
@@ -145,11 +154,6 @@ const gridOptions = {
       title: $t('content.message.notify.table.columns.created_date'),
       width: 170,
       align: 'center' as const,
-    },
-    {
-      slots: { default: 'action' },
-      title: $t('content.message.notify.table.columns.action'),
-      minWidth: 110,
     },
   ],
   pagerConfig: {
@@ -173,7 +177,7 @@ const gridOptions = {
           params.keyword = searchKeyword.value.trim();
         }
         const resp = await NotifyService.getList(params);
-        // 归一化数据：补全 date/isRead/link 字段供表格使用
+        // 归一化数据：补全 date/isRead/link/query 字段供表格使用
         const items = (resp.list ?? []).map((item: any) => ({
           ...item,
           date: item.created_at
@@ -183,6 +187,7 @@ const gridOptions = {
             : '',
           isRead: item.status === 'read',
           link: item.action_url ?? '',
+          query: parseActionParams(item.action_params),
           category_name: item.category_name || '通知',
         }));
         return { items, total: resp.total ?? 0 };
@@ -212,16 +217,83 @@ const [Grid, gridApi] = useVbenVxeGrid<any>({
 });
 
 // ==================== 事件 ====================
-function handleItemClick(item: any) {
-  if (item.link) {
-    if (item.link.startsWith('http')) {
-      window.open(item.link, '_blank');
-    } else {
-      router.push({ path: item.link, query: item.query || {} });
-    }
+/** 安全解析 action_params（JSON 字符串 / 对象） */
+function parseActionParams(raw: any): Record<string, any> {
+  if (!raw) return {};
+  if (typeof raw === 'object') return raw;
+  try {
+    const parsed = JSON.parse(raw);
+    return typeof parsed === 'object' && parsed !== null ? parsed : {};
+  } catch {
+    return {};
   }
-  if (!item.isRead) {
-    notifyStore.markRead(item.id);
+}
+
+/** 标记已读（更新徽标 + 本地状态） */
+function markItemRead(item: any) {
+  if (item.isRead) return;
+  notifyStore.markRead(item.id);
+  item.isRead = true;
+}
+
+/**
+ * 标题点击：跳转到消息对应模块
+ * - 有导航目标且当前用户菜单中存在 → 跳转（并标记已读）
+ * - 有导航目标但菜单中不存在 → 无响应（静默模式）
+ * - 无导航目标 → 默认打开文本阅读
+ */
+function handleTitleClick(item: any) {
+  const target: string = item.link || '';
+  if (target && canAccessRoute(target)) {
+    markItemRead(item);
+    if (isExternalLink(target)) {
+      window.open(target, '_blank');
+      return;
+    }
+    // 与详情"前往处理"一致：跳转成功后通知父级关闭抽屉
+    if (navigateToTarget(target, item.query)) {
+      emit('navigate');
+    }
+    return;
+  }
+  if (!target) {
+    openDetail(item);
+  }
+}
+
+/** 文本阅读：打开阅读面板（阅读即标记已读） */
+function openDetail(item: any) {
+  detailWasUnread.value = !item.isRead;
+  detailItem.value = item;
+  markItemRead(item);
+}
+
+function closeDetail() {
+  detailItem.value = null;
+  // 已读状态变更后刷新列表，保持未读标记/列表数据一致
+  if (detailWasUnread.value) {
+    detailWasUnread.value = false;
+    refresh();
+  }
+}
+
+/** 阅读面板中的"前往处理"按钮 */
+const detailCanNavigate = computed(() => {
+  const target: string = detailItem.value?.link || '';
+  return !!target && canAccessRoute(target);
+});
+
+function goDetailTarget() {
+  const item = detailItem.value;
+  const target: string = item?.link || '';
+  if (!target) return;
+  if (isExternalLink(target)) {
+    window.open(target, '_blank');
+    return;
+  }
+  if (navigateToTarget(target, item?.query)) {
+    closeDetail();
+    emit('navigate');
   }
 }
 
@@ -469,29 +541,90 @@ watch(searchKeyword, () => {
         </span>
       </div>
 
-      <!-- vxe-grid 表格（含内置分页） -->
-      <div class="flex-1 overflow-hidden">
+      <!-- 主区域：文本阅读面板 / 消息列表 -->
+      <div v-if="detailItem" class="flex flex-1 flex-col overflow-hidden">
+        <div
+          class="shrink-0 flex items-center border-b border-border/30 px-4 py-2.5"
+        >
+          <button
+            class="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary"
+            @click="closeDetail"
+          >
+            <ChevronLeft class="size-4" />
+            {{ $t('content.message.notify.detail.back') }}
+          </button>
+        </div>
+        <div class="flex-1 overflow-y-auto px-6 py-5">
+          <h3 class="text-base font-medium text-foreground">
+            {{ detailItem.title }}
+          </h3>
+          <div
+            class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground"
+          >
+            <span v-if="detailItem.category_name">
+              {{ $t('content.message.notify.table.columns.type') }}：
+              {{ detailItem.category_name }}
+            </span>
+            <span v-if="detailItem.date">
+              {{ $t('content.message.notify.table.columns.created_date') }}：
+              {{ detailItem.date }}
+            </span>
+            <span v-if="detailItem.sender?.real_name">
+              {{ $t('content.message.notify.detail.sender') }}：
+              {{ detailItem.sender.real_name }}
+            </span>
+          </div>
+          <div
+            class="mt-5 whitespace-pre-wrap text-sm leading-6 text-foreground/90"
+          >
+            {{ detailItem.content || $t('content.message.notify.detail.empty') }}
+          </div>
+        </div>
+        <div
+          v-if="detailCanNavigate"
+          class="shrink-0 border-t border-border/30 px-6 py-3"
+        >
+          <button
+            class="rounded-md bg-primary px-4 py-1.5 text-xs text-primary-foreground transition-colors hover:bg-primary/90"
+            @click="goDetailTarget"
+          >
+            {{ $t('content.message.notify.detail.goto') }}
+          </button>
+        </div>
+      </div>
+      <div v-else class="flex-1 overflow-hidden">
         <Grid>
           <template #view="{ row }">
             <button
-              class="inline-flex items-center justify-center rounded p-1 text-muted-foreground/70 hover:bg-accent hover:text-primary transition-colors"
-              @click.stop="handleItemClick(row)"
+              class="inline-flex items-center justify-center rounded p-1 text-muted-foreground/70 transition-colors hover:bg-accent hover:text-primary"
+              :title="$t('content.message.notify.detail.view_tooltip')"
+              @click.stop="openDetail(row)"
             >
               <Mail class="size-4" />
             </button>
           </template>
-          <template #content="{ row }">
-            <span class="truncate block" :title="row.content">
-              {{ row.content }}
+          <template #title="{ row }">
+            <span
+              class="cursor-pointer transition-colors hover:text-primary"
+              :class="{ 'font-medium text-foreground': !row.isRead }"
+              :title="row.title"
+              @click.stop="handleTitleClick(row)"
+            >
+              <span
+                v-if="!row.isRead"
+                class="mr-1 inline-block size-[6px] rounded-full bg-blue-500 align-middle"
+              ></span>
+              {{ row.title }}
             </span>
           </template>
-          <template #action="{ row }">
-            <button
-              class="text-xs text-blue-500 hover:text-blue-600 hover:underline transition-colors"
-              @click.stop="handleItemClick(row)"
+          <template #content="{ row }">
+            <span
+              class="cursor-pointer truncate block hover:text-primary"
+              :title="row.content"
+              @click.stop="openDetail(row)"
             >
-              {{ $t('content.message.notify.table.action.view') }}
-            </button>
+              {{ row.content }}
+            </span>
           </template>
         </Grid>
       </div>
