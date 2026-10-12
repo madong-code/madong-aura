@@ -3,22 +3,20 @@ node_modules
 dist
 dist-ssr
 *.local
+*.log
 .cursorrules
+
+# Nitro mock
+tooling/mock/.nitro
+tooling/mock/.data
+
+# Vite plugins
+tooling/vite/plugins
+
+# src/plugin
+src/plugin/*
 
 # Auto-generated files
 src/types/import/auto-imports.d.ts
 src/types/import/components.d.ts
 .auto-import.json
-
-# 调试/测试残留（仅限仓库根目录）
-/*.log
-/*.err
-/*.out.log
-/*.yaml
-/*.png
-/*.txt
-/*.cjs
-/*.js
-/verify.*
-/vite.verify.config.ts
-/.playwright-cli/

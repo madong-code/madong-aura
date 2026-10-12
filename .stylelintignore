@@ -1,9 +1,7 @@
 dist
 node_modules
 public
-.husky
 .vscode
 
-src/components/Layout/MenuLeft/index.vue
 src/assets
 stats.html
