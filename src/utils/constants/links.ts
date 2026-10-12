@@ -3,27 +3,31 @@
  * 集中管理便于维护和更新链接地址
  *
  * @module utils/constants/links
- * @author Madong Team
+ * @author Mr.April
  */
 export const WEB_LINKS = {
-  // Github 主页
-  GITHUB_HOME: 'https://gitee.com/liu_guan_qing',
-
-  // 项目 Github 主页
-  GITHUB: 'https://gitee.com/motion-code/madong-vue',
+  // 代码仓库（按实际项目地址修改）
+  GITHUB_HOME: '',
+  GITHUB: '',
 
   // 个人博客
-  BLOG: 'https://madong.tech/',
+  BLOG: '',
 
   // 项目文档
-  DOCS: 'https://madong.tech/docs/framework',
+  DOCS: '',
+
+  // 精简版本
+  LiteVersion: '',
+
+  // 历史版本
+  OldVersion: '',
 
   // 项目社区
-  COMMUNITY: 'https://madong.tech/',
+  COMMUNITY: '',
 
-  // 个人 Bilibili 主页
+  // Bilibili 主页
   BILIBILI: '',
 
   // 项目介绍
-  INTRODUCE: 'https://madong.tech/docs/framework/297061518217330688',
-};
+  INTRODUCE: ''
+}

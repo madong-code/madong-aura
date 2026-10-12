@@ -10,6 +10,8 @@
 
 import { useSiteConfigStore } from '#/store/modules/site-config';
 
+import { resolveSignedUrl } from './private-storage';
+
 // ============================================================================
 // 常量
 // ============================================================================
@@ -108,10 +110,17 @@ export const buildStaticUrl = (
 
   const trimmed = path.trim();
 
-  // 完整 URL、协议相对 URL、Data URL、Blob URL → 无需加工直接返回
+  // Data URL、Blob URL → 无需加工直接返回
+  if (isDataUrl(trimmed) || isBlobUrl(trimmed)) return trimmed;
+
+  // 私有空间：资源 key 交后端签发临时直链，前端不做任何拼接
+  // （未就绪时返回 null，先按下方公开逻辑回落，拿到签名地址后重新渲染）
+  const signedUrl = resolveSignedUrl(trimmed);
+  if (signedUrl) return signedUrl;
+
+  // 完整 URL、协议相对 URL → 无需加工直接返回
   if (isFullUrl(trimmed)) return addParams ? addCdnParams(trimmed) : trimmed;
   if (isProtocolRelativeUrl(trimmed)) return trimmed;
-  if (isDataUrl(trimmed) || isBlobUrl(trimmed)) return trimmed;
 
   const baseUrl = getStaticBaseUrl(domain);
   const cleaned = stripLeadingSlash(trimmed);

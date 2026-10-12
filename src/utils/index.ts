@@ -3,7 +3,7 @@
  * 提供向后兼容性和便捷导入
  *
  * @module utils/index
- * @author Madong Team
+ * @author Mr.April
  */
 
 // 常量定义相关

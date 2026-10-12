@@ -112,6 +112,7 @@ export type ComponentType =
   | 'KeyValueEditor'
   | 'Password'
   | 'RadioGroup'
+  | 'ReposEditor'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -142,6 +143,7 @@ export interface ComponentPropsMap {
   InputNumber: InputNumberProps;
   Password: Record<string, any>;
   RadioGroup: RadioGroupProps;
+  ReposEditor: Record<string, any>;
   Select: SelectV2Props;
   Space: SpaceProps;
   Switch: SwitchProps;
