@@ -10,6 +10,7 @@ import { preferences } from '#/core/preferences';
 import { LOGIN_PATH } from '#/core/shared/constants';
 import { resetAllStores, useAccessStore, useUserStore } from '#/core/stores';
 import { useSiteConfigStore } from '#/store/modules/site-config';
+import { buildAppUrl } from '#/utils/url';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -73,24 +74,31 @@ export const useAuthStore = defineStore('auth', () => {
       // 不做任何处理
     }
 
-    // 1. 重置所有 store（access/user/siteConfig/tabbar...），siteConfig.$reset 已包含重置
+    // 1. 重置所有 store（access/user/siteConfig/tabbar...）
     resetAllStores();
 
     // 2. 强制清除 token 并写入 storage，防止 pinia-plugin-persistedstate 在 $reset 后恢复旧 token
     accessStore.$patch({
       accessToken: null,
       refreshToken: null,
+      isAccessChecked: false,
+      loginExpired: false,
     });
 
-    // 3. 回登录页（路由守卫检测 accessToken 为空 → 放行）
-    await router.replace({
-      path: LOGIN_PATH,
-      query: redirect
-        ? {
-            redirect: encodeURIComponent(router.currentRoute.value.fullPath),
-          }
-        : {},
-    });
+    // 3. 清除 localStorage 中的持久化数据，防止 persist 插件在导航守卫中恢复 token
+    try {
+      const namespace = `${import.meta.env.VITE_APP_NAMESPACE}-${import.meta.env.VITE_APP_VERSION}-${import.meta.env.PROD ? 'prod' : 'dev'}`;
+      localStorage.removeItem(`${namespace}-core-access`);
+    } catch {}
+
+    // 4. 构建登录页 URL，如有需要携带 redirect 参数
+    const loginUrl = redirect
+      ? `${LOGIN_PATH}?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`
+      : LOGIN_PATH;
+
+    // 5. 使用硬跳转确保一定到达登录页（绕过路由守卫和 persist 插件的竞态问题）
+    //    必须经 buildAppUrl 拼上部署 base（如 /admin/），否则子目录部署会 404
+    window.location.assign(buildAppUrl(loginUrl));
   }
 
   async function fetchUserInfo() {

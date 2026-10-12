@@ -7,11 +7,10 @@ import { defineStore } from 'pinia';
 import { CategoryService } from '#/api/content/message/category';
 import { NotifyService } from '#/api/content/message/notify';
 import { useUserStore } from '#/core/stores';
-// @ts-expect-error: push-vue.js has no type declarations
-import { Push } from '#/utils/push/push-vue.js';
 
-// 全局 Push 连接（Store 多次创建时复用）
-let pushClient: InstanceType<typeof Push> | null = null;
+import { subscribeUserChannel, resetPushClient } from '#/utils/push/client';
+
+let isInitialized = false;
 
 export const useNotifyStore = defineStore('notify', () => {
   // ========== 状态 ==========
@@ -21,33 +20,22 @@ export const useNotifyStore = defineStore('notify', () => {
   const loading = ref(false);
   const pushConnected = ref(false);
 
-  // ========== 订阅相关已移除：subscribe-page 直接调用 API ==========
-
   // ========== Push 连接管理 ==========
   function initPush() {
-    if (pushClient) return;
-
-    const wssEnabled = import.meta.env.VITE_GLOB_ENABLE_WSS === 'true';
-    if (!wssEnabled) return;
-
-    const wssUrl = import.meta.env.VITE_GLOB_WSS_URL;
-    const appKey = import.meta.env.VITE_GLOB_WSS_APPKEY;
-    if (!wssUrl || !appKey) {
-      console.warn('[NotifyStore] WSS 未配置');
-      return;
-    }
+    if (isInitialized) return;
 
     const userStore = useUserStore();
     const userId = (userStore.userInfo as Record<string, any>)?.id || '0';
 
-    pushClient = new Push({
-      url: wssUrl,
-      app_key: appKey,
-      auth: '/adminapi/plugin/webman/push/auth',
-    });
+    const channel = subscribeUserChannel(String(userId));
 
-    // 订阅个人消息通道 backend-admin-{userId}（单租户，无租户维度）
-    const channel = pushClient.subscribe(`backend-admin-${userId}`);
+    // WSS 未启用（如 mock 联调期）：退化为 REST 拉取未读数，保证红点可用
+    if (!channel) {
+      isInitialized = true;
+      loadUnreadCount();
+      return;
+    }
+
     channel.on('message', (data: any) => {
       const messages = data.messages || data;
       const list = Array.isArray(messages) ? messages : [messages];
@@ -62,11 +50,14 @@ export const useNotifyStore = defineStore('notify', () => {
     });
 
     pushConnected.value = true;
+    isInitialized = true;
     loadUnreadCount();
+    console.log('[NotifyStore] 通知推送已初始化');
   }
 
   function destroyPush() {
-    // Push 连接由 Push 内部管理生命周期，不主动断开
+    isInitialized = false;
+    pushConnected.value = false;
   }
 
   // ========== 数据加载 ==========
@@ -160,7 +151,8 @@ export const useNotifyStore = defineStore('notify', () => {
     totalItems.value = 0;
     loading.value = false;
     pushConnected.value = false;
-    pushClient = null;
+    isInitialized = false;
+    resetPushClient();
   }
 
   // ========== 工具函数 ==========
@@ -170,7 +162,7 @@ export const useNotifyStore = defineStore('notify', () => {
       definition_id: item.definition_id,
       category: item.category_id ?? 0,
       category_name: item.category_name,
-      module_id: item.definition_id, // 兼容旧引用
+      module_id: item.definition_id,
       module_name: item.definition_name ?? item.module_name,
       title: item.title ?? '',
       content: item.content ?? '',

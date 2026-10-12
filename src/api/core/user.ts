@@ -1,4 +1,4 @@
-import type { UserInfo } from '#/core/shared/types';
+import type { UserInfo } from '#/core/shared/types/user';
 
 import { requestClient } from '#/api/request';
 

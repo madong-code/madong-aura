@@ -9,11 +9,11 @@ export interface LoginResult {
 }
 
 /**
- * 刷新accessToken
+ * 刷新accessToken（GET + query，幂等读操作）
  */
 export async function refreshTokenApi(refreshToken: string) {
-  return baseRequestClient.post('/system/auth/refresh-token', {
-    refresh_token: refreshToken,
+  return baseRequestClient.get('/system/auth/refresh-token', {
+    params: { refresh_token: refreshToken },
   });
 }
 

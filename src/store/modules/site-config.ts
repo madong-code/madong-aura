@@ -6,6 +6,7 @@ import { defineStore } from 'pinia';
 import { ConfigService } from '#/api/system/config';
 import { setPreferences } from '#/core/preferences';
 import { buildStaticUrl } from '#/utils/url';
+import { prefetchSignedUrls } from '#/utils/url/private-storage';
 
 // 站点配置的分组与编码（与后端 config 表一致）
 const SITE_GROUP_CODE = 'default';
@@ -157,7 +158,9 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
 
     const updates: Record<string, any> = {};
     if (config.title) updates.app = { name: config.title };
-    // logo 通过 buildStaticUrl 处理：同域使用相对路径，CDN 自动拼接域名
+    // 私有空间下 logo/favicon 需先向后台换取签名地址，再写入 preferences（一次性写入，无法后续重算）
+    await prefetchSignedUrls([config.logo, config.favicon]);
+    // logo 通过 buildStaticUrl 处理：同域使用相对路径，CDN 自动拼接域名，私有空间取签名地址
     const logoUrl = buildStaticUrl(config.logo || '');
     updates.logo = {
       source: logoUrl || '/logo.png',
