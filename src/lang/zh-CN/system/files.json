@@ -2,6 +2,7 @@
   "title": "文件管理",
   "table": {
     "columns": {
+      "preview": "预览",
       "filename": "文件名",
       "original_filename": "原始文件名",
       "size_info": "大小",
@@ -14,20 +15,68 @@
       "filename": "文件名",
       "original_filename": "原始文件名",
       "ext": "扩展名",
-      "platform": "平台"
+      "platform": "平台",
+      "platform_placeholder": "请选择存储平台"
     }
   },
-  "list": {
-    "table": {
-      "columns": {
-        "actions": {
-          "delete": {
-            "label": "删除",
-            "title": "删除确认",
-            "confirm": "确定删除选中的文件吗？"
-          }
-        }
-      }
-    }
+  "delete": {
+    "title": "删除附件",
+    "content": "即将删除 {0} 个附件，同时会清理对应的云 / 本地物理文件且不可恢复。请输入当前登录管理员密码以确认：",
+    "password_placeholder": "请输入管理员密码",
+    "password_required": "请输入管理员密码",
+    "confirm": "确认删除",
+    "cancel": "取消",
+    "success": "已删除 {0} 个附件"
+  },
+  "detail": {
+    "action": "详情",
+    "title": "文件详情",
+    "basic_info": "基础信息",
+    "preview_unsupported": "该文件类型不支持预览",
+    "filename": "文件名",
+    "original_filename": "原始文件名",
+    "content_type": "文件类型",
+    "size_info": "文件大小",
+    "platform": "存储平台",
+    "space": "存储空间",
+    "space_public": "公开空间",
+    "space_private": "私有空间",
+    "source": "来源",
+    "source_default": "系统",
+    "source_plugin": "插件（{0}）",
+    "created_name": "上传人",
+    "created_date": "上传时间",
+    "link": "文件链接",
+    "path": "存储路径",
+    "copy": "复制",
+    "copy_success": "链接已复制",
+    "private_hint": "私有空间资源地址为临时签名直链，有效期由服务端统一配置（1 小时）",
+    "open": "在新窗口打开",
+    "close": "关闭"
+  },
+  "upload": {
+    "action": "上传",
+    "title": "上传附件",
+    "tab_local": "本地上传",
+    "tab_remote": "远程拉取",
+    "kind": "类型",
+    "kind_image": "图片",
+    "kind_file": "附件",
+    "sub_dir": "归属子目录",
+    "sub_dir_hint": "文件将存放到「存储根目录 / 归属子目录 / 年月」下，建议按用途填写",
+    "drag_text": "将文件拖到此处，或点击选择",
+    "drag_hint_image": "支持 jpg/png/gif/webp/svg 等图片格式，可多选",
+    "drag_hint_file": "支持 doc/docx/xls/xlsx/pdf/txt/zip/rar/7z，单文件不超过 50MB",
+    "remote_label": "图片地址",
+    "remote_placeholder": "每行一个图片 URL，支持批量拉取",
+    "remote_button": "开始拉取",
+    "remote_required": "请输入至少一个图片地址",
+    "results": "处理结果",
+    "copy": "复制链接",
+    "copy_all": "复制全部链接",
+    "copy_success": "链接已复制",
+    "dedup_hint": "内容相同的文件会复用已有记录，不会重复占用存储",
+    "failed": "上传失败",
+    "close": "关闭"
   }
 }

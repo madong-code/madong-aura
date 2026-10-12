@@ -3,12 +3,15 @@
   "table": {
     "columns": {
       "name": "Name",
+      "code": "Code",
       "category": "Category",
       "url": "URL",
       "sort": "Sort",
       "type": "Type",
       "target": "Target",
       "is_show": "Visible",
+      "is_public": "Public",
+      "is_no_auth": "Login Only",
       "enabled": "Status"
     },
     "search": {
@@ -22,6 +25,7 @@
     "category": "Category",
     "app": "App",
     "source": "Source",
+    "code": "Code",
     "name": "Name",
     "type": "Type",
     "pid": "Parent",
@@ -31,6 +35,8 @@
     "sort": "Sort",
     "enabled": "Status",
     "is_show": "Visible",
+    "is_public": "Public",
+    "is_no_auth": "Login Only",
     "rules_name": "Please enter name",
     "rules_type": "Please select type",
     "placeholder_app": "Please select app",

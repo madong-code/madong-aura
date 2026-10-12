@@ -34,5 +34,12 @@
       "total": "共 {total} 条",
       "selected": "已选 {count} 项"
     }
+  },
+  "detail": {
+    "back": "返回列表",
+    "goto": "前往处理",
+    "sender": "发送者",
+    "empty": "（无正文内容）",
+    "view_tooltip": "点击阅读"
   }
 }

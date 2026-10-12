@@ -1,461 +1,585 @@
 import type { RouteRecordStringComponent } from '#/core/shared/types';
 
-import { $t } from '#/locales';
-
-/** 插件路由定义类型：component 可选，无 component 但有 children 时自动渲染为 RouterView 容器 */
+/**
+ * 插件路由定义类型：component 可选，无 component 但有 children 时自动渲染为 RouterView 容器
+ */
 type PluginRoute = Omit<
   RouteRecordStringComponent,
   'children' | 'component'
 > & {
   children?: PluginRoute[];
-  component?: string;
+  component?: null | string;
 };
 
-const routes: PluginRoute[] = [
-  {
-    path: '/demo',
-    name: 'DemoRoot',
-    component: 'BasicLayout',
-    redirect: '/demo/crud/basic',
-    meta: {
-      title: $t('demo.menu.title'),
-      icon: 'lucide:flask-conical',
-      order: 9999,
-      module: 'demo',
-    },
-    children: [
-      // ===================== CRUD 示例 =====================
-      {
-        path: '/demo/crud',
-        name: 'DemoCrudGroup',
-        redirect: '/demo/crud/basic',
-        meta: {
-          title: $t('demo.menu.crud'),
-          icon: 'lucide:database',
-          module: 'demo',
-        },
-        children: [
-          {
-            path: '/demo/crud/basic',
-            name: 'DemoCrudBasic',
-            component: '/crud/basic',
-            meta: {
-              title: $t('demo.crud.basic.title'),
-              icon: 'lucide:file-spreadsheet',
-              module: 'demo',
-            },
-          },
-          {
-            path: '/demo/crud/tree',
-            name: 'DemoCrudTree',
-            component: 'crud/tree',
-            meta: {
-              title: $t('demo.crud.tree.title'),
-              icon: 'lucide:git-fork',
-              module: 'demo',
-            },
-          },
-          {
-            path: '/demo/crud/drawer',
-            name: 'DemoCrudDrawer',
-            component: 'crud/drawer',
-            meta: {
-              title: $t('demo.crud.drawer.title'),
-              icon: 'lucide:panel-right-open',
-              module: 'demo',
-            },
-          },
-        ],
+/**
+ * demo 插件前端路由定义（开发环境）。
+ *
+ * 本文件由插件包 resource/data/menu/admin.php（后端 sys_menu 种子）转换生成，
+ * 仅供 dev scanner 扫描合并：开发环境下无需后端配置菜单即可访问插件页面。
+ * 生产环境菜单始终以后端安装插件时写入的 sys_menu 为权威（source='plugin:demo'，
+ * 后端自动注入 meta.module='demo'），插件目录与菜单 code 均为 demo，
+ * 故 dev 与生产解析到的组件路径完全一致。
+ *
+ * 字段语义同后端菜单：component 为相对 src/plugin/demo/views/ 的裸路径，
+ * 根节点使用 BasicLayout 布局哨兵；scanner 会为非布局节点注入 meta.module='demo'。
+ */
+const routes: PluginRoute[] =   [
+    {
+      "name": "demo",
+      "path": "/demo",
+      "component": "BasicLayout",
+      "redirect": "/demo/crud/basic",
+      "meta": {
+        "title": "示例演示",
+        "icon": "lucide:flask-conical",
+        "order": 9999,
+        "keepAlive": false,
+        "hideInMenu": false
       },
-      // ===================== 表单示例 =====================
-      {
-        path: '/demo/form',
-        name: 'DemoFormGroup',
-        redirect: '/demo/form/overview',
-        meta: {
-          title: $t('demo.menu.form'),
-          icon: 'lucide:clipboard-list',
-          module: 'demo',
+      "children": [
+        {
+          "name": "demo:crud",
+          "path": "/demo/crud",
+          "component": null,
+          "redirect": "/demo/crud/basic",
+          "meta": {
+            "title": "CRUD 示例",
+            "icon": "lucide:database",
+            "order": 1,
+            "keepAlive": false,
+            "hideInMenu": false
+          },
+          "children": [
+            {
+              "name": "demo:crud:basic",
+              "path": "/demo/crud/basic",
+              "component": "crud/basic",
+              "redirect": "",
+              "meta": {
+                "title": "基础表格",
+                "icon": "lucide:file-spreadsheet",
+                "order": 1,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            },
+            {
+              "name": "demo:crud:tree",
+              "path": "/demo/crud/tree",
+              "component": "crud/tree",
+              "redirect": "",
+              "meta": {
+                "title": "树形表格",
+                "icon": "lucide:git-fork",
+                "order": 2,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            },
+            {
+              "name": "demo:crud:drawer",
+              "path": "/demo/crud/drawer",
+              "component": "crud/drawer",
+              "redirect": "",
+              "meta": {
+                "title": "抽屉模式",
+                "icon": "lucide:panel-right-open",
+                "order": 3,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            }
+          ]
         },
-        children: [
-          {
-            path: '/demo/form/overview',
-            name: 'DemoFormOverview',
-            component: 'form/overview',
-            meta: {
-              title: $t('demo.form.overview.title'),
-              icon: 'lucide:layout-dashboard',
-              module: 'demo',
-            },
+        {
+          "name": "demo:form",
+          "path": "/demo/form",
+          "component": null,
+          "redirect": "/demo/form/overview",
+          "meta": {
+            "title": "表单示例",
+            "icon": "lucide:clipboard-list",
+            "order": 2,
+            "keepAlive": false,
+            "hideInMenu": false
           },
-          {
-            path: '/demo/form/basic',
-            name: 'DemoFormBasic',
-            component: 'form/basic',
-            meta: {
-              title: $t('demo.form.basic.title'),
-              icon: 'lucide:file-text',
-              module: 'demo',
+          "children": [
+            {
+              "name": "demo:form:overview",
+              "path": "/demo/form/overview",
+              "component": "form/overview",
+              "redirect": "",
+              "meta": {
+                "title": "表单总览",
+                "icon": "lucide:layout-dashboard",
+                "order": 1,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/query',
-            name: 'DemoFormQuery',
-            component: 'form/query',
-            meta: {
-              title: $t('demo.form.query.title'),
-              icon: 'lucide:search',
-              module: 'demo',
+            {
+              "name": "demo:form:basic",
+              "path": "/demo/form/basic",
+              "component": "form/basic",
+              "redirect": "",
+              "meta": {
+                "title": "基础表单",
+                "icon": "lucide:file-text",
+                "order": 2,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/rules',
-            name: 'DemoFormRules',
-            component: 'form/rules',
-            meta: {
-              title: $t('demo.form.rules.title'),
-              icon: 'lucide:shield-check',
-              module: 'demo',
+            {
+              "name": "demo:form:query",
+              "path": "/demo/form/query",
+              "component": "form/query",
+              "redirect": "",
+              "meta": {
+                "title": "查询表单",
+                "icon": "lucide:search",
+                "order": 3,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/dynamic',
-            name: 'DemoFormDynamic',
-            component: 'form/dynamic',
-            meta: {
-              title: $t('demo.form.dynamic.title'),
-              icon: 'lucide:git-branch',
-              module: 'demo',
+            {
+              "name": "demo:form:rules",
+              "path": "/demo/form/rules",
+              "component": "form/rules",
+              "redirect": "",
+              "meta": {
+                "title": "表单校验",
+                "icon": "lucide:shield-check",
+                "order": 4,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/api',
-            name: 'DemoFormApi',
-            component: 'form/api',
-            meta: {
-              title: $t('demo.form.api.title'),
-              icon: 'lucide:code-2',
-              module: 'demo',
+            {
+              "name": "demo:form:dynamic",
+              "path": "/demo/form/dynamic",
+              "component": "form/dynamic",
+              "redirect": "",
+              "meta": {
+                "title": "动态表单",
+                "icon": "lucide:git-branch",
+                "order": 5,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/merge',
-            name: 'DemoFormMerge',
-            component: 'form/merge',
-            meta: {
-              title: $t('demo.form.merge.title'),
-              icon: 'lucide:combine',
-              module: 'demo',
+            {
+              "name": "demo:form:api",
+              "path": "/demo/form/api",
+              "component": "form/api",
+              "redirect": "",
+              "meta": {
+                "title": "表单API",
+                "icon": "lucide:code-2",
+                "order": 6,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/form/custom-layout',
-            name: 'DemoFormCustomLayout',
-            component: 'form/custom-layout',
-            meta: {
-              title: $t('demo.form.custom_layout.title'),
-              icon: 'lucide:panels-top-left',
-              module: 'demo',
+            {
+              "name": "demo:form:merge",
+              "path": "/demo/form/merge",
+              "component": "form/merge",
+              "redirect": "",
+              "meta": {
+                "title": "合并表单",
+                "icon": "lucide:combine",
+                "order": 7,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-        ],
-      },
-      // ===================== Vxe 表格 =====================
-      {
-        path: '/demo/vxe-table',
-        name: 'DemoVxeTableGroup',
-        redirect: '/demo/vxe-table/basic',
-        meta: {
-          title: $t('demo.menu.vxe_table'),
-          icon: 'lucide:sheet',
-          module: 'demo',
+            {
+              "name": "demo:form:custom-layout",
+              "path": "/demo/form/custom-layout",
+              "component": "form/custom-layout",
+              "redirect": "",
+              "meta": {
+                "title": "自定义布局",
+                "icon": "lucide:panels-top-left",
+                "order": 8,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            }
+          ]
         },
-        children: [
-          {
-            path: '/demo/vxe-table/basic',
-            name: 'DemoVxeTableBasic',
-            component: 'vxe-table/basic',
-            meta: {
-              title: $t('demo.vxe_table.basic.title'),
-              icon: 'lucide:table',
-              module: 'demo',
-            },
+        {
+          "name": "demo:vxe-table",
+          "path": "/demo/vxe-table",
+          "component": null,
+          "redirect": "/demo/vxe-table/basic",
+          "meta": {
+            "title": "Vxe 表格",
+            "icon": "lucide:sheet",
+            "order": 3,
+            "keepAlive": false,
+            "hideInMenu": false
           },
-          {
-            path: '/demo/vxe-table/remote',
-            name: 'DemoVxeTableRemote',
-            component: 'vxe-table/remote',
-            meta: {
-              title: $t('demo.vxe_table.remote.title'),
-              icon: 'lucide:cloud-download',
-              module: 'demo',
+          "children": [
+            {
+              "name": "demo:vxe-table:basic",
+              "path": "/demo/vxe-table/basic",
+              "component": "vxe-table/basic",
+              "redirect": "",
+              "meta": {
+                "title": "基础表格",
+                "icon": "lucide:table",
+                "order": 1,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/tree',
-            name: 'DemoVxeTableTree',
-            component: 'vxe-table/tree',
-            meta: {
-              title: $t('demo.vxe_table.tree.title'),
-              icon: 'lucide:list-tree',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:remote",
+              "path": "/demo/vxe-table/remote",
+              "component": "vxe-table/remote",
+              "redirect": "",
+              "meta": {
+                "title": "远程加载",
+                "icon": "lucide:cloud-download",
+                "order": 2,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/custom-cell',
-            name: 'DemoVxeTableCustomCell',
-            component: 'vxe-table/custom-cell',
-            meta: {
-              title: $t('demo.vxe_table.custom_cell.title'),
-              icon: 'lucide:square-stack',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:tree",
+              "path": "/demo/vxe-table/tree",
+              "component": "vxe-table/tree",
+              "redirect": "",
+              "meta": {
+                "title": "树形表格",
+                "icon": "lucide:list-tree",
+                "order": 3,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/edit-cell',
-            name: 'DemoVxeTableEditCell',
-            component: 'vxe-table/edit-cell',
-            meta: {
-              title: $t('demo.vxe_table.edit_cell.title'),
-              icon: 'lucide:pencil-line',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:custom-cell",
+              "path": "/demo/vxe-table/custom-cell",
+              "component": "vxe-table/custom-cell",
+              "redirect": "",
+              "meta": {
+                "title": "自定义单元格",
+                "icon": "lucide:square-stack",
+                "order": 4,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/edit-row',
-            name: 'DemoVxeTableEditRow',
-            component: 'vxe-table/edit-row',
-            meta: {
-              title: $t('demo.vxe_table.edit_row.title'),
-              icon: 'lucide:edit-3',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:edit-cell",
+              "path": "/demo/vxe-table/edit-cell",
+              "component": "vxe-table/edit-cell",
+              "redirect": "",
+              "meta": {
+                "title": "单元格编辑",
+                "icon": "lucide:pencil-line",
+                "order": 5,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/fixed',
-            name: 'DemoVxeTableFixed',
-            component: 'vxe-table/fixed',
-            meta: {
-              title: $t('demo.vxe_table.fixed.title'),
-              icon: 'lucide:pin',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:edit-row",
+              "path": "/demo/vxe-table/edit-row",
+              "component": "vxe-table/edit-row",
+              "redirect": "",
+              "meta": {
+                "title": "行编辑",
+                "icon": "lucide:edit-3",
+                "order": 6,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/form',
-            name: 'DemoVxeTableForm',
-            component: 'vxe-table/form',
-            meta: {
-              title: $t('demo.vxe_table.form.title'),
-              icon: 'lucide:table-properties',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:fixed",
+              "path": "/demo/vxe-table/fixed",
+              "component": "vxe-table/fixed",
+              "redirect": "",
+              "meta": {
+                "title": "固定表头/列",
+                "icon": "lucide:pin",
+                "order": 7,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          {
-            path: '/demo/vxe-table/virtual',
-            name: 'DemoVxeTableVirtual',
-            component: 'vxe-table/virtual',
-            meta: {
-              title: $t('demo.vxe_table.virtual.title'),
-              icon: 'lucide:zap',
-              module: 'demo',
+            {
+              "name": "demo:vxe-table:form",
+              "path": "/demo/vxe-table/form",
+              "component": "vxe-table/form",
+              "redirect": "",
+              "meta": {
+                "title": "搜索表单",
+                "icon": "lucide:table-properties",
+                "order": 8,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-        ],
-      },
-      // ===================== 控件中心 =====================
-      {
-        path: '/demo/widgets',
-        name: 'DemoWidgetCenter',
-        redirect: '/demo/widgets/form-builder',
-        meta: {
-          title: $t('demo.menu.widget_center'),
-          icon: 'lucide:blocks',
-          module: 'demo',
+            {
+              "name": "demo:vxe-table:virtual",
+              "path": "/demo/vxe-table/virtual",
+              "component": "vxe-table/virtual",
+              "redirect": "",
+              "meta": {
+                "title": "虚拟滚动",
+                "icon": "lucide:zap",
+                "order": 9,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            }
+          ]
         },
-        children: [
-          // 表单设计
-          {
-            path: '/demo/widgets/form-builder',
-            name: 'DemoFormBuilder',
-            component: 'widgets/form-builder/builder/index',
-            meta: {
-              title: $t('demo.widgets.form-builder.title'),
-              icon: 'lucide:layout-template',
-              module: 'demo',
-            },
+        {
+          "name": "demo:widgets",
+          "path": "/demo/widgets",
+          "component": null,
+          "redirect": "/demo/widgets/form-builder",
+          "meta": {
+            "title": "控件中心",
+            "icon": "lucide:blocks",
+            "order": 4,
+            "keepAlive": false,
+            "hideInMenu": false
           },
-          // 图片选择器
-          {
-            path: '/demo/widgets/image-selector',
-            name: 'DemoImageSelector',
-            component: 'widgets/image-selector/index',
-            meta: {
-              title: $t('demo.widgets.image-selector.title'),
-              icon: 'lucide:image',
-              module: 'demo',
+          "children": [
+            {
+              "name": "demo:widgets:form-builder",
+              "path": "/demo/widgets/form-builder",
+              "component": "widgets/form-builder/builder/index",
+              "redirect": "",
+              "meta": {
+                "title": "表单设计器",
+                "icon": "lucide:layout-template",
+                "order": 1,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 模态框
-          {
-            path: '/demo/widgets/modal',
-            name: 'DemoModal',
-            component: 'widgets/modal/index',
-            meta: {
-              title: $t('demo.widgets.modal.title'),
-              icon: 'lucide:app-window',
-              keepAlive: true,
-              module: 'demo',
+            {
+              "name": "demo:widgets:visual-flow",
+              "path": "/demo/widgets/visual-flow",
+              "component": "widgets/visual-flow/index",
+              "redirect": "",
+              "meta": {
+                "title": "流程设计器",
+                "icon": "lucide:workflow",
+                "order": 2,
+                "keepAlive": true,
+                "hideInMenu": false
+              }
             },
-          },
-          // 抽屉
-          {
-            path: '/demo/widgets/drawer',
-            name: 'DemoDrawer',
-            component: 'widgets/drawer/index',
-            meta: {
-              title: $t('demo.widgets.drawer.title'),
-              icon: 'lucide:panel-right',
-              keepAlive: true,
-              module: 'demo',
+            {
+              "name": "demo:widgets:image-selector",
+              "path": "/demo/widgets/image-selector",
+              "component": "widgets/image-selector/index",
+              "redirect": "",
+              "meta": {
+                "title": "图片选择器",
+                "icon": "lucide:image",
+                "order": 3,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 验证码
-          {
-            path: '/demo/widgets/captcha',
-            name: 'DemoCaptcha',
-            component: 'widgets/captcha/slider-captcha',
-            meta: {
-              title: $t('demo.widgets.captcha.title'),
-              icon: 'lucide:shield',
-              module: 'demo',
+            {
+              "name": "demo:widgets:modal",
+              "path": "/demo/widgets/modal",
+              "component": "widgets/modal/index",
+              "redirect": "",
+              "meta": {
+                "title": "弹窗",
+                "icon": "lucide:app-window",
+                "order": 4,
+                "keepAlive": true,
+                "hideInMenu": false
+              }
             },
-          },
-          // 文本省略
-          {
-            path: '/demo/widgets/ellipsis',
-            name: 'DemoEllipsis',
-            component: 'widgets/ellipsis/index',
-            meta: {
-              title: $t('demo.widgets.ellipsis.title'),
-              icon: 'lucide:more-horizontal',
-              module: 'demo',
+            {
+              "name": "demo:widgets:drawer",
+              "path": "/demo/widgets/drawer",
+              "component": "widgets/drawer/index",
+              "redirect": "",
+              "meta": {
+                "title": "抽屉",
+                "icon": "lucide:panel-right",
+                "order": 5,
+                "keepAlive": true,
+                "hideInMenu": false
+              }
             },
-          },
-          // JSON 查看器
-          {
-            path: '/demo/widgets/json-viewer',
-            name: 'DemoJsonViewer',
-            component: 'widgets/json-viewer/index',
-            meta: {
-              title: $t('demo.widgets.json-viewer.title'),
-              icon: 'lucide:braces',
-              module: 'demo',
+            {
+              "name": "demo:widgets:captcha",
+              "path": "/demo/widgets/captcha",
+              "component": "widgets/captcha/slider-captcha",
+              "redirect": "",
+              "meta": {
+                "title": "滑块验证",
+                "icon": "lucide:shield",
+                "order": 6,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 加载
-          {
-            path: '/demo/widgets/loading',
-            name: 'DemoLoading',
-            component: 'widgets/loading/index',
-            meta: {
-              title: $t('demo.widgets.loading.title'),
-              icon: 'lucide:loader-circle',
-              module: 'demo',
+            {
+              "name": "demo:widgets:ellipsis",
+              "path": "/demo/widgets/ellipsis",
+              "component": "widgets/ellipsis/index",
+              "redirect": "",
+              "meta": {
+                "title": "文本省略",
+                "icon": "lucide:more-horizontal",
+                "order": 7,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 数字动画
-          {
-            path: '/demo/widgets/count-to',
-            name: 'DemoCountTo',
-            component: 'widgets/count-to/index',
-            meta: {
-              title: $t('demo.widgets.count-to.title'),
-              icon: 'lucide:hash',
-              module: 'demo',
+            {
+              "name": "demo:widgets:json-viewer",
+              "path": "/demo/widgets/json-viewer",
+              "component": "widgets/json-viewer/index",
+              "redirect": "",
+              "meta": {
+                "title": "JsonViewer",
+                "icon": "lucide:braces",
+                "order": 8,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 图片裁剪
-          {
-            path: '/demo/widgets/cropper',
-            name: 'DemoCropper',
-            component: 'widgets/cropper/index',
-            meta: {
-              title: $t('demo.widgets.cropper.title'),
-              icon: 'lucide:crop',
-              module: 'demo',
+            {
+              "name": "demo:widgets:loading",
+              "path": "/demo/widgets/loading",
+              "component": "widgets/loading/index",
+              "redirect": "",
+              "meta": {
+                "title": "Loading",
+                "icon": "lucide:loader-circle",
+                "order": 9,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 右键菜单
-          {
-            path: '/demo/widgets/context-menu',
-            name: 'DemoContextMenu',
-            component: 'widgets/context-menu/index',
-            meta: {
-              title: $t('demo.widgets.context-menu.title'),
-              icon: 'lucide:mouse-pointer-click',
-              module: 'demo',
+            {
+              "name": "demo:widgets:count-to",
+              "path": "/demo/widgets/count-to",
+              "component": "widgets/count-to/index",
+              "redirect": "",
+              "meta": {
+                "title": "CountTo",
+                "icon": "lucide:hash",
+                "order": 10,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 尺寸监听
-          {
-            path: '/demo/widgets/resize',
-            name: 'DemoResize',
-            component: 'widgets/resize/basic',
-            meta: {
-              title: $t('demo.widgets.resize.title'),
-              icon: 'lucide:maximize-2',
-              module: 'demo',
+            {
+              "name": "demo:widgets:cropper",
+              "path": "/demo/widgets/cropper",
+              "component": "widgets/cropper/index",
+              "redirect": "",
+              "meta": {
+                "title": "图片裁剪",
+                "icon": "lucide:crop",
+                "order": 11,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // Tippy 提示
-          {
-            path: '/demo/widgets/tippy',
-            name: 'DemoTippy',
-            component: 'widgets/tippy/index',
-            meta: {
-              title: $t('demo.widgets.tippy.title'),
-              icon: 'lucide:message-square',
-              module: 'demo',
+            {
+              "name": "demo:widgets:context-menu",
+              "path": "/demo/widgets/context-menu",
+              "component": "widgets/context-menu/index",
+              "redirect": "",
+              "meta": {
+                "title": "上下文菜单",
+                "icon": "lucide:mouse-pointer-click",
+                "order": 12,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 富文本编辑器
-          {
-            path: '/demo/widgets/tiptap',
-            name: 'DemoTiptap',
-            component: 'widgets/tiptap/index',
-            meta: {
-              title: $t('demo.widgets.tiptap.title'),
-              icon: 'lucide:pen-tool',
-              module: 'demo',
+            {
+              "name": "demo:widgets:resize",
+              "path": "/demo/widgets/resize",
+              "component": "widgets/resize/basic",
+              "redirect": "",
+              "meta": {
+                "title": "拖动调整",
+                "icon": "lucide:maximize-2",
+                "order": 13,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 动画
-          {
-            path: '/demo/widgets/motion',
-            name: 'DemoMotion',
-            component: 'widgets/motion/index',
-            meta: {
-              title: $t('demo.widgets.motion.title'),
-              icon: 'lucide:wand-2',
-              module: 'demo',
+            {
+              "name": "demo:widgets:tippy",
+              "path": "/demo/widgets/tippy",
+              "component": "widgets/tippy/index",
+              "redirect": "",
+              "meta": {
+                "title": "Tippy",
+                "icon": "lucide:message-square",
+                "order": 14,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-          // 国际化
-          {
-            path: '/demo/widgets/locale',
-            name: 'DemoLocale',
-            component: 'widgets/locale/index',
-            meta: {
-              title: $t('demo.widgets.locale.title'),
-              icon: 'lucide:languages',
-              module: 'demo',
+            {
+              "name": "demo:widgets:tiptap",
+              "path": "/demo/widgets/tiptap",
+              "component": "widgets/tiptap/index",
+              "redirect": "",
+              "meta": {
+                "title": "富文本编辑器",
+                "icon": "lucide:pen-tool",
+                "order": 15,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
             },
-          },
-        ],
-      },
-    ],
-  },
-];
+            {
+              "name": "demo:widgets:motion",
+              "path": "/demo/widgets/motion",
+              "component": "widgets/motion/index",
+              "redirect": "",
+              "meta": {
+                "title": "Motion",
+                "icon": "lucide:wand-2",
+                "order": 16,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            },
+            {
+              "name": "demo:widgets:locale",
+              "path": "/demo/widgets/locale",
+              "component": "widgets/locale/index",
+              "redirect": "",
+              "meta": {
+                "title": "多语言示例",
+                "icon": "lucide:languages",
+                "order": 17,
+                "keepAlive": false,
+                "hideInMenu": false
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ];
 
 export default routes;

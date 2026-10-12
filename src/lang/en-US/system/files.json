@@ -2,6 +2,7 @@
   "title": "Files",
   "table": {
     "columns": {
+      "preview": "Preview",
       "filename": "Filename",
       "original_filename": "Original Name",
       "size_info": "Size",
@@ -14,20 +15,68 @@
       "filename": "Filename",
       "original_filename": "Original Name",
       "ext": "Extension",
-      "platform": "Platform"
+      "platform": "Platform",
+      "platform_placeholder": "Select storage platform"
     }
   },
-  "list": {
-    "table": {
-      "columns": {
-        "actions": {
-          "delete": {
-            "label": "Delete",
-            "title": "Confirm Delete",
-            "confirm": "Are you sure to delete the selected files?"
-          }
-        }
-      }
-    }
+  "delete": {
+    "title": "Delete Files",
+    "content": "{0} file(s) will be deleted, and the corresponding cloud / local physical files will be removed as well. This cannot be undone. Enter your admin password to confirm:",
+    "password_placeholder": "Enter admin password",
+    "password_required": "Please enter the admin password",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "success": "{0} file(s) deleted"
+  },
+  "detail": {
+    "action": "Detail",
+    "title": "File Detail",
+    "basic_info": "Basic Info",
+    "preview_unsupported": "Preview is not supported for this file type",
+    "filename": "Filename",
+    "original_filename": "Original Name",
+    "content_type": "Content Type",
+    "size_info": "Size",
+    "platform": "Storage Platform",
+    "space": "Storage Space",
+    "space_public": "Public",
+    "space_private": "Private",
+    "source": "Source",
+    "source_default": "System",
+    "source_plugin": "Plugin ({0})",
+    "created_name": "Uploader",
+    "created_date": "Upload Date",
+    "link": "File URL",
+    "path": "Storage Path",
+    "copy": "Copy",
+    "copy_success": "URL copied",
+    "private_hint": "Private space URLs are temporary signed links; the validity period is configured globally by the server (1 hour)",
+    "open": "Open in New Tab",
+    "close": "Close"
+  },
+  "upload": {
+    "action": "Upload",
+    "title": "Upload Files",
+    "tab_local": "Local Upload",
+    "tab_remote": "Fetch from URL",
+    "kind": "Type",
+    "kind_image": "Image",
+    "kind_file": "Attachment",
+    "sub_dir": "Sub Directory",
+    "sub_dir_hint": "Files are stored under <storage root>/<sub dir>/<yyyyMM>/, name it by purpose",
+    "drag_text": "Drop files here, or click to select",
+    "drag_hint_image": "Supports jpg/png/gif/webp/svg, multiple files allowed",
+    "drag_hint_file": "Supports doc/docx/xls/xlsx/pdf/txt/zip/rar/7z, up to 50MB per file",
+    "remote_label": "Image URLs",
+    "remote_placeholder": "One image URL per line, batch supported",
+    "remote_button": "Start Fetching",
+    "remote_required": "Please enter at least one image URL",
+    "results": "Results",
+    "copy": "Copy URL",
+    "copy_all": "Copy All URLs",
+    "copy_success": "URL copied",
+    "dedup_hint": "Identical files reuse the existing record and do not occupy extra storage",
+    "failed": "Upload failed",
+    "close": "Close"
   }
 }

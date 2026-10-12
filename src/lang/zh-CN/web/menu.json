@@ -3,12 +3,15 @@
   "table": {
     "columns": {
       "name": "菜单名称",
+      "code": "编码",
       "category": "分类",
       "url": "链接地址",
       "sort": "排序",
       "type": "类型",
       "target": "打开方式",
       "is_show": "是否显示",
+      "is_public": "公开菜单",
+      "is_no_auth": "是否登录",
       "enabled": "状态"
     },
     "search": {
@@ -22,6 +25,7 @@
     "category": "分类",
     "app": "应用",
     "source": "来源",
+    "code": "编码",
     "name": "菜单名称",
     "type": "类型",
     "pid": "上级菜单",
@@ -31,6 +35,8 @@
     "sort": "排序",
     "enabled": "状态",
     "is_show": "是否显示",
+    "is_public": "公开菜单",
+    "is_no_auth": "是否登录",
     "rules_name": "请输入菜单名称",
     "rules_type": "请选择类型",
     "placeholder_app": "请选择应用",

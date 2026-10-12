@@ -52,26 +52,6 @@
     "enabled": "状态",
     "remark": "备注",
     "avatar": "头像",
-    "signed": "签名",
-    "modal": {
-      "id": "ID",
-      "real_name": "用户昵称",
-      "nick_name": "用户昵称",
-      "mobile_phone": "手机号码",
-      "email": "邮箱",
-      "sex": "性别",
-      "signed": "签名",
-      "address": "地址",
-      "user_name": "账号",
-      "password": "用户密码",
-      "confirm_password": "确认密码",
-      "dept_name": "所属部门",
-      "post_name": "所属职位",
-      "role_name": "角色",
-      "enabled": "状态",
-      "remark": "备注",
-      "avatar": "头像"
-    },
     "placeholder": {
       "user_name": "请输入账号",
       "real_name": "请输入用户昵称",
@@ -84,6 +64,14 @@
       "post_name": "请选择岗位",
       "role_name": "请选择角色",
       "remark": "请输入备注"
+    },
+    "modal": {
+      "real_name": "用户昵称",
+      "nick_name": "用户昵称",
+      "sex": "性别",
+      "email": "邮箱",
+      "mobile_phone": "手机号码",
+      "signed": "个人签名"
     }
   },
   "action": {

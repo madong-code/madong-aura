@@ -1,7 +1,7 @@
 <template>
   <ElConfigProvider
     size="default"
-    :locale="elementLocale"
+    :locale="locales[language]"
     :z-index="3000"
     :card="{
       shadow: 'never'
@@ -12,17 +12,23 @@
 </template>
 
 <script setup lang="ts">
-  /**
-   * 根组件
-   *
-   * Element Plus 的语言包由 `#/locales` 统一维护（与 vue-i18n 同源），
-   * 不再使用 art 原来的 userStore.language 手动映射，避免两套语言状态不同步。
-   */
-  import { elementLocale } from '#/locales'
-  import { systemUpgrade } from '#/core/shared/art-utils/sys'
-  import { toggleTransition } from '#/core/shared/art-utils/ui/animation'
-  import { checkStorageCompatibility } from '#/core/shared/art-utils/storage'
-  import { initializeTheme } from '#/core/composables/art/useTheme'
+  import { useUserStore } from './store/modules/user'
+  import { useSiteConfigStore } from '#/store/modules/site-config'
+  import { useAccessStore } from '#/core/stores'
+  import zh from 'element-plus/es/locale/lang/zh-cn'
+  import en from 'element-plus/es/locale/lang/en'
+  import { systemUpgrade } from '#/core/utils/upgrade'
+  import { toggleTransition } from '#/core/utils/ui/animation'
+  import { checkStorageCompatibility } from '#/core/utils/storage'
+  import { initializeTheme } from '#/core/composables/use-theme'
+
+  const userStore = useUserStore()
+  const { language } = storeToRefs(userStore)
+
+  const locales = {
+    zh: zh,
+    en: en
+  }
 
   onBeforeMount(() => {
     toggleTransition(true)
@@ -33,5 +39,12 @@
     checkStorageCompatibility()
     toggleTransition(false)
     systemUpgrade()
+    // madong 站点配置（logo/标题/favicon）：接口需要登录态，仅在已登录启动时预加载；
+    // 未登录访问登录页不拉取（401 会触发重认证流程），登录成功后由登录流程负责同步
+    if (useAccessStore().accessToken) {
+      useSiteConfigStore()
+        .syncSitePreferences()
+        .catch(() => {})
+    }
   })
 </script>

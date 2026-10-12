@@ -14,11 +14,11 @@ src/
 ├── locales/
 │   ├── langs/                   # 应用语言包（文件名作前缀 key，不支持子目录）
 │   │   ├── zh-CN/
-│   │   │   ├── page.json
-│   │   │   └── demos.json
+│   │   │   ├── common.json
+│   │   │   └── page.json
 │   │   └── en-US/
-│   │       ├── page.json
-│   │       └── demos.json
+│   │       ├── common.json
+│   │       └── page.json
 │   └── loader/                  # 本模块
 └── plugins/
     └── test/                    # 插件语言包（插件名 + 文件名作前缀）
@@ -45,16 +45,6 @@ src/
 ```
 
 使用：`$t('page.auth.login')` → `登录`
-
-```jsonc
-// locales/langs/zh-CN/demos.json
-{
-  "title": "演示",
-  "localeTest": { "title": "语言包测试" },
-}
-```
-
-使用：`$t('demos.title')` → `演示`
 
 ### 2. 框架语言包 — `lang/`
 

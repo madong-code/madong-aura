@@ -23,6 +23,9 @@
   "uninstall_menu": "卸载菜单",
   "update_db": "更新数据库",
   "update_info": "更新信息",
+  "more": "更多",
+  "invalid_env_check": "模块信息不完整，无法进行环境检测",
+  "invalid_uninstall": "模块信息不完整，无法进行卸载",
   "column_seq": "#",
   "column_module": "模块信息",
   "column_version": "版本",
@@ -83,9 +86,9 @@
     "install": {
       "immediate": "安装",
       "title": "安装模块",
-      "step1": "信息确认",
-      "step2": "选择安装文件",
-      "step3": "执行安装",
+      "step1": "环境检查",
+      "step2": "安装进度",
+      "step3": "安装完成",
       "path": "路径",
       "requirement": "要求",
       "status": "状态",
@@ -104,7 +107,14 @@
       "next": "下一步",
       "success": "模块 {name} 安装成功",
       "fail": "安装模块失败",
-      "invalid": "模块信息不完整"
+      "invalid": "模块信息不完整",
+      "readable": "可读",
+      "writable": "可写",
+      "log_start": "开始安装...",
+      "log_retry": "开始重新安装...",
+      "log_warn_prefix": "警告: {msg}",
+      "log_error_prefix": "错误: {msg}",
+      "sse_error": "SSE连接错误"
     },
     "delete": {
       "confirm_title": "删除确认",
@@ -126,7 +136,7 @@
       "immediate": "卸载",
       "title": "卸载模块",
       "step1": "信息确认",
-      "step2": "确认卸载",
+      "step2": "卸载进度",
       "step3": "卸载完成",
       "confirm_msg": "即将卸载模块 {name}，此操作将移除菜单、删除文件和数据",
       "operations_title": "卸载将执行以下操作：",
@@ -145,7 +155,11 @@
       "close": "关闭",
       "refresh": "刷新列表",
       "success": "模块 {name} 卸载成功",
-      "fail": "卸载模块失败"
+      "fail": "卸载模块失败",
+      "log_start": "开始卸载...",
+      "log_warn_prefix": "警告: {msg}",
+      "log_error_prefix": "错误: {msg}",
+      "sse_error": "SSE连接错误"
     }
   }
 }

@@ -1,47 +1,37 @@
-/**
- * 应用偏好设置（admin 业务层 #/core/preferences 的初始化入口）
- *
- * art-admin 的 UI 布局由 art-design-pro 的 setting store 控制，
- * 这里的 preferences 主要供 admin 业务层（core/request、core/locales、
- * core/access、CRUD 组件等）读取运行时配置。
- *
- * 两者的职责划分：
- * - art setting store：主题、菜单折叠、标签页、暗黑模式等 **视觉** 配置
- * - core preferences：语言、权限模式、水印、动态标题等 **业务运行时** 配置
- */
 import { defineOverridesPreferences } from '#/core/preferences';
 
+/**
+ * @description 项目配置文件（业务侧偏好，与 madong-single 对齐）
+ * 只需要覆盖项目中的一部分配置，不需要的配置不用覆盖，会自动使用默认配置
+ * !!! 更改配置后请清空缓存，否则可能不生效
+ *
+ * 容器布局/主题由 app 容器层（#/core/ui/layout）自行管理，这里的 theme/logo 等配置仅服务于
+ * 业务代码（#/views、#/components）读取 #/core/preferences 的场景。
+ */
 export const overridesPreferences = defineOverridesPreferences({
-  // overrides
   app: {
     name: import.meta.env.VITE_APP_TITLE,
-    // 权限模式：backend 由后端下发菜单（与 admin 保持一致）
-    accessMode: 'backend',
-    // 语言默认跟随 art 壳的中文
-    locale: 'zh-CN',
-    // 布局交由 art 壳接管，这里不再使用 vben 的布局
-    layout: 'sidebar-nav',
-    // 关闭 vben 自带的偏好设置抽屉（art 有自己的设置面板）
-    enablePreferences: false,
-    // 关闭 vben 的检查更新（art 有 systemUpgrade）
-    enableCheckUpdates: false,
-    watermark: false,
+    // P4 对接 madong 后端菜单管线后切换为 backend
+    accessMode: 'frontend',
+    enableRefreshToken: true,
   },
+  /**
+   * 默认 Logo（后端无配置时使用本地文件）
+   * public/logo.png 会被复制到构建输出根目录
+   */
   logo: {
-    source: '',
+    source: '/logo.png',
   },
+  /**
+   * 默认主题模式：明亮（覆盖 core 默认 dark；容器实际主题以 art 设置为准）
+   */
   theme: {
-    // 主题由 art 的 useTheme 接管
-    mode: 'auto',
+    mode: 'light',
   },
-  widget: {
-    // 这些小组件都在 art 的 header-bar 里，关闭 vben 的
-    fullscreen: false,
-    globalSearch: false,
-    languageToggle: false,
-    lockScreen: false,
-    notification: false,
-    sidebarToggle: false,
-    themeToggle: false,
+  /**
+   * 页面切换过渡默认关闭（容器内容区过渡由 art 控制，避免双过渡冲突）
+   */
+  transition: {
+    enable: false,
   },
 });

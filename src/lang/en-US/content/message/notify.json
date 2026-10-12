@@ -34,5 +34,12 @@
       "total": "Total {total} items",
       "selected": "{count} selected"
     }
+  },
+  "detail": {
+    "back": "Back to List",
+    "goto": "Go to Handle",
+    "sender": "Sender",
+    "empty": "(No content)",
+    "view_tooltip": "Click to read"
   }
 }

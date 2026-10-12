@@ -27,7 +27,9 @@
     "retry": "Retry",
     "copy": "Copy",
     "copy_success": "Copied successfully",
-    "copied": "Copied"
+    "copied": "Copied",
+    "fullscreen": "Fullscreen",
+    "cancelFullscreen": "Exit fullscreen"
   },
 
   "crud": {

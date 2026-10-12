@@ -23,6 +23,9 @@
   "uninstall_menu": "Uninstall Menu",
   "update_db": "Update Database",
   "update_info": "Update Info",
+  "more": "More",
+  "invalid_env_check": "Incomplete module info, cannot perform environment check",
+  "invalid_uninstall": "Incomplete module info, cannot uninstall",
   "column_seq": "#",
   "column_module": "Module Info",
   "column_version": "Version",
@@ -83,9 +86,9 @@
     "install": {
       "immediate": "Install",
       "title": "Install Module",
-      "step1": "Confirm Info",
-      "step2": "Select File",
-      "step3": "Install",
+      "step1": "Environment Check",
+      "step2": "Install Progress",
+      "step3": "Install Complete",
       "path": "Path",
       "requirement": "Requirement",
       "status": "Status",
@@ -104,7 +107,14 @@
       "next": "Next",
       "success": "Module {name} installed successfully",
       "fail": "Failed to install module",
-      "invalid": "Incomplete module info"
+      "invalid": "Incomplete module info",
+      "readable": "Readable",
+      "writable": "Writable",
+      "log_start": "Starting installation...",
+      "log_retry": "Retrying installation...",
+      "log_warn_prefix": "Warning: {msg}",
+      "log_error_prefix": "Error: {msg}",
+      "sse_error": "SSE connection error"
     },
     "delete": {
       "confirm_title": "Confirm Delete",
@@ -126,7 +136,7 @@
       "immediate": "Uninstall",
       "title": "Uninstall Module",
       "step1": "Confirm Info",
-      "step2": "Confirm Uninstall",
+      "step2": "Uninstall Progress",
       "step3": "Uninstall Complete",
       "confirm_msg": "About to uninstall module {name}. This will remove menus, files, and data.",
       "operations_title": "The following operations will be performed:",
@@ -145,7 +155,11 @@
       "close": "Close",
       "refresh": "Refresh List",
       "success": "Module {name} uninstalled successfully",
-      "fail": "Failed to uninstall module"
+      "fail": "Failed to uninstall module",
+      "log_start": "Starting uninstall...",
+      "log_warn_prefix": "Warning: {msg}",
+      "log_error_prefix": "Error: {msg}",
+      "sse_error": "SSE connection error"
     }
   }
 }

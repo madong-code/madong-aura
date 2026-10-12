@@ -21,6 +21,8 @@
     "print": "Print",
     "add_child": "Child Node",
     "more": "More",
+    "fullscreen": "Fullscreen",
+    "column_setting": "Column Settings",
     "confirm_title": "Confirm",
     "confirm_content": "Are you sure to proceed?"
   },

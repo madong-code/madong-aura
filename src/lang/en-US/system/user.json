@@ -53,26 +53,6 @@
     "enabled": "Status",
     "remark": "Remark",
     "avatar": "Avatar",
-    "signed": "Signature",
-    "modal": {
-      "id": "ID",
-      "real_name": "Real Name",
-      "nick_name": "Nickname",
-      "sex": "Sex",
-      "mobile_phone": "Mobile",
-      "email": "Email",
-      "signed": "Signature",
-      "address": "Address",
-      "user_name": "Username",
-      "password": "Password",
-      "confirm_password": "Confirm Password",
-      "dept_name": "Department Name",
-      "post_name": "Post Name",
-      "role_name": "Role",
-      "enabled": "Status",
-      "remark": "Remark",
-      "avatar": "Avatar"
-    },
     "placeholder": {
       "user_name": "Please enter username",
       "password": "Please enter password",
@@ -85,6 +65,14 @@
       "post_name": "Please select post",
       "role_name": "Please select role",
       "remark": "Please enter remark"
+    },
+    "modal": {
+      "real_name": "Real Name",
+      "nick_name": "Nickname",
+      "sex": "Sex",
+      "email": "Email",
+      "mobile_phone": "Mobile",
+      "signed": "Signature"
     }
   },
   "action": {
