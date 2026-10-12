@@ -12,7 +12,7 @@
  * - 配置查询 - 提供工具函数快速查询组件配置
  *
  * @module config/component
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
 import { defineAsyncComponent } from 'vue'
@@ -25,7 +25,7 @@ export const globalComponentsConfig: GlobalComponentConfig[] = [
     name: '设置面板',
     key: 'settings-panel',
     component: defineAsyncComponent(
-      () => import('#/core/ui/layout/art-settings-panel/index.vue')
+      () => import('@/core/ui/layout/components/app-settings-panel/index.vue')
     ),
     enabled: true
   },
@@ -33,7 +33,7 @@ export const globalComponentsConfig: GlobalComponentConfig[] = [
     name: '全局搜索',
     key: 'global-search',
     component: defineAsyncComponent(
-      () => import('#/core/ui/layout/art-global-search/index.vue')
+      () => import('@/core/ui/layout/components/app-global-search/index.vue')
     ),
     enabled: true
   },
@@ -41,23 +41,24 @@ export const globalComponentsConfig: GlobalComponentConfig[] = [
     name: '锁屏',
     key: 'screen-lock',
     component: defineAsyncComponent(
-      () => import('#/core/ui/layout/art-screen-lock/index.vue')
+      () => import('@/core/ui/layout/components/app-screen-lock/index.vue')
     ),
     enabled: true
   },
-  {
-    name: '聊天窗口',
-    key: 'chat-window',
-    component: defineAsyncComponent(
-      () => import('#/core/ui/layout/art-chat-window/index.vue')
-    ),
-    enabled: true
-  },
+  // Art Bot 入口暂时不需要，保留组件代码，关闭注册
+  // {
+  //   name: '聊天窗口',
+  //   key: 'chat-window',
+  //   component: defineAsyncComponent(
+  //     () => import('@/core/ui/layout/components/app-chat-window/index.vue')
+  //   ),
+  //   enabled: true
+  // },
   {
     name: '礼花效果',
     key: 'fireworks-effect',
     component: defineAsyncComponent(
-      () => import('#/core/ui/layout/art-fireworks-effect/index.vue')
+      () => import('@/core/ui/layout/components/app-fireworks-effect/index.vue')
     ),
     enabled: true
   },
@@ -65,7 +66,7 @@ export const globalComponentsConfig: GlobalComponentConfig[] = [
     name: '水印效果',
     key: 'watermark',
     component: defineAsyncComponent(
-      () => import('#/core/ui/components/art/core/others/art-watermark/index.vue')
+      () => import('@/core/ui/layout/components/app-watermark/index.vue')
     ),
     enabled: true
   }

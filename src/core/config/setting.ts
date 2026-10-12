@@ -14,14 +14,14 @@
  * ## 注意事项
  *
  * 1. 修改此文件的配置项时，需要同步更新以下文件：
- *    - src/components/core/layouts/art-settings-panel/widget/SettingActions.vue（复制配置和重置配置逻辑）
+ *    - #/core/ui/layout/components/app-settings-panel/widget/SettingActions.vue（复制配置和重置配置逻辑）
  *    - src/store/modules/setting.ts（Store 状态定义）
  * 2. 可以通过设置面板的"复制配置"按钮快速生成配置代码
  * 3. 枚举类型的值需要与 src/enums/appEnum.ts 中的定义保持一致
  */
 
-import AppConfig from '#/core/config'
-import { SystemThemeEnum, MenuThemeEnum, MenuTypeEnum, ContainerWidthEnum } from '#/core/enums/appEnum'
+import AppConfig from './index'
+import { SystemThemeEnum, MenuThemeEnum, MenuTypeEnum } from '@/enums/appEnum'
 
 /**
  * 系统设置默认值配置
@@ -32,9 +32,7 @@ export const SETTING_DEFAULT_CONFIG = {
   /** 菜单展开宽度 */
   menuOpenWidth: 230,
   /** 菜单是否展开 */
-  // 默认收起侧边栏，让主内容区更宽，Crud 搜索表单能在一行内放下 3 列，
-  // 表格更紧凑，整体观感与 template/admin 接近。
-  menuOpen: false,
+  menuOpen: true,
   /** 双菜单是否显示文本 */
   dualMenuShowText: false,
   /** 系统主题类型 */
@@ -83,8 +81,6 @@ export const SETTING_DEFAULT_CONFIG = {
   tabStyle: 'tab-default',
   /** 自定义圆角 */
   customRadius: '0.75',
-  /** 容器宽度 */
-  containerWidth: ContainerWidthEnum.FULL,
   /** 节日日期 */
   festivalDate: ''
 }

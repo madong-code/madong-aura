@@ -64,7 +64,7 @@ export function useExpandable(props: FormRenderProps) {
     //   return;
     // }
 
-    const formItems = [...wrapperRef.value.children];
+    const formItems = Array.from(wrapperRef.value.children);
 
     const container = wrapperRef.value;
     const containerStyles = window.getComputedStyle(container);

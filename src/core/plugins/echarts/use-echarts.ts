@@ -28,7 +28,7 @@ import {
 
 import { usePreferences } from '#/core/preferences';
 
-import echarts from './echarts-core';
+import echarts from './echarts';
 
 type EchartsUIType = typeof EchartsUI | undefined;
 

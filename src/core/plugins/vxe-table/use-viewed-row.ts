@@ -1,261 +1,64 @@
 import type { VxeGridProps as VxeTableGridProps } from 'vxe-table';
 
-import type {
-  ViewedRowOptions,
-  ViewedRowPersistOptions,
-  ViewedRowStorageAdapter,
-} from './types';
+import type { ViewedRowOptions } from './types';
 
-import { isRef, shallowRef, toRaw, triggerRef, watch } from 'vue';
-
-import { useDebounceFn } from '@vueuse/core';
+import { isRef, shallowRef, triggerRef, watch } from 'vue';
 
 import { isBoolean, isFunction } from '#/core/shared';
-import {
-  IndexedDBDriver,
-  LocalStorageDriver,
-  StorageManager,
-} from '#/core/shared/cache';
 
 const DEFAULT_VIEWED_CLASS = 'vxe-row--viewed';
 
-// ========== 持久化策略 ==========
-
 /**
- * localStorage / sessionStorage 适配器
- * 整体存储：key → [1, 2, 3]
+ * 已读行 helper
+ *
+ * 垫片说明：契约与 madong-single 保持一致（mark/isViewed/clear/remove、
+ * rowClassName/rowStyle 注入、CellOperation 列拦截）。持久化策略仅保留
+ * 内存模式；persist 配置可传入但不会落盘，业务当前未使用该能力。
  */
-function createWebStorageAdapter(
-  storageType: 'localStorage' | 'sessionStorage',
-  key: string,
-  ttl?: number,
-): ViewedRowStorageAdapter {
-  const manager = new StorageManager({
-    driver: new LocalStorageDriver({ storageType }),
-  });
-
-  return {
-    async getKeys() {
-      const stored = await manager.getItem<Array<number | string>>(key);
-      return stored ?? [];
-    },
-    async removeKeys() {
-      await manager.removeItem(key);
-    },
-    async setKeys(keys) {
-      await manager.setItem(key, keys, ttl);
-    },
-  };
-}
-
-/**
- * IndexedDB 适配器
- * 单条存储：prefix:1 → { expiry, value: 1 }
- */
-function createIndexedDBAdapter(
-  opts: Extract<ViewedRowPersistOptions, { type: 'indexedDB' }>,
-): ViewedRowStorageAdapter {
-  const prefix = opts.key;
-  const manager = new StorageManager({
-    driver: new IndexedDBDriver({
-      dbName: opts.dbName || 'viewed-table-db',
-      dbVersion: opts.dbVersion || 1,
-      storeName: opts.storeName || 'viewed-table-row',
-    }),
-    prefix,
-  });
-
-  return {
-    async getKeys() {
-      try {
-        // 通过 StorageManager 获取当前前缀下所有 key，再逐条读取（自动过滤过期）
-        const shortKeys = await manager.keys();
-
-        const results: Array<number | string> = [];
-        for (const shortKey of shortKeys) {
-          const value = await manager.getItem<number | string>(shortKey);
-          if (value !== null) {
-            results.push(value);
-          }
-        }
-        return results;
-      } catch (error) {
-        console.error('[viewedRow] indexedDB restore failed:', error);
-        return [];
-      }
-    },
-    async removeKeys() {
-      try {
-        await manager.clear();
-      } catch (error) {
-        console.error('[viewedRow] indexedDB clear failed:', error);
-      }
-    },
-    async setKeys(keys) {
-      try {
-        const newKeySet = new Set(keys.map(String));
-        // 获取已存在的 key，避免重复写入刷新过期时间
-        const existingKeys = await manager.keys();
-        const existingKeySet = new Set(existingKeys);
-
-        // 只写入新增的 key，不覆盖已有记录的过期时间
-        const toAdd = keys.filter((key) => !existingKeySet.has(String(key)));
-        if (toAdd.length > 0) {
-          await Promise.all(
-            toAdd.map((key) => manager.setItem(String(key), key, opts.ttl)),
-          );
-        }
-
-        // 清理不在新集合中的旧 key
-        const toRemove = existingKeys.filter((k) => !newKeySet.has(k));
-        if (toRemove.length > 0) {
-          await Promise.all(toRemove.map((k) => manager.removeItem(k)));
-        }
-      } catch (error) {
-        console.error('[viewedRow] indexedDB persist failed:', error);
-      }
-    },
-  };
-}
-
-/**
- * 根据 persist 配置创建存储适配器
- */
-function createStorageAdapter(
-  persist?: string | ViewedRowPersistOptions,
-): null | ViewedRowStorageAdapter {
-  if (!persist) return null;
-
-  // 简写模式：string → localStorage
-  if (typeof persist === 'string') {
-    return createWebStorageAdapter('localStorage', persist);
-  }
-
-  switch (persist.type) {
-    case 'custom': {
-      // 用户自定义适配器，解除 Vue 响应式代理
-      return toRaw(persist.storage);
-    }
-    case 'indexedDB': {
-      return createIndexedDBAdapter(persist);
-    }
-    case 'localStorage': {
-      return createWebStorageAdapter('localStorage', persist.key, persist.ttl);
-    }
-    case 'memory': {
-      return null;
-    }
-    case 'sessionStorage': {
-      return createWebStorageAdapter(
-        'sessionStorage',
-        persist.key,
-        persist.ttl,
-      );
-    }
-    default: {
-      return null;
-    }
-  }
-}
-
-// ========== maxSize 淘汰 ==========
-
-/**
- * 强制执行 maxSize 限制，超出时淘汰最早插入的 key（FIFO）
- */
-function enforceMaxSize(set: Set<number | string>, maxSize: number): void {
-  if (maxSize > 0 && set.size > maxSize) {
-    const iterator = set.values();
-    while (set.size > maxSize) {
-      const oldest = iterator.next().value;
-      if (oldest !== undefined) {
-        set.delete(oldest);
-      }
-    }
-  }
-}
-
-// ========== 核心 composable ==========
-
 export function useViewedRow<T = any>(
   options: ViewedRowOptions<T> & { keyField: string },
 ) {
-  // ========== 解析持久化配置 ==========
-  const persistOpts: null | ViewedRowPersistOptions = options.persist
-    ? typeof options.persist === 'string'
-      ? { key: options.persist, type: 'localStorage' }
-      : options.persist
-    : null;
+  const maxSize = 100;
 
-  const adapter = createStorageAdapter(options.persist);
-  const maxSize = persistOpts?.maxSize ?? 100;
-
-  // ========== 初始化已读集合 ==========
   const viewedSet = shallowRef<Set<number | string>>(new Set());
 
-  // ========== 持久化（防抖） ==========
-  function persistImmediate() {
-    if (!adapter) return;
-    adapter.setKeys([...viewedSet.value]).catch((error) => {
-      console.error('[viewedRow] persist failed:', error);
-    });
-  }
-
-  const persist = useDebounceFn(persistImmediate, 300);
-
-  // ========== 从存储恢复 ==========
-  async function restoreFromStorage(): Promise<void> {
-    if (!adapter) return;
-
-    try {
-      const stored = await adapter.getKeys();
-      if (stored && stored.length > 0) {
-        for (const key of stored) {
-          viewedSet.value.add(key);
+  function enforceMaxSize(set: Set<number | string>) {
+    if (maxSize > 0 && set.size > maxSize) {
+      const iterator = set.values();
+      while (set.size > maxSize) {
+        const oldest = iterator.next().value;
+        if (oldest !== undefined) {
+          set.delete(oldest);
         }
-        if (maxSize > 0) {
-          enforceMaxSize(viewedSet.value, maxSize);
-        }
-        triggerRef(viewedSet);
       }
-    } catch (error) {
-      console.error('[viewedRow] restore failed:', error);
     }
   }
 
-  // 先恢复存储，再合并外部 viewedKeys，确保 viewedKeys 是最新插入的（最后被淘汰）
-  restoreFromStorage().then(() => {
-    if (options.viewedKeys) {
-      const keys = isRef(options.viewedKeys)
-        ? options.viewedKeys.value
-        : options.viewedKeys;
-      updateViewedSet((set) => {
-        let changed = false;
-        for (const key of keys) {
-          if (!set.has(key)) {
-            set.add(key);
-            changed = true;
-          }
-        }
-        return changed;
-      });
-    }
-  });
-
-  // ========== 更新 viewedSet 的统一入口 ==========
   function updateViewedSet(updater: (set: Set<number | string>) => boolean) {
     const changed = updater(viewedSet.value);
 
     if (changed) {
-      if (maxSize > 0) {
-        enforceMaxSize(viewedSet.value, maxSize);
-      }
+      enforceMaxSize(viewedSet.value);
       triggerRef(viewedSet);
-      persist();
     }
   }
 
-  // ========== 监听外部 viewedKeys 变化（如果是 Ref） ==========
+  if (options.viewedKeys) {
+    const keys = isRef(options.viewedKeys)
+      ? options.viewedKeys.value
+      : options.viewedKeys;
+    updateViewedSet((set) => {
+      let changed = false;
+      for (const key of keys) {
+        if (!set.has(key)) {
+          set.add(key);
+          changed = true;
+        }
+      }
+      return changed;
+    });
+  }
+
   if (isRef(options.viewedKeys)) {
     watch(options.viewedKeys, (newKeys) => {
       updateViewedSet((set) => {
@@ -271,7 +74,6 @@ export function useViewedRow<T = any>(
     });
   }
 
-  // ========== 标记已读 ==========
   function markAsViewed(record: T) {
     const key = (record as Record<string, any>)[options.keyField] as
       | number
@@ -298,7 +100,6 @@ export function useViewedRow<T = any>(
     });
   }
 
-  // ========== 查询 ==========
   function isViewed(record: T): boolean {
     const key = (record as Record<string, any>)[options.keyField] as
       | number
@@ -306,7 +107,6 @@ export function useViewedRow<T = any>(
     return viewedSet.value.has(key);
   }
 
-  // ========== 清除 ==========
   function clearViewed() {
     const hadData = viewedSet.value.size > 0;
     viewedSet.value.clear();
@@ -314,15 +114,8 @@ export function useViewedRow<T = any>(
     if (hadData) {
       triggerRef(viewedSet);
     }
-
-    if (adapter) {
-      adapter.removeKeys().catch((error) => {
-        console.error('[viewedRow] clear persist failed:', error);
-      });
-    }
   }
 
-  // ========== 移除指定 keys ==========
   function removeKeys(keys: Array<number | string>) {
     updateViewedSet((set) => {
       let changed = false;
@@ -336,7 +129,6 @@ export function useViewedRow<T = any>(
     });
   }
 
-  // ========== rowClassName 函数 ==========
   function getRowClassName(params: any): string {
     if (!isViewed(params.row)) return '';
 
@@ -353,7 +145,6 @@ export function useViewedRow<T = any>(
     return DEFAULT_VIEWED_CLASS;
   }
 
-  // ========== rowStyle 函数 ==========
   function getRowStyle(params: any): any {
     if (!isViewed(params.row)) return undefined;
 

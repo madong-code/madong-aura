@@ -24,7 +24,12 @@ export function formatDate(time?: FormatDate, format: Format = 'YYYY-MM-DD') {
     return '';
   }
   try {
-    const date = dayjs.isDayjs(time) ? time : dayjs(time);
+    let value: FormatDate = time;
+    // 秒级时间戳（10位）转毫秒，避免 dayjs 按毫秒解析导致显示 1970
+    if (typeof value === 'number' && value.toString().length === 10) {
+      value = value * 1000;
+    }
+    const date = dayjs.isDayjs(value) ? value : dayjs(value);
     if (!date.isValid()) {
       throw new Error('Invalid date');
     }

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import { cn } from '#/core/shared/utils';
+import { signContentImages } from '#/utils/url/private-storage';
 
 const props = withDefaults(
   defineProps<{
@@ -15,6 +16,43 @@ const props = withDefaults(
     minHeight: 320,
   },
 );
+
+// 预览内容是富文本 HTML：私有存储下图片需换取签名地址后才能显示
+const rootRef = ref<HTMLElement | null>(null);
+
+let contentObserver: MutationObserver | null = null;
+
+const syncContentImages = async () => {
+  await nextTick();
+  void signContentImages(rootRef.value);
+};
+
+watch(
+  () => props.content,
+  () => {
+    void syncContentImages();
+  },
+);
+
+onMounted(() => {
+  void syncContentImages();
+  if (rootRef.value) {
+    contentObserver = new MutationObserver(() => {
+      void syncContentImages();
+    });
+    contentObserver.observe(rootRef.value, {
+      attributes: true,
+      attributeFilter: ['src'],
+      childList: true,
+      subtree: true,
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  contentObserver?.disconnect();
+  contentObserver = null;
+});
 
 const contentMinHeight = computed(() =>
   typeof props.minHeight === 'number'
@@ -34,6 +72,7 @@ const previewClass = computed(() =>
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div
+    ref="rootRef"
     :class="previewClass"
     :style="{ minHeight: contentMinHeight }"
     v-html="content"

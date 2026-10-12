@@ -3,7 +3,6 @@ import type { ExtendedFormApi, VbenFormProps } from './types';
 
 import type { Recordable } from '#/core/shared/types/base';
 
-// import { toRaw, watch } from 'vue';
 import { nextTick, onMounted, watch } from 'vue';
 
 import { useDebounceFn } from '@vueuse/core';
@@ -110,13 +109,13 @@ onMounted(async () => {
 
 <template>
   <Form
-    @keydown.enter="handleKeyDownEnter"
     v-bind="forward"
     :collapsed="state?.collapsed"
     :component-bind-event-map="COMPONENT_BIND_EVENT_MAP"
     :component-map="COMPONENT_MAP"
     :form="form"
     :global-common-config="DEFAULT_FORM_COMMON_CONFIG"
+    @keydown.enter="handleKeyDownEnter"
   >
     <template
       v-for="slotName in delegatedSlots"

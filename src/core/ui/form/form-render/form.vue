@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { GenericObject } from 'vee-validate';
 import type { ZodTypeAny } from 'zod';
 
 import type {
@@ -17,7 +16,6 @@ import {
   isString,
   mergeWithArrayOverride,
 } from '#/core/shared/utils';
-import { Form } from '#/core/ui/primitives';
 
 import { provideFormRenderProps } from './context';
 import { useExpandable } from './expandable';
@@ -37,10 +35,6 @@ const props = withDefaults(
   },
 );
 
-const emits = defineEmits<{
-  submit: [event: any];
-}>();
-
 const wrapperClass = computed(() => {
   const cls = ['flex'];
   if (props.layout === 'inline') {
@@ -53,7 +47,6 @@ const wrapperClass = computed(() => {
 
 provideFormRenderProps(props);
 
-// @ts-expect-error unused
 const { isCalculated, keepFormItemIndex, wrapperRef } = useExpandable(props);
 
 const shapes = computed(() => {
@@ -79,16 +72,11 @@ const shapes = computed(() => {
   return resultShapes;
 });
 
-const formComponent = computed(() => (props.form ? 'form' : Form));
-
-const formComponentProps = computed(() => {
-  return props.form
-    ? {
-        onSubmit: props.form.handleSubmit((val) => emits('submit', val)),
-      }
-    : {
-        onSubmit: (val: GenericObject) => emits('submit', val),
-      };
+const onSubmit = computed(() => {
+  if (props.form) {
+    return props.form.handleSubmit(() => {});
+  }
+  return () => {};
 });
 
 const formCollapsed = computed(() => {
@@ -170,12 +158,9 @@ const computedSchema = computed(
 </script>
 
 <template>
-  <component :is="formComponent" v-bind="formComponentProps">
+  <form @submit.prevent="onSubmit">
     <div ref="wrapperRef" :class="wrapperClass">
       <template v-for="cSchema in computedSchema" :key="cSchema.fieldName">
-        <!-- <div v-if="$slots[cSchema.fieldName]" :class="cSchema.formItemClass">
-          <slot :definition="cSchema" :name="cSchema.fieldName"> </slot>
-        </div> -->
         <FormField
           v-bind="cSchema"
           :class="cSchema.formItemClass"
@@ -188,5 +173,5 @@ const computedSchema = computed(
       </template>
       <slot :shapes="shapes"></slot>
     </div>
-  </component>
+  </form>
 </template>

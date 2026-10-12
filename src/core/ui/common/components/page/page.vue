@@ -47,6 +47,11 @@ async function calcContentHeight() {
 
   setTimeout(() => {
     shouldAutoHeight.value = true;
+    // 容器首帧即写入内容高度变量，vxe-table 的 auto 高度首次计算可能早于
+    // 搜索栏/工具栏完成布局，之后又没有尺寸变化事件触发重算；高度激活后补发
+    // resize，让 vxe 按最终布局重算（二次补发覆盖异步工具栏/字典渲染）。
+    requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 260);
   }, 30);
 }
 
@@ -68,7 +73,7 @@ onMounted(() => {
       ref="headerRef"
       :class="
         cn(
-          'relative flex items-end border-b border-border bg-card px-6 py-4',
+          'relative flex items-end border-b border-[var(--default-border)] bg-box px-6 py-4',
           headerClass,
         )
       "
@@ -81,7 +86,7 @@ onMounted(() => {
         </slot>
 
         <slot name="description">
-          <p v-if="description" class="text-muted-foreground">
+          <p v-if="description" class="text-g-600">
             {{ description }}
           </p>
         </slot>
@@ -98,7 +103,7 @@ onMounted(() => {
     <div
       v-if="$slots.footer"
       ref="footerRef"
-      :class="cn('align-center flex bg-card px-6 py-4', footerClass)"
+      :class="cn('align-center flex bg-box px-6 py-4', footerClass)"
     >
       <slot name="footer"></slot>
     </div>

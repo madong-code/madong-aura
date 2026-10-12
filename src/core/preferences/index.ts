@@ -1,27 +1,13 @@
-import type {
-  CustomPreferencesRecord,
-  Preferences,
-  PreferencesExtension,
-} from '#/core/preferences/base';
+import type { Preferences } from '#/core/preferences/base';
 import type { DeepPartial } from '#/core/shared/types/base';
 
 /**
- * 如果你想所有的app都使用相同的默认偏好设置，你可以在这里定义
- * 而不是去修改 #/core/preferences/base 中的默认偏好设置
- * @param preferences
- * @returns
+ * 项目级偏好覆盖：只需要提供与默认值不同的字段
  */
-
 function defineOverridesPreferences(preferences: DeepPartial<Preferences>) {
   return preferences;
 }
 
-function definePreferencesExtension<
-  TCustomPreferences extends object = CustomPreferencesRecord,
->(extension: PreferencesExtension<TCustomPreferences>) {
-  return extension;
-}
-
-export { defineOverridesPreferences, definePreferencesExtension };
+export { defineOverridesPreferences };
 
 export * from '#/core/preferences/base';

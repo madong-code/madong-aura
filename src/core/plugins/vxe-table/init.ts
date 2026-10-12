@@ -29,8 +29,7 @@ import {
 
 import { usePreferences } from '#/core/preferences';
 
-import { injectPluginsOptions } from '../plugins-context';
-import { extendsDefaultFormatter } from './extends'; // 是否加载过
+import { extendsDefaultFormatter } from './extends';
 
 // 是否加载过
 let isInit = false;
@@ -48,13 +47,10 @@ function normalizeVxeLocale<T extends Record<string, any>>(localeModule: T) {
 }
 
 export function useTableForm(...args: any[]) {
-  const pluginsOptions = injectPluginsOptions();
-  const contextFormFactory = pluginsOptions?.form?.useVbenForm;
-
-  const factory = tableFormFactory || contextFormFactory;
+  const factory = tableFormFactory;
   if (!factory) {
     throw new Error(
-      'useTableForm is not initialized. Please provide useVbenForm via setupVbenVxeTable() or providePluginsOptions()',
+      'useTableForm is not initialized. Please provide useVbenForm via setupVbenVxeTable()',
     );
   }
 
@@ -113,7 +109,7 @@ export function setupVbenVxeTable(setupOptions: SetupVxeTable) {
 
   initVxeTable();
 
-  // 优先使用参数传入的 useVbenForm，否则清空让 context 注入生效
+  // useVbenForm 由 adapter 注入
   if (useVbenFormFromParam) {
     tableFormFactory = useVbenFormFromParam;
   }

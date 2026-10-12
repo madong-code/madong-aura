@@ -6,6 +6,7 @@ import type {
 
 import {
   defineComponent,
+  getCurrentInstance,
   h,
   inject,
   nextTick,
@@ -39,6 +40,7 @@ export function useVbenDrawer<
     const isDrawerReady = ref(true);
     const Drawer = defineComponent(
       (props: TParentDrawerProps, { attrs, slots }) => {
+        const instance = getCurrentInstance();
         provide(USER_DRAWER_INJECT_KEY, {
           extendApi(api: ExtendedDrawerApi) {
             // 不能直接给 reactive 赋值，会丢失响应
@@ -60,7 +62,7 @@ export function useVbenDrawer<
         return () =>
           h(
             isDrawerReady.value ? connectedComponent : 'div',
-            { ...props, ...attrs },
+            { ...(instance?.vnode.props ?? {}) },
             slots,
           );
       },
@@ -103,9 +105,17 @@ export function useVbenDrawer<
   };
 
   const Drawer = defineComponent(
-    (props: DrawerProps, { attrs, slots }) => {
+    (props: DrawerProps, { slots }) => {
+      // 只转发模板上显式写出的属性（原始 vnode.props）。
+      // cast 后的 props 会把未传的 Boolean 属性变成 false，转发后会
+      // 覆盖 drawer api state 的 true 默认值（标题栏/遮罩/按钮消失）。
+      const instance = getCurrentInstance();
       return () =>
-        h(VbenDrawer, { ...props, ...attrs, drawerApi: extendedApi }, slots);
+        h(
+          VbenDrawer,
+          { ...(instance?.vnode.props ?? {}), drawerApi: extendedApi },
+          slots,
+        );
     },
     // eslint-disable-next-line vue/one-component-per-file
     {

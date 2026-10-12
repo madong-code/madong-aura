@@ -11,6 +11,7 @@ const SvgCardIcon = createIconifyIcon('svg:card');
 const SvgBellIcon = createIconifyIcon('svg:bell');
 const SvgCakeIcon = createIconifyIcon('svg:cake');
 const SvgGithubIcon = createIconifyIcon('svg:github');
+const SvgGiteeIcon = createIconifyIcon('svg:gitee');
 const SvgGoogleIcon = createIconifyIcon('svg:google');
 const SvgQQChatIcon = createIconifyIcon('svg:qqchat');
 const SvgWeChatIcon = createIconifyIcon('svg:wechat');
@@ -26,6 +27,7 @@ export {
   SvgCardIcon,
   SvgDingDingIcon,
   SvgDownloadIcon,
+  SvgGiteeIcon,
   SvgGithubIcon,
   SvgGoogleIcon,
   SvgQQChatIcon,

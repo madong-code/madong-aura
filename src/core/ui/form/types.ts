@@ -6,7 +6,6 @@ import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
 import type { FormApi } from './form-api';
 
 import type { ClassType, MaybeComputedRef } from '#/core/shared/types/base';
-import type { VbenButtonProps } from '#/core/ui/primitives';
 
 export type FormLayout = 'horizontal' | 'inline' | 'vertical';
 
@@ -412,7 +411,7 @@ export interface FormRenderProps<
   wrapperClass?: WrapperClassType;
 }
 
-export interface ActionButtonOptions extends VbenButtonProps {
+export interface ActionButtonOptions {
   [key: string]: any;
   content?: MaybeComputedRef<string>;
   show?: boolean;
@@ -422,9 +421,9 @@ export interface VbenFormProps<
   T extends BaseFormComponentType = BaseFormComponentType,
   P extends Record<string, any> = Record<never, never>,
 > extends Omit<
-  FormRenderProps<T, P>,
-  'componentBindEventMap' | 'componentMap' | 'form'
-> {
+    FormRenderProps<T, P>,
+    'componentBindEventMap' | 'componentMap' | 'form'
+  > {
   /**
    * 操作按钮是否反转（提交按钮前置）
    */
@@ -497,7 +496,6 @@ export interface VbenFormProps<
    * @default false
    */
   submitOnChange?: boolean;
-
   /**
    * 是否在回车时提交表单
    * @default false

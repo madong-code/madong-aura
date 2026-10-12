@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { ChevronDown } from 'lucide-vue-next';
+
 import { computed, toRaw, unref, watch } from 'vue';
 
 import { useSimpleLocale } from '#/core/composables';
 import { cn, isFunction, triggerWindowResize } from '#/core/shared/utils';
-import { VbenExpandableArrow } from '#/core/ui/primitives';
 
 import { COMPONENT_MAP } from '../config';
 import { injectFormProps } from '../use-form-context';
@@ -83,7 +84,7 @@ const actionWrapperClass = computed(() => {
     props.compact ? 'pb-2' : 'pb-4',
     props.layout === 'vertical' ? 'self-end' : 'self-center',
     props.layout === 'inline' ? '' : 'w-full',
-    props.actionWrapperClass,
+    props.actionWrapperClass as string,
   ];
 
   switch (actionLayout) {
@@ -132,8 +133,8 @@ defineExpose({
         :is="COMPONENT_MAP.PrimaryButton"
         v-if="submitButtonOptions.show"
         type="button"
-        @click="handleSubmit"
         v-bind="submitButtonOptions"
+        @click="handleSubmit"
       >
         {{ submitButtonOptions.content }}
       </component>
@@ -146,8 +147,8 @@ defineExpose({
       :is="COMPONENT_MAP.DefaultButton"
       v-if="resetButtonOptions.show"
       type="button"
-      @click="handleReset"
       v-bind="resetButtonOptions"
+      @click="handleReset"
     >
       {{ resetButtonOptions.content }}
     </component>
@@ -160,8 +161,8 @@ defineExpose({
         :is="COMPONENT_MAP.PrimaryButton"
         v-if="submitButtonOptions.show"
         type="button"
-        @click="handleSubmit"
         v-bind="submitButtonOptions"
+        @click="handleSubmit"
       >
         {{ submitButtonOptions.content }}
       </component>
@@ -170,13 +171,21 @@ defineExpose({
     <!-- 展开按钮前 -->
     <slot name="expand-before"></slot>
 
-    <VbenExpandableArrow
-      class="ml-[-0.3em]"
+    <button
       v-if="rootProps.showCollapseButton"
-      v-model:model-value="collapsed"
+      type="button"
+      class="ml-[-0.3em] inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-sm text-[var(--el-color-primary)]"
+      @click="collapsed = !collapsed"
     >
+      <ChevronDown
+        :size="16"
+        class="transition-transform"
+        :class="{
+          'rotate-180': collapsed,
+        }"
+      />
       <span>{{ collapsed ? $t('expand') : $t('collapse') }}</span>
-    </VbenExpandableArrow>
+    </button>
 
     <!-- 展开按钮后 -->
     <slot name="expand-after"></slot>

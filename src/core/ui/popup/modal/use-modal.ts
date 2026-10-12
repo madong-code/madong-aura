@@ -2,6 +2,7 @@ import type { ExtendedModalApi, ModalApiOptions, ModalProps } from './modal';
 
 import {
   defineComponent,
+  getCurrentInstance,
   h,
   inject,
   nextTick,
@@ -35,6 +36,7 @@ export function useVbenModal<TParentModalProps extends ModalProps = ModalProps>(
     const isModalReady = ref(true);
     const Modal = defineComponent(
       (props: TParentModalProps, { attrs, slots }) => {
+        const instance = getCurrentInstance();
         provide(USER_MODAL_INJECT_KEY, {
           extendApi(api: ExtendedModalApi) {
             // 不能直接给 reactive 赋值，会丢失响应
@@ -58,8 +60,7 @@ export function useVbenModal<TParentModalProps extends ModalProps = ModalProps>(
           h(
             isModalReady.value ? connectedComponent : 'div',
             {
-              ...props,
-              ...attrs,
+              ...(instance?.vnode.props ?? {}),
             },
             slots,
           );
@@ -111,13 +112,16 @@ export function useVbenModal<TParentModalProps extends ModalProps = ModalProps>(
   };
 
   const Modal = defineComponent(
-    (props: ModalProps, { attrs, slots }) => {
+    (props: ModalProps, { slots }) => {
+      // 只转发模板上显式写出的属性（原始 vnode.props）。
+      // cast 后的 props 会把未传的 Boolean 属性变成 false，转发后会
+      // 覆盖 modal api state 的 true 默认值（标题栏/遮罩/按钮消失）。
+      const instance = getCurrentInstance();
       return () =>
         h(
           VbenModal,
           {
-            ...props,
-            ...attrs,
+            ...(instance?.vnode.props ?? {}),
             modalApi: extendedApi,
           },
           slots,

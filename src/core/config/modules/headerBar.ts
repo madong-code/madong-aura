@@ -5,10 +5,10 @@
  * 通过修改此配置文件可以快速启用或禁用顶部栏的功能按钮。
  *
  * @module config/headerBar
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import { HeaderBarFeatureConfig } from '#/core/types'
+import type { HeaderBarFeatureConfig } from '@/types'
 
 /**
  * 顶部栏功能配置对象

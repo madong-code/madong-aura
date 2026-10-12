@@ -26,19 +26,19 @@
  * - headerBar: 顶部栏功能配置
  *
  * @module config
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import { MenuThemeEnum, MenuTypeEnum, SystemThemeEnum } from '#/core/enums/appEnum'
-import { SystemConfig } from '#/core/types/config'
+import { MenuThemeEnum, MenuTypeEnum, SystemThemeEnum } from '@/enums/appEnum'
+import type { SystemConfig } from '@/types'
 import { configImages } from './assets/images'
 import fastEnterConfig from './modules/fastEnter'
 import { headerBarConfig } from './modules/headerBar'
 
 const appConfig: SystemConfig = {
-  // 系统信息
+  // 系统信息（名称由环境变量 VITE_APP_TITLE 驱动，支持各部署模式独立品牌）
   systemInfo: {
-    name: 'Art Design Pro' // 系统名称
+    name: import.meta.env.VITE_APP_TITLE
   },
   // 系统主题
   systemThemeStyles: {
@@ -84,7 +84,7 @@ const appConfig: SystemConfig = {
     {
       theme: MenuThemeEnum.DESIGN,
       background: '#FFFFFF',
-      systemNameColor: 'var(--art-gray-800)',
+      systemNameColor: 'var(--app-gray-800)',
       iconColor: '#6B6B6B',
       textColor: '#29343D',
       img: configImages.menuStyles.design
@@ -100,7 +100,7 @@ const appConfig: SystemConfig = {
     {
       theme: MenuThemeEnum.LIGHT,
       background: '#ffffff',
-      systemNameColor: 'var(--art-gray-800)',
+      systemNameColor: 'var(--app-gray-800)',
       iconColor: '#6B6B6B',
       textColor: '#29343D',
       img: configImages.menuStyles.light

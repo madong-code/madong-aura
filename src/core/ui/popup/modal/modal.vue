@@ -1,401 +1,268 @@
-<script lang="ts" setup>
-import type { ExtendedModalApi, ModalProps } from './modal';
+<!--
+  VbenModal 垫片实现（Element Plus ElDialog）
+  契约对齐 vben：modalApi(useStore/open/close/setState/lock/setData...)、
+  slots(default/footer/prepend-footer/append-footer/center-footer/title)、
+  onOpened/onClosed 生命周期。
+-->
+<script setup lang="ts">
+import type { ModalProps } from './modal';
 
-import {
-  computed,
-  nextTick,
-  onDeactivated,
-  provide,
-  ref,
-  unref,
-  useId,
-  watch,
-} from 'vue';
+import type { ExtendedModalApi } from './modal';
 
-import {
-  useIsMobile,
-  usePriorityValues,
-  useSimpleLocale,
-} from '#/core/composables';
-import { Expand, Shrink } from '#/core/design/icons/base';
-import { ELEMENT_ID_MAIN_CONTENT } from '#/core/shared/constants';
-import { globalShareState } from '#/core/shared/global-state';
-import { cn } from '#/core/shared/utils';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  VbenButton,
-  VbenHelpTooltip,
-  VbenIconButton,
-  VbenLoading,
-  VisuallyHidden,
-} from '#/core/ui/primitives';
+import { computed, getCurrentInstance, onDeactivated } from 'vue';
 
-import { useModalDraggable } from './use-modal-draggable';
+import { useMediaQuery } from '@vueuse/core';
+import { Expand, HelpCircle, Shrink, X } from 'lucide-vue-next';
+
+import { useSimpleLocale } from '#/core/composables';
 
 interface Props extends ModalProps {
   modalApi?: ExtendedModalApi;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  appendToMain: false,
-  destroyOnClose: false,
-  modalApi: undefined,
-});
-
-const components = globalShareState.getComponents();
-
-const contentRef = ref();
-// @ts-expect-error unused
-const wrapperRef = ref<HTMLElement>();
-const dialogRef = ref();
-const headerRef = ref();
-// @ts-expect-error unused
-const footerRef = ref();
-
-const id = useId();
-
-provide('DISMISSABLE_MODAL_ID', id);
+const props = defineProps<Props>();
 
 const { $t } = useSimpleLocale();
-const { isMobile } = useIsMobile();
+const isMobile = useMediaQuery('(max-width: 768px)');
+
 const state = props.modalApi?.useStore?.();
 
-const {
-  appendToMain,
-  bordered,
-  cancelText,
-  centered,
-  class: modalClass,
-  closable,
-  closeOnClickModal,
-  closeOnPressEscape,
-  confirmDisabled,
-  confirmLoading,
-  confirmText,
-  contentClass,
-  description,
-  destroyOnClose,
-  draggable,
-  overflow,
-  footer: showFooter,
-  footerClass,
-  fullscreen,
-  fullscreenButton,
-  header,
-  headerClass,
-  loading: showLoading,
-  modal,
-  openAutoFocus,
-  overlayBlur,
-  showCancelButton,
-  showConfirmButton,
-  submitting,
-  title,
-  titleTooltip,
-  animationType,
-  zIndex,
-} = usePriorityValues(props, state);
-
-const shouldFullscreen = computed(() => fullscreen.value || isMobile.value);
-
-const shouldDraggable = computed(
-  () => draggable.value && !shouldFullscreen.value && header.value,
-);
-
-const shouldCentered = computed(
-  () => centered.value && !shouldFullscreen.value,
-);
-
-const getAppendTo = computed(() => {
-  return appendToMain.value
-    ? `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`
-    : undefined;
+/**
+ * vben 契约：模板上【显式传入】的 props（title/footer=false/class...）优先级
+ * 高于 api store 初始值。
+ * 不能遍历 defineProps 结果：Vue 对 Boolean props 会把「未传」转成 false，
+ * 未传的 header/footer/fullscreenButton/closable 等会覆盖掉 state 的 true
+ * 默认值（标题栏、遮罩、按钮集体消失）。vnode.props 只含模板真正写出的
+ * 属性，是「是否显式传入」的可靠来源。
+ */
+const instance = getCurrentInstance();
+const mergedState = computed<Record<string, any>>(() => {
+  const rawProps = instance?.vnode.props ?? {};
+  const overrides: Record<string, any> = {};
+  for (const key of Object.keys(rawProps)) {
+    if (key === 'modalApi' || key.startsWith('on')) continue;
+    overrides[key] = rawProps[key] as unknown;
+  }
+  return { ...state?.value, ...overrides };
 });
 
-const { dragging, transform } = useModalDraggable(
-  dialogRef,
-  headerRef,
-  shouldDraggable,
-  getAppendTo,
-  shouldCentered,
-  overflow,
+const shouldFullscreen = computed(
+  () => (mergedState.value.fullscreen ?? false) || isMobile.value,
 );
 
-const firstOpened = ref(false);
-const isClosed = ref(true);
+/** vben 用 class="w-[800px]/w-[60%]" 控制宽度，映射到 ElDialog width */
+const dialogWidth = computed(() => {
+  const raw = String(mergedState.value.class ?? '');
+  return raw.match(/(?:^|\s)w-\[([^\]]+)\]/)?.[1];
+});
 
-// 兜底定时器：当关闭动画事件(@closed/animationend)未触发时，
-// 确保 force-mount 残留的内容最终被 hidden 隐藏。
-// 背景：art-admin 缺少 tailwindcss-animate，modal 内容的 data-[state=closed]:animate-out
-// 等 CSS 动画未生成，导致 DialogContent 的 animationend 永远不触发 @closed，
-// isClosed 保持 false、hidden class 不加，弹窗内容残留显示（遮罩已 v-if 移除）。
-let closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
-const CLOSE_FALLBACK_MS = 400;
-
-watch(
-  () => state?.value?.isOpen,
-  async (v) => {
-    if (closeFallbackTimer) {
-      clearTimeout(closeFallbackTimer);
-      closeFallbackTimer = null;
-    }
-    if (v) {
-      isClosed.value = false;
-      if (!firstOpened.value) firstOpened.value = true;
-      await nextTick();
-      if (!contentRef.value) return;
-      const innerContentRef = contentRef.value.getContentRef();
-      dialogRef.value = innerContentRef.$el;
-      // reopen modal reassign value
-      const { offsetX, offsetY } = transform;
-      dialogRef.value.style.transform = shouldCentered.value
-        ? `translate(${offsetX}px, calc(-50% + ${offsetY}px))`
-        : `translate(${offsetX}px, ${offsetY}px)`;
-    } else {
-      // 关闭：启动兜底定时器。若 @closed 正常触发，handleClosed 会 clearTimeout；
-      // 若动画未播放/事件未触发（缺少 tailwindcss-animate），定时器兜底设 isClosed=true。
-      closeFallbackTimer = setTimeout(() => {
-        closeFallbackTimer = null;
-        if (!state?.value?.isOpen) {
-          isClosed.value = true;
-          props.modalApi?.onClosed();
-        }
-      }, CLOSE_FALLBACK_MS);
-    }
-  },
-  { immediate: true },
+const dialogClass = computed(() =>
+  String(mergedState.value.class ?? '')
+    .replace(/(?:^|\s)w-\[[^\]]+\]/g, ' ')
+    .trim(),
 );
 
-// watch(
-//   () => [showLoading.value, submitting.value],
-//   ([l, s]) => {
-//     if ((s || l) && wrapperRef.value) {
-//       wrapperRef.value.scrollTo({
-//         // behavior: 'smooth',
-//         top: 0,
-//       });
-//     }
-//   },
-// );
+/** 宽度类已映射到 ElDialog width，避免内容区再套宽度类被缩成一半 */
+const contentClass = computed(() =>
+  String(mergedState.value.contentClass ?? '')
+    .replace(/(?:^|\s)w-\[[^\]]+\]/g, ' ')
+    .replace(/\bw-full\b/g, ' ')
+    .trim(),
+);
 
-/**
- * 在开启keepAlive情况下 直接通过浏览器按钮/手势等返回 不会关闭弹窗
- */
+function handleFullscreen() {
+  props.modalApi?.setState((prev) => ({ ...prev, fullscreen: !prev.fullscreen }));
+}
+
+function handleUpdateModelValue(value: boolean) {
+  if (!value && !state?.value.submitting) {
+    props.modalApi?.close();
+  }
+}
+
 onDeactivated(() => {
-  // 如果弹窗没有被挂载到内容区域，则关闭弹窗
-  if (!appendToMain.value) {
+  if (!state?.value.appendToMain) {
     props.modalApi?.close();
   }
 });
-
-function handleFullscreen() {
-  props.modalApi?.setState((prev) => {
-    // if (prev.fullscreen) {
-    //   resetPosition();
-    // }
-    return { ...prev, fullscreen: !fullscreen.value };
-  });
-}
-function interactOutside(e: Event) {
-  if (!closeOnClickModal.value || submitting.value) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-}
-function escapeKeyDown(e: KeyboardEvent) {
-  if (!closeOnPressEscape.value || submitting.value) {
-    e.preventDefault();
-  }
-}
-
-function handleOpenAutoFocus(e: Event) {
-  if (!openAutoFocus.value) {
-    e?.preventDefault();
-  }
-}
-
-// pointer-down-outside
-function pointerDownOutside(e: Event) {
-  const target = e.target as HTMLElement;
-  const isDismissableModal = target?.dataset.dismissableModal;
-  if (
-    !closeOnClickModal.value ||
-    isDismissableModal !== id ||
-    submitting.value
-  ) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-}
-
-function handleFocusOutside(e: Event) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-const getForceMount = computed(() => {
-  return !unref(destroyOnClose) && unref(firstOpened);
-});
-
-const handleOpened = () => {
-  requestAnimationFrame(() => {
-    props.modalApi?.onOpened();
-  });
-};
-
-function handleClosed() {
-  if (closeFallbackTimer) {
-    clearTimeout(closeFallbackTimer);
-    closeFallbackTimer = null;
-  }
-  isClosed.value = true;
-  props.modalApi?.onClosed();
-}
 </script>
+
 <template>
-  <Dialog
-    :modal="false"
-    :open="state?.isOpen"
-    @update:open="() => (!submitting ? modalApi?.close() : undefined)"
+  <ElDialog
+    :model-value="mergedState.isOpen"
+    :width="shouldFullscreen ? '100%' : dialogWidth"
+    :fullscreen="shouldFullscreen"
+    :align-center="mergedState.centered"
+    :draggable="mergedState.draggable"
+    :modal="mergedState.modal"
+    :append-to-body="mergedState.appendToMain"
+    :close-on-click-modal="
+      (mergedState.closeOnClickModal ?? true) && !mergedState.submitting
+    "
+    :close-on-press-escape="
+      (mergedState.closeOnPressEscape ?? true) && !mergedState.submitting
+    "
+    :show-close="false"
+    :destroy-on-close="mergedState.destroyOnClose"
+    :z-index="mergedState.zIndex"
+    :class="['vben-modal', dialogClass]"
+    class="vben-modal-root"
+    @update:model-value="handleUpdateModelValue"
+    @opened="props.modalApi?.onOpened()"
+    @closed="props.modalApi?.onClosed()"
   >
-    <DialogContent
-      ref="contentRef"
-      :append-to="getAppendTo"
-      :class="
-        cn(
-          'inset-x-0 top-[10vh] mx-auto flex max-h-[80%] w-130 flex-col p-0',
-          shouldFullscreen ? 'sm:rounded-none' : 'sm:rounded-(--radius)',
-          modalClass,
-          {
-            'border border-border': bordered,
-            'shadow-3xl': !bordered,
-            'top-0 left-0 size-full max-h-full transform-[translate(0,0)]!':
-              shouldFullscreen,
-            'top-1/2': centered && !shouldFullscreen,
-            'duration-300': !dragging,
-            hidden: isClosed,
-          },
-        )
-      "
-      :force-mount="getForceMount"
-      :modal="modal"
-      :open="state?.isOpen"
-      :show-close="closable"
-      :animation-type="animationType"
-      :z-index="zIndex"
-      :overlay-blur="overlayBlur"
-      close-class="top-3"
-      @close-auto-focus="handleFocusOutside"
-      @closed="handleClosed"
-      :close-disabled="submitting"
-      @escape-key-down="escapeKeyDown"
-      @focus-outside="handleFocusOutside"
-      @interact-outside="interactOutside"
-      @open-auto-focus="handleOpenAutoFocus"
-      @opened="handleOpened"
-      @pointer-down-outside="pointerDownOutside"
-    >
-      <DialogHeader
-        ref="headerRef"
-        :class="
-          cn(
-            'px-5 py-4',
-            {
-              'border-b border-border': bordered,
-              hidden: !header,
-              'cursor-move select-none': shouldDraggable,
-            },
-            headerClass,
-          )
-        "
-      >
-        <DialogTitle v-if="title" class="text-left">
-          <slot name="title">
-            {{ title }}
-
-            <slot v-if="titleTooltip" name="titleTooltip">
-              <VbenHelpTooltip trigger-class="pb-1">
-                {{ titleTooltip }}
-              </VbenHelpTooltip>
-            </slot>
-          </slot>
-        </DialogTitle>
-        <DialogDescription v-if="description">
-          <slot name="description">
-            {{ description }}
-          </slot>
-        </DialogDescription>
-        <VisuallyHidden v-if="!title || !description">
-          <DialogTitle v-if="!title" />
-          <DialogDescription v-if="!description" />
-        </VisuallyHidden>
-      </DialogHeader>
+    <template #header>
       <div
-        ref="wrapperRef"
-        :class="
-          cn('relative min-h-40 flex-1 overflow-y-auto p-3', contentClass, {
-            'pointer-events-none': showLoading || submitting,
-          })
-        "
+        v-if="mergedState.header !== false"
+        :class="['vben-modal__header', mergedState.headerClass]"
       >
-        <slot></slot>
+        <div class="vben-modal__header-main">
+          <slot name="title">
+            <span class="vben-modal__title">{{ mergedState.title }}</span>
+            <ElTooltip
+              v-if="mergedState.titleTooltip"
+              :content="mergedState.titleTooltip"
+              placement="top"
+            >
+              <HelpCircle class="ml-1 inline-block size-3.5 cursor-help align-text-bottom opacity-60%" />
+            </ElTooltip>
+          </slot>
+          <div v-if="mergedState.description" class="vben-modal__description">
+            <slot name="description">{{ mergedState.description }}</slot>
+          </div>
+        </div>
+        <div class="vben-modal__header-actions">
+          <button
+            v-if="mergedState.fullscreenButton !== false && !isMobile"
+            type="button"
+            class="vben-modal__icon-btn"
+            :title="mergedState.fullscreen ? $t('common.cancelFullscreen') : $t('common.fullscreen')"
+            @click="handleFullscreen"
+          >
+            <Shrink v-if="mergedState.fullscreen" class="size-[18px]" />
+            <Expand v-else class="size-[18px]" />
+          </button>
+          <button
+            v-if="mergedState.closable !== false"
+            type="button"
+            class="vben-modal__icon-btn"
+            :title="$t('common.close')"
+            @click="handleUpdateModelValue(false)"
+          >
+            <X class="size-[18px]" />
+          </button>
+        </div>
       </div>
-      <VbenLoading v-if="showLoading || submitting" spinning />
-      <VbenIconButton
-        v-if="fullscreenButton"
-        class="absolute top-3 right-10 flex-center hidden size-6 rounded-full px-1 text-lg text-foreground/80 opacity-70 transition-opacity hover:bg-accent hover:text-accent-foreground hover:opacity-100 focus:outline-hidden disabled:pointer-events-none sm:block"
-        @click="handleFullscreen"
-      >
-        <Shrink v-if="fullscreen" class="size-3.5" />
-        <Expand v-else class="size-3.5" />
-      </VbenIconButton>
+    </template>
 
-      <DialogFooter
-        ref="footerRef"
-        v-if="showFooter"
-        :class="
-          cn(
-            'flex-row items-center justify-end p-2',
-            {
-              'border-t border-border': bordered,
-            },
-            footerClass,
-          )
-        "
+    <div
+      v-loading="Boolean(mergedState.loading || mergedState.submitting)"
+      :class="['vben-modal__content', contentClass]"
+    >
+      <slot></slot>
+    </div>
+
+    <template #footer>
+      <div
+        v-if="mergedState.footer"
+        :class="['vben-modal__footer', mergedState.footerClass]"
       >
         <slot name="prepend-footer"></slot>
         <slot name="footer">
-          <component
-            :is="components.DefaultButton || VbenButton"
-            v-if="showCancelButton"
-            variant="ghost"
-            :disabled="submitting"
-            @click="() => modalApi?.onCancel()"
+          <ElButton
+            v-if="mergedState.showCancelButton !== false"
+            :disabled="mergedState.submitting"
+            @click="props.modalApi?.onCancel()"
           >
             <slot name="cancelText">
-              {{ cancelText || $t('cancel') }}
+              {{ mergedState.cancelText || $t('cancel') }}
             </slot>
-          </component>
+          </ElButton>
           <slot name="center-footer"></slot>
-          <component
-            :is="components.PrimaryButton || VbenButton"
-            v-if="showConfirmButton"
-            :disabled="confirmDisabled"
-            :loading="confirmLoading || submitting"
-            @click="() => modalApi?.onConfirm()"
+          <ElButton
+            v-if="mergedState.showConfirmButton !== false"
+            type="primary"
+            :disabled="mergedState.confirmDisabled"
+            :loading="mergedState.confirmLoading || mergedState.submitting"
+            @click="props.modalApi?.onConfirm()"
           >
             <slot name="confirmText">
-              {{ confirmText || $t('confirm') }}
+              {{ mergedState.confirmText || $t('confirm') }}
             </slot>
-          </component>
+          </ElButton>
         </slot>
         <slot name="append-footer"></slot>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+      </div>
+    </template>
+  </ElDialog>
 </template>
+
+<style scoped>
+  .vben-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-right: 0;
+  }
+
+  .vben-modal__header-main {
+    min-width: 0;
+  }
+
+  .vben-modal__header-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 4px;
+    margin-top: -2px;
+    margin-right: -2px;
+  }
+
+  .vben-modal__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .vben-modal__description {
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--el-text-color-secondary);
+  }
+
+  .vben-modal__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--el-text-color-secondary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+
+  .vben-modal__icon-btn:hover {
+    color: var(--el-color-primary);
+    background: var(--el-fill-color-light);
+  }
+
+  .vben-modal__content {
+    min-height: 60px;
+  }
+
+  .vben-modal__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+</style>

@@ -20,7 +20,6 @@ export class DrawerApi {
     | 'onOpened'
   >;
 
-  // private prevState!: DrawerState;
   private state!: DrawerState;
 
   constructor(options: DrawerApiOptions = {}) {
@@ -85,8 +84,6 @@ export class DrawerApi {
    * @description 关闭抽屉时会调用 onBeforeClose 钩子函数，如果 onBeforeClose 返回 false，则不关闭弹窗
    */
   async close() {
-    // 通过 onBeforeClose 钩子函数来判断是否允许关闭弹窗
-    // 如果 onBeforeClose 返回 false，则不关闭弹窗
     const allowClose = (await this.api.onBeforeClose?.()) ?? true;
     if (allowClose) {
       this.store.setState((prev) => ({
@@ -103,8 +100,6 @@ export class DrawerApi {
 
   /**
    * 锁定抽屉状态（用于提交过程中的等待状态）
-   * @description 锁定状态将禁用默认的取消按钮，使用spinner覆盖抽屉内容，隐藏关闭按钮，阻止手动关闭弹窗，将默认的提交按钮标记为loading状态
-   * @param isLocked 是否锁定
    */
   lock(isLocked: boolean = true) {
     return this.setState({ submitting: isLocked });
@@ -170,7 +165,6 @@ export class DrawerApi {
 
   /**
    * 解除抽屉的锁定状态
-   * @description 解除由lock方法设置的锁定状态，是lock(false)的别名
    */
   unlock() {
     return this.lock(false);

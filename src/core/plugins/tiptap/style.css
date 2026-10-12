@@ -1,4 +1,4 @@
-@reference "@vben/tailwind-config/theme";
+@reference '@styles/core/tailwind.css';
 
 .vben-tiptap-content h1 {
   @apply text-2xl font-bold leading-[1.4];

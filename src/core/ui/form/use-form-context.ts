@@ -1,19 +1,36 @@
 import type { ZodRawShape } from 'zod';
 
-import type { ComputedRef } from 'vue';
+import type { ComputedRef, InjectionKey } from 'vue';
 
 import type { ExtendedFormApi, FormActions, VbenFormProps } from './types';
 
-import { computed, unref, useSlots } from 'vue';
+import { computed, inject, provide, unref, useSlots } from 'vue';
 
 import { useForm } from 'vee-validate';
 import { object, ZodIntersection, ZodNumber, ZodObject, ZodString } from 'zod';
 import { getDefaultsForSchema } from 'zod-defaults';
 
 import { isString, mergeWithArrayOverride, set } from '#/core/shared/utils';
-import { createContext } from '#/core/ui/primitives';
 
 type ExtendFormProps = VbenFormProps & { formApi?: ExtendedFormApi };
+
+function createContext<T>(name: string) {
+  const key: InjectionKey<T> = Symbol(name);
+
+  const injectContext = () => {
+    const context = inject(key, null);
+    if (context === null) {
+      throw new Error(`${name} context must be used within provider`);
+    }
+    return context;
+  };
+
+  const provideContext = (value: T) => {
+    provide(key, value);
+  };
+
+  return [injectContext, provideContext] as const;
+}
 
 export const [injectFormProps, provideFormProps] =
   createContext<[ComputedRef<ExtendFormProps> | ExtendFormProps, FormActions]>(

@@ -6,12 +6,12 @@ import type { ClassType, MaybePromise } from '#/core/shared/types/base';
 
 export interface ModalProps {
   /**
-   * 动画类型
+   * 动画类型（Element Plus 无对应能力，仅保留契约兼容）
    * @default 'slide'
    */
   animationType?: 'scale' | 'slide';
   /**
-   * 是否要挂载到内容区域
+   * 是否要挂载到内容区域（垫片实现统一为 append-to-body）
    * @default false
    */
   appendToMain?: boolean;
@@ -111,12 +111,12 @@ export interface ModalProps {
    */
   openAutoFocus?: boolean;
   /**
-   * 拖动范围是否可以超出可视区
+   * 拖动范围是否可以超出可视区（垫片保留契约，Element Plus 自行处理）
    * @default false
    */
   overflow?: boolean;
   /**
-   * 弹窗遮罩模糊效果
+   * 弹窗遮罩模糊效果（垫片保留契约）
    */
   overlayBlur?: number;
   /**

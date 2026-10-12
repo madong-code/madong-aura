@@ -1,8 +1,8 @@
-import type { Component, VNode, VNodeArrayChildren } from 'vue';
+import type { Component, InjectionKey, VNode, VNodeArrayChildren } from 'vue';
 
 import type { Recordable } from '#/core/shared/types/base';
 
-import { createContext } from '#/core/ui/primitives';
+import { inject, provide } from 'vue';
 
 export type IconType = 'error' | 'info' | 'question' | 'success' | 'warning';
 
@@ -15,7 +15,7 @@ export type AlertProps = {
   beforeClose?: (
     scope: BeforeCloseScope,
   ) => boolean | Promise<boolean | undefined> | undefined;
-  /** 边框 */
+  /** 边框（垫片保留契约） */
   bordered?: boolean;
   /**
    * 按钮对齐方式
@@ -34,15 +34,13 @@ export type AlertProps = {
   content: Component | string;
   /** 弹窗内容的额外样式 */
   contentClass?: string;
-  /** 执行beforeClose回调期间，在内容区域显示一个loading遮罩*/
+  /** 执行beforeClose回调期间显示loading遮罩（垫片保留契约，Element Plus 自行处理） */
   contentMasking?: boolean;
   /** 弹窗底部内容（与按钮在同一个容器中） */
   footer?: Component | string;
   /** 弹窗的图标（在标题的前面） */
   icon?: Component | IconType;
-  /**
-   * 弹窗遮罩模糊效果
-   */
+  /** 弹窗遮罩模糊效果（垫片保留契约） */
   overlayBlur?: number;
   /** 是否显示取消按钮 */
   showCancel?: boolean;
@@ -83,15 +81,17 @@ export type AlertContext = {
   doConfirm: () => void;
 };
 
-export const [injectAlertContext, provideAlertContext] =
-  createContext<AlertContext>('VbenAlertContext');
+const ALERT_INJECT_KEY: InjectionKey<AlertContext> = Symbol('VbenAlertContext');
+
+export function provideAlertContext(context: AlertContext) {
+  provide(ALERT_INJECT_KEY, context);
+}
 
 /**
  * 获取Alert上下文
- * @returns AlertContext
  */
 export function useAlertContext() {
-  const context = injectAlertContext();
+  const context = inject(ALERT_INJECT_KEY);
   if (!context) {
     throw new Error('useAlertContext must be used within an AlertProvider');
   }

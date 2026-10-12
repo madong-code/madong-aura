@@ -13,7 +13,7 @@ import type {
   WangEditorUploadConfig,
 } from './types';
 
-import { computed, onBeforeUnmount, shallowRef } from 'vue';
+import { computed, nextTick, onBeforeUnmount, ref, shallowRef } from 'vue';
 
 import { Boot } from '@wangeditor/editor';
 // 关键：具名导入，不是 default 导入！兼容 Vue 3.5+
@@ -21,6 +21,7 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 
 import { $t } from '#/core/locales';
 import { useVbenModal } from '#/core/ui/popup';
+import { signContentImages } from '#/utils/url/private-storage';
 
 import Preview from './preview.vue';
 
@@ -82,6 +83,17 @@ const modelValue = defineModel<string>({ default: '' });
 
 // 编辑器实例引用（用 shallowRef 和 old/madong-vue 保持一致）
 const editorRef = shallowRef<IDomEditor>();
+
+// 编辑器根节点：正文型图片需在渲染完成后扫描并换取签名地址
+const wrapperRef = ref<HTMLElement | null>(null);
+
+// 私有存储下：内容里的图片（回显的既有内容、新插入的图片）都要换取签名地址才能显示
+let contentObserver: MutationObserver | null = null;
+
+const syncContentImages = async () => {
+  await nextTick();
+  void signContentImages(wrapperRef.value);
+};
 
 // 全屏按钮清理定时器
 const fullscreenTimers: ReturnType<typeof setTimeout>[] = [];
@@ -239,6 +251,22 @@ function onCreateEditor(editor: IDomEditor) {
   editorRef.value = editor;
   emit('created', editor);
 
+  // 私有存储：内容（含回显的既有内容）渲染完成后换取图片签名地址；
+  // 同时监听 img 的 src 变化，编辑器重渲染把 src 还原成原始路径时自动补签
+  editor.on('change', syncContentImages);
+  if (wrapperRef.value) {
+    contentObserver = new MutationObserver(() => {
+      void syncContentImages();
+    });
+    contentObserver.observe(wrapperRef.value, {
+      attributes: true,
+      attributeFilter: ['src'],
+      childList: true,
+      subtree: true,
+    });
+  }
+  void syncContentImages();
+
   // 绑定预览菜单点击事件
   if (props.previewable) {
     editor.on(PREVIEW_MENU_KEY, openPreviewModal);
@@ -273,6 +301,10 @@ onBeforeUnmount(() => {
   fullscreenTimers.forEach((timer) => clearTimeout(timer));
   fullscreenTimers.length = 0;
 
+  // 清理正文图片签名监听
+  contentObserver?.disconnect();
+  contentObserver = null;
+
   // 清理预览菜单事件监听
   if (cleanupPreviewListener) {
     cleanupPreviewListener();
@@ -281,6 +313,7 @@ onBeforeUnmount(() => {
 
   const editor = editorRef.value;
   if (editor) {
+    editor.off('change', syncContentImages);
     editor.destroy();
   }
 });
@@ -299,7 +332,7 @@ defineExpose<WangEditorExpose>({
 </script>
 
 <template>
-  <div class="editor-wrapper">
+  <div class="editor-wrapper" ref="wrapperRef">
     <!-- 工具栏 -->
     <Toolbar
       v-if="toolbar && editorRef"

@@ -27,7 +27,7 @@ export async function fetchIconsData(prefix: string): Promise<string[]> {
   if (Reflect.has(ICONS_MAP, prefix) && ICONS_MAP[prefix]) {
     return ICONS_MAP[prefix];
   }
-  if (Reflect.has(PENDING_REQUESTS, prefix) && PENDING_REQUESTS[prefix]) {
+  if (Reflect.has(PENDING_REQUESTS, prefix)) {
     return PENDING_REQUESTS[prefix];
   }
   PENDING_REQUESTS[prefix] = (async () => {

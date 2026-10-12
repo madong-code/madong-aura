@@ -1,29 +1,23 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import type { IconPickerProps } from './types';
 
 import { computed, ref, useAttrs, watch, watchEffect } from 'vue';
 
-import { objectOmit, refDebounced, watchDebounced } from '@vueuse/core';
+import { refDebounced, watchDebounced } from '@vueuse/core';
+import {
+  ElIcon,
+  ElInput,
+  ElPagination,
+  ElPopover,
+  ElTooltip,
+} from 'element-plus';
+
+import { listIcons } from '@iconify/vue';
 
 import { usePagination } from '#/core/composables';
-import { EmptyIcon, Grip, listIcons } from '#/core/design/icons';
+import { EmptyIcon, Grip, IconifyIcon as VbenIcon } from '#/core/design/icons';
 import { $t } from '#/core/locales';
 import { isFunction } from '#/core/shared/utils';
-import {
-  Button,
-  Input,
-  Pagination,
-  PaginationEllipsis,
-  PaginationFirst,
-  PaginationLast,
-  PaginationList,
-  PaginationListItem,
-  PaginationNext,
-  PaginationPrev,
-  VbenIcon,
-  VbenIconButton,
-  VbenPopover,
-} from '#/core/ui/primitives';
 
 import { fetchIconsData } from './icons';
 
@@ -63,7 +57,9 @@ watchDebounced(
   { immediate: true, debounce: 500, maxWait: 1000 },
 );
 
-const currentList = computed(() => {
+const fallbackIcon = Grip as any;
+
+const currentList = computed<string[]>(() => {
   try {
     if (props.prefix) {
       if (
@@ -78,17 +74,16 @@ const currentList = computed(() => {
         console.warn(`No icons found for prefix: ${props.prefix}`);
       }
       return icons;
-    } else {
-      return props.icons;
     }
   } catch (error) {
     console.error('Failed to load icons:', error);
     return [];
   }
+  return [];
 });
 
 const showList = computed(() => {
-  return currentList.value.filter((item) =>
+  return (currentList.value ?? []).filter((item) =>
     item.includes(keywordDebounce.value),
   );
 });
@@ -112,24 +107,12 @@ watch(
 const handleClick = (icon: string) => {
   currentSelect.value = icon;
   modelValue.value = icon;
-  close();
+  visible.value = false;
 };
 
 const handlePageChange = (page: number) => {
   setCurrentPage(page);
 };
-
-function toggleOpenState() {
-  visible.value = !visible.value;
-}
-
-function open() {
-  visible.value = true;
-}
-
-function close() {
-  visible.value = false;
-}
 
 function onKeywordChange(v: string) {
   keyword.value = v;
@@ -154,20 +137,16 @@ function updateCurrentSelect(v: string) {
     attrs[eventKey](v);
   }
 }
-const getBindAttrs = computed(() => {
-  return objectOmit(attrs, [`onUpdate:${props.modelValueProp}`]);
-});
-
-defineExpose({ toggleOpenState, open, close });
 </script>
 <template>
-  <VbenPopover
-    v-model:open="visible"
-    :content-props="{ align: 'end', alignOffset: -11, sideOffset: 8 }"
-    content-class="p-0 pt-3 w-full"
-    trigger-class="w-full"
+  <ElPopover
+    v-model:visible="visible"
+    placement="bottom-end"
+    :width="280"
+    trigger="click"
+    popper-class="madong-icon-picker-popover"
   >
-    <template #trigger>
+    <template #reference>
       <template v-if="props.type === 'input'">
         <component
           v-if="props.inputComponent"
@@ -176,51 +155,48 @@ defineExpose({ toggleOpenState, open, close });
           :placeholder="$t('ui.iconPicker.placeholder')"
           role="combobox"
           :aria-label="$t('ui.iconPicker.placeholder')"
-          aria-expanded="visible"
+          :aria-expanded="visible"
           :[`onUpdate:${modelValueProp}`]="updateCurrentSelect"
-          v-bind="getBindAttrs"
+          v-bind="attrs"
         >
           <template #[iconSlot]>
-            <VbenIcon
-              :icon="currentSelect || Grip"
-              class="size-4"
-              aria-hidden="true"
-            />
+            <VbenIcon :icon="currentSelect || fallbackIcon" class="size-4" aria-hidden="true" />
           </template>
         </component>
-        <div class="relative w-full" v-else>
-          <Input
+        <div v-else class="relative w-full">
+          <ElInput
             v-bind="$attrs"
             v-model="currentSelect"
             :placeholder="$t('ui.iconPicker.placeholder')"
-            class="h-8 w-full pr-8"
+            class="w-full"
             role="combobox"
             :aria-label="$t('ui.iconPicker.placeholder')"
-            aria-expanded="visible"
-          />
-          <VbenIcon
-            :icon="currentSelect || Grip"
-            class="absolute top-1 right-1 size-6"
-            aria-hidden="true"
-          />
+            :aria-expanded="visible"
+          >
+            <template #append>
+              <ElIcon class="text-base"><VbenIcon :icon="currentSelect || fallbackIcon" /></ElIcon>
+            </template>
+          </ElInput>
         </div>
       </template>
-      <VbenIcon
-        :icon="currentSelect || Grip"
+      <ElIcon
         v-else
-        class="size-4"
+        class="size-4 c-p"
         v-bind="$attrs"
-      />
+      >
+        <VbenIcon :icon="currentSelect || fallbackIcon" />
+      </ElIcon>
     </template>
+
     <div class="mb-2 flex w-full">
       <component
         v-if="inputComponent"
         :is="inputComponent"
         v-bind="searchInputProps"
       />
-      <Input
+      <ElInput
         v-else
-        class="mx-2 h-8 w-full"
+        class="mx-2 w-[calc(100%-1rem)]"
         :placeholder="$t('ui.iconPicker.search')"
         v-model="keyword"
       />
@@ -228,72 +204,45 @@ defineExpose({ toggleOpenState, open, close });
 
     <template v-if="paginationList.length > 0">
       <div class="grid max-h-90 w-full grid-cols-6 justify-items-center">
-        <VbenIconButton
+        <ElTooltip
           v-for="(item, index) in paginationList"
           :key="index"
-          :tooltip="item"
-          tooltip-side="top"
-          @click="handleClick(item)"
+          :content="item"
+          placement="top"
         >
-          <VbenIcon
+          <button
+            type="button"
+            class="flex size-9 items-center justify-center rounded border-0 bg-transparent c-p transition-colors hover:bg-[var(--el-fill-color-light)]"
             :class="{
-              'text-primary transition-all': currentSelect === item,
+              'text-[var(--el-color-primary)]': currentSelect === item,
             }"
-            :icon="item"
-          />
-        </VbenIconButton>
+            @click="handleClick(item)"
+          >
+            <VbenIcon :icon="item" class="text-lg" />
+          </button>
+        </ElTooltip>
       </div>
       <div
         v-if="total >= pageSize"
-        class="flex-center flex justify-end overflow-hidden border-t py-2 pr-3"
+        class="mt-2 flex justify-end border-t border-[var(--default-border)] pt-2"
       >
-        <Pagination
-          :items-per-page="36"
-          :sibling-count="1"
+        <ElPagination
+          small
+          background
+          layout="prev, pager, next"
           :total="total"
-          show-edges
-          size="small"
-          @update:page="handlePageChange"
-        >
-          <PaginationList
-            v-slot="{ items }"
-            class="flex w-full items-center gap-1"
-          >
-            <PaginationFirst class="size-5" />
-            <PaginationPrev class="size-5" />
-            <template v-for="(item, index) in items">
-              <PaginationListItem
-                v-if="item.type === 'page'"
-                :key="index"
-                :value="item.value"
-                as-child
-              >
-                <Button
-                  :variant="item.value === currentPage ? 'default' : 'outline'"
-                  class="size-5 p-0 text-sm"
-                >
-                  {{ item.value }}
-                </Button>
-              </PaginationListItem>
-              <PaginationEllipsis
-                v-else
-                :key="item.type"
-                :index="index"
-                class="size-5"
-              />
-            </template>
-            <PaginationNext class="size-5" />
-            <PaginationLast class="size-5" />
-          </PaginationList>
-        </Pagination>
+          :page-size="36"
+          :current-page="currentPage"
+          @current-change="handlePageChange"
+        />
       </div>
     </template>
 
     <template v-else>
-      <div class="flex-col-center min-h-37.5 w-full text-muted-foreground">
+      <div class="flex min-h-37.5 w-full flex-col items-center justify-center text-g-500">
         <EmptyIcon class="size-10" />
         <div class="mt-1 text-sm">{{ $t('common.noData') }}</div>
       </div>
     </template>
-  </VbenPopover>
+  </ElPopover>
 </template>

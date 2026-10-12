@@ -10,7 +10,7 @@ export type CloseIconPlacement = 'left' | 'right';
 
 export interface DrawerProps {
   /**
-   * 是否挂载到内容区域
+   * 是否挂载到内容区域（垫片实现统一为 append-to-body）
    * @default false
    */
   appendToMain?: boolean;
@@ -25,7 +25,7 @@ export interface DrawerProps {
    */
   closable?: boolean;
   /**
-   * 关闭按钮的位置
+   * 关闭按钮的位置（垫片保留契约，Element Plus 固定右侧）
    */
   closeIconPlacement?: CloseIconPlacement;
   /**
@@ -86,11 +86,11 @@ export interface DrawerProps {
   modal?: boolean;
 
   /**
-   * 是否自动聚焦
+   * 是否自动聚焦（垫片保留契约）
    */
   openAutoFocus?: boolean;
   /**
-   * 弹窗遮罩模糊效果
+   * 弹窗遮罩模糊效果（垫片保留契约）
    */
   overlayBlur?: number;
   /**

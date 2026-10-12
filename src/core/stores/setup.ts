@@ -2,10 +2,12 @@ import type { Pinia } from 'pinia';
 
 import type { App } from 'vue';
 
-import { createPinia } from 'pinia';
+import { createPersistedState } from 'pinia-plugin-persistedstate';
 import SecureLS from 'secure-ls';
 
-let pinia: Pinia;
+import { store as sharedPinia } from '@/store';
+
+let pinia: Pinia = sharedPinia;
 
 type SecureLSStorage = {
   get(key: string): any;
@@ -29,66 +31,78 @@ const SecureLSConstructor =
   secureLSModule.SecureLS ??
   (SecureLS as unknown as SecureLSCtor);
 
-/**
- * 【art-admin 改造 · store/stores 合并】
- *
- * 原先存在两个 pinia 来源：`core/store`（art 壳自己 createPinia 并注册
- * StorageKeyManager 持久化）与 `core/stores`（admin 业务层）。本次合并为唯一
- * 来源 `core/stores`，由本模块统一创建并注册持久化插件：
- *   - SecureLS 加密持久化（admin 业务 store）
- *   - StorageKeyManager 版本化 localStorage 持久化（art 壳 UI 状态：菜单/设置/标签页）
- * 避免两个 pinia 实例导致状态互相读不到，也消除重复的 store 目录。
- */
-export const store: Pinia = createPinia();
-
 export interface InitStoreOptions {
   /**
-   * @zh_CN 应用名,由于 #/core/stores 是公用的，后续可能有多个app，为了防止多个app缓存冲突，可在这里配置应用名,应用名将被用于持久化的前缀
+   * @zh_CN 应用名，持久化存储 key 的前缀，用于多应用隔离
    */
   namespace: string;
-  /**
-   * @zh_CN 复用已存在的 pinia 实例（合并后一般传 core/stores 的 store）。
-   */
-  pinia?: Pinia;
+}
+
+const NOOP_STORAGE_KEY = '__noop__';
+
+function isCoreKey(prefix: string, key: string) {
+  return key.startsWith(prefix) && !key.includes(NOOP_STORAGE_KEY);
 }
 
 /**
- * @zh_CN 初始化pinia
+ * @zh_CN 初始化 pinia
+ *
+ * 与 app 容器层共用同一个 pinia 实例（@/store 中创建），
+ * 仅追加 core-* store 的持久化策略：DEV 明文 localStorage，生产 AES 加密。
+ * 容器自身的 store 由其原有插件负责，这里通过 storage no-op 跳过。
  */
 export async function initStores(app: App, options: InitStoreOptions) {
-  const { createPersistedState } = await import('pinia-plugin-persistedstate');
-  pinia = options.pinia ?? store;
   const { namespace } = options;
-  // 无论是否复用外部 pinia（art-admin 复用共享 store），都要注册持久化插件，
-  // 否则 admin 业务 store（如 core-access）的 persist 配置不会生效，
-  // 登录 token 无法写入 localStorage，刷新页面后即回到登录页。
+  const prefix = `${namespace}-`;
+
   const ls = new SecureLSConstructor({
     encodingType: 'aes',
     encryptionSecret: import.meta.env.VITE_APP_STORE_SECURE_KEY,
     isCompression: true,
     metaKey: `${namespace}-secure-meta`,
   });
+
+  const secureStorage = {
+    getItem(key: string) {
+      if (!isCoreKey(prefix, key)) return null;
+      return ls.get(key);
+    },
+    setItem(key: string, value: string) {
+      if (!isCoreKey(prefix, key)) return;
+      ls.set(key, value);
+    },
+    removeItem(key: string) {
+      if (!isCoreKey(prefix, key)) return;
+      (ls as any).remove?.(key);
+    },
+  };
+
+  const plainStorage = {
+    getItem(key: string) {
+      if (!isCoreKey(prefix, key)) return null;
+      return localStorage.getItem(key);
+    },
+    setItem(key: string, value: string) {
+      if (!isCoreKey(prefix, key)) return;
+      localStorage.setItem(key, value);
+    },
+    removeItem(key: string) {
+      if (!isCoreKey(prefix, key)) return;
+      localStorage.removeItem(key);
+    },
+  };
+
   pinia.use(
     createPersistedState({
-      // key $appName-$store.id
-      key: (storeKey) => `${namespace}-${storeKey}`,
-      storage: import.meta.env.DEV
-        ? localStorage
-        : {
-            getItem(key) {
-              return ls.get(key);
-            },
-            setItem(key, value) {
-              ls.set(key, value);
-            },
-          },
+      // 仅处理 core-* 开头的业务 store，其余 key 走 storage no-op
+      key: (storeKey) =>
+        storeKey.startsWith('core-')
+          ? `${prefix}${storeKey}`
+          : `${prefix}${NOOP_STORAGE_KEY}-${storeKey}`,
+      storage: import.meta.env.DEV ? plainStorage : secureStorage,
     }),
   );
-  // 说明：art 壳 UI 状态 store（menu/setting/tabbar/worktab 等）各自在
-  // persist 配置里指定了 key 与 storage，admin store（core-access 等）使用
-  // 上面的全局 key 函数 `${namespace}-${storeId}`。两者都由上面注册的
-  // pinia-plugin-persistedstate 统一处理，无需再单独注册 StorageKeyManager
-  //（它是存储键生成器类，不是 pinia 插件，直接 pinia.use 会抛错）。
+
   app.use(pinia);
   return pinia;
 }
@@ -98,16 +112,16 @@ export function resetAllStores() {
     console.error('Pinia is not installed');
     return;
   }
-  const allStores = (pinia as any)._s;
-  for (const [key, store] of allStores) {
-    // art-admin：art 壳与 admin 业务层共用同一个 pinia，
-    // art 侧存在用 setup 语法且未自定义 $reset 的 store（如 menuStore）。
-    // pinia 对这类 store 调用 $reset() 会直接抛错，进而中断整个登出流程，
-    // 因此这里逐个隔离，缺失 $reset 的 store 跳过而非让异常冒泡。
+  const allStores = (pinia as any)._s as Map<string, any>;
+  for (const [id, store] of allStores) {
+    // 容器层 setup store 的 $reset 已在 @/store 插件中替换为快照重置；
+    // 这里再兜底一次，避免单个 store 重置失败阻断登出/启动流程
     try {
       store.$reset();
     } catch (error) {
-      console.warn(`[resetAllStores] store "${key}" 无法重置，已跳过`, error);
+      console.warn(`[store] skip $reset for "${id}":`, error);
     }
   }
 }
+
+export { pinia };

@@ -4,8 +4,7 @@ export type {
   IconType,
   PromptProps,
 } from './alert';
-export { useAlertContext } from './alert';
-export { default as Alert } from './alert.vue';
+export { provideAlertContext, useAlertContext } from './alert';
 export {
   vbenAlert as alert,
   clearAllAlerts,

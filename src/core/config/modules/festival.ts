@@ -20,10 +20,10 @@
  * - 每个用户每天只会播放一次烟花效果
  *
  * @module config/modules/festival
- * @author Art Design Pro Team
+ * @author Aura
  */
 
-import { FestivalConfig } from '#/core/types/config'
+import type { FestivalConfig } from '@/types'
 
 // 导入烟花图片（根据需要取消注释）
 // import sd from '@imgs/ceremony/sd.png'
@@ -46,6 +46,6 @@ export const festivalConfigList: FestivalConfig[] = [
   //   date: '2024-12-25',
   //   image: sd,
   //   count: 3 // 可选，不设置则使用默认值 3 次
-  //   scrollText: 'Merry Christmas！Art Design Pro 祝您圣诞快乐，愿节日的欢乐与祝福如雪花般纷至沓来！',
+  //   scrollText: 'Merry Christmas！Aura 祝您圣诞快乐，愿节日的欢乐与祝福如雪花般纷至沓来！',
   // }
 ]

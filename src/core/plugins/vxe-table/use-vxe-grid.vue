@@ -25,6 +25,9 @@ import {
   watch,
 } from 'vue';
 
+import { Loading } from '@element-plus/icons-vue';
+import { HelpCircle } from 'lucide-vue-next';
+import { ElIcon, ElTooltip } from 'element-plus';
 import { VxeButton } from 'vxe-pc-ui';
 import { VxeGrid, VxeUI } from 'vxe-table';
 
@@ -39,24 +42,13 @@ import {
   isEqual,
   mergeWithArrayOverride,
 } from '#/core/shared';
-import { VbenHelpTooltip, VbenLoading } from '#/core/ui/primitives';
 
 import { extendProxyOptions } from './extends';
 import { useTableForm } from './init';
 import { applyViewedRowOptions, useViewedRow } from './use-viewed-row';
 
-// 【art-admin 修复】使用 all.scss 而非 cssvar.scss。
-//
-// cssvar.scss 只加载 CSS 变量（--vxe-ui-font-size-small 等），
-// 不加载组件样式（grid.scss 中的 .vxe-grid { font-size: var(...) } 等）。
-// admin 项目通过 vite-plugin-lazy-import 的 VxeResolver 自动按需导入
-// 每个组件的样式，而 art-admin 没有使用该插件，只导入了 cssvar.scss，
-// 导致 .vxe-grid 的 font-size 未被设置，回退到继承值 16px（浏览器默认），
-// 表格视觉比 admin（13px）偏大。
-//
-// 改为 all.scss 后，grid.scss / table.scss / toolbar.scss 等组件样式
-// 会被完整加载，.vxe-grid.size--small 的 font-size 正确使用
-// var(--vxe-ui-font-size-small) = 12px。
+// 新版 vxe（table 4.22+/pc-ui 4.19+）cssvar.scss 仅含主题变量，
+// 组件结构样式与图标字体需引入 all.scss（内部已 @use base.scss 主题变量）
 import 'vxe-table/styles/all.scss';
 import 'vxe-pc-ui/styles/all.scss';
 import './style.css';
@@ -145,7 +137,7 @@ const [Form, formApi] = useTableForm({
     await formApi.resetForm();
     const formValues = await formApi.getValues();
     formApi.setLatestSubmissionValues(formValues);
-    // 如果值发生了变化，submitOnChange会触发刷新。所以只在submitOnChange为false或者值没有发生变化时，手动刷新
+    // 如果值发生了变化，submitOnChange会触发刷新。所以只在submitOnChange为false或者值没有变化时，手动刷新
     if (isEqual(prevValues, formValues) || !formOptions.value?.submitOnChange) {
       props.api.reload(formValues);
     }
@@ -177,14 +169,25 @@ const showToolbar = computed(() => {
 const toolbarOptions = computed(() => {
   const slotActions = slots[TOOLBAR_ACTIONS]?.();
   const slotTools = slots[TOOLBAR_TOOLS]?.();
-  // 注意：如果 slotTools 存在（crud 组件会固定传入），vxe 原生 tools 完全由 slot 渲染，
-  // 因此此处不再把 searchBtn 合并进 toolbarConfig.tools（会被 slot 覆盖，加了无效）。
-  // 原生的 refresh/zoom/custom/export 工具按钮与搜索切换按钮，统一在
-  // template 的 #toolbar-tools slot 末尾手动渲染，确保视觉完整。
+  const searchBtn: VxeToolbarPropTypes.ToolConfig = {
+    code: 'search',
+    icon: 'vxe-icon-search',
+    circle: true,
+    status: showSearchForm.value ? 'primary' : undefined,
+    title: showSearchForm.value
+      ? $t('common.hideSearchPanel')
+      : $t('common.showSearchPanel'),
+  };
+  // 将搜索按钮合并到用户配置的toolbarConfig.tools中
   const toolbarConfig: VxeGridPropTypes.ToolbarConfig = {
     tools: (gridOptions.value?.toolbarConfig?.tools ??
       []) as VxeToolbarPropTypes.ToolConfig[],
   };
+  if (gridOptions.value?.toolbarConfig?.search && !!formOptions.value) {
+    toolbarConfig.tools = Array.isArray(toolbarConfig.tools)
+      ? [...toolbarConfig.tools, searchBtn]
+      : [searchBtn];
+  }
 
   if (!showToolbar.value) {
     toolbarConfig.enabled = false;
@@ -395,7 +398,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :class="cn('h-full rounded-md bg-card', className)">
+  <div :class="cn('h-full rounded-md bg-box', className)">
     <VxeGrid
       ref="gridRef"
       :class="
@@ -413,11 +416,11 @@ onUnmounted(() => {
       <!-- 左侧操作区域或者title -->
       <template v-if="showToolbar" #toolbar-actions="slotProps">
         <slot v-if="showTableTitle" name="table-title">
-          <div class="flex-center gap-1 text-[1rem] font-bold">
+          <div class="flex items-center gap-1 text-[1rem] font-bold">
             {{ tableTitle }}
-            <VbenHelpTooltip v-if="tableTitleHelp">
-              {{ tableTitleHelp }}
-            </VbenHelpTooltip>
+            <ElTooltip v-if="tableTitleHelp" :content="tableTitleHelp" placement="top">
+              <HelpCircle class="size-4 cursor-help text-gray-400" />
+            </ElTooltip>
           </div>
         </slot>
         <slot name="toolbar-actions" v-bind="slotProps"> </slot>
@@ -433,16 +436,13 @@ onUnmounted(() => {
       </template>
       <template #toolbar-tools="slotProps">
         <slot name="toolbar-tools" v-bind="slotProps"></slot>
-        <!-- 搜索面板切换按钮：仅在存在 formOptions 时显示，点击切换搜索区显示/隐藏。
-          注意：vxe 原生的刷新/全屏/列设置/导出按钮由 toolbarConfig（refresh/zoom/custom/export）
-          控制，会自动渲染，不需要在 slot 中手动补，否则会重复。 -->
         <VxeButton
           icon="vxe-icon-search"
           circle
           class="ml-2"
           v-if="gridOptions?.toolbarConfig?.search && !!formOptions"
           :status="showSearchForm ? 'primary' : undefined"
-          :title="showSearchForm ? $t('common.hideSearchPanel') : $t('common.showSearchPanel')"
+          :title="$t('common.search')"
           @click="onSearchBtnClick"
         />
       </template>
@@ -496,14 +496,18 @@ onUnmounted(() => {
             :style="{
               ...(separatorBg ? { backgroundColor: separatorBg } : undefined),
             }"
-            class="absolute bottom-1 -left-2 z-100 h-2 w-[calc(100%+1rem)] overflow-hidden bg-background-deep md:bottom-2 md:h-3"
+            class="absolute bottom-1 -left-2 z-[10] h-2 w-[calc(100%+1rem)] overflow-hidden bg-g-200 md:bottom-2 md:h-3"
           ></div>
         </div>
       </template>
       <!-- loading -->
       <template #loading>
         <slot name="loading">
-          <VbenLoading :spinning="true" />
+          <div
+            class="flex h-full w-full items-center justify-center py-10 text-[var(--el-color-primary)]"
+          >
+            <ElIcon :size="28" class="is-loading"><Loading /></ElIcon>
+          </div>
         </slot>
       </template>
       <!-- 统一控状态 -->

@@ -25,7 +25,7 @@ function parseSvg(svgData: string): IconifyIconStructure {
     'stroke-width',
   ]);
 
-  const svgContent = [...svgElement.childNodes]
+  const svgContent = Array.from(svgElement.childNodes)
     .filter((node) => node.nodeType === Node.ELEMENT_NODE)
     .map((node) => new XMLSerializer().serializeToString(node))
     .join('');

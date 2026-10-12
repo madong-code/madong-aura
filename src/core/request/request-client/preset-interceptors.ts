@@ -27,7 +27,9 @@ export const defaultResponseInterceptor = ({
       }
 
       if (status >= 200 && status < 400) {
-        if (config.responseReturn === 'body') {
+        // 二进制响应（文件下载/预览）没有 code 信封，直接放行，
+        // 否则会落入 code 校验抛错 → 被通用错误提示误报"内部服务器错误"
+        if (responseData instanceof Blob || config.responseReturn === 'body') {
           return responseData;
         } else if (
           isFunction(successCode)
@@ -60,8 +62,13 @@ export const authenticateResponseInterceptor = ({
   return {
     rejected: async (error) => {
       const { config, response } = error;
+      // 401 判定：HTTP 状态码为 401，或业务响应体 code === 401（登录失效）
+      // 本项目后端未授权以 HTTP 200 + body.code=401 返回，仅靠 status 会漏判，
+      // 导致登录失效落入通用错误提示（"服务器异常"）而不会触发重新认证
+      const isUnauthorized =
+        response?.status === 401 || response?.data?.code === 401;
       // 如果不是 401 错误，直接抛出异常
-      if (response?.status !== 401) {
+      if (!isUnauthorized) {
         throw error;
       }
       // 判断是否启用了 refreshToken 功能
@@ -128,6 +135,19 @@ export const errorMessageResponseInterceptor = (
       if (errMsg) {
         makeErrorMessage?.(errMsg, error);
         return Promise.reject(error);
+      }
+
+      // 业务错误对象：request-client 在非 2xx 时抛出纯响应体（如 {code, msg}），
+      // 不携带 response 属性，按状态码匹配会落入 default 误报"服务器异常"。
+      // 优先提取业务错误信息直接展示。
+      const body =
+        error?.response?.data ?? (error?.code !== undefined ? error : null);
+      if (body && typeof body === 'object') {
+        const bizMsg = body?.msg ?? body?.message ?? body?.error;
+        if (bizMsg) {
+          makeErrorMessage?.(bizMsg, error);
+          return Promise.reject(error);
+        }
       }
 
       let errorMessage: string;

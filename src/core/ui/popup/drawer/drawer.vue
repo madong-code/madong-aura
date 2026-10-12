@@ -1,362 +1,226 @@
-<script lang="ts" setup>
-import type { DrawerProps, ExtendedDrawerApi } from './drawer';
+<!--
+  VbenDrawer 垫片实现（Element Plus ElDrawer）
+  契约对齐 vben：drawerApi、slots(default/footer/prepend-footer/...)、
+  placement(right/left/top/bottom)、class="w-[60%]" 宽度、lock 提交锁。
+-->
+<script setup lang="ts">
+import type { DrawerPlacement, DrawerProps } from './drawer';
+
+import type { ExtendedDrawerApi } from './drawer';
 
 import {
   computed,
+  getCurrentInstance,
   onDeactivated,
-  provide,
-  ref,
-  unref,
-  useId,
-  watch,
+  useAttrs,
 } from 'vue';
 
-import {
-  useIsMobile,
-  usePriorityValues,
-  useSimpleLocale,
-} from '#/core/composables';
-import { X } from '#/core/design/icons/base';
-import { ELEMENT_ID_MAIN_CONTENT } from '#/core/shared/constants';
-import { globalShareState } from '#/core/shared/global-state';
+import { HelpCircle } from 'lucide-vue-next';
+
+import { useSimpleLocale } from '#/core/composables';
 import { cn } from '#/core/shared/utils';
-import {
-  Separator,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  VbenButton,
-  VbenHelpTooltip,
-  VbenIconButton,
-  VbenLoading,
-  VisuallyHidden,
-} from '#/core/ui/primitives';
 
 interface Props extends DrawerProps {
   drawerApi?: ExtendedDrawerApi;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  appendToMain: false,
-  closeIconPlacement: 'right',
-  destroyOnClose: false,
-  drawerApi: undefined,
-  submitting: false,
-  zIndex: 1000,
-});
+const props = defineProps<Props>();
 
-const components = globalShareState.getComponents();
-
-const id = useId();
-provide('DISMISSABLE_DRAWER_ID', id);
-
-// @ts-expect-error unused
-const wrapperRef = ref<HTMLElement>();
 const { $t } = useSimpleLocale();
-const { isMobile } = useIsMobile();
 
 const state = props.drawerApi?.useStore?.();
 
-const {
-  appendToMain,
-  cancelText,
-  class: drawerClass,
-  closable,
-  closeIconPlacement,
-  closeOnClickModal,
-  closeOnPressEscape,
-  confirmLoading,
-  confirmText,
-  contentClass,
-  description,
-  destroyOnClose,
-  footer: showFooter,
-  footerClass,
-  header: showHeader,
-  headerClass,
-  loading: showLoading,
-  modal,
-  openAutoFocus,
-  overlayBlur,
-  placement,
-  showCancelButton,
-  showConfirmButton,
-  submitting,
-  title,
-  titleTooltip,
-  zIndex,
-} = usePriorityValues(props, state);
+/**
+ * vben 契约：模板上【显式传入】的 props（title/footer=false/class...）优先级
+ * 高于 api store 初始值。
+ * 注意不能遍历 defineProps 的结果：Vue 对 Boolean 类型 props 会把「未传」
+ * 强制转成 false，导致 header/modal/footer/closable 等未传时覆盖掉 state
+ * 的 true 默认值（表现为标题栏/遮罩/按钮全部消失）。
+ * vnode.props 只包含模板上真正写出的属性，是判断「是否显式传入」的唯一
+ * 可靠来源。
+ */
+const instance = getCurrentInstance();
+const mergedState = computed<Record<string, any>>(() => {
+  const rawProps = instance?.vnode.props ?? {};
+  const overrides: Record<string, any> = {};
+  for (const key of Object.keys(rawProps)) {
+    if (key === 'drawerApi' || key.startsWith('on')) continue;
+    overrides[key] = rawProps[key] as unknown;
+  }
+  return { ...state?.value, ...overrides };
+});
 
-// watch(
-//   () => showLoading.value,
-//   (v) => {
-//     if (v && wrapperRef.value) {
-//       wrapperRef.value.scrollTo({
-//         // behavior: 'smooth',
-//         top: 0,
-//       });
-//     }
-//   },
-// );
+const directionMap: Record<DrawerPlacement, 'btt' | 'ltr' | 'rtl' | 'ttb'> = {
+  bottom: 'btt',
+  left: 'ltr',
+  right: 'rtl',
+  top: 'ttb',
+};
+
+const direction = computed(
+  () =>
+    directionMap[(mergedState.value.placement as DrawerPlacement) ?? 'right'],
+);
 
 /**
- * 在开启keepAlive情况下 直接通过浏览器按钮/手势等返回 不会关闭弹窗
+ * vben 用 class="w-[600px]/w-[60%]" 控制抽屉宽度（上下方向用 h-[...]）。
+ * 模板 class 经 mergedState 合并后解析；w-full 映射为 100%。
  */
+const attrs = useAttrs();
+
+const mergedClass = computed(() =>
+  cn(mergedState.value.class, attrs.class),
+);
+
+const drawerSize = computed(() => {
+  const raw = String(mergedClass.value ?? '');
+  const vertical = direction.value === 'ttb' || direction.value === 'btt';
+  // 仅匹配独立的 w-[..]/h-[..]，排除 max-w-[..]、min-h-[..] 等限制类
+  const sizeRe = vertical
+    ? /(?:^|\s)h-\[([^\]]+)\]/
+    : /(?:^|\s)w-\[([^\]]+)\]/;
+  const matched = raw.match(sizeRe)?.[1];
+  if (matched) return matched;
+  const fullRe = vertical ? /\bh-full\b/ : /\bw-full\b/;
+  if (fullRe.test(raw)) return '100%';
+  return undefined;
+});
+
+const drawerClass = computed(() =>
+  String(mergedClass.value ?? '')
+    .replace(/(?:^|\s)[wh]-\[[^\]]+\]/g, ' ')
+    .replace(/\b[wh]-full\b/g, ' ')
+    .trim(),
+);
+
+function handleUpdateModelValue(value: boolean) {
+  if (!value && !state?.value.submitting) {
+    props.drawerApi?.close();
+  }
+}
+
 onDeactivated(() => {
-  // 如果弹窗没有被挂载到内容区域，则关闭弹窗
-  if (!appendToMain.value) {
+  if (!state?.value.appendToMain) {
     props.drawerApi?.close();
   }
 });
-
-function interactOutside(e: Event) {
-  if (!closeOnClickModal.value || submitting.value) {
-    e.preventDefault();
-  }
-}
-function escapeKeyDown(e: KeyboardEvent) {
-  if (!closeOnPressEscape.value || submitting.value) {
-    e.preventDefault();
-  }
-}
-// pointer-down-outside
-function pointerDownOutside(e: Event) {
-  const target = e.target as HTMLElement;
-  const dismissableDrawer = target?.dataset.dismissableDrawer;
-  if (
-    submitting.value ||
-    !closeOnClickModal.value ||
-    dismissableDrawer !== id
-  ) {
-    e.preventDefault();
-  }
-}
-
-function handerOpenAutoFocus(e: Event) {
-  if (!openAutoFocus.value) {
-    e?.preventDefault();
-  }
-}
-
-function handleFocusOutside(e: Event) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-const getAppendTo = computed(() => {
-  return appendToMain.value
-    ? `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`
-    : undefined;
-});
-
-/**
- * destroyOnClose功能完善
- */
-// 是否打开过
-const hasOpened = ref(false);
-const isClosed = ref(true);
-// 兜底定时器：当关闭动画事件(@closed/animationend)未触发时，
-// 确保 force-mount 残留的内容最终被 hidden 隐藏。
-// 背景：art-admin 缺少 tailwindcss-animate，drawer 内容的 data-[state=closed]:animate-out
-// 等 CSS 动画未生成，导致 SheetContent 的 onAnimationEnd 永远不触发 @closed，
-// isClosed 保持 false、hidden class 不加，抽屉内容残留显示（遮罩已 v-if 移除）。
-let closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
-const CLOSE_FALLBACK_MS = 400;
-watch(
-  () => state?.value?.isOpen,
-  (value) => {
-    if (closeFallbackTimer) {
-      clearTimeout(closeFallbackTimer);
-      closeFallbackTimer = null;
-    }
-    if (value) {
-      // 打开：立即显示内容（清除 hidden）
-      isClosed.value = false;
-      if (!unref(hasOpened)) {
-        hasOpened.value = true;
-      }
-    } else {
-      // 关闭：启动兜底定时器。
-      // 若 @closed 事件在动画结束时正常触发，handleClosed 会 clearTimeout 并设置 isClosed。
-      // 若动画未播放/事件未触发（缺少 tailwindcss-animate 时），定时器兜底设 isClosed=true。
-      closeFallbackTimer = setTimeout(() => {
-        closeFallbackTimer = null;
-        if (!state?.value?.isOpen) {
-          isClosed.value = true;
-          props.drawerApi?.onClosed();
-        }
-      }, CLOSE_FALLBACK_MS);
-    }
-  },
-);
-function handleClosed() {
-  if (closeFallbackTimer) {
-    clearTimeout(closeFallbackTimer);
-    closeFallbackTimer = null;
-  }
-  isClosed.value = true;
-  props.drawerApi?.onClosed();
-}
-const getForceMount = computed(() => {
-  return !unref(destroyOnClose) && unref(hasOpened);
-});
 </script>
+
 <template>
-  <Sheet
-    :modal="false"
-    :open="state?.isOpen"
-    @update:open="() => drawerApi?.close()"
+  <ElDrawer
+    :model-value="mergedState.isOpen"
+    :direction="direction"
+    :size="drawerSize"
+    :modal="mergedState.modal"
+    :append-to-body="mergedState.appendToMain"
+    :with-header="mergedState.header !== false"
+    :show-close="
+      (mergedState.closable !== false) && (mergedState.header !== false)
+    "
+    :close-on-click-modal="
+      (mergedState.closeOnClickModal ?? true) && !mergedState.submitting
+    "
+    :close-on-press-escape="
+      (mergedState.closeOnPressEscape ?? true) && !mergedState.submitting
+    "
+    :destroy-on-close="mergedState.destroyOnClose"
+    :z-index="mergedState.zIndex"
+    :class="['vben-drawer', drawerClass]"
+    @update:model-value="handleUpdateModelValue"
+    @opened="props.drawerApi?.onOpened()"
+    @closed="props.drawerApi?.onClosed()"
   >
-    <SheetContent
-      :append-to="getAppendTo"
-      :class="
-        cn('flex w-130 flex-col', drawerClass, {
-          'w-full!': isMobile || placement === 'bottom' || placement === 'top',
-          'max-h-screen': placement === 'bottom' || placement === 'top',
-          hidden: isClosed,
-        })
-      "
-      :modal="modal"
-      :open="state?.isOpen"
-      :side="placement"
-      :z-index="zIndex"
-      :force-mount="getForceMount"
-      :overlay-blur="overlayBlur"
-      @close-auto-focus="handleFocusOutside"
-      @closed="handleClosed"
-      @escape-key-down="escapeKeyDown"
-      @focus-outside="handleFocusOutside"
-      @interact-outside="interactOutside"
-      @open-auto-focus="handerOpenAutoFocus"
-      @opened="() => drawerApi?.onOpened()"
-      @pointer-down-outside="pointerDownOutside"
-    >
-      <SheetHeader
-        v-if="showHeader"
-        :class="
-          cn(
-            'flex! flex-row items-center justify-between border-b border-border px-6 py-5',
-            headerClass,
-            {
-              'px-4 py-3': closable,
-              'pl-2': closable && closeIconPlacement === 'left',
-            },
-          )
-        "
-      >
-        <div class="flex items-center">
-          <SheetClose
-            v-if="closable && closeIconPlacement === 'left'"
-            as-child
-            :disabled="submitting"
-            class="ml-0.5 cursor-pointer rounded-full opacity-80 transition-opacity hover:opacity-100 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary"
+    <template #header>
+      <div :class="['vben-drawer__header', mergedState.headerClass]">
+        <slot name="title">
+          <span class="vben-drawer__title">{{ mergedState.title }}</span>
+          <ElTooltip
+            v-if="mergedState.titleTooltip"
+            :content="mergedState.titleTooltip"
+            placement="top"
           >
-            <slot name="close-icon">
-              <VbenIconButton>
-                <X class="size-4" />
-              </VbenIconButton>
-            </slot>
-          </SheetClose>
-          <Separator
-            v-if="closable && closeIconPlacement === 'left'"
-            class="mr-2 ml-1 h-8"
-            decorative
-            orientation="vertical"
-          />
-          <SheetTitle v-if="title" class="text-left">
-            <slot name="title">
-              {{ title }}
-
-              <VbenHelpTooltip v-if="titleTooltip" trigger-class="pb-1">
-                {{ titleTooltip }}
-              </VbenHelpTooltip>
-            </slot>
-          </SheetTitle>
-          <SheetDescription v-if="description" class="mt-1 text-xs">
-            <slot name="description">
-              {{ description }}
-            </slot>
-          </SheetDescription>
+            <HelpCircle class="ml-1 inline-block size-3.5 cursor-help align-text-bottom opacity-60" />
+          </ElTooltip>
+        </slot>
+        <div v-if="mergedState.description" class="vben-drawer__description">
+          <slot name="description">{{ mergedState.description }}</slot>
         </div>
-
-        <VisuallyHidden v-if="!title || !description">
-          <SheetTitle v-if="!title" />
-          <SheetDescription v-if="!description" />
-        </VisuallyHidden>
-
-        <div class="flex-center">
-          <slot name="extra"></slot>
-          <SheetClose
-            v-if="closable && closeIconPlacement === 'right'"
-            as-child
-            :disabled="submitting"
-            class="ml-0.5 cursor-pointer rounded-full opacity-80 transition-opacity hover:opacity-100 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary"
-          >
-            <slot name="close-icon">
-              <VbenIconButton>
-                <X class="size-4" />
-              </VbenIconButton>
-            </slot>
-          </SheetClose>
-        </div>
-      </SheetHeader>
-      <template v-else>
-        <VisuallyHidden>
-          <SheetTitle />
-          <SheetDescription />
-        </VisuallyHidden>
-      </template>
-      <div
-        ref="wrapperRef"
-        :class="
-          cn('relative flex-1 overflow-y-auto p-3', contentClass, {
-            'pointer-events-none': showLoading || submitting,
-          })
-        "
-      >
-        <slot></slot>
       </div>
-      <VbenLoading v-if="showLoading || submitting" spinning />
-      <SheetFooter
-        v-if="showFooter"
-        :class="
-          cn(
-            'w-full flex-row items-center justify-end border-t border-border p-2 px-3',
-            footerClass,
-          )
-        "
+    </template>
+
+    <div
+      v-loading="Boolean(mergedState.loading || mergedState.submitting)"
+      :class="['vben-drawer__content', mergedState.contentClass]"
+    >
+      <slot></slot>
+    </div>
+
+    <template #footer>
+      <div
+        v-if="mergedState.footer"
+        :class="['vben-drawer__footer', mergedState.footerClass]"
       >
         <slot name="prepend-footer"></slot>
         <slot name="footer">
-          <component
-            :is="components.DefaultButton || VbenButton"
-            v-if="showCancelButton"
-            variant="ghost"
-            :disabled="submitting"
-            @click="() => drawerApi?.onCancel()"
+          <ElButton
+            v-if="mergedState.showCancelButton !== false"
+            :disabled="mergedState.submitting"
+            @click="props.drawerApi?.onCancel()"
           >
             <slot name="cancelText">
-              {{ cancelText || $t('cancel') }}
+              {{ mergedState.cancelText || $t('cancel') }}
             </slot>
-          </component>
+          </ElButton>
           <slot name="center-footer"></slot>
-          <component
-            :is="components.PrimaryButton || VbenButton"
-            v-if="showConfirmButton"
-            :loading="confirmLoading || submitting"
-            @click="() => drawerApi?.onConfirm()"
+          <ElButton
+            v-if="mergedState.showConfirmButton !== false"
+            type="primary"
+            :loading="mergedState.confirmLoading || mergedState.submitting"
+            @click="props.drawerApi?.onConfirm()"
           >
             <slot name="confirmText">
-              {{ confirmText || $t('confirm') }}
+              {{ mergedState.confirmText || $t('confirm') }}
             </slot>
-          </component>
+          </ElButton>
         </slot>
         <slot name="append-footer"></slot>
-      </SheetFooter>
-    </SheetContent>
-  </Sheet>
+      </div>
+    </template>
+  </ElDrawer>
 </template>
+
+<style scoped>
+  .vben-drawer__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .vben-drawer__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .vben-drawer__description {
+    flex-basis: 100%;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--el-text-color-secondary);
+  }
+
+  .vben-drawer__content {
+    /* 撑满 ElDrawer body，保证内部 h-full 高度链可解析（如消息中心表格） */
+    height: 100%;
+    min-height: 60px;
+  }
+
+  .vben-drawer__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+</style>

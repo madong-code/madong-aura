@@ -6,32 +6,53 @@ import type {
   VbenFormAdapterOptions,
 } from './types';
 
-import { h } from 'vue';
+import { defineComponent, h } from 'vue';
 
+import { ElButton, ElInput, type ButtonProps } from 'element-plus';
 import { defineRule } from 'vee-validate';
 
 import { globalShareState } from '#/core/shared/global-state';
-import {
-  VbenButton,
-  VbenCheckbox,
-  Input as VbenInput,
-  VbenInputPassword,
-  VbenPinInput,
-  VbenSelect,
-} from '#/core/ui/primitives';
+
+import BaseCheckbox from './components/base-checkbox.vue';
+import { VbenInputPassword } from './components/base-input-password';
+import BaseSelect from './components/base-select.vue';
 
 const DEFAULT_MODEL_PROP_NAME = 'modelValue';
 
 export const DEFAULT_FORM_COMMON_CONFIG: FormCommonConfig = {};
 
+/**
+ * 表单操作按钮包装：
+ * vben 契约下业务模板会写 type="button"（DOM 语义），但 ElButton 的 type
+ * 同时是样式类型（primary/default...），直接 h(ElButton,{type:'primary'})
+ * 会被业务传入的 type="button" 覆盖，导致搜索按钮丢失主题色实底样式。
+ * 包装层吞掉透传的 type，固定 ElButton 样式类型（native-type 默认 button）。
+ * 不显式传 size：与搜索栏输入框同走 ElConfigProvider 的全局 default 尺寸，
+ * 保证重置/搜索按钮与输入框等高（对齐 madong-single 视觉）。
+ */
+function createFormButton(type: ButtonProps['type']) {
+  return defineComponent({
+    name: type === 'primary' ? 'FormPrimaryButton' : 'FormDefaultButton',
+    inheritAttrs: false,
+    setup(_, { attrs, slots }) {
+      return () =>
+        h(
+          ElButton,
+          { ...attrs, type } as ButtonProps & Record<string, unknown>,
+          slots,
+        );
+    },
+  });
+}
+
 export const COMPONENT_MAP: Record<BaseFormComponentType, Component> = {
-  DefaultButton: h(VbenButton, { size: 'sm', variant: 'outline' }),
-  PrimaryButton: h(VbenButton, { size: 'sm', variant: 'default' }),
-  VbenCheckbox,
-  VbenInput,
+  DefaultButton: createFormButton('default'),
+  PrimaryButton: createFormButton('primary'),
+  VbenCheckbox: BaseCheckbox,
+  VbenInput: ElInput,
   VbenInputPassword,
-  VbenPinInput,
-  VbenSelect,
+  VbenPinInput: ElInput,
+  VbenSelect: BaseSelect,
 };
 
 export const COMPONENT_BIND_EVENT_MAP: Partial<

@@ -18,6 +18,14 @@ const i18n = createI18n({
   legacy: false,
   locale: '',
   messages: {},
+  // 容器使用短码 zh/en（别名消息在 src/locales 注册）；
+  // 短码缺消息时回退规范码，英文个别未翻译键最终回退中文而不是裸露 key
+  fallbackLocale: {
+    en: ['en-US', 'zh-CN'],
+    'en-US': ['zh-CN'],
+    zh: ['zh-CN'],
+    default: ['zh-CN'],
+  },
 });
 
 const modules = import.meta.glob('./langs/**/*.json');

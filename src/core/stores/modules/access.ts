@@ -107,6 +107,12 @@ export const useAccessStore = defineStore('core-access', {
       this.lockScreenPassword = undefined;
     },
   },
+  getters: {
+    /**
+     * 容器菜单由 art 负责，这里直接返回原始菜单（无徽标合并）
+     */
+    menusWithBadges: (state) => state.accessMenus,
+  },
   persist: {
     // 持久化
     pick: [

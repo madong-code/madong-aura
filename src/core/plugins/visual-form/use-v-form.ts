@@ -70,26 +70,83 @@ async function loadVisualFormModule() {
 }
 
 export async function installVisualForm(app: App) {
-  if (installedApps.has(app)) return;
-
-  installVisualFormElementPlus(app);
-  const visualFormModule = await loadVisualFormModule();
-
-  if (typeof visualFormModule.install === 'function') {
-    app.use(visualFormModule as Plugin);
-  } else {
-    const components = [
-      visualFormModule.VFormDesigner,
-      visualFormModule.VFormRender,
-    ];
-    for (const component of components) {
-      if (component?.name) {
-        app.component(component.name, component);
+  // 检查是否已安装过（但也要验证组件是否真的注册了）
+  if (installedApps.has(app)) {
+    // 即使标记为已安装，也要验证关键组件是否真的注册了
+    // 因为 bootstrap 阶段可能中途失败
+    const vFormRender = visualFormRuntime.VFormDesigner?.VFormRender;
+    if (vFormRender?.name) {
+      try {
+        const existing = app.component(vFormRender.name);
+        if (existing) {
+          console.log(
+            '[VisualForm] VFormRender already registered, skip install',
+          );
+          return;
+        }
+      } catch {
+        // 查询失败，继续尝试注册
       }
     }
+    console.warn(
+      '[VisualForm] Marked as installed but component missing, re-installing...',
+    );
   }
 
-  installedApps.add(app);
+  try {
+    installVisualFormElementPlus(app);
+  } catch (e) {
+    console.warn('[VisualForm] installVisualFormElementPlus failed:', e);
+    // Element Plus 组件安装失败不影响 VForm3 本身，继续执行
+  }
+
+  const visualFormModule = await loadVisualFormModule();
+
+  try {
+    if (typeof visualFormModule.install === 'function') {
+      console.log('[VisualForm] Installing via plugin install method...');
+      app.use(visualFormModule as Plugin);
+    } else {
+      console.log(
+        '[VisualForm] Installing via manual component registration...',
+      );
+      const components = [
+        visualFormModule.VFormDesigner,
+        visualFormModule.VFormRender,
+      ];
+      for (const component of components) {
+        if (component?.name) {
+          app.component(component.name, component);
+          console.log('[VisualForm] Registered component:', component.name);
+        }
+      }
+    }
+
+    installedApps.add(app);
+    console.log('[VisualForm] Installation completed successfully');
+  } catch (e) {
+    console.error('[VisualForm] Installation failed:', e);
+    // 即使 install 方法失败，也尝试手动注册核心组件
+    try {
+      const components = [
+        visualFormModule.VFormDesigner,
+        visualFormModule.VFormRender,
+      ];
+      for (const component of components) {
+        if (component?.name) {
+          app.component(component.name, component);
+          console.log(
+            '[VisualForm] Fallback: registered component:',
+            component.name,
+          );
+        }
+      }
+      installedApps.add(app);
+    } catch (e2) {
+      console.error('[VisualForm] Fallback registration also failed:', e2);
+      throw e2;
+    }
+  }
 }
 
 export function useVForm() {

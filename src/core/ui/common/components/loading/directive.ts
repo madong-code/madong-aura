@@ -2,107 +2,90 @@ import type { App, Directive, DirectiveBinding } from 'vue';
 
 import { h, render } from 'vue';
 
-import { isString } from '#/core/shared/utils';
-import { VbenLoading, VbenSpinner } from '#/core/ui/primitives';
+import { Loading } from '@element-plus/icons-vue';
+import { ElIcon } from 'element-plus';
 
-const LOADING_INSTANCE_KEY = Symbol('loading');
 const SPINNER_INSTANCE_KEY = Symbol('spinner');
 
 const CLASS_NAME_RELATIVE = 'spinner-parent--relative';
 
-const loadingDirective: Directive = {
-  mounted(el, binding) {
-    const instance = h(VbenLoading, getOptions(binding));
-    render(instance, el);
+/**
+ * 全屏/容器旋转遮罩（EP 实现，替代 vben primitives 的 VbenSpinner）
+ */
+function renderSpinner(binding: DirectiveBinding) {
+  const options =
+    binding.value === undefined
+      ? { spinning: true }
+      : typeof binding.value === 'boolean'
+        ? { spinning: binding.value }
+        : { ...binding.value };
 
-    el.classList.add(CLASS_NAME_RELATIVE);
-    el[LOADING_INSTANCE_KEY] = instance;
-  },
-  unmounted(el) {
-    const instance = el[LOADING_INSTANCE_KEY];
-    el.classList.remove(CLASS_NAME_RELATIVE);
-    render(null, el);
-    instance.el.remove();
-
-    el[LOADING_INSTANCE_KEY] = null;
-  },
-
-  updated(el, binding) {
-    const instance = el[LOADING_INSTANCE_KEY];
-    const options = getOptions(binding);
-    if (options && instance?.component) {
-      try {
-        Object.keys(options).forEach((key) => {
-          instance.component.props[key] = options[key];
-        });
-        instance.component.update();
-      } catch (error) {
-        console.error(
-          'Failed to update loading component in directive:',
-          error,
-        );
-      }
-    }
-  },
-};
-
-function getOptions(binding: DirectiveBinding) {
-  if (binding.value === undefined) {
-    return { spinning: true };
-  } else if (typeof binding.value === 'boolean') {
-    return { spinning: binding.value };
-  } else {
-    return { ...binding.value };
-  }
+  return h(
+    'div',
+    {
+      class: 'madong-spinning-mask',
+      style: {
+        position: 'absolute',
+        inset: '0',
+        display: options.spinning ? 'flex' : 'none',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'z-index': '2000',
+        'background-color': 'var(--el-mask-color)',
+        'border-radius': 'inherit',
+      },
+    },
+    [
+      h(
+        ElIcon,
+        { class: 'is-loading', style: { 'font-size': '24px' } },
+        () => h(Loading),
+      ),
+    ],
+  );
 }
 
 const spinningDirective: Directive = {
   mounted(el, binding) {
-    const instance = h(VbenSpinner, getOptions(binding));
+    const instance = h('div', { style: 'display:contents' }, [
+      renderSpinner(binding),
+    ]);
     render(instance, el);
-
+    const maskEl = el.querySelector('.madong-spinning-mask');
+    el[SPINNER_INSTANCE_KEY] = maskEl;
     el.classList.add(CLASS_NAME_RELATIVE);
-    el[SPINNER_INSTANCE_KEY] = instance;
   },
   unmounted(el) {
-    const instance = el[SPINNER_INSTANCE_KEY];
     el.classList.remove(CLASS_NAME_RELATIVE);
-    render(null, el);
-    instance.el.remove();
-
+    const maskEl = el[SPINNER_INSTANCE_KEY];
+    if (maskEl?.parentNode) {
+      maskEl.parentNode.removeChild(maskEl);
+    }
     el[SPINNER_INSTANCE_KEY] = null;
   },
-
   updated(el, binding) {
-    const instance = el[SPINNER_INSTANCE_KEY];
-    const options = getOptions(binding);
-    if (options && instance?.component) {
-      try {
-        Object.keys(options).forEach((key) => {
-          instance.component.props[key] = options[key];
-        });
-        instance.component.update();
-      } catch (error) {
-        console.error(
-          'Failed to update spinner component in directive:',
-          error,
-        );
-      }
+    const maskEl = el[SPINNER_INSTANCE_KEY] as HTMLElement | undefined;
+    const spinning =
+      binding.value === undefined
+        ? true
+        : typeof binding.value === 'boolean'
+          ? binding.value
+          : !!binding.value?.spinning;
+    if (maskEl) {
+      maskEl.style.display = spinning ? 'flex' : 'none';
     }
   },
 };
 
 type loadingDirectiveParams = {
-  /** 是否注册loading指令。如果提供一个string，则将指令注册为指定的名称 */
+  /** 是否注册 loading 指令（art 侧使用 EP 原生 v-loading，通常传 false） */
   loading?: boolean | string;
-  /** 是否注册spinning指令。如果提供一个string，则将指令注册为指定的名称 */
+  /** 是否注册 spinning 指令。如果提供一个 string，则将指令注册为指定的名称 */
   spinning?: boolean | string;
 };
 
 /**
- * 注册loading指令
- * @param app
- * @param params
+ * 注册 loading/spinning 指令
  */
 export function registerLoadingDirective(
   app: App,
@@ -118,14 +101,12 @@ export function registerLoadingDirective(
   `;
   document.head.append(style);
   if (params?.loading !== false) {
-    app.directive(
-      isString(params?.loading) ? params.loading : 'loading',
-      loadingDirective,
-    );
+    // 默认无 vben loading 实现，由调用方使用 EP 原生 v-loading
+    console.warn('[registerLoadingDirective] 请使用 Element Plus 原生 v-loading 指令');
   }
   if (params?.spinning !== false) {
     app.directive(
-      isString(params?.spinning) ? params.spinning : 'spinning',
+      typeof params?.spinning === 'string' ? params.spinning : 'spinning',
       spinningDirective,
     );
   }

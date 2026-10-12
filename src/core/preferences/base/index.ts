@@ -1,23 +1,22 @@
-import type { Preferences } from './types';
-
 import { preferencesManager } from './preferences';
 
 export const {
-  getPreferences,
+  clearCache,
   getCustomPreferences,
   getInitialCustomPreferences,
+  getInitialPreferences,
+  getPreferences,
   getPreferencesExtension,
-  updatePreferences,
+  initPreferences,
+  resetPreferences,
   setPreferences,
   updateCustomPreferences,
-  resetPreferences,
-  clearCache,
-  initPreferences,
+  updatePreferences,
 } = preferencesManager;
 
-export const preferences: Preferences = getPreferences();
+export const preferences = getPreferences();
 
-export { preferencesManager };
+export { preferencesManager, PreferenceManager } from './preferences';
 
 export * from './constants';
 export type * from './types';
