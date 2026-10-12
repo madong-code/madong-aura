@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="g" x1="9" y1="39" x2="39" y2="9" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset=".55" stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <!-- 倾斜轨道 -->
+  <ellipse cx="24" cy="24" rx="19" ry="8.5" stroke="url(#g)" stroke-width="4" transform="rotate(-30 24 24)"/>
+  <!-- 能量核心 -->
+  <circle cx="24" cy="24" r="7" fill="url(#g)"/>
+  <!-- 轨道卫星 -->
+  <circle cx="39.3" cy="13.2" r="3.2" fill="#22D3EE"/>
+</svg>

@@ -9,7 +9,7 @@
 
 /*滚动条的轨道*/
 ::-webkit-scrollbar-track {
-  background-color: var(--art-gray-200);
+  background-color: var(--app-gray-200);
 }
 
 /*滚动条的滑块按钮*/
@@ -36,6 +36,6 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: var(--art-gray-300) !important;
+    background-color: var(--app-gray-300) !important;
   }
 }

@@ -52,7 +52,7 @@
 .langDropDownStyle {
   // 选中项背景颜色
   .is-selected {
-    background-color: var(--art-el-active-color) !important;
+    background-color: var(--app-el-active-color) !important;
   }
 
   // 语言切换按钮菜单样式优化
@@ -81,12 +81,7 @@
   }
 }
 
-// 盒子默认边框
-.page-content {
-  border: 1px solid var(--art-card-border) !important;
-}
-
-@mixin art-card-base($border-color, $shadow: none, $radius-diff: 4px) {
+@mixin app-card-base($border-color, $shadow: none, $radius-diff: 4px) {
   background: var(--default-box-color);
   border: 1px solid #{$border-color} !important;
   border-radius: calc(var(--custom-radius) + #{$radius-diff}) !important;
@@ -95,63 +90,61 @@
   --el-card-border-color: var(--default-border) !important;
 }
 
-.art-card,
-.art-card-sm,
-.art-card-xs {
-  border: 1px solid var(--art-card-border);
+.app-card,
+.app-card-sm,
+.app-card-xs {
+  border: 1px solid var(--app-card-border);
 }
 
 // 盒子边框
 [data-box-mode='border-mode'] {
-  .page-content,
-  .art-table-card {
-    border: 1px solid var(--art-card-border) !important;
+  .app-table-card {
+    border: 1px solid var(--app-card-border) !important;
   }
 
-  .art-card {
-    @include art-card-base(var(--art-card-border), none, 4px);
+  .app-card {
+    @include app-card-base(var(--app-card-border), none, 4px);
   }
 
-  .art-card-sm {
-    @include art-card-base(var(--art-card-border), none, 0px);
+  .app-card-sm {
+    @include app-card-base(var(--app-card-border), none, 0px);
   }
 
-  .art-card-xs {
-    @include art-card-base(var(--art-card-border), none, -4px);
+  .app-card-xs {
+    @include app-card-base(var(--app-card-border), none, -4px);
   }
 }
 
 // 盒子阴影
 [data-box-mode='shadow-mode'] {
-  .page-content,
-  .art-table-card {
+  .app-table-card {
     box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.04) !important;
-    border: 1px solid var(--art-gray-200) !important;
+    border: 1px solid var(--app-gray-200) !important;
   }
 
   .layout-sidebar {
-    border-right: 1px solid var(--art-card-border) !important;
+    border-right: 1px solid var(--app-card-border) !important;
   }
 
-  .art-card {
-    @include art-card-base(
-      var(--art-gray-200),
+  .app-card {
+    @include app-card-base(
+      var(--app-gray-200),
       (0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.08)),
       4px
     );
   }
 
-  .art-card-sm {
-    @include art-card-base(
-      var(--art-gray-200),
+  .app-card-sm {
+    @include app-card-base(
+      var(--app-gray-200),
       (0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.08)),
       2px
     );
   }
 
-  .art-card-xs {
-    @include art-card-base(
-      var(--art-gray-200),
+  .app-card-xs {
+    @include app-card-base(
+      var(--app-gray-200),
       (0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 1px -1px rgba(0, 0, 0, 0.08)),
       -4px
     );
@@ -176,7 +169,7 @@
 }
 
 // 表格卡片
-.art-table-card {
+.app-table-card {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -190,8 +183,8 @@
 }
 
 // 容器全高
-.art-full-height {
-  height: var(--art-full-height);
+.app-full-height {
+  height: var(--app-full-height);
   display: flex;
   flex-direction: column;
 
@@ -201,7 +194,7 @@
 }
 
 // 徽章样式
-.art-badge {
+.app-badge {
   position: absolute;
   top: 0;
   right: 20px;
@@ -213,15 +206,15 @@
   border-radius: 50%;
   animation: breathe 1.5s ease-in-out infinite;
 
-  &.art-badge-horizontal {
+  &.app-badge-horizontal {
     right: 0;
   }
 
-  &.art-badge-mixed {
+  &.app-badge-mixed {
     right: 0;
   }
 
-  &.art-badge-dual {
+  &.app-badge-dual {
     right: 5px;
     top: 5px;
     bottom: auto;
@@ -229,7 +222,7 @@
 }
 
 // 文字徽章样式
-.art-text-badge {
+.app-text-badge {
   position: absolute;
   top: 0;
   right: 12px;
@@ -264,7 +257,7 @@
 }
 
 // 修复老机型 loading 定位问题
-.art-loading-fix {
+.app-loading-fix {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -277,7 +270,7 @@
   justify-content: center !important;
 }
 
-.art-loading-fix .el-loading-spinner {
+.app-loading-fix .el-loading-spinner {
   position: static !important;
   top: auto !important;
   left: auto !important;
