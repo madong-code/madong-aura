@@ -4,17 +4,16 @@
  * 负责菜单数据的获取、过滤和处理
  *
  * @module router/core/MenuProcessor
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import type { AppRouteRecord } from '#/core/types/router'
-import { useUserStore } from '#/core/stores/modules/user'
-import { useAppMode } from '#/core/composables/art/useAppMode'
+import type { AppRouteRecord } from '@/types'
+import { useUserStore } from '@/store/modules/user'
+import { useAppMode } from '#/core/composables/use-app-mode'
+import { fetchMadongMenuList } from './menu-transform'
 import { asyncRoutes } from '../routes/asyncRoutes'
 import { RoutesAlias } from '../routesAlias'
-import { formatMenuTitle } from '#/core/shared/art-utils'
-import { getAllMenusApi } from '#/api/core/menu'
-import { adaptAdminMenusToArtRoutes } from './adminMenuAdapter'
+import { formatMenuTitle } from '#/core/utils/router'
 
 export class MenuProcessor {
   /**
@@ -31,7 +30,11 @@ export class MenuProcessor {
     }
 
     // 在规范化路径之前，验证原始路径配置
-    this.validateMenuPaths(menuList)
+    // 仅前端模式校验：madong 后端菜单存在「菜单层级与 URL 前缀不一致」的合法绝对子路径
+    // （如 系统设置 > 网络 > /content/message/manage），不适用 art 的相对路径约定
+    if (isFrontendMode.value) {
+      this.validateMenuPaths(menuList)
+    }
 
     // 规范化路径（将相对路径转换为完整路径）
     return this.normalizeMenuPaths(menuList)
@@ -56,15 +59,10 @@ export class MenuProcessor {
 
   /**
    * 处理后端控制模式的菜单
-   *
-   * 【art-admin 改造】改为调用 admin 后端的 `/system/auth/user-menus`
-   * （RouteRecordStringComponent 格式），再经 adminMenuAdapter 转成
-   * art 的 AppRouteRecord，从而复用 admin 的全部菜单/插件路由/权限结构。
    */
   private async processBackendMenu(): Promise<AppRouteRecord[]> {
-    const adminMenus = await getAllMenusApi()
-    const artRoutes = adaptAdminMenusToArtRoutes(adminMenus)
-    return this.filterEmptyMenus(artRoutes)
+    const list = await fetchMadongMenuList()
+    return this.filterEmptyMenus(list)
   }
 
   /**
@@ -194,17 +192,31 @@ export class MenuProcessor {
 
   /**
    * 验证菜单路径配置
-   *
-   * 【art-admin 改造 · 对齐 admin 路径策略】
-   * 后端返回的 path 已是完整的路由路径（绝对路径），参考 admin 的
-   * generateRoutesByBackend：不修改 path，只转换 component。
-   * 因此不再对二级及以下菜单的绝对路径报错。
+   * 检测非一级菜单是否错误使用了 / 开头的路径
+   */
+  /**
+   * 验证菜单路径配置
+   * 检测非一级菜单是否错误使用了 / 开头的路径
    */
   private validateMenuPaths(menuList: AppRouteRecord[], level = 1): void {
-    // 对齐 admin：后端 path 即最终路由 path，无需校验 / 开头
-    // 仅递归检查是否有其他配置问题（保留方法以便后续扩展）
     menuList.forEach((route) => {
       if (!route.children?.length) return
+
+      const parentName = String(route.name || route.path || '未知路由')
+
+      route.children.forEach((child) => {
+        const childPath = child.path || ''
+
+        // 跳过合法的绝对路径：外部链接和 iframe 路由
+        if (this.isValidAbsolutePath(childPath)) return
+
+        // 检测非法的绝对路径
+        if (childPath.startsWith('/')) {
+          this.logPathError(child, childPath, parentName, level)
+        }
+      })
+
+      // 递归检查更深层级的子路由
       this.validateMenuPaths(route.children, level + 1)
     })
   }
@@ -221,7 +233,7 @@ export class MenuProcessor {
   }
 
   /**
-   * 输出路径配置错误日志（已停用，保留以防外部调用）
+   * 输出路径配置错误日志
    */
   private logPathError(
     route: AppRouteRecord,
@@ -244,13 +256,6 @@ export class MenuProcessor {
 
   /**
    * 构建完整路径
-   *
-   * 【art-admin 改造 · 对齐 admin 路由路径策略】
-   * 后端返回的 path 已是完整的路由路径（绝对路径），参考 admin 的
-   * generateRoutesByBackend：只转换 component，不修改 path。
-   *
-   * vue-router 嵌套路由对子路由 path 以 '/' 开头时视为绝对路径，
-   * 不会拼接到父路径，因此菜单 path 与路由 path 自然保持一致。
    */
   private buildFullPath(path: string, parentPath: string): string {
     if (!path) return ''
@@ -260,13 +265,14 @@ export class MenuProcessor {
       return path
     }
 
-    // 绝对路径直接返回（对齐 admin：后端 path 即最终路由 path）
+    // 如果已经是绝对路径，直接返回
     if (path.startsWith('/')) {
       return path
     }
 
-    // 相对路径，拼接到父路径
+    // 拼接父路径和当前路径
     if (parentPath) {
+      // 移除父路径末尾的斜杠，移除子路径开头的斜杠，然后拼接
       const cleanParent = parentPath.replace(/\/$/, '')
       const cleanChild = path.replace(/^\//, '')
       return `${cleanParent}/${cleanChild}`

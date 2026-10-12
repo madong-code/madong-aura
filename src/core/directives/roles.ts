@@ -41,10 +41,10 @@
  * - 如需基于具体操作的细粒度权限控制，请使用 v-auth 指令
  *
  * @module directives/roles
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import { useUserStore } from '#/core/stores/modules/user'
+import { useUserStore } from '@/store/modules/user'
 import { App, Directive, DirectiveBinding } from 'vue'
 
 export type RolesDirective = Directive<HTMLElement, string | string[]>

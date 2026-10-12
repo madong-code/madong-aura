@@ -1,9 +1,9 @@
 import { nextTick } from 'vue'
-import { useSettingStore } from '#/core/stores/modules/setting'
+import { useSettingStore } from '@/store/modules/setting'
 import { Router } from 'vue-router'
 import NProgress from 'nprogress'
-import { useCommon } from '#/core/composables/art/useCommon'
-import { loadingService } from '#/core/shared/art-utils/ui'
+import { useCommon } from '#/core/composables/use-common'
+import { loadingService } from '#/core/utils/ui'
 import { getPendingLoading, resetPendingLoading } from './beforeEach'
 
 /** 路由全局后置守卫 */

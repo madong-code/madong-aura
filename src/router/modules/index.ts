@@ -1,27 +1,8 @@
-import { AppRouteRecord } from '#/core/types/router'
-import { dashboardRoutes } from './dashboard'
-import { templateRoutes } from './template'
-import { widgetsRoutes } from './widgets'
-import { examplesRoutes } from './examples'
-import { systemRoutes } from './system'
-import { articleRoutes } from './article'
-import { resultRoutes } from './result'
-import { exceptionRoutes } from './exception'
-import { safeguardRoutes } from './safeguard'
-import { helpRoutes } from './help'
+import type { AppRouteRecord } from '@/types'
 
 /**
- * 导出所有模块化路由
+ * 前端模式（VITE_ACCESS_MODE=frontend）下本地维护的动态路由。
+ * 项目主体使用后端模式，菜单由 madong 接口 GET /system/auth/user-menus 返回；
+ * 如前端模式需要内置菜单，在此数组中追加路由配置。
  */
-export const routeModules: AppRouteRecord[] = [
-  dashboardRoutes,
-  templateRoutes,
-  widgetsRoutes,
-  examplesRoutes,
-  systemRoutes,
-  articleRoutes,
-  resultRoutes,
-  exceptionRoutes,
-  safeguardRoutes,
-  ...helpRoutes
-]
+export const routeModules: AppRouteRecord[] = []

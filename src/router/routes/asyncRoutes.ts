@@ -1,5 +1,4 @@
-// 权限文档：https://www.artd.pro/docs/zh/guide/in-depth/permission.html
-import { AppRouteRecord } from '#/core/types/router'
+import type { AppRouteRecord } from '@/types'
 import { routeModules } from '../modules'
 
 /**

@@ -4,10 +4,10 @@
  * 负责验证路由配置的合法性
  *
  * @module router/core/RouteValidator
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import type { AppRouteRecord } from '#/core/types/router'
+import type { AppRouteRecord } from '@/types'
 import { RoutesAlias } from '../routesAlias'
 
 export interface ValidationResult {
@@ -182,7 +182,6 @@ export class RouteValidator {
    * 路径解析
    */
   private resolvePath(parent: string, child: string): string {
-    const parts = [parent.replace(/\/$/, ''), child.replace(/^\//, '')].filter(Boolean)
-    return parts.length > 0 ? parts.join('/') : '/'
+    return [parent.replace(/\/$/, ''), child.replace(/^\//, '')].filter(Boolean).join('/')
   }
 }

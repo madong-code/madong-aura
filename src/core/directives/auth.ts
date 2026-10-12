@@ -29,10 +29,10 @@
  * - 权限列表从当前路由的 meta.authList 中获取
  *
  * @module directives/auth
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import { router } from '#/router'
+import { router } from '@/router'
 import { App, Directive, DirectiveBinding } from 'vue'
 
 export type AuthDirective = Directive<HTMLElement, string>

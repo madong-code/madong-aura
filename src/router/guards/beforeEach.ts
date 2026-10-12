@@ -33,24 +33,24 @@
  * 6. 未匹配路由跳转到 404 页面
  *
  * @module router/guards/beforeEach
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 import type { Router, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { nextTick } from 'vue'
 import NProgress from 'nprogress'
-import { useSettingStore } from '#/core/stores/modules/setting'
-import { useUserStore } from '#/core/stores/modules/user'
-import { useMenuStore } from '#/core/stores/modules/menu'
-import { setWorktab } from '#/core/shared/art-utils/navigation'
-import { setPageTitle } from '#/core/shared/art-utils/router'
+import { useSettingStore } from '@/store/modules/setting'
+import { useUserStore } from '@/store/modules/user'
+import { useMenuStore } from '@/store/modules/menu'
+import { setWorktab } from '#/core/utils/navigation'
+import { setPageTitle } from '#/core/utils/router'
 import { RoutesAlias } from '../routesAlias'
 import { staticRoutes } from '../routes/staticRoutes'
-import { loadingService } from '#/core/shared/art-utils/ui'
-import { useCommon } from '#/core/composables/art/useCommon'
-import { useWorktabStore } from '#/core/stores/modules/worktab'
-import { getUserInfoApi } from '#/api/core/user'
-import { ApiStatus } from '#/core/shared/art-utils/http/status'
-import { isHttpError } from '#/core/shared/art-utils/http/error'
+import { loadingService } from '#/core/utils/ui'
+import { useCommon } from '#/core/composables/use-common'
+import { useWorktabStore } from '@/store/modules/worktab'
+import { fetchGetUserInfo } from '@/api/auth'
+import { getAccessCodesApi } from '@/api'
+import { useAccessStore, useUserStore as useCoreUserStore } from '#/core/stores'
 import { RouteRegistry, MenuProcessor, IframeRouteManager, RoutePermissionValidator } from '../core'
 
 // 路由注册器实例
@@ -194,9 +194,7 @@ async function handleRouteGuard(
   }
 
   // 6. 未匹配到路由，跳转到 404
-  // 用 path 跳转（而非 name），确保渲染完整路由树（AppLayout 父 + not-found 子），
-  // 让 404 在布局右侧内容区显示，而非独立全屏。
-  next({ path: '/400' })
+  next({ name: 'Exception404' })
 }
 
 /**
@@ -230,7 +228,7 @@ function isStaticRoute(path: string): boolean {
     return routes.some((route) => {
       // 404 catch-all 路由不应视为可匿名访问的静态页，
       // 否则未登录时手动输入任意地址会直接落到 404，无法跳转登录页。
-      if (route.name === 'NotFoundPage') {
+      if (route.name === 'Exception404') {
         return false
       }
 
@@ -270,6 +268,17 @@ async function handleDynamicRoutes(
   try {
     // 1. 获取用户信息
     await fetchUserInfo()
+
+    // 1.1 补偿加载业务权限码（刷新页面后 art 登录态仍在，但 core accessStore 可能只有持久化数据；
+    //     权限码缺失时补拉，保证业务页 v-access 按钮显隐正确。失败不阻塞路由初始化）
+    const accessStore = useAccessStore()
+    if (accessStore.accessToken && accessStore.accessCodes.length === 0) {
+      try {
+        accessStore.setAccessCodes(await getAccessCodesApi())
+      } catch (error) {
+        console.warn('[RouteGuard] 权限码加载失败:', error)
+      }
+    }
 
     // 2. 获取菜单数据
     const menuList = await menuProcessor.getMenuList()
@@ -356,11 +365,6 @@ async function handleDynamicRoutes(
     routeInitFailed = true
     routeInitInProgress = false
 
-    // 输出详细错误信息，便于排查
-    if (isHttpError(error)) {
-      console.error(`[RouteGuard] 错误码: ${error.code}, 消息: ${error.message}`)
-    }
-
     // 跳转到 500 页面，使用 replace 避免产生历史记录
     next({ name: 'Exception500', replace: true })
   }
@@ -371,9 +375,20 @@ async function handleDynamicRoutes(
  */
 async function fetchUserInfo(): Promise<void> {
   const userStore = useUserStore()
-  const data = await getUserInfoApi()
-  // art 的 userStore.setUserInfo 期望 art 自有 UserInfo 类型，与 admin getUserInfoApi 返回类型存在差异
-  userStore.setUserInfo(data as any)
+  const coreUserStore = useCoreUserStore()
+  const data = await fetchGetUserInfo()
+  userStore.setUserInfo(data)
+  // 同步写入 core-user store：容器层（命令终端入口、notify userId 等）
+  // 与 vben 生态均从 core userStore.userInfo 读取，自研守卫需双写保持一致。
+  // core BasicUserInfo 要求 username/realName/string 型 userId，此处做契约适配
+  const raw = data as Record<string, any>
+  coreUserStore.setUserInfo({
+    ...data,
+    avatar: data.avatar ?? '',
+    username: data.userName,
+    realName: raw.realName ?? raw.real_name ?? '',
+    userId: String(data.userId)
+  })
   // 检查并清理工作台标签页（如果是不同用户登录）
   userStore.checkAndClearWorktabs()
 }
@@ -415,7 +430,12 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
 
 /**
  * 判断是否为未授权错误（401）
+ *
+ * 与 #/core/request 的 authenticateResponseInterceptor 判定保持一致：
+ * HTTP 状态码 401，或后端 HTTP 200 + 响应体 code === 401。
  */
 function isUnauthorizedError(error: unknown): boolean {
-  return isHttpError(error) && error.code === ApiStatus.unauthorized
+  const response = (error as { response?: { status?: number; data?: { code?: number } } })
+    ?.response
+  return response?.status === 401 || response?.data?.code === 401
 }

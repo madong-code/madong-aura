@@ -4,10 +4,10 @@
  * 负责管理 iframe 类型的路由
  *
  * @module router/core/IframeRouteManager
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
-import type { AppRouteRecord } from '#/core/types/router'
+import type { AppRouteRecord } from '@/types'
 
 export class IframeRouteManager {
   private static instance: IframeRouteManager

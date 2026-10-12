@@ -38,7 +38,7 @@
  * - 智能监听：只在有新代码块时才触发处理
  *
  * @module directives/highlight
- * @author Art Design Pro Team
+ * @author Mr.April
  */
 
 import { App, Directive } from 'vue'
