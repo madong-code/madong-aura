@@ -10,7 +10,12 @@
   // 按钮粗度
   --el-font-weight-primary: 400 !important;
 
-  --el-component-custom-height: 36px !important;
+  // 组件默认高度：归位 Element Plus 默认档（32px）。
+  // 此前为 36px（对齐 madong-single 的放大视觉），导致 default 档表单组件
+  // （输入框/选择器/按钮等）整体大于 EP 默认，被误认为 size="large"。
+  // 实测：default=32px / large=40px / small=24px；本项目表单未使用 large 档，
+  // 统一走 default 档即可（如需再放大只需调整此变量）。
+  --el-component-custom-height: 32px !important;
 
   --el-component-size: var(--el-component-custom-height) !important;
 
@@ -89,6 +94,28 @@ html.dark .el-card {
 // circle 按钮宽度优化
 .el-button--default.is-circle {
   width: var(--el-component-custom-height) !important;
+}
+
+// ---------------- CRUD 搜索表单与表格工具栏按钮（对齐 v5.madong.tech/admin 视觉规格） ----------------
+// 搜索表单操作按钮（重置/搜索）：32px 高 / 12px 字号 / 0 8px 内边距，
+// 与搜索输入框高度协调，避免默认 36px 大按钮的臃肿感。
+// 仅限定 vxe-grid 搜索表单区域，登录页等其它 vben 表单不受影响。
+// 注意：圆角不在此写死，跟随系统设置「圆角大小」派生的 --el-border-radius-base。
+.vxe-grid--form-wrapper .vben-form-action-btn {
+  height: 32px !important;
+  padding: 0 8px !important;
+  font-size: 12px !important;
+}
+
+// 表格工具栏（左上角）操作按钮（新增/批量删除等）：32px 高，
+// 字号（14px）与内边距（8px 15px）保持 el-button 默认，与表格整体风格一致。
+// 注意：圆角不在此写死，跟随系统设置「圆角大小」派生的 --el-border-radius-base。
+.vxe-buttons--wrapper .el-button--default {
+  height: 32px !important;
+}
+
+.vxe-buttons--wrapper .el-button--default.is-circle {
+  width: 32px !important;
 }
 
 // 修改 el-select 高度
