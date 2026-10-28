@@ -1,26 +1,21 @@
-import type { DrawerApiOptions, DrawerState } from './drawer';
+import type { DrawerApiOptions, DrawerState } from './drawer'
 
-import { Store } from '#/core/shared/store';
-import { bindMethods, isFunction } from '#/core/shared/utils';
+import { Store } from '#/core/shared/store'
+import { bindMethods, isFunction } from '#/core/shared/utils'
 
 export class DrawerApi {
   // 共享数据
   public sharedData: Record<'payload', any> = {
-    payload: {},
-  };
-  public store: Store<DrawerState>;
+    payload: {}
+  }
+  public store: Store<DrawerState>
 
   private api: Pick<
     DrawerApiOptions,
-    | 'onBeforeClose'
-    | 'onCancel'
-    | 'onClosed'
-    | 'onConfirm'
-    | 'onOpenChange'
-    | 'onOpened'
-  >;
+    'onBeforeClose' | 'onCancel' | 'onClosed' | 'onConfirm' | 'onOpenChange' | 'onOpened'
+  >
 
-  private state!: DrawerState;
+  private state!: DrawerState
 
   constructor(options: DrawerApiOptions = {}) {
     const {
@@ -32,7 +27,7 @@ export class DrawerApi {
       onOpenChange,
       onOpened,
       ...storeState
-    } = options;
+    } = options
 
     const defaultState: DrawerState = {
       class: '',
@@ -52,31 +47,33 @@ export class DrawerApi {
       showCancelButton: true,
       showConfirmButton: true,
       submitting: false,
-      title: '',
-    };
+      title: ''
+    }
 
     this.store = new Store<DrawerState>({
       ...defaultState,
-      ...storeState,
-    });
+      ...storeState
+    })
 
-    this.store.subscribe((state) => {
-      const prevIsOpen = this.state?.isOpen;
-      this.state = state;
-      if (state?.isOpen !== prevIsOpen) {
-        this.api.onOpenChange?.(!!state?.isOpen);
+    this.store.subscribe((state, previousState) => {
+      // 注意：Store 为就地变异（Object.assign）后通知，监听器内 this.state 与 state
+      // 是同一 reactive 对象、已是新值；上一次快照必须取 Store 传入的 previousState，
+      // 否则新旧值恒等，onOpenChange 永远不会触发（编辑抽屉详情加载/表单回填全部失效）。
+      this.state = state
+      if (state?.isOpen !== previousState?.isOpen) {
+        this.api.onOpenChange?.(!!state?.isOpen)
       }
-    });
-    this.state = this.store.state;
+    })
+    this.state = this.store.state
     this.api = {
       onBeforeClose,
       onCancel,
       onClosed,
       onConfirm,
       onOpenChange,
-      onOpened,
-    };
-    bindMethods(this);
+      onOpened
+    }
+    bindMethods(this)
   }
 
   /**
@@ -84,25 +81,25 @@ export class DrawerApi {
    * @description 关闭抽屉时会调用 onBeforeClose 钩子函数，如果 onBeforeClose 返回 false，则不关闭弹窗
    */
   async close() {
-    const allowClose = (await this.api.onBeforeClose?.()) ?? true;
+    const allowClose = (await this.api.onBeforeClose?.()) ?? true
     if (allowClose) {
       this.store.setState((prev) => ({
         ...prev,
         isOpen: false,
-        submitting: false,
-      }));
+        submitting: false
+      }))
     }
   }
 
   getData<T extends object = Record<string, any>>() {
-    return (this.sharedData?.payload ?? {}) as T;
+    return (this.sharedData?.payload ?? {}) as T
   }
 
   /**
    * 锁定抽屉状态（用于提交过程中的等待状态）
    */
   lock(isLocked: boolean = true) {
-    return this.setState({ submitting: isLocked });
+    return this.setState({ submitting: isLocked })
   }
 
   /**
@@ -110,9 +107,9 @@ export class DrawerApi {
    */
   onCancel() {
     if (this.api.onCancel) {
-      this.api.onCancel?.();
+      this.api.onCancel?.()
     } else {
-      this.close();
+      this.close()
     }
   }
 
@@ -121,7 +118,7 @@ export class DrawerApi {
    */
   onClosed() {
     if (!this.state.isOpen) {
-      this.api.onClosed?.();
+      this.api.onClosed?.()
     }
   }
 
@@ -129,7 +126,7 @@ export class DrawerApi {
    * 确认操作
    */
   onConfirm() {
-    this.api.onConfirm?.();
+    this.api.onConfirm?.()
   }
 
   /**
@@ -137,36 +134,32 @@ export class DrawerApi {
    */
   onOpened() {
     if (this.state.isOpen) {
-      this.api.onOpened?.();
+      this.api.onOpened?.()
     }
   }
 
   open() {
-    this.store.setState((prev) => ({ ...prev, isOpen: true }));
+    this.store.setState((prev) => ({ ...prev, isOpen: true }))
   }
 
   setData<T>(payload: T) {
-    this.sharedData.payload = payload;
-    return this;
+    this.sharedData.payload = payload
+    return this
   }
 
-  setState(
-    stateOrFn:
-      | ((prev: DrawerState) => Partial<DrawerState>)
-      | Partial<DrawerState>,
-  ) {
+  setState(stateOrFn: ((prev: DrawerState) => Partial<DrawerState>) | Partial<DrawerState>) {
     if (isFunction(stateOrFn)) {
-      this.store.setState(stateOrFn);
+      this.store.setState(stateOrFn)
     } else {
-      this.store.setState((prev) => ({ ...prev, ...stateOrFn }));
+      this.store.setState((prev) => ({ ...prev, ...stateOrFn }))
     }
-    return this;
+    return this
   }
 
   /**
    * 解除抽屉的锁定状态
    */
   unlock() {
-    return this.lock(false);
+    return this.lock(false)
   }
 }

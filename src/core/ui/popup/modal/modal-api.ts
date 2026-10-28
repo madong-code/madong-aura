@@ -1,26 +1,21 @@
-import type { ModalApiOptions, ModalState } from './modal';
+import type { ModalApiOptions, ModalState } from './modal'
 
-import { Store } from '#/core/shared/store';
-import { bindMethods, isFunction } from '#/core/shared/utils';
+import { Store } from '#/core/shared/store'
+import { bindMethods, isFunction } from '#/core/shared/utils'
 
 export class ModalApi {
   // 共享数据
   public sharedData: Record<'payload', any> = {
-    payload: {},
-  };
-  public store: Store<ModalState>;
+    payload: {}
+  }
+  public store: Store<ModalState>
 
   private api: Pick<
     ModalApiOptions,
-    | 'onBeforeClose'
-    | 'onCancel'
-    | 'onClosed'
-    | 'onConfirm'
-    | 'onOpenChange'
-    | 'onOpened'
-  >;
+    'onBeforeClose' | 'onCancel' | 'onClosed' | 'onConfirm' | 'onOpenChange' | 'onOpened'
+  >
 
-  private state!: ModalState;
+  private state!: ModalState
 
   constructor(options: ModalApiOptions = {}) {
     const {
@@ -32,7 +27,7 @@ export class ModalApi {
       onOpenChange,
       onOpened,
       ...storeState
-    } = options;
+    } = options
 
     const defaultState: ModalState = {
       bordered: true,
@@ -59,24 +54,26 @@ export class ModalApi {
       showCancelButton: true,
       showConfirmButton: true,
       title: '',
-      animationType: 'slide',
-    };
+      animationType: 'slide'
+    }
 
     this.store = new Store<ModalState>({
       ...defaultState,
-      ...storeState,
-    });
+      ...storeState
+    })
 
-    this.store.subscribe((state) => {
+    this.store.subscribe((state, previousState) => {
       // 每次更新状态时，都会调用 onOpenChange 回调函数
-      const prevIsOpen = this.state?.isOpen;
-      this.state = state;
-      if (state?.isOpen !== prevIsOpen) {
-        this.api.onOpenChange?.(!!state?.isOpen);
+      // 注意：Store 为就地变异（Object.assign）后通知，监听器内 this.state 与 state
+      // 是同一 reactive 对象、已是新值；上一次快照必须取 Store 传入的 previousState，
+      // 否则新旧值恒等，onOpenChange 永远不会触发（编辑弹窗详情加载/表单回填全部失效）。
+      this.state = state
+      if (state?.isOpen !== previousState?.isOpen) {
+        this.api.onOpenChange?.(!!state?.isOpen)
       }
-    });
+    })
 
-    this.state = this.store.state;
+    this.state = this.store.state
 
     this.api = {
       onBeforeClose,
@@ -84,9 +81,9 @@ export class ModalApi {
       onClosed,
       onConfirm,
       onOpenChange,
-      onOpened,
-    };
-    bindMethods(this);
+      onOpened
+    }
+    bindMethods(this)
   }
 
   /**
@@ -94,17 +91,17 @@ export class ModalApi {
    * @description 关闭弹窗时会调用 onBeforeClose 钩子函数，如果 onBeforeClose 返回 false，则不关闭弹窗
    */
   async close() {
-    const allowClose = (await this.api.onBeforeClose?.()) ?? true;
+    const allowClose = (await this.api.onBeforeClose?.()) ?? true
     if (allowClose) {
       this.store.setState((prev) => ({
         ...prev,
-        isOpen: false,
-      }));
+        isOpen: false
+      }))
     }
   }
 
   getData<T extends object = Record<string, any>>() {
-    return (this.sharedData?.payload ?? {}) as T;
+    return (this.sharedData?.payload ?? {}) as T
   }
 
   /**
@@ -113,7 +110,7 @@ export class ModalApi {
    * @param isLocked 是否锁定
    */
   lock(isLocked = true) {
-    return this.setState({ submitting: isLocked });
+    return this.setState({ submitting: isLocked })
   }
 
   /**
@@ -121,9 +118,9 @@ export class ModalApi {
    */
   onCancel() {
     if (this.api.onCancel) {
-      this.api.onCancel?.();
+      this.api.onCancel?.()
     } else {
-      this.close();
+      this.close()
     }
   }
 
@@ -132,7 +129,7 @@ export class ModalApi {
    */
   onClosed() {
     if (!this.state.isOpen) {
-      this.api.onClosed?.();
+      this.api.onClosed?.()
     }
   }
 
@@ -140,7 +137,7 @@ export class ModalApi {
    * 确认操作
    */
   onConfirm() {
-    this.api.onConfirm?.();
+    this.api.onConfirm?.()
   }
 
   /**
@@ -148,7 +145,7 @@ export class ModalApi {
    */
   onOpened() {
     if (this.state.isOpen) {
-      this.api.onOpened?.();
+      this.api.onOpened?.()
     }
   }
 
@@ -156,26 +153,22 @@ export class ModalApi {
     this.store.setState((prev) => ({
       ...prev,
       isOpen: true,
-      submitting: false,
-    }));
+      submitting: false
+    }))
   }
 
   setData<T>(payload: T) {
-    this.sharedData.payload = payload;
-    return this;
+    this.sharedData.payload = payload
+    return this
   }
 
-  setState(
-    stateOrFn:
-      | ((prev: ModalState) => Partial<ModalState>)
-      | Partial<ModalState>,
-  ) {
+  setState(stateOrFn: ((prev: ModalState) => Partial<ModalState>) | Partial<ModalState>) {
     if (isFunction(stateOrFn)) {
-      this.store.setState(stateOrFn);
+      this.store.setState(stateOrFn)
     } else {
-      this.store.setState((prev) => ({ ...prev, ...stateOrFn }));
+      this.store.setState((prev) => ({ ...prev, ...stateOrFn }))
     }
-    return this;
+    return this
   }
 
   /**
@@ -183,6 +176,6 @@ export class ModalApi {
    * @description 解除由lock方法设置的锁定状态，是lock(false)的别名
    */
   unlock() {
-    return this.lock(false);
+    return this.lock(false)
   }
 }
