@@ -22,15 +22,21 @@
  * @returns 可直接赋给 window.location 的完整路径
  */
 export function buildAppUrl(path: string): string {
-  const base = import.meta.env.BASE_URL || '/';
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const base = import.meta.env.BASE_URL || '/'
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
 
-  if (import.meta.env.VITE_ROUTER_HISTORY === 'hash') {
-    return `${base}#${normalizedPath}`;
+  // 与 src/router/index.ts 的 createWebHashHistory() 保持一致：hash 模式为默认值。
+  // 此前判断 VITE_ROUTER_HISTORY === 'hash'，但该变量从未在任何 .env 中定义，
+  // 恒走 history 分支丢失 '#'，登出硬跳转产生 /auth/login?redirect=xxx#/... 的错序 URL，
+  // 且 query 落在 hash 外导致登录后 redirect 参数丢失。
+  // hash 模式下 query 必须位于 '#' 之内（path?query 一起放入 hash 段）。
+  const historyMode = import.meta.env.VITE_ROUTER_HISTORY ?? 'hash'
+  if (historyMode !== 'history') {
+    return `${base}#${normalizedPath}`
   }
 
   // history 模式：拼接 base（去掉末尾斜杠）与路径
-  return `${base.replace(/\/+$/, '')}${normalizedPath}`;
+  return `${base.replace(/\/+$/, '')}${normalizedPath}`
 }
 
 // ============================================================================
@@ -45,5 +51,5 @@ export {
   isCdnMode,
   joinUrls,
   staticUrl,
-  staticUrls,
-} from '#/utils/url/static-resource';
+  staticUrls
+} from '#/utils/url/static-resource'
