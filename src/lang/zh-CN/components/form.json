@@ -37,6 +37,20 @@
     "upload_success": "上传成功",
     "upload_error": "上传失败",
     "load_error": "加载图片失败",
-    "empty": "暂无图片"
+    "empty": "暂无图片",
+    "format_error": "仅支持 {exts} 格式的图片",
+    "size_error": "图片大小不能超过 {size}MB"
+  },
+  "upload_field": {
+    "drag_hint": "拖拽文件到此处，或点击选择",
+    "image_hint": "拖拽图片到此处，或点击选择",
+    "replace": "点击或拖拽可替换",
+    "uploading": "上传中",
+    "upload_success": "上传成功",
+    "upload_error": "上传失败",
+    "format_error": "仅支持 {exts} 格式的文件",
+    "size_error": "文件大小不能超过 {size}MB",
+    "remove": "移除",
+    "external_placeholder": "也可直接粘贴外链地址"
   }
 }

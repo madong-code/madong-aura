@@ -37,6 +37,20 @@
     "upload_success": "Uploaded successfully",
     "upload_error": "Upload failed",
     "load_error": "Failed to load images",
-    "empty": "No images"
+    "empty": "No images",
+    "format_error": "Only {exts} images are supported",
+    "size_error": "Image must be no larger than {size}MB"
+  },
+  "upload_field": {
+    "drag_hint": "Drag a file here, or click to select",
+    "image_hint": "Drag an image here, or click to select",
+    "replace": "Click or drag to replace",
+    "uploading": "Uploading",
+    "upload_success": "Uploaded successfully",
+    "upload_error": "Upload failed",
+    "format_error": "Only {exts} files are supported",
+    "size_error": "File must be no larger than {size}MB",
+    "remove": "Remove",
+    "external_placeholder": "You can also paste an external URL"
   }
 }
