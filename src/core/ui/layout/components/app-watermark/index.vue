@@ -6,7 +6,7 @@
     :style="{ zIndex: zIndex }"
   >
     <ElWatermark
-      :content="content"
+      :content="watermarkContent"
       :font="{ fontSize: fontSize, color: fontColor }"
       :rotate="rotate"
       :gap="[gapX, gapY]"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-  import AppConfig from '#/core/config'
+  import { preferences } from '#/core/preferences'
   import { useSettingStore } from '@/store/modules/setting'
 
   defineOptions({ name: 'AppWatermark' })
@@ -49,8 +49,7 @@
     zIndex?: number
   }
 
-  withDefaults(defineProps<WatermarkProps>(), {
-    content: AppConfig.systemInfo.name,
+  const props = withDefaults(defineProps<WatermarkProps>(), {
     visible: false,
     fontSize: 16,
     fontColor: 'rgba(128, 128, 128, 0.2)',
@@ -61,4 +60,8 @@
     offsetY: 50,
     zIndex: 3100
   })
+
+  // 水印内容：显式传入优先；未传入时跟随站点配置名称
+  // （preferences.app.name 被 site-config applyToPreferences 动态覆盖，响应式）
+  const watermarkContent = computed(() => props.content || preferences.app.name)
 </script>

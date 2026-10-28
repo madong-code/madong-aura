@@ -6,10 +6,10 @@
  * @module utils/router
  */
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
-import AppConfig from '#/core/config'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { i18n, $t } from '#/core/locales'
+import { preferences } from '#/core/preferences'
 
 /** 扩展的路由配置类型 */
 export type AppRouteRecordRaw = RouteRecordRaw & {
@@ -28,13 +28,16 @@ export const configureNProgress = () => {
 
 /**
  * 设置页面标题，根据路由元信息和系统信息拼接标题
+ * 后缀读取 preferences.app.name：默认取 env（VITE_APP_TITLE），
+ * 站点配置（site_setting.site_name）加载后由 applyToPreferences 覆盖，
+ * 与 admin 模板 bootstrap.ts 的标题机制对齐，保证后端站点名称生效。
  * @param to 当前路由对象
  */
 export const setPageTitle = (to: RouteLocationNormalized): void => {
   const { title } = to.meta
   if (title) {
     setTimeout(() => {
-      document.title = `${formatMenuTitle(String(title))} - ${AppConfig.systemInfo.name}`
+      document.title = `${formatMenuTitle(String(title))} - ${preferences.app.name}`
     }, 150)
   }
 }

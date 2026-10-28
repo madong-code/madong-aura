@@ -39,12 +39,34 @@
     checkStorageCompatibility()
     toggleTransition(false)
     systemUpgrade()
-    // madong 站点配置（logo/标题/favicon）：接口需要登录态，仅在已登录启动时预加载；
-    // 未登录访问登录页不拉取（401 会触发重认证流程），登录成功后由登录流程负责同步
+    // madong 站点配置（logo/标题/favicon/CDN）：GET /system/config/code/site_setting
+    // 为匿名接口（后端 AllowAnonymous），登录前（登录页品牌）与登录后共用。
+    // 已登录：强制刷新（拿到最新配置）；未登录：幂等预加载（main.ts 已提前发起，此处在途则跳过）。
     if (useAccessStore().accessToken) {
       useSiteConfigStore()
         .syncSitePreferences()
         .catch(() => {})
+    } else {
+      useSiteConfigStore()
+        .fetchSiteConfig()
+        .catch(() => {})
     }
   })
+
+  // 站点配置变化 → 同步标签页标题与 favicon（对齐 admin app.vue）
+  watch(
+    () => useSiteConfigStore().getCurrentConfig(),
+    (config) => {
+      if (config?.title) {
+        document.title = config.title
+      }
+      if (config?.favicon) {
+        const link = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null
+        if (link) {
+          link.href = config.favicon
+        }
+      }
+    },
+    { immediate: true }
+  )
 </script>

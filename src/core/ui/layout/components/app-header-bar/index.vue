@@ -18,7 +18,7 @@
         <!-- 系统信息  -->
         <div class="flex-c c-p" @click="toHome" v-if="isTopMenu">
           <AppLogo class="pl-4.5" />
-          <p v-if="width >= 1400" class="my-0 mx-2 ml-2 text-lg">{{ AppConfig.systemInfo.name }}</p>
+          <p v-if="width >= 1400" class="my-0 mx-2 ml-2 text-lg">{{ preferences.app.name }}</p>
         </div>
 
         <AppLogo
@@ -203,7 +203,7 @@
   import { useSettingStore } from '@/store/modules/setting'
   import { useUserStore } from '@/store/modules/user'
   import { useMenuStore } from '@/store/modules/menu'
-  import AppConfig from '#/core/config'
+  import { preferences } from '#/core/preferences'
   import { changeLocale, languageOptions } from '@/locales'
   import { mittBus } from '#/core/utils/event-bus'
   import { themeAnimation } from '#/core/utils/ui/animation'

@@ -86,7 +86,7 @@
             opacity: !menuOpen ? 0 : 1
           }"
         >
-          {{ AppConfig.systemInfo.name }}
+          {{ preferences.app.name }}
         </p>
       </div>
       <ElScrollbar :style="scrollbarStyle">
@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-  import AppConfig from '#/core/config'
+  import { preferences } from '#/core/preferences'
   import { useSettingStore } from '@/store/modules/setting'
   import { MenuTypeEnum, MenuWidth } from '@/enums/appEnum'
   import { useMenuStore } from '@/store/modules/menu'

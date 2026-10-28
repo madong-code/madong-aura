@@ -15,6 +15,7 @@ import { registerLoadingDirective } from '#/core/ui/common'
 import { initPreferences } from '#/core/preferences'
 import { initStores, useAccessStore } from '#/core/stores'
 import { registerAccessDirective } from '#/core/access'
+import { useSiteConfigStore } from '#/store/modules/site-config'
 
 // vxe-table 适配器：模块加载即注册默认 grid 配置与全部 cellRenderers
 import '#/adapter/vxe-table'
@@ -56,6 +57,14 @@ async function initApplication() {
   // 超级权限码，拥有这些权限码的用户拥有所有权限
   const accessStore = useAccessStore()
   accessStore.setSuperCodes(['*', 'admin'])
+
+  // madong 站点配置预加载（GET /system/config/code/site_setting 匿名接口，不阻塞启动）：
+  // sync = 拉取 + 应用到 preferences（app.name/logo.source/favicon），
+  // 登录页品牌（名称/Logo/favicon）与 CDN（static_url）在首屏即生效；
+  // 登录成功后由登录流程 syncSitePreferences 强制刷新
+  useSiteConfigStore()
+    .syncSitePreferences()
+    .catch(() => {})
 
   // 国际化（异步加载语言包后再挂载）
   await setupI18n(app)

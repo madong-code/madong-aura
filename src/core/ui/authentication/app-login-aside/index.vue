@@ -3,7 +3,7 @@
   <div class="login-left-view">
     <div class="logo">
       <AppLogo class="icon" size="46" />
-      <h1 class="title">{{ AppConfig.systemInfo.name }}</h1>
+      <h1 class="title">{{ siteName }}</h1>
     </div>
 
     <div class="left-img">
@@ -74,11 +74,16 @@
   import AppConfig from '#/core/config'
   import loginIcon from '@imgs/svg/login_icon.svg'
   import { themeAnimation } from '#/core/utils/ui/animation'
+  import { useSiteConfigStore } from '#/store/modules/site-config'
 
   // 定义 props
   defineProps<{
     hideContent?: boolean // 是否隐藏内容，只显示 logo
   }>()
+
+  // 站点名称：后端 site_setting.site_name 优先，未配置时回退 env（对齐 admin auth.vue）
+  const siteConfigStore = useSiteConfigStore()
+  const siteName = computed(() => siteConfigStore.platformConfig.title || AppConfig.systemInfo.name)
 </script>
 
 <style lang="scss" scoped>

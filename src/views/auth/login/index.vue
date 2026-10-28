@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-  import AppConfig from '#/core/config'
+  import { preferences } from '#/core/preferences'
   import { useUserStore } from '@/store/modules/user'
   import { useI18n } from 'vue-i18n'
   import { getAccessCodesApi, loginApi } from '@/api'
@@ -157,7 +157,7 @@
   const isPassing = ref(false)
   const isClickPass = ref(false)
 
-  const systemName = AppConfig.systemInfo.name
+  const systemName = computed(() => preferences.app.name)
   const formRef = ref<FormInstance>()
 
   const formData = reactive({
@@ -270,7 +270,7 @@
         type: 'success',
         duration: 2500,
         zIndex: 10000,
-        message: `${t('login.success.message')}, ${systemName}!`
+        message: `${t('login.success.message')}, ${systemName.value}!`
       })
     }, 1000)
   }

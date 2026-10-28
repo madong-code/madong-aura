@@ -1,86 +1,64 @@
 <script setup lang="ts">
-import type { TabsPaneContext } from 'element-plus';
+  import type { TabsPaneContext } from 'element-plus'
 
-import { defineAsyncComponent, markRaw, ref } from 'vue';
-import { useRouter } from 'vue-router';
+  import { defineAsyncComponent, markRaw, ref } from 'vue'
+  import { useRouter } from 'vue-router'
 
-import { ElCard, ElTabPane, ElTabs } from 'element-plus';
+  import { ElCard, ElTabPane, ElTabs } from 'element-plus'
 
-import { Page } from '#/components/page';
-import { useAccess } from '#/core/access';
-import { $t } from '#/locales';
+  import { Page } from '#/components/page'
+  import { useAccess } from '#/core/access'
+  import { $t } from '#/locales'
 
-const router = useRouter();
-const { hasAccessByCodes } = useAccess();
-const activeName = ref('1');
-const COMMON_TAB_KEY = 'nav-common';
+  const router = useRouter()
+  const { hasAccessByCodes } = useAccess()
+  const activeName = ref('1')
+  const COMMON_TAB_KEY = 'nav-common'
 
-const handleClick = (tab: TabsPaneContext) => {
-  const targetKey = tab.props.name as string;
+  const handleClick = (tab: TabsPaneContext) => {
+    const targetKey = tab.props.name as string
 
-  // 点击"配置项管理"标签 → 跳转独立页面，不切换 Tab
-  if (targetKey === COMMON_TAB_KEY) {
-    router.push('/system/config-common');
-    return;
+    // 点击"配置项管理"标签 → 跳转独立页面，不切换 Tab
+    if (targetKey === COMMON_TAB_KEY) {
+      router.push('/system/config-common')
+      return
+    }
+
+    settingList.value.forEach((item) => {
+      if (item.key === targetKey) {
+        item.loadKey += 1
+      }
+    })
   }
 
-  settingList.value.forEach((item) => {
-    if (item.key === targetKey) {
-      item.loadKey += 1;
+  const settingList = ref([
+    {
+      // 站点设置（site_setting）：ERP 后台管理系统自身的站点信息；
+      // web 前台门户站点设置在「基础管理 → 公共设置 → 网站设置 → 站点设置」（web_site_setting 行），两者分离存储
+      component: markRaw(defineAsyncComponent(() => import('./components/site.vue'))),
+      key: '1',
+      name: $t('system.config.site.title'),
+      loadKey: 0
+    },
+    {
+      component: markRaw(defineAsyncComponent(() => import('./components/upload.vue'))),
+      key: '2',
+      name: $t('system.config.upload.title'),
+      loadKey: 0
+    },
+    {
+      component: markRaw(defineAsyncComponent(() => import('./components/email.vue'))),
+      key: '3',
+      name: $t('system.config.email.title'),
+      loadKey: 0
+    },
+    {
+      component: markRaw(defineAsyncComponent(() => import('./components/sms.vue'))),
+      key: '4',
+      name: $t('system.config.sms.title'),
+      loadKey: 0
     }
-  });
-};
-
-const settingList = ref([
-  {
-    component: markRaw(
-      defineAsyncComponent(() => import('./components/site.vue')),
-    ),
-    key: '1',
-    name: $t('system.config.site.title'),
-    loadKey: 0,
-  },
-  // {
-  //   component: markRaw(
-  //     defineAsyncComponent(() => import('./components/web-site.vue')),
-  //   ),
-  //   key: '6',
-  //   name: $t('system.config.web_site.title'),
-  //   loadKey: 0,
-  // },
-  // {
-  //   component: markRaw(
-  //     defineAsyncComponent(() => import('./components/baidu-tongji.vue')),
-  //   ),
-  //   key: '7',
-  //   name: $t('system.config.baidu_tongji.title'),
-  //   loadKey: 0,
-  // },
-  {
-    component: markRaw(
-      defineAsyncComponent(() => import('./components/upload.vue')),
-    ),
-    key: '2',
-    name: $t('system.config.upload.title'),
-    loadKey: 0,
-  },
-  {
-    component: markRaw(
-      defineAsyncComponent(() => import('./components/email.vue')),
-    ),
-    key: '3',
-    name: $t('system.config.email.title'),
-    loadKey: 0,
-  },
-  {
-    component: markRaw(
-      defineAsyncComponent(() => import('./components/sms.vue')),
-    ),
-    key: '4',
-    name: $t('system.config.sms.title'),
-    loadKey: 0,
-  },
-]);
+  ])
 </script>
 
 <template>

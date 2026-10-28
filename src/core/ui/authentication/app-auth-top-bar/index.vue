@@ -5,7 +5,7 @@
   >
     <div class="flex-cc !hidden max-[1180px]:!flex ml-2 max-sm:ml-6">
       <AppLogo class="icon" size="46" />
-      <h1 class="text-xl ont-mediumf ml-2">{{ AppConfig.systemInfo.name }}</h1>
+      <h1 class="text-xl ont-mediumf ml-2">{{ preferences.app.name }}</h1>
     </div>
 
     <div class="flex-cc gap-1.5 mr-2 max-sm:mr-5">
@@ -79,6 +79,7 @@
   import { changeLocale, languageOptions } from '@/locales'
   import { LanguageEnum } from '@/enums/appEnum'
   import AppConfig from '#/core/config'
+  import { preferences } from '#/core/preferences'
 
   defineOptions({ name: 'AppAuthTopBar' })
 
