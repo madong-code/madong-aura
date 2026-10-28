@@ -1,0 +1,47 @@
+{
+  "title": "站点设置",
+  "subtitle": "配置 web 前台门户站点信息、页脚版权备案与百度统计（后台管理系统 ERP 自身的站点信息请在 系统配置→站点设置 中配置）",
+  "tabs": {
+    "site": "站点信息",
+    "footer": "页脚信息",
+    "tongji": "百度统计"
+  },
+  "group_entry": "页脚入口",
+  "group_contact": "联系方式",
+  "fields": {
+    "site_open": "前台站点开关",
+    "site_url": "前台站点URL",
+    "site_name": "站点名称",
+    "site_logo": "站点Logo",
+    "contact_email": "联系邮箱",
+    "site_copyright": "版权文案",
+    "site_record_no": "ICP备案号",
+    "site_icp_url": "ICP备案链接",
+    "site_network_security": "公安备案号",
+    "site_network_security_url": "公安备案链接",
+    "show_apply": "申请友链入口",
+    "show_powered": "技术支持入口",
+    "tongji_enabled": "启用百度统计",
+    "tongji_key": "统计Key"
+  },
+  "placeholder": {
+    "site_url": "留空自动取当前访问域名",
+    "site_name": "如：Madong",
+    "site_logo": "点击图片上传 Logo；支持 PNG / JPG / SVG，不超过 2MB；留空显示默认图标，透明背景 PNG 高度 36px 左右",
+    "contact_email": "如：admin{'@'}example.com",
+    "contact_email_help": "展示于前台「成为赞助商」页（赞助/合作联系）；留空则前台不展示邮箱",
+    "site_copyright": "留空时默认显示：© 当前年份 站点名称 · 版权所有；支持 {year}、{site} 占位",
+    "site_record_no": "如：京ICP备XXXXXXXX号",
+    "site_icp_url": "工信部备案查询地址",
+    "site_network_security": "如：京公网安备XXXXXXXXXXXX号",
+    "site_network_security_url": "全国互联网安全管理平台地址",
+    "tongji_key": "hm.js? 后的 32 位站点 Key",
+    "tongji_help": "登录百度统计后台「管理 → 代码获取」，复制代码中 hm.js? 后面的 32 位 Key；填写并启用后前台自动注入统计脚本，Key 为空时开关不生效"
+  },
+  "actions": {
+    "save": "保存设置"
+  },
+  "messages": {
+    "save_success": "站点设置已保存"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "title": "Site Settings",
+  "subtitle": "Configure the web portal site info, footer copyright/filings and Baidu Analytics. For the admin (ERP) system's own site info, go to System Config → Site Settings",
+  "tabs": {
+    "site": "Site Info",
+    "footer": "Footer",
+    "tongji": "Baidu Analytics"
+  },
+  "group_entry": "Footer Entries",
+  "group_contact": "Contact",
+  "fields": {
+    "site_open": "Portal Site Switch",
+    "site_url": "Portal Site URL",
+    "site_name": "Site Name",
+    "site_logo": "Site Logo",
+    "contact_email": "Contact Email",
+    "site_copyright": "Copyright Text",
+    "site_record_no": "ICP Filing No.",
+    "site_icp_url": "ICP Filing URL",
+    "site_network_security": "Police Filing No.",
+    "site_network_security_url": "Police Filing URL",
+    "show_apply": "Friend Link Apply Entry",
+    "show_powered": "Powered-by Entry",
+    "tongji_enabled": "Enable Baidu Analytics",
+    "tongji_key": "Analytics Key"
+  },
+  "placeholder": {
+    "site_url": "Leave empty to use the current domain",
+    "site_name": "e.g. Madong",
+    "site_logo": "Click the image to upload a logo; PNG / JPG / SVG up to 2MB; shows the default icon when empty, transparent PNG around 36px tall recommended",
+    "contact_email": "e.g. admin{'@'}example.com",
+    "contact_email_help": "Shown on the front-end \"Become a Sponsor\" page for sponsorship/partnership contact; left empty means not shown",
+    "site_copyright": "Empty shows: © Year Site Name · All rights reserved; {year} and {site} placeholders supported",
+    "site_record_no": "e.g. Jing ICP No. XXXXXXXX",
+    "site_icp_url": "MIIT filing query URL",
+    "site_network_security": "e.g. Jing Police No. XXXXXXXX",
+    "site_network_security_url": "National internet security platform URL",
+    "tongji_key": "The 32-char site key after hm.js?",
+    "tongji_help": "In Baidu Analytics, go to Manage → Code, and copy the 32-char key after hm.js?. Once filled and enabled, the tracking script is injected automatically; the switch has no effect when the key is empty"
+  },
+  "actions": {
+    "save": "Save Settings"
+  },
+  "messages": {
+    "save_success": "Site settings saved"
+  }
+}
