@@ -25,7 +25,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'member:level:delete',
       view: 'member:level:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'level',
@@ -101,11 +101,12 @@ export const useCrudSchema = (): CrudSchema => {
     },
     formDialog: {
       enabled: true,
-      title: $t('member.level.title'),
+      title: () => $t('member.level.title'),
       width: 'w-[40%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 120 },
-      schema: [
+      schema: () => [
         {
           fieldName: 'id',
           label: $t('member.level.form.id'),

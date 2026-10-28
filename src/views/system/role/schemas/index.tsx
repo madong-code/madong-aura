@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'system:role:delete',
       view: 'system:role:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'id',
@@ -132,7 +132,7 @@ export const useCrudSchema = (): CrudSchema => {
       enabled: true,
       dialogType: 'modal',
 
-      schema: [
+      schema: () => [
         {
           fieldName: 'id',
           label: $t('system.role.form.id'),
@@ -167,18 +167,17 @@ export const useCrudSchema = (): CrudSchema => {
             isBtn: true,
           },
           defaultValue: 1,
-          formItemClass: 'cols-span-6',
         },
         {
           fieldName: 'remark',
           label: $t('system.role.form.remark'),
           component: 'Input',
           componentProps: { type: 'textarea', rows: 3 },
-          formItemClass: 'cols-span-6',
         },
       ],
-      title: $t('system.role.title'),
+      title: () => $t('system.role.title'),
       width: 'w-[40%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 80,

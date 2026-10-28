@@ -74,7 +74,7 @@ export const useCrudSchema = (): CrudSchema => {
         total: res?.total ?? items.length,
       };
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'id',

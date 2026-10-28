@@ -21,7 +21,7 @@ const [BasicCrud, crudApi] = useCrud({
   },
   tableActions: [
     {
-      label: $t('system.role.table_actions.auth_menu'),
+      label: () => $t('system.role.table_actions.auth_menu'),
       type: 'primary',
       link: true,
       auth: 'system:auth:role_menu',
@@ -34,7 +34,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('system.role.table_actions.member_manage'),
+      label: () => $t('system.role.table_actions.member_manage'),
       type: 'primary',
       link: true,
       auth: 'system:auth:role_user_list',
@@ -49,7 +49,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   dropDownActions: [
     {
-      label: $t('system.role.drop_down_actions.edit'),
+      label: () => $t('system.role.drop_down_actions.edit'),
       auth: 'system:role:update',
       icon: 'ant-design:edit-outlined',
       onClick: (_e: any, row: any) => {
@@ -57,7 +57,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('system.role.drop_down_actions.assign_permission'),
+      label: () => $t('system.role.drop_down_actions.assign_permission'),
       auth: 'system:role:data_scope',
       icon: 'ant-design:safety-outlined',
       onClick: (_e: any, row: any) => {

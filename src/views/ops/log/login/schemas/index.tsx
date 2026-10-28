@@ -23,7 +23,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'logs:login:delete',
       view: 'logs:login:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'account.user_name',

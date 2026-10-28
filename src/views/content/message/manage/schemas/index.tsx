@@ -64,7 +64,7 @@ export function useCrudSchema(): CrudSchema {
       zoom: false,
       export: false,
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'name',
@@ -100,11 +100,12 @@ export function useCrudSchema(): CrudSchema {
     ],
     formDialog: {
       enabled: true,
-      title: $t('content.message.manage.form.dialog_title'),
+      title: () => $t('content.message.manage.form.dialog_title'),
       width: 'w-[55%]',
-      wrapperClass: 'grid-cols-2',
+      formWidth: 'w-full',
+      wrapperClass: 'grid-cols-2 gap-x-4',
       commonConfig: { labelWidth: 100, labelAlign: 'right' },
-      schema: [
+      schema: () => [
         {
           fieldName: 'name',
           label: $t('content.message.manage.form.name'),

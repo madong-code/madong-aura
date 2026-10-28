@@ -16,7 +16,7 @@ const [BasicCrud, crudApi] = useCrud({
   hasRemove: false,
   tableActions: [
     {
-      label: $t('system.dict.table_actions.dict_item'),
+      label: () => $t('system.dict.table_actions.dict_item'),
       type: 'primary',
       link: true,
       icon: 'ant-design:setting-outlined',
@@ -28,7 +28,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   dropDownActions: [
     {
-      label: $t('system.dict.drop_down_actions.edit'),
+      label: () => $t('system.dict.drop_down_actions.edit'),
       type: 'primary',
       link: true,
       icon: 'ant-design:edit-outlined',
@@ -38,7 +38,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('system.dict.drop_down_actions.delete'),
+      label: () => $t('system.dict.drop_down_actions.delete'),
       type: 'danger',
       icon: 'ant-design:delete-outlined',
       auth: 'dict:dict:delete',

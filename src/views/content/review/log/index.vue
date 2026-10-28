@@ -53,7 +53,7 @@ const schema = {
   ...useCrudSchema(),
   toolbarActions: [
     {
-      label: $t('content.review.log.clean.title'),
+      label: () => $t('content.review.log.clean.title'),
       type: 'warning',
       sort: -2,
       icon: 'ant-design:clear-outlined',

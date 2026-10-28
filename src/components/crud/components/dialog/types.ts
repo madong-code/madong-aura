@@ -2,79 +2,75 @@
  * FormDialog 类型定义
  */
 
-import type { VbenFormProps, VbenFormSchema } from '#/adapter/form';
+import type { VbenFormProps, VbenFormSchema } from '#/adapter/form'
 
-export type FormDialogType = 'drawer' | 'modal';
-export type FormActionType = 'add' | 'edit' | 'view';
+export type FormDialogType = 'drawer' | 'modal'
+export type FormActionType = 'add' | 'edit' | 'view'
 
 export interface FormDialogApiConfig {
-  add?: (params: any) => Promise<any>;
-  edit?: (params: any) => Promise<any>;
-  view?: (id: any) => Promise<any>;
+  add?: (params: any) => Promise<any>
+  edit?: (params: any) => Promise<any>
+  view?: (id: any) => Promise<any>
 }
 
 export interface FormDialogCommonConfig {
-  labelWidth?: number;
-  labelAlign?: 'left' | 'right';
-  formLabelAlign?: 'left' | 'right';
-  detailLabelAlign?: 'left' | 'right';
-  labelClass?: string;
-  controlClass?: string;
-  wrapperClass?: string;
-  hideLabel?: boolean;
-  hideRequiredMark?: boolean;
-  formItemClass?: (() => string) | string;
-  componentProps?: Record<string, any>;
+  labelWidth?: number
+  labelAlign?: 'left' | 'right'
+  formLabelAlign?: 'left' | 'right'
+  detailLabelAlign?: 'left' | 'right'
+  labelClass?: string
+  controlClass?: string
+  wrapperClass?: string
+  hideLabel?: boolean
+  hideRequiredMark?: boolean
+  formItemClass?: (() => string) | string
+  componentProps?: Record<string, any>
 }
 
-export interface FormDialogOptions extends Omit<
-  Partial<VbenFormProps>,
-  'schema'
-> {
-  schema?: (() => VbenFormSchema[]) | VbenFormSchema[];
-  commonConfig?: FormDialogCommonConfig;
-  api?: FormDialogApiConfig;
-  dialogType?: FormDialogType;
-  title?: string;
-  width?: string;
-  rowKey?: string;
+export interface FormDialogOptions extends Omit<Partial<VbenFormProps>, 'schema'> {
+  schema?: (() => VbenFormSchema[]) | VbenFormSchema[]
+  commonConfig?: FormDialogCommonConfig
+  api?: FormDialogApiConfig
+  dialogType?: FormDialogType
+  /** 弹窗标题前缀（函数形式可在语言切换时实时更新） */
+  title?: (() => string) | string
+  width?: string
+  rowKey?: string
   /** 表单布局 */
-  layout?: 'horizontal' | 'inline' | 'vertical';
+  layout?: 'horizontal' | 'inline' | 'vertical'
   /** Grid 布局 class，用于控制表单列数 */
-  wrapperClass?: string;
-  draggable?: boolean;
-  fullscreenButton?: boolean;
+  wrapperClass?: string
+  /**
+   * 表单内容区宽度 class（相对弹窗内容区）。
+   * 仅控制表单内容的视觉宽度，滚动容器始终占满弹窗宽度，
+   * 因此滚动条位置固定在弹窗最右缘，不随表单列数/宽度布局变化。
+   * 默认 'w-1/2'（对半显示）；多列布局可配 'w-full' 占满。
+   */
+  formWidth?: string
+  draggable?: boolean
+  fullscreenButton?: boolean
   /** 弹窗组件的 CSS class，例如 'top-0' 让弹窗靠顶部显示 */
-  class?: string;
+  class?: string
   /** 弹窗层级，默认 undefined（使用组件默认值） */
-  zIndex?: number;
-  onSuccess?: (
-    type: FormActionType,
-    values: Record<string, any>,
-  ) => Promise<void> | void;
+  zIndex?: number
+  onSuccess?: (type: FormActionType, values: Record<string, any>) => Promise<void> | void
   beforeSubmit?: (
     values: Record<string, any>,
-    type: FormActionType,
-  ) => false | Promise<false | Record<string, any>> | Record<string, any>;
-  onOpen?: (
-    type: FormActionType,
-    data: Record<string, any>,
-  ) => Promise<void> | void;
-  confirmText?: string;
-  cancelText?: string;
-  transformFormValues?: (
-    values: Record<string, any>,
-    type: FormActionType,
-  ) => Record<string, any>;
+    type: FormActionType
+  ) => false | Promise<false | Record<string, any>> | Record<string, any>
+  onOpen?: (type: FormActionType, data: Record<string, any>) => Promise<void> | void
+  confirmText?: string
+  cancelText?: string
+  transformFormValues?: (values: Record<string, any>, type: FormActionType) => Record<string, any>
 }
 
 export interface FormDialogApi {
-  openAdd: (data?: Record<string, any>) => void;
-  openEdit: (row: Record<string, any>) => void;
-  openView: (row: Record<string, any>) => void;
-  close: () => void;
-  getFormApi: () => any;
-  getActionType: () => FormActionType;
-  getCurrentRow: () => Record<string, any>;
-  show: (params: { data: any; type: FormActionType }) => void;
+  openAdd: (data?: Record<string, any>) => void
+  openEdit: (row: Record<string, any>) => void
+  openView: (row: Record<string, any>) => void
+  close: () => void
+  getFormApi: () => any
+  getActionType: () => FormActionType
+  getCurrentRow: () => Record<string, any>
+  show: (params: { data: any; type: FormActionType }) => void
 }

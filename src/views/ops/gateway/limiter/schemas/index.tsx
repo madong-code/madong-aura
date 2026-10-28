@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'gateway:limiter:delete',
       view: 'gateway:limiter:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'priority',
@@ -130,14 +130,15 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('ops.gateway.limiter.title'),
+      title: () => $t('ops.gateway.limiter.title'),
       width: 'w-[50%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 120,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           label: $t('ops.gateway.limiter.form.modal.name'),
           fieldName: 'name',

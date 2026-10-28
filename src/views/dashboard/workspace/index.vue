@@ -9,7 +9,7 @@ import type {
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { preferences } from '#/core/preferences';
+import { useUserAvatar } from '#/core/composables/use-user-avatar';
 import { openWindow } from '#/core/shared';
 import { useUserStore } from '#/core/stores';
 import {
@@ -24,6 +24,8 @@ import {
 import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
 
 const userStore = useUserStore();
+// 头像统一走 buildStaticUrl，兼容相对路径与 CDN
+const { avatarSrc } = useUserAvatar();
 
 // 这是一个示例数据，实际项目中需要根据实际情况进行调整
 // url 也可以是内部路由，在 navTo 方法中识别处理，进行内部跳转
@@ -235,9 +237,7 @@ function navTo(nav: WorkbenchProjectItem | WorkbenchQuickNavItem) {
 
 <template>
   <div class="p-5">
-    <WorkbenchHeader
-      :avatar="userStore.userInfo?.avatar || preferences.app.defaultAvatar"
-    >
+    <WorkbenchHeader :avatar="avatarSrc">
       <template #title>
         早安, {{ userStore.userInfo?.realName }}, 开始您一天的工作吧！
       </template>

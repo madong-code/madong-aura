@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'web:link:delete',
       view: 'web:link:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       { field: 'logo', title: $t('web.link.table.columns.logo'), width: 80 },
       {
@@ -79,11 +79,12 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('web.link.title'),
+      title: () => $t('web.link.title'),
       width: 'w-[500px]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 120 },
-      schema: [
+      schema: () => [
         {
           fieldName: 'id',
           label: 'ID',

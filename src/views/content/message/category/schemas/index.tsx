@@ -44,7 +44,7 @@ export function useCrudSchema(): CrudSchema {
         },
       ],
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'icon',
@@ -86,14 +86,15 @@ export function useCrudSchema(): CrudSchema {
     ],
     formDialog: {
       enabled: true,
-      title: $t('content.message.category.form.dialog_title'),
+      title: () => $t('content.message.category.form.dialog_title'),
       width: 'w-[55%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-2 gap-x-4',
       commonConfig: {
         labelWidth: 100,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           fieldName: 'id',
           label: $t('content.message.category.form.id'),

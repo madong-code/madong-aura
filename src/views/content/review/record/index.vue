@@ -17,7 +17,7 @@ const schema: CrudSchema = {
   ...useCrudSchema(),
   tableActions: [
     {
-      label: $t('content.review.record.actions.detail'),
+      label: () => $t('content.review.record.actions.detail'),
       type: 'primary',
       link: true,
       auth: 'content:review:record:read',

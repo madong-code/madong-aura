@@ -99,7 +99,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     ],
   },
-  columns: [
+  columns: () => [
     { type: 'checkbox', width: 70 },
     {
       field: 'user_name',
@@ -120,7 +120,7 @@ const [BasicCrud, crudApi] = useCrud({
   height: 'auto',
   toolbarActions: [
     {
-      label: $t('system.role.member.add_user'),
+      label: () => $t('system.role.member.add_user'),
       icon: 'ant-design:plus-outlined',
       type: 'primary',
       auth: 'system:auth:save_user_role',
@@ -133,7 +133,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('system.role.member.remove_user'),
+      label: () => $t('system.role.member.remove_user'),
       type: 'danger',
       icon: 'ant-design:delete-outlined',
       auth: 'system:auth:remove_user_role',
@@ -152,7 +152,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   tableActions: [
     {
-      label: $t('system.role.member.remove_user'),
+      label: () => $t('system.role.member.remove_user'),
       type: 'danger',
       link: true,
       icon: 'ant-design:delete-outlined',

@@ -29,7 +29,7 @@ export const useCrudSchema = (): CrudSchema => {
       view: 'plugin:develop:read',
     },
 
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'title',

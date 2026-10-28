@@ -72,7 +72,7 @@ export const useCrudSchema = (): CrudSchema => {
         total: res?.total ?? items.length,
       };
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'name',
@@ -158,14 +158,15 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('system.dept.title'),
+      title: () => $t('system.dept.title'),
       width: 'w-[50%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 100,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           label: $t('system.dept.form.id'),
           fieldName: 'id',

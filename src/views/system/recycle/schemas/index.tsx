@@ -22,7 +22,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'system:recycle:delete',
       view: 'system:recycle:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'table_name',

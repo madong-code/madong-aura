@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'crontab:task:delete',
       view: 'crontab:task:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'type',

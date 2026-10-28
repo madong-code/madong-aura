@@ -51,7 +51,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
       ],
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'type',

@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'gateway:blacklist:delete',
       view: 'gateway:blacklist:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'priority',
@@ -142,14 +142,15 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('ops.gateway.blacklist.title'),
+      title: () => $t('ops.gateway.blacklist.title'),
       width: 'w-[50%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 100,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           label: $t('ops.gateway.blacklist.form.modal.id'),
           fieldName: 'id',

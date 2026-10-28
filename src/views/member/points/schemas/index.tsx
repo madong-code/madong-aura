@@ -20,7 +20,7 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: false,
     permissions: { add: 'member:points:create', view: 'member:points:read' },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'member.username',
@@ -118,11 +118,12 @@ export const useCrudSchema = (): CrudSchema => {
     },
     formDialog: {
       enabled: true,
-      title: $t('member.points.title'),
+      title: () => $t('member.points.title'),
       width: 'w-[40%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 120 },
-      schema: [
+      schema: () => [
         {
           fieldName: 'member_id',
           label: $t('member.points.form.member_id'),

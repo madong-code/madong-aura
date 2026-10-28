@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'dict:dict:delete',
       view: 'dict:dict:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'group_code',
@@ -118,14 +118,15 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('system.dict.title'),
+      title: () => $t('system.dict.title'),
       width: 'w-[50%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 100,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           label: $t('system.dict.form.modal.id'),
           fieldName: 'id',

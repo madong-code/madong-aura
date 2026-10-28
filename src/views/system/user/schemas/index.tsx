@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'system:admin:delete',
       view: 'system:admin:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'user_name',

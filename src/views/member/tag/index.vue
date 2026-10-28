@@ -19,7 +19,7 @@ const [BasicCrud, crudApi] = useCrud({
   },
   dropDownActions: [
     {
-      label: $t('common.crud.edit'),
+      label: () => $t('common.crud.edit'),
       auth: 'member:tag:update',
       icon: 'ant-design:edit-outlined',
       onClick: (_e: any, row: any) => {
@@ -29,7 +29,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   tableActions: [
     {
-      label: $t('member.tag.table_actions.auth_menu'),
+      label: () => $t('member.tag.table_actions.auth_menu'),
       type: 'primary',
       link: true,
       auth: 'member:tag:assign_permissions',
@@ -42,7 +42,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('member.tag.table_actions.member_manage'),
+      label: () => $t('member.tag.table_actions.member_manage'),
       type: 'primary',
       link: true,
       auth: 'member:tag:member_list',

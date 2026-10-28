@@ -56,6 +56,10 @@ const renderIcon = (icon: any | string) => {
   return h(icon);
 };
 
+/** 文案支持函数形式：把 $t 延迟到渲染期求值，切换语言时可实时更新 */
+const renderLabel = (action: ActionItem): string =>
+  typeof action.label === 'function' ? action.label() : action.label || '';
+
 const { hasAccessByCodes } = useAccess();
 
 const hasAccess = (permCodes: string | unknown) => {
@@ -288,12 +292,12 @@ const handleRef = (e: any, index: number) => {
         >
           <template #reference>
             <ElButton v-bind="getButtonProps(action)">
-              {{ action.label }}
+              {{ renderLabel(action) }}
             </ElButton>
           </template>
         </ElPopconfirm>
         <ElButton v-else v-bind="getButtonProps(action)">
-          {{ action.label }}
+          {{ renderLabel(action) }}
         </ElButton>
       </template>
     </ElSpace>
@@ -320,7 +324,7 @@ const handleRef = (e: any, index: number) => {
             :command="index"
           >
             <Icon v-if="action.icon" :icon="action.icon" />
-            <span style="margin-left: 8px">{{ action.label }}</span>
+            <span style="margin-left: 8px">{{ renderLabel(action) }}</span>
           </ElDropdownItem>
         </ElDropdownMenu>
       </template>

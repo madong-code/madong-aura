@@ -22,7 +22,7 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: false,
     hasView: false,
     hasRemove: false,
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'priority',

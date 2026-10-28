@@ -52,7 +52,7 @@ const useCrudSchema = (): CrudSchema => {
     hasView: false,
     hasRemove: false,
     height: 'auto',
-    columns: [
+    columns: () => [
       {
         field: 'name',
         title: $t('system.config.common.columns.name'),
@@ -106,7 +106,7 @@ const useCrudSchema = (): CrudSchema => {
 
     toolbarActions: [
       {
-        label: $t('common.crud.create'),
+        label: () => $t('common.crud.create'),
         type: 'primary',
         icon: 'ant-design:plus-outlined',
         dialogRef: configDialogRef,
@@ -122,7 +122,7 @@ const useCrudSchema = (): CrudSchema => {
     ],
     tableActions: [
       {
-        label: $t('common.crud.edit'),
+        label: () => $t('common.crud.edit'),
         type: 'primary',
         sort: 10,
         link: true,
@@ -139,7 +139,7 @@ const useCrudSchema = (): CrudSchema => {
         },
       },
       {
-        label: $t('common.crud.delete'),
+        label: () => $t('common.crud.delete'),
         type: 'danger',
         sort: 50,
         link: true,

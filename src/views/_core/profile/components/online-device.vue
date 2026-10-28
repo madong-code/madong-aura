@@ -63,7 +63,7 @@ const crudSchema: CrudSchema = {
       };
     },
   },
-  columns: [
+  columns: () => [
     { field: 'jti', title: 'JTI', width: 250, align: 'left', visible: false },
     {
       field: 'ip',
@@ -132,7 +132,7 @@ const crudSchema: CrudSchema = {
   },
   tableActions: [
     {
-      label: $t('system.profile.online_device.action_kickout'),
+      label: () => $t('system.profile.online_device.action_kickout'),
       link: true,
       onClick: (_e: any, record: any) => handleKickout(record as RowType),
     },

@@ -29,7 +29,7 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
         crontab_id,
       };
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'target',

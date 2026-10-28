@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'dict:item:delete',
       view: 'dict:item:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'code',

@@ -79,7 +79,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     ],
   },
-  columns: [
+  columns: () => [
     { type: 'checkbox', width: 50 },
     {
       field: 'username',

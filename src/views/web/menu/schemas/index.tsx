@@ -54,7 +54,7 @@ export const useCrudSchema = (): CrudSchema => {
       const items = res?.items || [];
       return { items: arrayToTree(items), total: res?.total ?? items.length };
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'name',

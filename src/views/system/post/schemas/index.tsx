@@ -26,7 +26,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'org:post:delete',
       view: 'org:post:read',
     },
-    columns: [
+    columns: () => [
       { type: 'checkbox', width: 60 },
       {
         field: 'dept.name',
@@ -121,14 +121,15 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('system.post.title'),
+      title: () => $t('system.post.title'),
       width: 'w-[50%]',
+      formWidth: 'w-full',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
         labelWidth: 100,
         labelAlign: 'right',
       },
-      schema: [
+      schema: () => [
         {
           label: $t('system.post.form.id'),
           fieldName: 'id',

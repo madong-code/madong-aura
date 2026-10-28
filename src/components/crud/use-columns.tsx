@@ -20,7 +20,8 @@ const BUILTIN_CENTER_COLUMNS = (col: CrudColumn) =>
   );
 
 interface UseColumnsOptions {
-  columns: CrudColumn[];
+  /** 列定义数组或其工厂函数（工厂函数可让 $t 在语言切换时重新求值） */
+  columns: (() => CrudColumn[]) | CrudColumn[];
   tableActionColumn?: Partial<CrudColumn>;
 }
 
@@ -30,7 +31,11 @@ export function useColumns(
   dropDownActions: Ref<ActionItem[]>,
 ) {
   return computed(() => {
-    const rawColumns = options.columns || [];
+    // 每次求值都重新取列定义，保证列标题内的 $t 能跟随语言切换更新
+    const rawColumns =
+      typeof options.columns === 'function'
+        ? options.columns()
+        : options.columns || [];
 
     const vxeColumns = rawColumns.map((col: CrudColumn) => {
       const { viewComponent, viewComponentProps, vxeColumn, ...rest } = col;

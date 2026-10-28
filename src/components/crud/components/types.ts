@@ -124,14 +124,19 @@ export interface FormDialogConfig {
   api?: FormDialogApiConfig;
   /** 弹窗类型，默认 modal */
   dialogType?: FormDialogType;
-  /** 弹窗标题前缀 */
-  title?: string;
+  /** 弹窗标题前缀（函数形式可在语言切换时实时更新） */
+  title?: (() => string) | string;
   /** 弹窗宽度 */
   width?: string;
   /** 表单布局 */
   layout?: 'horizontal' | 'inline' | 'vertical';
   /** Grid 布局 class，用于控制表单列数，如 'grid-cols-1' 一列，'grid-cols-2' 两列，'grid-cols-3' 三列 */
   wrapperClass?: string;
+  /**
+   * 表单内容区宽度 class（相对弹窗内容区），默认 'w-1/2'。
+   * 需要整行铺满时配置 'w-full'。
+   */
+  formWidth?: string;
   /** 行数据的 key 字段，默认 id */
   rowKey?: string;
   /** 是否可拖拽（仅 modal 有效），默认 true */

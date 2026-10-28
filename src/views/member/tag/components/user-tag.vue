@@ -89,7 +89,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     ],
   },
-  columns: [
+  columns: () => [
     { type: 'checkbox', width: 70 },
     {
       field: 'username',
@@ -112,7 +112,7 @@ const [BasicCrud, crudApi] = useCrud({
   height: 'auto',
   toolbarActions: [
     {
-      label: $t('member.tag.user.actions.add_user'),
+      label: () => $t('member.tag.user.actions.add_user'),
       icon: 'ant-design:plus-outlined',
       type: 'primary',
       sort: -1,
@@ -124,7 +124,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: $t('member.tag.user.actions.remove_user'),
+      label: () => $t('member.tag.user.actions.remove_user'),
       type: 'danger',
       icon: 'ant-design:delete-outlined',
       sort: 100,
@@ -142,7 +142,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   tableActions: [
     {
-      label: $t('member.tag.user.actions.remove_user'),
+      label: () => $t('member.tag.user.actions.remove_user'),
       type: 'danger',
       link: true,
       icon: 'ant-design:delete-outlined',

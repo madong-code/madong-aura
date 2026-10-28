@@ -115,7 +115,7 @@ export const useCrudSchema = (
     }
   }
 
-  const columns: CrudSchema['columns'] = [
+  const columns: CrudSchema['columns'] = () => [
     { type: 'checkbox', width: 60 },
     {
       field: 'base_path',
@@ -205,7 +205,7 @@ export const useCrudSchema = (
     tableActions: [
       {
         key: 'detail',
-        label: $t('system.files.detail.action'),
+        label: () => $t('system.files.detail.action'),
         type: 'primary',
         link: true,
         icon: 'ant-design:eye-outlined',
@@ -219,7 +219,7 @@ export const useCrudSchema = (
     toolbarActions: [
       {
         key: 'upload',
-        label: $t('system.files.upload.action'),
+        label: () => $t('system.files.upload.action'),
         type: 'primary',
         icon: 'ant-design:cloud-upload-outlined',
         auth: 'upload:files:upload_image',
@@ -229,7 +229,7 @@ export const useCrudSchema = (
       },
       {
         key: 'batchRemove',
-        label: $t('components.crud.action.batch_delete'),
+        label: () => $t('components.crud.action.batch_delete'),
         type: 'danger',
         icon: 'ant-design:delete-outlined',
         auth: 'upload:files:delete',
@@ -245,7 +245,7 @@ export const useCrudSchema = (
     dropDownActions: [
       {
         key: 'remove',
-        label: $t('components.crud.action.delete'),
+        label: () => $t('components.crud.action.delete'),
         type: 'danger',
         icon: 'ant-design:delete-outlined',
         size: 'small',

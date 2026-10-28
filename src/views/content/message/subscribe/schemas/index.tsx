@@ -38,7 +38,7 @@ export function useCrudSchema(): CrudSchema {
       zoom: true,
       export: false,
     },
-    columns: [
+    columns: () => [
       // { type: 'seq', width: 60, title: '#' },
       {
         field: 'module_name',

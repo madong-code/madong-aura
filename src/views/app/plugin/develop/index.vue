@@ -36,7 +36,7 @@ const [BasicCrud] = useCrud({
   tableActions: [],
   dropDownActions: [
     {
-      label: $t('app.plugin.develop.action.package'),
+      label: () => $t('app.plugin.develop.action.package'),
       icon: 'ant-design:download-outlined',
       auth: 'plugin:develop:build',
       onClick: async (_e: Event, row: any) => {

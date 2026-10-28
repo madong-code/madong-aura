@@ -125,7 +125,7 @@ const schema = {
   ...useCrudSchema(),
   tableActions: [
     {
-      label: $t('content.review.manage.actions.review'),
+      label: () => $t('content.review.manage.actions.review'),
       type: 'primary',
       link: true,
       auth: 'content:review:manage:approve',
@@ -138,13 +138,13 @@ const schema = {
   ] as ActionItem[],
   toolbarActions: [
     {
-      label: $t('content.review.manage.actions.batch_approve'),
+      label: () => $t('content.review.manage.actions.batch_approve'),
       type: 'primary',
       auth: 'content:review:manage:approve',
       onClick: () => handleBatchApprove(),
     },
     {
-      label: $t('content.review.manage.actions.batch_reject'),
+      label: () => $t('content.review.manage.actions.batch_reject'),
       type: 'danger',
       auth: 'content:review:manage:reject',
       onClick: () => handleBatchReject(),

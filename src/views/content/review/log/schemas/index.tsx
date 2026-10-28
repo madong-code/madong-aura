@@ -27,7 +27,7 @@ export const REVIEW_ACTION_OPTIONS = [
 ];
 
 export function useCrudSchema(): CrudSchema {
-  const columns: CrudSchema['columns'] = [
+  const columns: CrudSchema['columns'] = () => [
     {
       type: 'checkbox',
       width: 60,

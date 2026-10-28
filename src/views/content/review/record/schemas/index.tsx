@@ -46,7 +46,7 @@ function getCurrentMonthRange(): [number, number] {
 }
 
 export function useCrudSchema(): CrudSchema {
-  const columns: CrudSchema['columns'] = [
+  const columns: CrudSchema['columns'] = () => [
     {
       field: 'id',
       title: $t('content.review.record.table.columns.id'),
