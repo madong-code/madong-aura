@@ -1,4 +1,4 @@
-import type { Ctx, RouteDef } from './types';
+import type { Ctx, RouteDef } from './types'
 
 import {
   BLACKLISTS,
@@ -15,11 +15,11 @@ import {
   SERVER_INFO,
   SYS_ADMIN_TYPES,
   WEB_LINKS,
-  WEB_MENUS,
-} from '../utils/admin/datasets';
-import { crud, daysAgo, nextId, now, toIds } from '../utils/admin/store';
-import { crudRoutes } from './system';
-import { route } from './types';
+  WEB_MENUS
+} from '../utils/admin/datasets'
+import { crud, daysAgo, nextId, now, toIds } from '../utils/admin/store'
+import { crudRoutes } from './system'
+import { route } from './types'
 
 // ==================== 本地运行时状态 ====================
 
@@ -27,31 +27,28 @@ import { route } from './types';
 const TAG_MENU_IDS = new Map<number, number[]>([
   [1, [1, 2]],
   [2, []],
-  [3, [1]],
-]);
+  [3, [1]]
+])
 
 /** 定时任务日志 */
-const CRONTAB_LOGS: Record<string, any>[] = Array.from(
-  { length: 8 },
-  (_, i) => ({
-    id: i + 1,
-    crontab_id: (i % 3) + 1,
-    crontab_title: ['数据库备份', '缓存清理', '日报生成'][i % 3],
-    status: i === 5 ? 0 : 1,
-    output: i === 5 ? '执行失败：连接超时' : '执行成功',
-    exec_time: daysAgo(i, 3),
-    exec_duration: `${(i % 9) + 1}.${i}s`,
-    created_at: daysAgo(i, 3),
-    updated_at: daysAgo(i, 3),
-  }),
-);
+const CRONTAB_LOGS: Record<string, any>[] = Array.from({ length: 8 }, (_, i) => ({
+  id: i + 1,
+  crontab_id: (i % 3) + 1,
+  crontab_title: ['数据库备份', '缓存清理', '日报生成'][i % 3],
+  status: i === 5 ? 0 : 1,
+  output: i === 5 ? '执行失败：连接超时' : '执行成功',
+  exec_time: daysAgo(i, 3),
+  exec_duration: `${(i % 9) + 1}.${i}s`,
+  created_at: daysAgo(i, 3),
+  updated_at: daysAgo(i, 3)
+}))
 
 /** 积分规则 */
 const POINT_RULES: Record<string, any> = {
   signin: 5,
   register: 100,
-  consumption: 1,
-};
+  consumption: 1
+}
 
 // ==================== 会员用户 ====================
 
@@ -61,50 +58,49 @@ const memberUserRoutes: RouteDef[] = [
     pattern: '/member/user/enable',
     handler: ({ body }: Ctx) => {
       for (const id of toIds(body.ids ?? body.id)) {
-        const u = crud.find(MEMBER_USERS, id);
-        if (u) u.status = 1;
+        const u = crud.find(MEMBER_USERS, id)
+        if (u) u.status = 1
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'PUT',
     pattern: '/member/user/disable',
     handler: ({ body }: Ctx) => {
       for (const id of toIds(body.ids ?? body.id)) {
-        const u = crud.find(MEMBER_USERS, id);
-        if (u) u.status = 0;
+        const u = crud.find(MEMBER_USERS, id)
+        if (u) u.status = 0
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'PUT',
     pattern: '/member/user/:id/reset-password',
     handler: ({ body, params }: Ctx) => {
-      const u = crud.find(MEMBER_USERS, params[0]);
-      if (u) (u as any).password = body.password ?? '123456';
-      return u ?? null;
-    },
+      const u = crud.find(MEMBER_USERS, params[0])
+      if (u) (u as any).password = body.password ?? '123456'
+      return u ?? null
+    }
   },
   {
     method: 'PUT',
     pattern: '/member/user/:id/assign-tags',
     handler: ({ body, params }: Ctx) => {
-      const u = crud.find(MEMBER_USERS, params[0]);
-      if (u)
-        (u as any).tag_ids = (body.tag_ids ?? body.tag_id ?? []).map(Number);
-      return u ?? null;
-    },
+      const u = crud.find(MEMBER_USERS, params[0])
+      if (u) (u as any).tag_ids = (body.tag_ids ?? body.tag_id ?? []).map(Number)
+      return u ?? null
+    }
   },
   {
     method: 'PUT',
     pattern: '/member/user/:id/adjust-points',
     handler: ({ body, params }: Ctx) => {
-      const u = crud.find(MEMBER_USERS, params[0]);
-      if (!u) return null;
-      const delta = Number(body.points ?? 0);
-      (u as any).points += delta;
+      const u = crud.find(MEMBER_USERS, params[0])
+      if (!u) return null
+      const delta = Number(body.points ?? 0)
+      ;(u as any).points += delta
       MEMBER_POINTS.unshift({
         id: nextId(),
         member_id: u.id,
@@ -117,10 +113,10 @@ const memberUserRoutes: RouteDef[] = [
         source: 'admin_adjust',
         remark: body.remark ?? '',
         operator: 'admin',
-        create_time: now(),
-      });
-      return u;
-    },
+        create_time: now()
+      })
+      return u
+    }
   },
   {
     method: 'GET',
@@ -131,30 +127,30 @@ const memberUserRoutes: RouteDef[] = [
       disabled: MEMBER_USERS.filter((u) => u.status === 0).length,
       today_new: 2,
       week_new: 5,
-      month_new: 9,
-    }),
+      month_new: 9
+    })
   },
   {
     method: 'POST',
     pattern: '/member/user/batch',
     handler: ({ body }: Ctx) => {
-      const ids = toIds(body.ids);
-      const action = String(body.action ?? body.type ?? '');
+      const ids = toIds(body.ids)
+      const action = String(body.action ?? body.type ?? '')
       for (const id of ids) {
-        const u = crud.find(MEMBER_USERS, id);
-        if (!u) continue;
-        if (action === 'enable' || action === '1') u.status = 1;
-        if (action === 'disable' || action === '0') u.status = 0;
-        if (action === 'delete') crud.remove(MEMBER_USERS, [id]);
+        const u = crud.find(MEMBER_USERS, id)
+        if (!u) continue
+        if (action === 'enable' || action === '1') u.status = 1
+        if (action === 'disable' || action === '0') u.status = 0
+        if (action === 'delete') crud.remove(MEMBER_USERS, [id])
       }
-      return null;
-    },
+      return null
+    }
   },
   ...crudRoutes('/member/user', MEMBER_USERS, {
     searchFields: ['username', 'nickname', 'phone', 'email'],
-    filterFields: ['status', 'level_id'],
-  }),
-];
+    filterFields: ['status', 'level_id']
+  })
+]
 
 // ==================== 会员认证/标签授权 ====================
 
@@ -164,78 +160,74 @@ function memberBrief(u: Record<string, any>) {
     username: u.username,
     nickname: u.nickname,
     phone: u.phone,
-    avatar: u.avatar,
-  };
+    avatar: u.avatar
+  }
 }
 
 const memberAuthRoutes: RouteDef[] = [
   {
     method: 'GET',
     pattern: '/member/auth/permissions',
-    handler: () => WEB_MENUS,
+    handler: () => WEB_MENUS
   },
   {
     method: 'GET',
     pattern: '/member/auth/tag-menu-ids',
-    handler: ({ query }: Ctx) => TAG_MENU_IDS.get(Number(query.tag_id)) ?? [],
+    handler: ({ query }: Ctx) => TAG_MENU_IDS.get(Number(query.tag_id)) ?? []
   },
   {
     method: 'POST',
     pattern: '/member/auth/save-tag-menu',
     handler: ({ body }: Ctx) => {
-      TAG_MENU_IDS.set(Number(body.tag_id), (body.menu_id ?? []).map(Number));
-      return null;
-    },
+      TAG_MENU_IDS.set(Number(body.tag_id), (body.menu_id ?? []).map(Number))
+      return null
+    }
   },
   {
     method: 'GET',
     pattern: '/member/auth/user-list-by-tag-id',
     handler: ({ query }: Ctx) => {
-      const tagId = Number(query.tag_id);
-      const list = MEMBER_USERS.filter((u) =>
-        (u.tag_ids ?? []).includes(tagId),
-      );
-      return { items: list.map(memberBrief), total: list.length };
-    },
+      const tagId = Number(query.tag_id)
+      const list = MEMBER_USERS.filter((u) => (u.tag_ids ?? []).includes(tagId))
+      return { items: list.map(memberBrief), total: list.length }
+    }
   },
   {
     method: 'GET',
     pattern: '/member/auth/user-list-exclude-tag-id',
     handler: ({ query }: Ctx) => {
-      const tagId = Number(query.tag_id);
-      const list = MEMBER_USERS.filter(
-        (u) => !(u.tag_ids ?? []).includes(tagId),
-      );
-      return { items: list.map(memberBrief), total: list.length };
-    },
+      const tagId = Number(query.tag_id)
+      const list = MEMBER_USERS.filter((u) => !(u.tag_ids ?? []).includes(tagId))
+      return { items: list.map(memberBrief), total: list.length }
+    }
   },
   {
     method: 'POST',
     pattern: '/member/auth/save-user-tag',
     handler: ({ body }: Ctx) => {
       for (const row of body ?? []) {
-        const u = crud.find(MEMBER_USERS, row.member_id);
+        const u = crud.find(MEMBER_USERS, row.member_id)
         if (u && !(u.tag_ids ?? []).includes(Number(row.tag_id))) {
-          u.tag_ids = [...(u.tag_ids ?? []), Number(row.tag_id)];
+          u.tag_ids = [...(u.tag_ids ?? []), Number(row.tag_id)]
         }
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'POST',
     pattern: '/member/auth/remove-user-tag',
     handler: ({ body }: Ctx) => {
       for (const row of body ?? []) {
-        const u = crud.find(MEMBER_USERS, row.member_id);
+        const u = crud.find(MEMBER_USERS, row.member_id)
         if (u) {
-          u.tag_ids = (u.tag_ids ?? []).filter((t) => t !== Number(row.tag_id));
+          u.tag_ids = (u.tag_ids ?? []).filter((t) => t !== Number(row.tag_id))
         }
       }
-      return null;
-    },
-  },
-];
+      return null
+    }
+  }
+]
 
 // ==================== 会员等级 ====================
 
@@ -243,35 +235,34 @@ const memberLevelRoutes: RouteDef[] = [
   {
     method: 'GET',
     pattern: '/member/level/enabled',
-    handler: () => MEMBER_LEVELS.filter((l) => l.status === 1),
+    handler: () => MEMBER_LEVELS.filter((l) => l.status === 1)
   },
   {
     method: 'PUT',
     pattern: '/member/level/update-sort',
     handler: ({ body }: Ctx) => {
       for (const row of body.rows ?? body ?? []) {
-        const l = crud.find(MEMBER_LEVELS, row.id);
-        if (l) l.sort = Number(row.sort ?? l.sort);
+        const l = crud.find(MEMBER_LEVELS, row.id)
+        if (l) l.sort = Number(row.sort ?? l.sort)
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'GET',
     pattern: '/member/level/check-delete/:id',
     handler: ({ params }: Ctx) => ({
       can: !MEMBER_USERS.some((u) => u.level_id === Number(params[0])),
-      count: MEMBER_USERS.filter((u) => u.level_id === Number(params[0]))
-        .length,
-    }),
+      count: MEMBER_USERS.filter((u) => u.level_id === Number(params[0])).length
+    })
   },
   {
     method: 'GET',
     pattern: '/member/level/:levelId/members',
     handler: ({ params, query }: Ctx) => {
-      const list = MEMBER_USERS.filter((u) => u.level_id === Number(params[0]));
-      return { items: list.map(memberBrief), total: list.length };
-    },
+      const list = MEMBER_USERS.filter((u) => u.level_id === Number(params[0]))
+      return { items: list.map(memberBrief), total: list.length }
+    }
   },
   ...crudRoutes('/member/level', MEMBER_LEVELS, {
     searchFields: ['name'],
@@ -286,10 +277,10 @@ const memberLevelRoutes: RouteDef[] = [
       member_count: 0,
       sort: Number(data.sort ?? 0),
       status: Number(data.status ?? 1),
-      create_time: now(),
-    }),
-  }),
-];
+      create_time: now()
+    })
+  })
+]
 
 // ==================== 积分 ====================
 
@@ -298,25 +289,19 @@ const memberPointsRoutes: RouteDef[] = [
     method: 'GET',
     pattern: '/member/points/statistics',
     handler: () => ({
-      total_income: MEMBER_POINTS.filter((p) => p.type === 1).reduce(
-        (s, p) => s + p.points,
-        0,
-      ),
-      total_expense: MEMBER_POINTS.filter((p) => p.type === 2).reduce(
-        (s, p) => s + p.points,
-        0,
-      ),
-      log_count: MEMBER_POINTS.length,
-    }),
+      total_income: MEMBER_POINTS.filter((p) => p.type === 1).reduce((s, p) => s + p.points, 0),
+      total_expense: MEMBER_POINTS.filter((p) => p.type === 2).reduce((s, p) => s + p.points, 0),
+      log_count: MEMBER_POINTS.length
+    })
   },
   {
     method: 'POST',
     pattern: '/member/points/operate',
     handler: ({ body }: Ctx) => {
-      const u = crud.find(MEMBER_USERS, body.member_id);
-      if (!u) return null;
-      const delta = Number(body.points ?? 0);
-      (u as any).points += delta;
+      const u = crud.find(MEMBER_USERS, body.member_id)
+      if (!u) return null
+      const delta = Number(body.points ?? 0)
+      ;(u as any).points += delta
       MEMBER_POINTS.unshift({
         id: nextId(),
         member_id: u.id,
@@ -329,20 +314,20 @@ const memberPointsRoutes: RouteDef[] = [
         source: body.source ?? 'admin_adjust',
         remark: body.remark ?? '',
         operator: 'admin',
-        create_time: now(),
-      });
-      return u;
-    },
+        create_time: now()
+      })
+      return u
+    }
   },
   {
     method: 'POST',
     pattern: '/member/points/batch-operate',
     handler: ({ body }: Ctx) => {
       for (const id of toIds(body.member_ids ?? body.ids)) {
-        const u = crud.find(MEMBER_USERS, id);
-        if (!u) continue;
-        const delta = Number(body.points ?? 0);
-        (u as any).points += delta;
+        const u = crud.find(MEMBER_USERS, id)
+        if (!u) continue
+        const delta = Number(body.points ?? 0)
+        ;(u as any).points += delta
         MEMBER_POINTS.unshift({
           id: nextId(),
           member_id: u.id,
@@ -355,30 +340,30 @@ const memberPointsRoutes: RouteDef[] = [
           source: 'admin_adjust',
           remark: body.remark ?? '',
           operator: 'admin',
-          create_time: now(),
-        });
+          create_time: now()
+        })
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'GET',
     pattern: '/member/points/rules',
-    handler: () => POINT_RULES,
+    handler: () => POINT_RULES
   },
   {
     method: 'POST',
     pattern: '/member/points/rules',
     handler: ({ body }: Ctx) => {
-      Object.assign(POINT_RULES, body);
-      return POINT_RULES;
-    },
+      Object.assign(POINT_RULES, body)
+      return POINT_RULES
+    }
   },
   ...crudRoutes('/member/points', MEMBER_POINTS, {
     searchFields: ['username', 'nickname'],
-    filterFields: ['type', 'member_id', 'source'],
-  }),
-];
+    filterFields: ['type', 'member_id', 'source']
+  })
+]
 
 // ==================== 会员标签 ====================
 
@@ -386,79 +371,73 @@ const memberTagRoutes: RouteDef[] = [
   {
     method: 'GET',
     pattern: '/member/tag/enabled',
-    handler: () => MEMBER_TAGS.filter((t) => t.status === 1),
+    handler: () => MEMBER_TAGS.filter((t) => t.status === 1)
   },
   {
     method: 'PUT',
     pattern: '/member/tag/update-sort',
     handler: ({ body }: Ctx) => {
       for (const row of body.rows ?? body ?? []) {
-        const t = crud.find(MEMBER_TAGS, row.id);
-        if (t) t.sort = Number(row.sort ?? t.sort);
+        const t = crud.find(MEMBER_TAGS, row.id)
+        if (t) t.sort = Number(row.sort ?? t.sort)
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'GET',
     pattern: '/member/tag/:tagId/menu-ids',
-    handler: ({ params }: Ctx) => TAG_MENU_IDS.get(Number(params[0])) ?? [],
+    handler: ({ params }: Ctx) => TAG_MENU_IDS.get(Number(params[0])) ?? []
   },
   {
     method: 'GET',
     pattern: '/member/tag/:tagId/excluded-members',
     handler: ({ params }: Ctx) => {
-      const tagId = Number(params[0]);
-      const list = MEMBER_USERS.filter(
-        (u) => !(u.tag_ids ?? []).includes(tagId),
-      );
-      return { items: list.map(memberBrief), total: list.length };
-    },
+      const tagId = Number(params[0])
+      const list = MEMBER_USERS.filter((u) => !(u.tag_ids ?? []).includes(tagId))
+      return { items: list.map(memberBrief), total: list.length }
+    }
   },
   {
     method: 'GET',
     pattern: '/member/tag/:tagId/members',
     handler: ({ params }: Ctx) => {
-      const tagId = Number(params[0]);
-      const list = MEMBER_USERS.filter((u) =>
-        (u.tag_ids ?? []).includes(tagId),
-      );
-      return { items: list.map(memberBrief), total: list.length };
-    },
+      const tagId = Number(params[0])
+      const list = MEMBER_USERS.filter((u) => (u.tag_ids ?? []).includes(tagId))
+      return { items: list.map(memberBrief), total: list.length }
+    }
   },
   {
     method: 'POST',
     pattern: '/member/tag/batch-assign',
     handler: ({ body }: Ctx) => {
-      const tagId = Number(body.tag_id);
-      const add = toIds(body.member_ids ?? body.add_member_ids);
-      const remove = toIds(body.remove_member_ids);
+      const tagId = Number(body.tag_id)
+      const add = toIds(body.member_ids ?? body.add_member_ids)
+      const remove = toIds(body.remove_member_ids)
       for (const id of add) {
-        const u = crud.find(MEMBER_USERS, id);
+        const u = crud.find(MEMBER_USERS, id)
         if (u && !(u.tag_ids ?? []).includes(tagId)) {
-          u.tag_ids = [...(u.tag_ids ?? []), tagId];
+          u.tag_ids = [...(u.tag_ids ?? []), tagId]
         }
       }
       for (const id of remove) {
-        const u = crud.find(MEMBER_USERS, id);
-        if (u) u.tag_ids = (u.tag_ids ?? []).filter((t) => t !== tagId);
+        const u = crud.find(MEMBER_USERS, id)
+        if (u) u.tag_ids = (u.tag_ids ?? []).filter((t) => t !== tagId)
       }
       for (const t of MEMBER_TAGS) {
         if (t.id === tagId)
-          t.member_count = MEMBER_USERS.filter((u) =>
-            (u.tag_ids ?? []).includes(tagId),
-          ).length;
+          t.member_count = MEMBER_USERS.filter((u) => (u.tag_ids ?? []).includes(tagId)).length
       }
-      return null;
-    },
+      return null
+    }
   },
   {
     method: 'PUT',
     pattern: '/member/:tagId/permissions',
     handler: ({ body, params }: Ctx) => {
-      TAG_MENU_IDS.set(Number(params[0]), (body.menu_ids ?? []).map(Number));
-      return null;
-    },
+      TAG_MENU_IDS.set(Number(params[0]), (body.menu_ids ?? []).map(Number))
+      return null
+    }
   },
   ...crudRoutes('/member/tag', MEMBER_TAGS, {
     searchFields: ['name'],
@@ -471,10 +450,10 @@ const memberTagRoutes: RouteDef[] = [
       member_count: 0,
       sort: Number(data.sort ?? 0),
       status: Number(data.status ?? 1),
-      create_time: now(),
-    }),
-  }),
-];
+      create_time: now()
+    })
+  })
+]
 
 // ==================== 定时任务 ====================
 
@@ -483,28 +462,28 @@ const crontabRoutes: RouteDef[] = [
     method: 'PUT',
     pattern: '/ops/crontab/:id/resume',
     handler: ({ params }: Ctx) => {
-      const c = crud.find(CRONTABS, params[0]);
-      if (c) c.enabled = 1;
-      return c ?? null;
-    },
+      const c = crud.find(CRONTABS, params[0])
+      if (c) c.enabled = 1
+      return c ?? null
+    }
   },
   {
     method: 'PUT',
     pattern: '/ops/crontab/:id/pause',
     handler: ({ params }: Ctx) => {
-      const c = crud.find(CRONTABS, params[0]);
-      if (c) c.enabled = 0;
-      return c ?? null;
-    },
+      const c = crud.find(CRONTABS, params[0])
+      if (c) c.enabled = 0
+      return c ?? null
+    }
   },
   {
     method: 'PUT',
     pattern: '/ops/crontab/:id/execute',
     handler: ({ params }: Ctx) => {
-      const c = crud.find(CRONTABS, params[0]);
-      if (!c) return null;
-      c.running_times += 1;
-      c.last_running_time = now();
+      const c = crud.find(CRONTABS, params[0])
+      if (!c) return null
+      c.running_times += 1
+      c.last_running_time = now()
       CRONTAB_LOGS.unshift({
         id: nextId(),
         crontab_id: c.id,
@@ -514,78 +493,112 @@ const crontabRoutes: RouteDef[] = [
         exec_time: now(),
         exec_duration: '0.8s',
         created_at: now(),
-        updated_at: now(),
-      });
-      return c;
-    },
+        updated_at: now()
+      })
+      return c
+    }
   },
   ...crudRoutes('/ops/crontab', CRONTABS, {
     searchFields: ['title', 'biz_id'],
-    filterFields: ['enabled', 'type'],
+    filterFields: ['enabled', 'type']
   }),
   ...crudRoutes('/ops/crontab-log', CRONTAB_LOGS, {
     searchFields: ['crontab_title'],
-    filterFields: ['status', 'crontab_id'],
-  }),
-];
+    filterFields: ['status', 'crontab_id']
+  })
+]
 
 // ==================== 网关（限流/黑名单） ====================
 
 const gatewayRoutes: RouteDef[] = [
   ...crudRoutes('/ops/rate-limiter', RATE_LIMITERS, {
     searchFields: ['name', 'path'],
-    filterFields: ['enabled'],
+    filterFields: ['enabled']
   }),
   ...crudRoutes('/ops/rate-restrictions', BLACKLISTS, {
     searchFields: ['name', 'ip'],
-    filterFields: ['enabled'],
-  }),
-];
+    filterFields: ['enabled']
+  })
+]
 
 // ==================== 日志 ====================
 
 const logRoutes: RouteDef[] = [
   ...crudRoutes('/ops/login-log', LOGIN_LOGS, {
     searchFields: ['user_name', 'ip'],
-    filterFields: ['status'],
+    filterFields: ['status']
   }),
   ...crudRoutes('/ops/operate-log', OPERATE_LOGS, {
     searchFields: ['name', 'user_name', 'url'],
-    filterFields: ['app', 'method'],
-  }),
-];
+    filterFields: ['app', 'method']
+  })
+]
 
 // ==================== 监控 ====================
 
 const monitorRoutes: RouteDef[] = [
   route('GET', '/ops/server', () => SERVER_INFO),
-  route('GET', '/ops/redis', () => REDIS_INFO),
-];
+  route('GET', '/ops/redis', () => REDIS_INFO)
+]
 
 // ==================== Web 站点 ====================
 
+/** 站点设置（sys_config web_site_setting 行的 14 键；白名单 merge，不影响同行的 membership_enabled） */
+const WEB_SITE_CONFIG: Record<string, any> = {
+  site_open: 1,
+  site_url: '',
+  site_name: 'Madong',
+  site_logo: '',
+  contact_email: '',
+  site_copyright: '',
+  site_record_no: '',
+  site_icp_url: 'https://beian.miit.gov.cn/',
+  site_network_security: '',
+  site_network_security_url: '',
+  show_apply: true,
+  show_powered: true,
+  tongji_enabled: false,
+  tongji_key: ''
+}
+
 const webRoutes: RouteDef[] = [
+  {
+    method: 'GET',
+    pattern: '/web/site-config',
+    handler: () => ({ ...WEB_SITE_CONFIG })
+  },
+  {
+    method: 'POST',
+    pattern: '/web/site-config',
+    handler: ({ body }: Ctx) => {
+      // 白名单 merge：仅合并本页 14 键，模拟后端不影响同行的 membership_enabled
+      for (const key of Object.keys(WEB_SITE_CONFIG)) {
+        if (key in body) WEB_SITE_CONFIG[key] = body[key]
+      }
+      return { ...WEB_SITE_CONFIG }
+    }
+  },
   ...crudRoutes('/web/link', WEB_LINKS, {
     searchFields: ['name'],
-    filterFields: ['status'],
+    filterFields: ['status']
   }),
   ...crudRoutes('/web/menu', WEB_MENUS, {
     searchFields: ['name', 'title'],
-    filterFields: ['type'],
-  }),
-];
+    filterFields: ['type']
+  })
+]
 
 // ==================== 会员签到 / 系统管理员类型 ====================
 
 const miscRoutes: RouteDef[] = [
   ...crudRoutes('/member-sign/membersign', MEMBER_SIGNS, {
     searchFields: ['sign_date'],
-    filterFields: ['member_id'],
+    filterFields: ['member_id']
   }),
   ...crudRoutes('/sys-admin-type/sysadmintype', SYS_ADMIN_TYPES, {
-    searchFields: ['name', 'code'],
-  }),
-];
+    searchFields: ['name', 'code']
+  })
+]
 
 export default [
   ...memberUserRoutes,
@@ -598,5 +611,5 @@ export default [
   ...logRoutes,
   ...monitorRoutes,
   ...webRoutes,
-  ...miscRoutes,
-] as RouteDef[];
+  ...miscRoutes
+] as RouteDef[]

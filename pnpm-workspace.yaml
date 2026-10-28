@@ -1,0 +1,6 @@
+allowBuilds:
+  '@logicflow/core': true
+  '@parcel/watcher': true
+  es5-ext: true
+  esbuild: true
+  vue-demi: true
