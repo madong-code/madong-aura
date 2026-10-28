@@ -20,21 +20,24 @@ export interface UpdateAvatarParam {
 }
 
 export interface UserSession {
-  id: string;
+  /** 会话唯一标识（强制下线使用） */
+  jti: string;
+  /** 客户端类型 */
+  client_type?: string;
   user_name: string;
+  real_name?: string;
+  avatar?: string;
   ip: string;
   ip_location: string;
   os: string;
   browser: string;
+  /** 1 在线 */
   status: number;
-  message: string;
+  /** 登录时间（秒级时间戳） */
   login_time: number;
-  key: string;
-  created_at: string;
-  expires_at: string;
-  updated_at: null | string;
-  deleted_at: null | number;
-  remark: null | string;
-  created_date: string;
-  updated_date: string;
+}
+
+export interface UserSessionList {
+  items: UserSession[];
+  total: number;
 }

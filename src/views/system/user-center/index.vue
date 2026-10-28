@@ -19,7 +19,6 @@ import {
 
 import { useCrud } from '#/adapter/crud';
 import { ProfileService } from '#/api/auth/profile';
-import defaultAvatar from '#/assets/images/avatar/default-avatar.webp';
 import { Avatar } from '#/components/form';
 import Icon from '#/components/icon/index.vue';
 import { Page } from '#/components/page';
@@ -32,41 +31,61 @@ import { useCrudSchema } from './schemas';
 defineOptions({ name: 'UserCenter' });
 
 const userStore = useUserStore();
-const userInfo = computed<Record<string, any>>(
-  () => (userStore.userInfo as null | Record<string, any>) ?? {},
-);
 
-// 格式化部门信息（从 depts 数组中获取 name）
+// 接口返回的个人资料（字段形态与后端一致：user_name / real_name / depts / roles ...）
+// 登录态下的 store 由守卫映射成驼峰结构，仅作为兜底，避免刷新后展示缺字段
+const profile = ref<Record<string, any>>({});
+
+const userInfo = computed<Record<string, any>>(() => {
+  const merged: Record<string, any> = {
+    ...((userStore.userInfo as null | Record<string, any>) ?? {}),
+  };
+  // 接口为权威数据，但空值不覆盖 store 兜底值
+  for (const [key, value] of Object.entries(profile.value)) {
+    if (value !== null && value !== undefined) {
+      merged[key] = value;
+    }
+  }
+  return merged;
+});
+
+// 头像地址：优先取接口/最新上传结果，空值交由 Avatar 组件回落默认头像
+const avatarUrl = computed<string>(() => (userInfo.value.avatar as string) || '');
+
+// 格式化部门信息（兼容 [{ name }] 与 ['name'] 两种返回结构）
 const formatDepts = (depts: any[] | undefined): string => {
   if (!depts || depts.length === 0) return '';
-  return depts.map((dept) => dept.name).join(', ');
+  return depts
+    .map((dept) => (typeof dept === 'string' ? dept : dept?.name))
+    .filter(Boolean)
+    .join(', ');
 };
 
-// 头像更新（Avatar 组件调用）
-const handleAvatarUpdate = (_newAvatarUrl: string) => {
-  // 这里可以更新本地状态，如果需要的话
-};
+// 角色可能为 ['admin'] 或 [{ id, name }]，统一取展示名
+const getRoleName = (role: any): string =>
+  typeof role === 'string' ? role : role?.name || '';
+
+const getRoleKey = (role: any, index: number): number | string =>
+  typeof role === 'string' ? `${role}-${index}` : role?.id ?? index;
 
 // 头像上传成功回调
-const handleAvatarSuccess = async (avatarUrl: string) => {
-  try {
-    // 调用专用头像更新接口
-    await ProfileService.updateAvatar({ avatar: avatarUrl });
+// 上传接口（PUT /auth/profile/avatar）已落库并返回相对路径，
+// 此处仅同步本地状态，避免再走 PUT /auth/profile 触发整表单校验失败
+const handleAvatarSuccess = (newAvatarUrl: string) => {
+  if (!newAvatarUrl) return;
+  profile.value = { ...profile.value, avatar: newAvatarUrl };
+  // 同步到基本设置表单，防止后续保存资料时用旧值覆盖头像
+  form.value.avatar = newAvatarUrl;
 
-    // 更新本地 store 中的用户头像
-    const currentUser = userStore.userInfo;
-    if (currentUser) {
-      userStore.setUserInfo({
-        ...(currentUser as any),
-        avatar: avatarUrl,
-      } as any);
-    }
-
-    ElMessage.success('头像更新成功');
-  } catch (error) {
-    console.error('头像更新失败:', error);
-    ElMessage.error('头像更新失败');
+  const currentUser = userStore.userInfo;
+  if (currentUser) {
+    userStore.setUserInfo({
+      ...(currentUser as any),
+      avatar: newAvatarUrl,
+    } as any);
   }
+
+  ElMessage.success('头像更新成功');
 };
 
 // 基本设置表单相关
@@ -158,6 +177,7 @@ const pwdRules = reactive<FormRules>({
 async function loadProfile() {
   try {
     const resp = (await ProfileService.getProfile()) as any;
+    profile.value = resp ?? {};
     form.value = {
       real_name: resp.real_name || '',
       nick_name: resp.nick_name || '',
@@ -195,12 +215,19 @@ const handleProfileEdit = async () => {
     // 更新用户数据
     await ProfileService.updateProfile(form.value as any);
 
-    // 获取新的用户数据
+    // 重新拉取最新资料，保证卡片展示与后端一致
     const newUser = (await ProfileService.getProfile()) as any;
+    profile.value = newUser ?? {};
 
-    // 更新store中的用户信息
-    const userStore = useUserStore();
-    userStore.setUserInfo(newUser);
+    // store 中为守卫映射后的驼峰结构，只同步必要字段，避免破坏其他组件的读取约定
+    const currentUser = userStore.userInfo;
+    if (currentUser) {
+      userStore.setUserInfo({
+        ...(currentUser as any),
+        avatar: newUser?.avatar || (currentUser as any).avatar || '',
+        email: newUser?.email || (currentUser as any).email || '',
+      } as any);
+    }
 
     ElMessage.success('个人信息更新成功');
     isEdit.value = false;
@@ -209,8 +236,6 @@ const handleProfileEdit = async () => {
       console.error('保存失败:', error);
       ElMessage.error('保存失败，请稍后重试');
     }
-  } finally {
-    ElMessage.closeAll();
   }
 };
 
@@ -299,26 +324,50 @@ const [BasicCrud, crudApi] = useCrud({
   // 表格行操作
   tableActions: [
     {
-      label: $t(
-        'system.user.center.online_device.table.columns.actions.force_offline.label',
-      ),
+      // 函数形式：切换语言时按钮文案才能跟随重渲染
+      label: () =>
+        $t(
+          'system.user.center.online_device.table.columns.actions.force_offline.label',
+        ),
       type: 'danger',
       sort: 1020,
       link: true,
       icon: 'ant-design:stop-outlined',
       // auth: "system:recycle_bin:recover",
-      onClick: (_e: Event, record: any) => {
-        ProfileService.kickoutSession(record.jti);
-        crudApi.refreshData();
+      onClick: async (_e: Event, record: any) => {
+        try {
+          await ElMessageBox.confirm(
+            $t(
+              'system.user.center.online_device.table.columns.actions.force_offline.confirm',
+              [record.browser || record.ip || ''],
+            ),
+            $t('common.tips'),
+            {
+              confirmButtonText: $t('common.confirm'),
+              cancelButtonText: $t('common.cancel'),
+              type: 'warning',
+            },
+          );
+          await ProfileService.kickoutSession(record.jti);
+          ElMessage.success('该设备已强制下线');
+          // 下线完成后再刷新，避免请求时序导致列表仍是旧数据
+          crudApi.reload();
+        } catch (error) {
+          if (error !== 'cancel') {
+            ElMessage.error('强制下线失败，请稍后重试');
+          }
+        }
       },
     },
   ],
+  // 工具栏：关闭缩放（全屏）按钮，字段名为 zoom
   toolbarConfig: {
-    fullscreen: false,
+    zoom: false,
   },
+  // 操作列固定在右侧，避免内容区变窄时被横向滚动挤出视野
   tableActionColumn: {
-    fixed: false,
-    width: 120,
+    fixed: 'right',
+    width: 110,
   },
   // 表格行操作-下拉菜单
   dropDownActions: [],
@@ -341,10 +390,9 @@ onMounted(() => {
           <!-- 头像上传 -->
           <div class="relative z-10 mt-24 mx-auto">
             <Avatar
-              :value="userInfo?.avatar || defaultAvatar"
+              :model-value="avatarUrl"
               shape="circle"
               class="border-2 border-white overflow-hidden shadow-lg"
-              @update:value="handleAvatarUpdate"
               @success="handleAvatarSuccess"
             />
           </div>
@@ -380,11 +428,11 @@ onMounted(() => {
             <h3 class="text-sm font-medium text-gray-700">角色标签</h3>
             <div class="flex flex-wrap justify-center mt-3 gap-2">
               <div
-                v-for="role in userInfo?.roles || []"
-                :key="role.id"
+                v-for="(role, index) in userInfo?.roles || []"
+                :key="getRoleKey(role, index)"
                 class="py-1 px-3 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-full"
               >
-                {{ role.name }}
+                {{ getRoleName(role) }}
               </div>
             </div>
           </div>

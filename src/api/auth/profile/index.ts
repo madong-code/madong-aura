@@ -1,7 +1,7 @@
 import type {
   UpdatePasswordParam,
   UpdateUserInfoParam,
-  UserSession,
+  UserSessionList,
 } from './types';
 
 import { requestClient } from '#/api/request';
@@ -38,7 +38,7 @@ export const ProfileService = {
     return requestClient.put(`${BASE_URL}/password`, data);
   },
 
-  getOnlineDevices(params?: Record<string, any>): Promise<UserSession> {
+  getOnlineDevices(params?: Record<string, any>): Promise<UserSessionList> {
     return requestClient.get(`${BASE_URL}/sessions`, { params });
   },
 
