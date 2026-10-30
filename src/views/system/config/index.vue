@@ -4,7 +4,7 @@
   import { defineAsyncComponent, markRaw, ref } from 'vue'
   import { useRouter } from 'vue-router'
 
-  import { ElCard, ElTabPane, ElTabs } from 'element-plus'
+  import { ElTabPane, ElTabs } from 'element-plus'
 
   import { Page } from '#/components/page'
   import { useAccess } from '#/core/access'
@@ -32,9 +32,9 @@
   }
 
   const settingList = ref([
+    // 站点设置（site_setting）：ERP 后台管理系统自身的站点信息；
+    // web 前台门户站点设置在「基础管理 → 公共设置 → 网站设置 → 站点设置」（web_site_setting 行），两者分离存储
     {
-      // 站点设置（site_setting）：ERP 后台管理系统自身的站点信息；
-      // web 前台门户站点设置在「基础管理 → 公共设置 → 网站设置 → 站点设置」（web_site_setting 行），两者分离存储
       component: markRaw(defineAsyncComponent(() => import('./components/site.vue'))),
       key: '1',
       name: $t('system.config.site.title'),
@@ -62,16 +62,10 @@
 </script>
 
 <template>
-  <Page>
-    <ElCard>
-      <ElTabs v-model="activeName" @tab-click="handleClick">
-        <ElTabPane
-          v-for="item in settingList"
-          :key="item.key"
-          :name="item.key"
-          :label="item.name"
-          class="mt-5"
-        >
+  <Page content-class="p-4 md:p-6">
+    <div class="min-w-0">
+      <ElTabs v-model="activeName" class="config-tabs" @tab-click="handleClick">
+        <ElTabPane v-for="item in settingList" :key="item.key" :name="item.key" :label="item.name">
           <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
         </ElTabPane>
         <!-- 配置项管理 - 作为 Tabs 最右侧标签，点击跳转独立页面 -->
@@ -81,6 +75,39 @@
           :label="$t('system.config.common.title')"
         />
       </ElTabs>
-    </ElCard>
+    </div>
   </Page>
 </template>
+
+<style scoped>
+  .config-tabs {
+    --el-tabs-header-height: 40px;
+  }
+
+  .config-tabs :deep(.el-tabs__header) {
+    margin-bottom: 20px;
+  }
+
+  .config-tabs :deep(.el-tabs__nav-wrap) {
+    overflow-x: auto;
+  }
+
+  .config-tabs :deep(.el-tabs__nav-wrap::after) {
+    background-color: var(--el-border-color-lighter);
+  }
+
+  .config-tabs :deep(.el-tabs__item) {
+    color: var(--el-text-color-secondary);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .config-tabs :deep(.el-tabs__item:hover),
+  .config-tabs :deep(.el-tabs__item.is-active) {
+    color: var(--el-color-primary);
+  }
+
+  .config-tabs :deep(.el-tabs__item.is-active) {
+    font-weight: 500;
+  }
+</style>
