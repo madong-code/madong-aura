@@ -5,7 +5,6 @@
 
   import { useVbenForm } from '#/adapter/form'
   import { ConfigService } from '#/api/system/config'
-  import { Page } from '#/components/page'
   import { $t } from '#/locales'
 
   const [BasicForm, formApi] = useVbenForm({
@@ -92,12 +91,12 @@
 </script>
 
 <template>
-  <Page :title="$t('system.config.sms.title')" auto-content-height>
+  <div class="min-w-0">
     <BasicForm />
     <div class="mt-4 flex flex-wrap justify-end gap-2 border-t border-border pt-4">
       <ElButton type="primary" @click="onSubmit">
         {{ $t('system.config.save') }}
       </ElButton>
     </div>
-  </Page>
+  </div>
 </template>

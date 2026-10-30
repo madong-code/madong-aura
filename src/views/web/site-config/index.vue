@@ -80,7 +80,7 @@
 </script>
 
 <template>
-  <Page auto-content-height content-class="p-4 md:p-6">
+  <Page content-class="p-4 md:p-6">
     <div v-loading="loading" class="min-w-0">
       <div class="mb-4">
         <h2 class="text-foreground text-base font-semibold">

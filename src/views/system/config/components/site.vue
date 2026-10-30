@@ -9,7 +9,6 @@
 
   import { useVbenForm } from '#/adapter/form'
   import { ConfigService } from '#/api/system/config'
-  import { Page } from '#/components/page'
   import { DictEnum } from '#/enums'
   import { $t } from '#/locales'
   import { useSiteConfigStore } from '#/store/modules/site-config'
@@ -167,12 +166,12 @@
 </script>
 
 <template>
-  <Page :title="$t('system.config.site.title')" auto-content-height>
+  <div>
     <BasicForm />
     <div class="mt-4 flex justify-end">
       <ElButton type="primary" @click="onSubmit">
         {{ $t('system.config.save') }}
       </ElButton>
     </div>
-  </Page>
+  </div>
 </template>
