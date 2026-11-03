@@ -11,6 +11,7 @@ import ElementPlus from 'unplugin-element-plus/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import tailwindcss from '@tailwindcss/vite'
 import fs from 'fs'
+import { viteInjectAppConfigPlugin } from './build/plugins/inject-app-config'
 import { viteNitroMockPlugin } from './build/plugins/nitro-mock'
 import { viteVisualFormElementPlusPlugin } from './build/plugins/visual-form'
 // import { visualizer } from 'rollup-plugin-visualizer'
@@ -185,6 +186,9 @@ export default ({ command, mode }: { command: string; mode: string }) => {
         threshold: 10240,
         deleteOriginFile: false
       }),
+      // 构建时生成 _app.config.js：VITE_GLOB_* 注入 window._VBEN_ADMIN_PRO_APP_CONF_
+      // （生产环境 useAppConfig 的数据源，缺失会导致运行时解构报错）
+      viteInjectAppConfigPlugin({ env }),
       vueDevTools()
       // 打包分析
       // visualizer({
