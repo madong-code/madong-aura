@@ -87,9 +87,13 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
     platformError.value = null
 
     try {
-      const response = (await ConfigService.getByCode(SITE_CODE, {
-        group_code: SITE_GROUP_CODE
-      })) as any
+      // skipGlobalErrorHandler：本方法内部已 try/catch 优雅降级（失败沿用默认品牌配置），
+      // 且启动期可能在 i18n 语言包就绪前发起，弹出错误 toast 反而造成"未登录刷新登录页报错"的观感
+      const response = (await ConfigService.getByCode(
+        SITE_CODE,
+        { group_code: SITE_GROUP_CODE },
+        { skipGlobalErrorHandler: true }
+      )) as any
       platformConfig.value = mapSiteConfig(response as any)
       platformIsLoaded.value = true
 

@@ -58,16 +58,19 @@ async function initApplication() {
   const accessStore = useAccessStore()
   accessStore.setSuperCodes(['*', 'admin'])
 
+  // 国际化（异步加载语言包后再挂载）。必须先于任何可能弹错误提示的请求：
+  // 请求拦截器的错误文案依赖 $t，语言包未就绪时会把 "ui.fallback.http.internalServerError" 原样弹出
+  await setupI18n(app)
+
   // madong 站点配置预加载（GET /system/config/code/site_setting 匿名接口，不阻塞启动）：
-  // sync = 拉取 + 应用到 preferences（app.name/logo.source/favicon），
+  // 拉取 + 应用到 preferences（app.name/logo.source/favicon），
   // 登录页品牌（名称/Logo/favicon）与 CDN（static_url）在首屏即生效；
+  // 非强制拉取（store 内有 loading/loaded 去重，App.vue 的幂等调用不会重复发请求），
+  // 失败由 store 内部优雅降级（请求为静默模式，不弹错误 toast）；
   // 登录成功后由登录流程 syncSitePreferences 强制刷新
   useSiteConfigStore()
-    .syncSitePreferences()
-    .catch(() => {})
-
-  // 国际化（异步加载语言包后再挂载）
-  await setupI18n(app)
+    .fetchSiteConfig()
+    .then(() => useSiteConfigStore().applyToPreferences())
 
   // 业务组件适配器（业务表单组件自动扫描注册）+ schema 表单规则
   await initComponentAdapter()

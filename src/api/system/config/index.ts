@@ -3,8 +3,12 @@ import { requestClient } from '#/api/request';
 const baseUrl = '/system/config';
 
 export const ConfigService = {
-  getByCode($code: string, params?: Record<string, any>) {
-    return requestClient.get(`${baseUrl}/code/${$code}`, { params });
+  getByCode(
+    $code: string,
+    params?: Record<string, any>,
+    options?: Record<string, any>,
+  ) {
+    return requestClient.get(`${baseUrl}/code/${$code}`, { params, ...options });
   },
   getByGroup(groupCode: string, params?: Record<string, any>) {
     return requestClient.get(`${baseUrl}/group/${groupCode}`, { params });

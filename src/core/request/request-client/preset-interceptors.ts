@@ -125,6 +125,11 @@ export const errorMessageResponseInterceptor = (
         return Promise.reject(error);
       }
 
+      // 调用方声明自行兜底的请求（如启动期匿名预加载）不弹全局错误提示，静默降级
+      if (error?.config?.skipGlobalErrorHandler === true) {
+        return Promise.reject(error);
+      }
+
       const err: string = error?.toString?.() ?? '';
       let errMsg = '';
       if (err?.includes('Network Error')) {

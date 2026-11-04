@@ -26,6 +26,11 @@ type ExtendOptions<T = any> = {
    * - data: 解构响应的BODY数据，只返回其中的data节点数据（会检查status和code是否为成功状态）。
    */
   responseReturn?: 'body' | 'data' | 'raw';
+  /**
+   * 跳过全局错误提示（errorMessageResponseInterceptor 的 ElMessage toast）。
+   * 用于调用方自行兜底的"容忍失败"请求（如启动期匿名预加载），失败时静默降级不弹窗。
+   */
+  skipGlobalErrorHandler?: boolean;
 };
 type RequestClientConfig<T = any> = AxiosRequestConfig<T> & ExtendOptions<T>;
 
