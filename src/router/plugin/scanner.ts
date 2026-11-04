@@ -78,8 +78,11 @@ export function scanPluginMenus(): PluginMenuNode[] {
 }
 
 function findNode(nodes: PluginMenuNode[], name: string): PluginMenuNode | undefined {
+  // 后端菜单 name 取自 DB code，与插件 routes 里的 name 可能仅大小写不同
+  // （如后端 'codegen' vs 插件 'Codegen'），按小写对齐避免合并失败产生重复菜单
+  const target = String(name).toLowerCase()
   for (const node of nodes) {
-    if (node.name === name) return node
+    if (String(node.name).toLowerCase() === target) return node
     if (node.children?.length) {
       const found = findNode(node.children, name)
       if (found) return found
@@ -88,13 +91,26 @@ function findNode(nodes: PluginMenuNode[], name: string): PluginMenuNode | undef
   return undefined
 }
 
-/** 同名字段合并：插件补充覆盖后端，meta 做对象级合并避免丢字段 */
+/**
+ * 同名字段合并：后端节点为权威基底，插件仅补充缺失字段。
+ *
+ * 展示字段（title/icon/order 等）以后端为准：插件 routes 经 import.meta.glob
+ * eager 加载，执行时机早于 i18n 语言包加载，其 $t(...) 会快照成原始 key 字符串，
+ * 若反向覆盖会把后端配置好的标题变成 "codegen.generate.menu" 这类未翻译文本。
+ * meta 做按 key 的缺失补充（插件的 meta.module 等后端没有的字段仍会合入）。
+ */
 function mergeNode(existing: PluginMenuNode, extra: PluginMenuNode): void {
   const extraMeta = extra.meta
   const extraChildren = extra.children
-  Object.assign(existing, extra)
+  const rest = { ...extra }
+  delete rest.meta
+  delete rest.children
+  // name 保留后端值：后端 name 取自权限码（如 codegen:index），是路由身份与
+  // 权限体系的锚点；按 path 兜底合并进来的插件节点不能把它改掉
+  const { name: _ignored, ...overridable } = rest
+  Object.assign(existing, overridable)
   if (extraMeta) {
-    existing.meta = { ...(existing.meta ?? {}), ...extraMeta }
+    existing.meta = { ...extraMeta, ...(existing.meta ?? {}) }
   }
   // children 在调用方递归处理，这里还原引用避免自合并
   if (extraChildren) {
@@ -114,10 +130,20 @@ export function mergePluginMenus(backendMenus: PluginMenuNode[]): PluginMenuNode
   // 菜单节点为纯 JSON（requestClient 返回），深拷贝避免污染原始数据
   const merged: PluginMenuNode[] = JSON.parse(JSON.stringify(backendMenus))
 
+  /** 归一化 path：去尾斜杠，用于同节点识别（name 不同但 path 相同 = 同一菜单） */
+  const normalizePath = (p?: string): string => (p || '').replace(/\/+$/, '')
+
   const mergeChildren = (backendChildren: PluginMenuNode[], extraChildren: PluginMenuNode[]): PluginMenuNode[] => {
     const list = [...backendChildren]
     for (const extra of extraChildren) {
-      const existing = list.find((item) => item.name === extra.name)
+      const target = String(extra.name).toLowerCase()
+      // 先按 name 匹配；name 不同但 path 相同（后端 name 取自权限码，插件 routes
+      // 常用自定义 name）也视为同一节点，避免追加出重复路由/重复菜单项
+      const existing =
+        list.find((item) => String(item.name).toLowerCase() === target) ??
+        (normalizePath(extra.path)
+          ? list.find((item) => normalizePath(item.path) === normalizePath(extra.path))
+          : undefined)
       if (existing) {
         mergeNode(existing, extra)
         if (extra.children?.length) {

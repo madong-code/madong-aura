@@ -35,6 +35,14 @@ const LAYOUT_SENTINEL = 'BasicLayout'
 const APP_LAYOUT = '/index/index'
 
 /**
+ * 顶层布局组件的等价写法。
+ * 后端各插件安装菜单时 component 约定不统一（vben 哨兵 BasicLayout / art 约定 /layout），
+ * 顶层目录节点也可能省略 component（插件 routes 契约：无 component 有 children 视为容器）。
+ * 一律归一化为 app 布局，否则 RouteValidator 会以"一级菜单缺少 component"抛错 → 登录后 500。
+ */
+const LAYOUT_SENTINELS = new Set(['BasicLayout', 'RouteView', '/layout', '/index/index'])
+
+/**
  * 后端模式下前端补充的隐藏路由（不在菜单显示，但可通过 URL/程序跳转访问）
  *
  * - Profile：个人中心（对齐 madong-single router/routes/backend.ts）
@@ -88,7 +96,10 @@ function toRelativePath(childPath: string, parentPath: string): string {
   if (!childPath.startsWith('/')) return childPath
   // 与父路径同前缀才能安全转相对路径，否则保留绝对路径
   const prefix = parentPath === '/' ? '/' : `${parentPath}/`
-  if (childPath === parentPath || childPath.startsWith(prefix)) {
+  // 注意：childPath === parentPath（如 生成代码 /codegen 挂在 /codegen 目录下）时
+  // 不能转成空字符串——空路径会让菜单项因无路由地址而被渲染层丢弃（侧边栏"少菜单"）。
+  // 这里保留其绝对路径形态：vue-router 允许绝对子路径，等价于父级的 index 路由。
+  if (childPath.startsWith(prefix)) {
     return childPath.slice(parentPath.length).replace(/^\/+/, '')
   }
   return childPath
@@ -125,8 +136,15 @@ function convertNode(
     route.redirect = node.redirect
   }
 
-  // 组件映射：BasicLayout → art 布局；空组件目录保持 undefined（componentless 父记录）
-  if (node.component) {
+  // 组件映射：顶层布局哨兵（BasicLayout//layout/RouteView）→ art 布局；
+  // 顶层目录节点未配 component 时同样视为布局容器；其余组件路径原样保留
+  if (
+    isTopLevel &&
+    node.children?.length &&
+    (!node.component || LAYOUT_SENTINELS.has(node.component))
+  ) {
+    route.component = APP_LAYOUT
+  } else if (node.component) {
     route.component =
       isTopLevel && node.component === LAYOUT_SENTINEL
         ? APP_LAYOUT

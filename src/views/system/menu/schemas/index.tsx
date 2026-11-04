@@ -252,7 +252,7 @@ export const useCrudSchema = (): CrudSchema => {
               renderType: 'RadioGroup',
               onChange: (val: any) => {
                 if (val !== 2) {
-                  _value.openType = 0;
+                  _value.open_type = 0;
                 }
               },
             };
@@ -354,7 +354,9 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('system.menu.form.modal.open_type'),
-          fieldName: 'openType',
+          // 后端字段为 snake_case（open_type），表单 fieldName 必须与详情返回一致，
+          // 否则编辑回填 setValues 取不到值，会回落 defaultValue 且保存时字段丢失
+          fieldName: 'open_type',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
@@ -389,7 +391,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('system.menu.form.modal.link_url'),
-          fieldName: 'url',
+          fieldName: 'link_url',
           component: 'Input',
           formItemClass: 'col-span-1',
           help: $t('system.menu.form.help.link_url'),
@@ -397,7 +399,7 @@ export const useCrudSchema = (): CrudSchema => {
             return {
               placeholder: $t('system.menu.form.placeholder.link_url'),
               clearable: true,
-              disabled: ![2, 3].includes(values.openType),
+              disabled: ![2, 3].includes(values.open_type),
             };
           },
         },
@@ -428,7 +430,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('system.menu.form.modal.is_show'),
-          fieldName: 'isShow',
+          fieldName: 'is_show',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
@@ -444,7 +446,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('system.menu.form.modal.is_sync'),
-          fieldName: 'isSync',
+          fieldName: 'is_sync',
           component: 'ApiDict',
           defaultValue: 0,
           formItemClass: 'col-span-1',
@@ -457,7 +459,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('system.menu.form.modal.is_cache'),
-          fieldName: 'isCache',
+          fieldName: 'is_cache',
           component: 'ApiDict',
           defaultValue: 0,
           formItemClass: 'col-span-1',
