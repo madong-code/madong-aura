@@ -36,7 +36,42 @@
     "tips": "Prompt",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "logOutTips": "Do you want to log out?"
+    "logOutTips": "Do you want to log out?",
+    "success": "Operation successful",
+    "error": "Operation failed",
+    "required": "Required",
+    "close": "Close",
+    "fullscreen": "Fullscreen",
+    "cancelFullscreen": "Exit fullscreen",
+    "addAction": "Add",
+    "update": "Update",
+    "selectAtLeastOne": "Please select at least one item",
+    "operation_success": "Operation successful",
+    "operation_failed": "Operation failed",
+    "add_success": "Added successfully",
+    "update_success": "Updated successfully",
+    "delete_success": "Deleted successfully",
+    "action": {
+      "search": "Search"
+    },
+    "operate": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "crud": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "message": {
+      "tips": "Tips",
+      "success": "Operation successful",
+      "fail": "Operation failed"
+    },
+    "confirm_dialog": {
+      "delete": "Are you sure you want to delete?"
+    }
   },
   "search": {
     "placeholder": "Search page",

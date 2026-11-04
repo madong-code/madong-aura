@@ -36,7 +36,42 @@
     "tips": "提示",
     "cancel": "取消",
     "confirm": "确定",
-    "logOutTips": "您是否要退出登录?"
+    "logOutTips": "您是否要退出登录?",
+    "success": "操作成功",
+    "error": "操作失败",
+    "required": "必填",
+    "close": "关闭",
+    "fullscreen": "全屏",
+    "cancelFullscreen": "退出全屏",
+    "addAction": "添加",
+    "update": "更新",
+    "selectAtLeastOne": "请至少选择一项",
+    "operation_success": "操作成功",
+    "operation_failed": "操作失败",
+    "add_success": "添加成功",
+    "update_success": "更新成功",
+    "delete_success": "删除成功",
+    "action": {
+      "search": "搜索"
+    },
+    "operate": {
+      "save": "保存",
+      "cancel": "取消",
+      "confirm": "确定"
+    },
+    "crud": {
+      "create": "新增",
+      "edit": "编辑",
+      "delete": "删除"
+    },
+    "message": {
+      "tips": "提示",
+      "success": "操作成功",
+      "fail": "操作失败"
+    },
+    "confirm_dialog": {
+      "delete": "确定要删除吗？"
+    }
   },
   "search": {
     "placeholder": "搜索页面",
