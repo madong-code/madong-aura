@@ -66,6 +66,16 @@ export interface DrawerProps {
    */
   footerClass?: ClassType;
   /**
+   * 是否全屏，可通过 drawerApi.setState 控制，移动端强制为 true
+   * @default false
+   */
+  fullscreen?: boolean;
+  /**
+   * 是否显示全屏切换按钮，移动端不显示
+   * @default false
+   */
+  fullscreenButton?: boolean;
+  /**
    * 是否显示顶栏
    * @default true
    */

@@ -3,6 +3,7 @@ import type { DialogEmits, MyDialogInstance, MyDialogProps } from './types';
 
 import { computed, nextTick, onMounted, ref } from 'vue';
 
+import { useMediaQuery } from '@vueuse/core';
 import { ElButton, ElDialog, ElDrawer } from 'element-plus';
 
 import { Icon } from '#/components/icon';
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<MyDialogProps>(), {
   // 注意：Boolean prop 未传入时 Vue 会解析为 false 而非 undefined，
   // 默认开启的开关必须在此声明默认值，模板里的 ?? true 不会生效
   modal: true,
+  fullscreenButton: true,
   closeOnPressEscape: true,
   destroyOnClose: true,
   closeOnClickModal: false,
@@ -26,7 +28,21 @@ const props = withDefaults(defineProps<MyDialogProps>(), {
 
 const emit = defineEmits<DialogEmits>();
 const dialogVisible = ref(false);
-const fullscreen = ref(false);
+const dialogPropsRef = ref<MyDialogProps>(props);
+const isMobile = useMediaQuery('(max-width: 768px)');
+
+// 全屏状态与 dialogPropsRef 双向同步，使 setState({ fullscreen }) 可驱动且 getState() 可读
+const fullscreen = computed({
+  get: () => dialogPropsRef.value.fullscreen ?? false,
+  set: (value: boolean) => {
+    dialogPropsRef.value = { ...dialogPropsRef.value, fullscreen: value };
+  },
+});
+
+/** 移动端抽屉强制全屏；ElDialog 分支保持原有行为 */
+const shouldFullscreen = computed(
+  () => fullscreen.value || (isMobile.value && props.dialogType === 'drawer'),
+);
 
 // 根据 dialogType 决定使用哪个组件
 const dialogComponent = computed(() => {
@@ -41,13 +57,12 @@ const customClass = computed(() => {
     : `${baseClass} m-dialog-box`;
 });
 
-const dialogPropsRef = ref<MyDialogProps>(props);
 const toggleFullscreen = () => {
   fullscreen.value = !fullscreen.value;
 };
 // ElDrawer 无 fullscreen prop，抽屉全屏通过 size=100% 实现
 const drawerSize = computed(() =>
-  fullscreen.value ? '100%' : (dialogPropsRef.value.width ?? '40%'),
+  shouldFullscreen.value ? '100%' : (dialogPropsRef.value.width ?? '40%'),
 );
 const handleCancel = () => {
   dialogVisible.value = false;
@@ -72,6 +87,7 @@ const methods: MyDialogInstance = {
   close() {
     dialogVisible.value = false;
   },
+  toggleFullscreen,
   // 设置组件状态（props）
   setState(state: MyDialogProps) {
     return new Promise((resolve) => {
@@ -106,7 +122,7 @@ defineExpose(methods);
     v-model="dialogVisible"
     :width="dialogPropsRef.width ?? '60%'"
     :title="dialogPropsRef.title ?? '操作'"
-    :fullscreen="fullscreen"
+    :fullscreen="shouldFullscreen"
     :show-close="dialogPropsRef.showClose"
     :direction="dialogPropsRef.direction ?? 'rtl'"
     :size="drawerSize"
@@ -122,6 +138,7 @@ defineExpose(methods);
         }}</span>
         <div class="dialog-header-actions">
           <ElButton
+            v-if="dialogPropsRef.fullscreenButton && !isMobile"
             class="dialog-header-btn"
             @click="toggleFullscreen"
             link
@@ -129,7 +146,9 @@ defineExpose(methods);
             <template #icon>
               <Icon
                 :icon="
-                  fullscreen ? 'ri:fullscreen-exit-line' : 'ri:fullscreen-line'
+                  shouldFullscreen
+                    ? 'ri:fullscreen-exit-line'
+                    : 'ri:fullscreen-line'
                 "
               />
             </template>

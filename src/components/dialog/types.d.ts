@@ -15,7 +15,10 @@ export type MyDialogProps = {
   draggable?: boolean;
   // 显示底部
   footer?: boolean;
+  // 是否全屏，可通过 setState({ fullscreen }) 控制，open() 时重置
   fullscreen?: boolean;
+  // 是否显示全屏切换按钮，默认 true，移动端隐藏
+  fullscreenButton?: boolean;
   // 内容区域加载中
   loading?: boolean;
   modal?: boolean;
@@ -38,6 +41,8 @@ export interface MyDialogInstance {
   open: () => void;
   // 关闭
   close: () => void;
+  // 切换全屏
+  toggleFullscreen: () => void;
   // 设置组件状态（props）
   setState: (state: MyDialogProps) => Promise<void>;
   // 获取组件状态（props）

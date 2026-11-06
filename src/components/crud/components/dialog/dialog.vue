@@ -73,6 +73,8 @@
       rowKey: _rowKey,
       draggable: _draggable,
       fullscreenButton: _fullscreenButton,
+      class: _class,
+      zIndex: _zIndex,
       onSuccess: _onSuccess,
       beforeSubmit: _beforeSubmit,
       onOpen: _onOpen,
@@ -179,6 +181,8 @@
 
   // === Drawer ===
   const [Drawer, drawerApi] = useVbenDrawer({
+    fullscreenButton: props.options.fullscreenButton !== false,
+    zIndex: props.options.zIndex,
     confirmText: props.options.confirmText,
     cancelText: props.options.cancelText,
     async onConfirm() {

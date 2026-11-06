@@ -93,6 +93,8 @@ export interface FormDialogOptions extends Omit<
   rowKey?: string;
   draggable?: boolean;
   fullscreenButton?: boolean;
+  class?: string;
+  zIndex?: number;
   onSuccess?: (
     type: FormActionType,
     values: Record<string, any>,

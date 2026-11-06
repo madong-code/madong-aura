@@ -15,7 +15,8 @@ import {
   useAttrs,
 } from 'vue';
 
-import { HelpCircle } from 'lucide-vue-next';
+import { useMediaQuery } from '@vueuse/core';
+import { Expand, HelpCircle, Shrink } from 'lucide-vue-next';
 
 import { useSimpleLocale } from '#/core/composables';
 import { cn } from '#/core/shared/utils';
@@ -27,6 +28,8 @@ interface Props extends DrawerProps {
 const props = defineProps<Props>();
 
 const { $t } = useSimpleLocale();
+/** 与 VbenModal 使用同一断点：移动端抽屉强制全屏且不提供切换入口 */
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const state = props.drawerApi?.useStore?.();
 
@@ -49,6 +52,23 @@ const mergedState = computed<Record<string, any>>(() => {
   }
   return { ...state?.value, ...overrides };
 });
+
+/** 移动端强制全屏；桌面端由 drawerApi.setState({ fullscreen }) 控制 */
+const shouldFullscreen = computed(
+  () => (mergedState.value.fullscreen ?? false) || isMobile.value,
+);
+
+/** core 默认关闭；CRUD 表单抽屉显式开启；移动端隐藏全部切换按钮 */
+const shouldShowFullscreenButton = computed(
+  () => mergedState.value.fullscreenButton === true && !isMobile.value,
+);
+
+function handleFullscreen() {
+  props.drawerApi?.setState((prev) => ({
+    ...prev,
+    fullscreen: !prev.fullscreen,
+  }));
+}
 
 const directionMap: Record<DrawerPlacement, 'btt' | 'ltr' | 'rtl' | 'ttb'> = {
   bottom: 'btt',
@@ -73,6 +93,8 @@ const mergedClass = computed(() =>
 );
 
 const drawerSize = computed(() => {
+  // ElDrawer 无 fullscreen prop，全屏通过 size=100% 实现（上下方向为高度）
+  if (shouldFullscreen.value) return '100%';
   const raw = String(mergedClass.value ?? '');
   const vertical = direction.value === 'ttb' || direction.value === 'btt';
   // 仅匹配独立的 w-[..]/h-[..]，排除 max-w-[..]、min-h-[..] 等限制类
@@ -86,12 +108,16 @@ const drawerSize = computed(() => {
   return undefined;
 });
 
-const drawerClass = computed(() =>
-  String(mergedClass.value ?? '')
+const drawerClass = computed(() => {
+  let cls = String(mergedClass.value ?? '')
     .replace(/(?:^|\s)[wh]-\[[^\]]+\]/g, ' ')
-    .replace(/\b[wh]-full\b/g, ' ')
-    .trim(),
-);
+    .replace(/\b[wh]-full\b/g, ' ');
+  // 全屏时必须清掉 max-w-[85vw] 之类的上限，否则 size=100% 仍被截断
+  if (shouldFullscreen.value) {
+    cls = cls.replace(/\bmax-[wh]-\[[^\]]+\]/g, ' ');
+  }
+  return cls.trim();
+});
 
 function handleUpdateModelValue(value: boolean) {
   if (!value && !state?.value.submitting) {
@@ -132,18 +158,30 @@ onDeactivated(() => {
   >
     <template #header>
       <div :class="['vben-drawer__header', mergedState.headerClass]">
-        <slot name="title">
-          <span class="vben-drawer__title">{{ mergedState.title }}</span>
-          <ElTooltip
-            v-if="mergedState.titleTooltip"
-            :content="mergedState.titleTooltip"
-            placement="top"
+        <div class="vben-drawer__header-main">
+          <slot name="title">
+            <span class="vben-drawer__title">{{ mergedState.title }}</span>
+            <ElTooltip
+              v-if="mergedState.titleTooltip"
+              :content="mergedState.titleTooltip"
+              placement="top"
+            >
+              <HelpCircle class="ml-1 inline-block size-3.5 cursor-help align-text-bottom opacity-60" />
+            </ElTooltip>
+          </slot>
+          <div v-if="mergedState.description" class="vben-drawer__description">
+            <slot name="description">{{ mergedState.description }}</slot>
+          </div>
+        </div>
+        <div v-if="shouldShowFullscreenButton" class="vben-drawer__header-actions">
+          <button
+            type="button"
+            class="vben-drawer__icon-btn"
+            @click="handleFullscreen"
           >
-            <HelpCircle class="ml-1 inline-block size-3.5 cursor-help align-text-bottom opacity-60" />
-          </ElTooltip>
-        </slot>
-        <div v-if="mergedState.description" class="vben-drawer__description">
-          <slot name="description">{{ mergedState.description }}</slot>
+            <Shrink v-if="shouldFullscreen" class="size-[16px]" />
+            <Expand v-else class="size-[16px]" />
+          </button>
         </div>
       </div>
     </template>
@@ -152,6 +190,16 @@ onDeactivated(() => {
       v-loading="Boolean(mergedState.loading || mergedState.submitting)"
       :class="['vben-drawer__content', mergedState.contentClass]"
     >
+      <!-- header=false 时 ElDrawer 不渲染 #header，切换按钮需落在内容层 -->
+      <button
+        v-if="mergedState.header === false && shouldShowFullscreenButton"
+        type="button"
+        class="vben-drawer__icon-btn vben-drawer__fullscreen-fallback"
+        @click="handleFullscreen"
+      >
+        <Shrink v-if="shouldFullscreen" class="size-[16px]" />
+        <Expand v-else class="size-[16px]" />
+      </button>
       <slot></slot>
     </div>
 
@@ -164,6 +212,7 @@ onDeactivated(() => {
         <slot name="footer">
           <ElButton
             v-if="mergedState.showCancelButton !== false"
+            class="vben-drawer__cancel-btn"
             :disabled="mergedState.submitting"
             @click="props.drawerApi?.onCancel()"
           >
@@ -194,6 +243,66 @@ onDeactivated(() => {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .vben-drawer__header-main {
+    min-width: 0;
+  }
+
+  .vben-drawer__header-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 4px;
+    /* 与弹窗右上角两按钮间距对齐：10px 使图标视觉空白约 22px，接近 Modal 的 20.75px */
+    margin-right: 10px;
+  }
+
+  /* 与 close 按钮统一：无背景、同色；hover 背景与 VbenModal 保持一致 */
+  .vben-drawer__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--el-text-color-primary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+
+  .vben-drawer__icon-btn:hover {
+    color: var(--el-color-primary);
+    background: var(--el-fill-color-light);
+  }
+
+  /* 取消按钮与 close 一致：默认无背景、无边框 */
+  .vben-drawer__cancel-btn,
+  .vben-drawer__cancel-btn:hover,
+  .vben-drawer__cancel-btn:focus {
+    color: var(--el-text-color-primary);
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .vben-drawer__cancel-btn:hover,
+  .vben-drawer__cancel-btn:focus {
+    color: var(--el-color-primary);
+  }
+
+  .vben-drawer__fullscreen-fallback {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
   }
 
   .vben-drawer__title {
@@ -212,6 +321,7 @@ onDeactivated(() => {
 
   .vben-drawer__content {
     /* 撑满 ElDrawer body，保证内部 h-full 高度链可解析（如消息中心表格） */
+    position: relative;
     height: 100%;
     min-height: 60px;
   }
@@ -222,5 +332,33 @@ onDeactivated(() => {
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
+  }
+</style>
+
+<style>
+  /* ElDrawer 内置 close 由组件内部渲染，不携带本文件的 scoped 属性，
+     故用非 scoped 规则并以 .vben-drawer 限定作用域，只影响本垫片的抽屉 */
+  .vben-drawer .el-drawer__close-btn {
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--el-text-color-primary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+
+  .vben-drawer .el-drawer__close-btn:hover {
+    color: var(--el-color-primary);
+    background: var(--el-fill-color-light);
   }
 </style>

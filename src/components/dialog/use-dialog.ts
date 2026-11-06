@@ -32,6 +32,9 @@ export function useDialog(props: MyDialogProps) {
     close() {
       dialogRef.value?.close();
     },
+    toggleFullscreen() {
+      dialogRef.value?.toggleFullscreen();
+    },
   };
 
   // 创建表单组件的配置
