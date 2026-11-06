@@ -145,22 +145,47 @@ interface CrudSchema {
 
 ### formDialog
 
-表单弹窗配置：
+表单弹窗配置，支持 `modal` 与 `drawer` 两种形态：
 
 ```typescript
 interface FormDialogConfig {
-  /** 是否启用 */
+  /** 是否启用，默认 true */
   enabled?: boolean;
   /** 弹窗标题 */
   title?: string;
-  /** 弹窗宽度 */
+  /** 弹窗宽度，Tailwind class，如 'w-[50%]' */
   width?: string;
+  /** 弹窗类型，默认 'modal' */
+  dialogType?: 'drawer' | 'modal';
+  /** 表单内容宽度，默认 'w-1/2' */
+  formWidth?: string;
+  /** Grid 布局 class，控制表单列数 */
+  wrapperClass?: string;
+  /** 表单通用配置 */
+  commonConfig?: FormDialogCommonConfig;
+  /** 是否可拖拽（仅 modal 有效） */
+  draggable?: boolean;
+  /** 是否显示全屏切换按钮，默认 true（modal 与 drawer 均适用） */
+  fullscreenButton?: boolean;
+  /** 弹窗组件额外 CSS class，如 'top-0' */
+  class?: string;
+  /** 弹窗层级，嵌套弹窗时需设更高值 */
+  zIndex?: number;
   /** 表单字段配置 */
   schema?: VbenFormSchema[] | (() => VbenFormSchema[]);
   /** 提交前转换表单值 */
   transformFormValues?: (values: Record<string, any>) => Record<string, any>;
+  /** 其它配置：api、onSuccess、beforeSubmit、onOpen、confirmText、cancelText */
 }
 ```
+
+**抽屉全屏行为**：
+
+- 全屏状态由 `drawerApi.setState({ fullscreen: true })` 控制，切换用 `setState((prev) => ({ ...prev, fullscreen: !prev.fullscreen }))`。
+- 底层 `useVbenDrawer` 的 `fullscreenButton` 默认 `false`，4 个独立业务抽屉外观不变；CRUD 的 `FormDialog` 按 `fullscreenButton !== false` 默认开启，7 个 drawer schema 无需改配置即可全屏。
+- 移动端（≤768px）抽屉强制全屏，且不显示全屏/还原切换按钮；桌面端保留单个切换按钮，全屏后点击可还原。
+- 关闭全屏按钮：`formDialog: { fullscreenButton: false, ... }`。
+- 旧版 `useDialog` 的 `fullscreenButton` 默认 `true`（19 个调用点保持原样），`setState({ fullscreen })` 与 `toggleFullscreen()` 均可驱动全屏。
 
 ### permissions
 
