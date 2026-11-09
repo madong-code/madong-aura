@@ -157,8 +157,8 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
    */
   const applyToPreferences = async () => {
     const config = getCurrentConfig()
-    if (!config.title && !config.logo) {
-      return // 无可用配置，跳过同步
+    if (!config.title && !config.logo && !config.favicon) {
+      return // 无可用配置（含仅配置 favicon 的场景），跳过同步
     }
 
     const updates: Record<string, any> = {}

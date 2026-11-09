@@ -166,6 +166,24 @@ export const resolveSignedUrl = (path: string): null | string => {
 };
 
 /**
+ * 私有资源是否处于「占位」状态
+ *
+ * 私有空间下 buildStaticUrl 在签名未就绪时会回落到拼接地址，浏览器随即对
+ * 私有空间发起一次必然失败的裸链请求并留下破图。调用方据此先隐藏图片、
+ * 保留品牌占位，签名缓存到齐后再渲染（signedUrls 是响应式的，会自动重算）。
+ *
+ * - 私有空间 + 本站存储资源 + 尚无签名地址 → true（换取失败也保持占位）
+ * - 已有签名地址 / 公开空间 / 非本站存储资源 → false（按正常地址渲染）
+ *
+ * 与 template/admin、template/web 的同名函数语义保持一致。
+ */
+export const isPrivateResourcePending = (path: string): boolean => {
+  if (!isPrivateStorage() || !isStorageResource(path)) return false
+  const trimmed = (path || '').trim()
+  return signedUrls.value[trimmed] === undefined
+}
+
+/**
  * 主动换取一批资源地址（用于非渲染期写入缓存，如落 preferences 前）
  *
  * 等待完成后调用 resolveSignedUrl 即可命中缓存。

@@ -53,18 +53,14 @@
     }
   })
 
-  // 站点配置变化 → 同步标签页标题与 favicon（对齐 admin app.vue）
+  // 站点配置变化 → 同步标签页标题；
+  // favicon 统一由 site-config.applyToPreferences 经 buildStaticUrl 解析（含私有空间签名、
+  // 未配置时回落 logo），此处不再直接写原始资源 key，避免竞态覆盖与裸链请求
   watch(
     () => useSiteConfigStore().getCurrentConfig(),
     (config) => {
       if (config?.title) {
         document.title = config.title
-      }
-      if (config?.favicon) {
-        const link = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null
-        if (link) {
-          link.href = config.favicon
-        }
       }
     },
     { immediate: true }
