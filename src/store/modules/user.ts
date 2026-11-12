@@ -42,6 +42,7 @@ import { setPageTitle } from '#/core/utils/router'
 import { resetRouterState } from '@/router/guards/beforeEach'
 import { useMenuStore } from './menu'
 import { StorageConfig } from '#/core/utils/storage/storage-config'
+import { buildAppUrl } from '#/utils/url'
 import { logoutApi } from '@/api'
 import { useAccessStore } from '#/core/stores'
 
@@ -190,13 +191,17 @@ export const useUserStore = defineStore(
       useMenuStore().setHomePath('')
       // 重置路由状态
       resetRouterState(500)
-      // 跳转到登录页，携带当前路由作为 redirect 参数
+      // 构建登录页 URL，携带当前路由作为 redirect 参数
       const currentRoute = router.currentRoute.value
-      const redirect = currentRoute.path !== '/login' ? currentRoute.fullPath : undefined
-      router.push({
-        name: 'Login',
-        query: redirect ? { redirect } : undefined
-      })
+      const loginUrl =
+        currentRoute.path !== '/auth/login'
+          ? `/auth/login?redirect=${encodeURIComponent(currentRoute.fullPath)}`
+          : '/auth/login'
+      // 使用硬跳转确保一定到达登录页（与 core authStore.logout 保持一致）：
+      // router.push 软导航在「退出 + resetRouterState 异步注销动态路由 +
+      // persist 插件恢复」的三方竞态下会偶发失效，表现为退出后停留原页，
+      // 需要手动刷新才能回到登录页。硬跳转绕过守卫与持久化恢复的时序问题。
+      window.location.assign(buildAppUrl(loginUrl))
     }
 
     /**
