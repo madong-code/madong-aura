@@ -1,6 +1,7 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
 import { UserService } from '#/api/system/user';
+import { roleSelectorConfig } from '#/views/system/user/configs/role-selector-config';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 
@@ -264,64 +265,77 @@ export const useCrudSchema = (): CrudSchema => {
             title: $t('system.user.form.outher_info'),
           },
         },
-        // 所属部门
+        // 所属部门（EntitySelector：部门选择器，多选）
         {
           label: $t('system.user.form.dept_name'),
           fieldName: 'dept_id_list',
-          component: 'ApiSelectDept',
+          component: 'EntitySelector',
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
             return {
-              multiple: true,
+              type: 'dept',
+              selectMode: 'multiple',
             };
           },
         },
-        // 所属岗位
+        // 所属岗位（EntitySelector：职位选择器，多选；限定已选部门及其子部门；部门未选时禁用）
         {
           label: $t('system.user.form.post_name'),
           fieldName: 'post_id_list',
           defaultValue: [],
-          component: 'ApiSelectPosition',
+          component: 'EntitySelector',
           formItemClass: 'col-span-2',
           componentProps: (values) => {
+            const deptIds = values.dept_id_list ?? [];
             return {
-              deptIds: values.dept_id_list ?? [],
+              type: 'post',
+              selectMode: 'multiple',
+              deptIds,
+              disabled: deptIds.length === 0,
+              placeholder: deptIds.length > 0 ? '选择职位' : '请先选择所属部门',
             };
           },
         },
-        // 主要部门
+        // 主要部门（EntitySelector：部门选择器，单选）
         {
           label: $t('system.user.form.main_dept_name'),
           fieldName: 'main_dept_id',
-          component: 'ApiSelectDept',
+          component: 'EntitySelector',
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
             return {
-              multiple: false,
+              type: 'dept',
             };
           },
         },
-        // 主要岗位
+        // 主要岗位（EntitySelector：职位选择器，单选；限定主要部门及其子部门；部门未选时禁用）
         {
           label: $t('system.user.form.main_post_name'),
           fieldName: 'main_post_id',
-          component: 'ApiSelectPosition',
+          component: 'EntitySelector',
           formItemClass: 'col-span-2',
           componentProps: (values) => {
             return {
-              multiple: false,
+              type: 'post',
               deptIds: values.main_dept_id ? [values.main_dept_id] : [],
+              disabled: !values.main_dept_id,
+              placeholder: values.main_dept_id ? '选择职位' : '请先选择主要部门',
             };
           },
         },
 
-        // 所属角色
+        // 所属角色（EntitySelector：角色选择器，多选；传参模式：配置文件整体注入 componentProps.config，
+        // fetcher/hydrate 为字符串 API 路径，组件边界自动归一化，免 registerEntityPickerConfig 预注册）
         {
           label: $t('system.user.form.role_name'),
           fieldName: 'role_id_list',
-          component: 'ApiSelectRole',
+          component: 'EntitySelector',
           formItemClass: 'col-span-2',
-          componentProps: {},
+          componentProps: {
+            type: 'role',
+            selectMode: 'multiple',
+            config: roleSelectorConfig,
+          },
         },
         {
           label: $t('system.user.form.avatar'),

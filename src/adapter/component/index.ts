@@ -106,6 +106,7 @@ export type ComponentType =
   | 'DatePicker'
   | 'Divider'
   | 'Editor'
+  | 'EntitySelector'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -138,6 +139,7 @@ export interface ComponentPropsMap {
   DatePicker: DatePickerProps;
   Divider: DividerProps;
   Editor: Record<string, any>;
+  EntitySelector: Record<string, any>;
   IconPicker: IconPickerProps;
   Input: InputProps;
   InputNumber: InputNumberProps;
