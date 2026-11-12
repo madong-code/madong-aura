@@ -429,13 +429,21 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
 }
 
 /**
- * 判断是否为未授权错误（401）
+ * 判断是否为未授权错误（401/402）
  *
  * 与 #/core/request 的 authenticateResponseInterceptor 判定保持一致：
- * HTTP 状态码 401，或后端 HTTP 200 + 响应体 code === 401。
+ * - HTTP 状态码 401，或后端 HTTP 200 + 响应体 code === 401（登录失效）
+ * - HTTP 状态码 402：后端约定 jwt_refresh_token_expired → 402（刷新令牌失效）。
+ *   刷新失败时拦截器抛出的是该 402 错误；不识别会误判为服务器错误，
+ *   触发 routeInitFailed → 500 兜底页死锁（无法回到登录页）。
  */
 function isUnauthorizedError(error: unknown): boolean {
   const response = (error as { response?: { status?: number; data?: { code?: number } } })
     ?.response
-  return response?.status === 401 || response?.data?.code === 401
+  return (
+    response?.status === 401 ||
+    response?.status === 402 ||
+    response?.data?.code === 401 ||
+    response?.data?.code === 402
+  )
 }

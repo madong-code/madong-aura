@@ -27,20 +27,32 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   });
 
   /**
-   * 重新认证逻辑
+   * 重新认证逻辑。
+   * 防重入：refresh 失效（HTTP 402）时 logout 内的 logoutApi 自身也会 401 →
+   * 再次触发刷新 → 再次 402 → 再次进入本函数。不加防重入会形成
+   * doReAuthenticate 递归，硬跳转登录页被请求往返拖住，用户停留在错误页。
    */
+  let reAuthenticating = false;
   async function doReAuthenticate() {
-    console.warn('Access token or refresh token is invalid or expired. ');
-    const accessStore = useAccessStore();
-    const authStore = useAuthStore();
-    accessStore.setAccessToken(null);
-    if (
-      preferences.app.loginExpiredMode === 'modal' &&
-      accessStore.isAccessChecked
-    ) {
-      accessStore.setLoginExpired(true);
-    } else {
-      await authStore.logout();
+    if (reAuthenticating) {
+      return;
+    }
+    reAuthenticating = true;
+    try {
+      console.warn('Access token or refresh token is invalid or expired. ');
+      const accessStore = useAccessStore();
+      const authStore = useAuthStore();
+      accessStore.setAccessToken(null);
+      if (
+        preferences.app.loginExpiredMode === 'modal' &&
+        accessStore.isAccessChecked
+      ) {
+        accessStore.setLoginExpired(true);
+      } else {
+        await authStore.logout();
+      }
+    } finally {
+      reAuthenticating = false;
     }
   }
 

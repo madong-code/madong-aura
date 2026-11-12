@@ -65,8 +65,14 @@ export const authenticateResponseInterceptor = ({
       // 401 判定：HTTP 状态码为 401，或业务响应体 code === 401（登录失效）
       // 本项目后端未授权以 HTTP 200 + body.code=401 返回，仅靠 status 会漏判，
       // 导致登录失效落入通用错误提示（"服务器异常"）而不会触发重新认证
+      // 402：后端约定 jwt_refresh_token_expired → HTTP 402（刷新令牌失效），
+      // 刷新失败时拦截器抛出的是该 402 错误，不识别会导致路由守卫误判为
+      // 服务器错误 → 落入 500 兜底页死锁（无法回到登录页）
       const isUnauthorized =
-        response?.status === 401 || response?.data?.code === 401;
+        response?.status === 401 ||
+        response?.status === 402 ||
+        response?.data?.code === 401 ||
+        response?.data?.code === 402;
       // 如果不是 401 错误，直接抛出异常
       if (!isUnauthorized) {
         throw error;
