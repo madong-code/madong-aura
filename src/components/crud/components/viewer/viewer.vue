@@ -3,7 +3,9 @@ import type { VbenFormSchema } from '#/adapter/form';
 
 import { computed } from 'vue';
 
+import { formatViewerValue, isEmptyValue } from './format';
 import { getComponent as getViewComponent } from './component-map';
+import ViewerItemBoundary from './viewer-item-boundary.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -22,6 +24,8 @@ const props = withDefaults(
     /** 布局方式：水平/垂直/行内 */
     layout?: 'horizontal' | 'inline' | 'vertical';
     model?: Record<string, any>;
+    /** 顶层加载态：true 时整体显示加载中兜底 */
+    loading?: boolean;
     schema: (() => VbenFormSchema[]) | VbenFormSchema[];
     wrapperClass?: string;
   }>(),
@@ -29,8 +33,11 @@ const props = withDefaults(
     model: () => ({}),
     commonConfig: () => ({}),
     layout: 'horizontal',
+    loading: false,
   },
 );
+
+/** 单项渲染异常由 ViewerItemBoundary 捕获兜底（仅该项显示 --，页面不崩溃） */
 
 // 合并 commonConfig 到 schema，并过滤 hideInDetail
 const mergedSchema = computed(() => {
@@ -110,22 +117,36 @@ const transformComponentName = (componentName: string): string => {
 
 const getViewComponentProps = (schema: VbenFormSchema) => {
   const viewComponentProps = schema.viewComponentProps || {};
-  const componentProps = schema.componentProps || {};
-
+  let componentProps = schema.componentProps || {};
+  // componentProps 为函数时（动态联动 schema），以当前 model 求值，
+  // 保证查看场景也能拿到 type 等静态配置
+  if (typeof componentProps === 'function') {
+    try {
+      componentProps = componentProps(props.model ?? {}, {} as any) ?? {};
+    } catch {
+      componentProps = {};
+    }
+  }
   return {
     ...componentProps,
     ...viewComponentProps,
   };
 };
 
-const formatValue = (_schema: VbenFormSchema, value: any) => {
-  if (Array.isArray(value)) {
-    return value.join(', ');
-  }
-  if (typeof value === 'object' && value !== null) {
-    return JSON.stringify(value);
-  }
-  return value;
+const formatValue = (schema: VbenFormSchema, value: any) => {
+  // 多类型自动格式化：text（含对象/数组兜底）为主，schema 可声明 format 类型
+  const formatOptions = {
+    ...(schema.componentProps as any)?.format,
+    ...(schema.viewComponentProps as any)?.format,
+  };
+  const format =
+    (schema.viewComponentProps as any)?.format?.type ??
+    (schema.componentProps as any)?.format?.type ??
+    (typeof formatOptions === 'string' ? formatOptions : undefined);
+  return formatViewerValue(value, {
+    ...(typeof formatOptions === 'object' ? formatOptions : {}),
+    format: (format as any) ?? 'text',
+  });
 };
 
 /**
@@ -158,7 +179,15 @@ defineExpose({
 </script>
 
 <template>
-  <div class="detail-view" :class="[layoutClass, wrapperClass]">
+  <!-- 顶层加载态兜底：数据请求中不渲染字段，避免闪烁 -->
+  <div
+    v-if="loading"
+    class="detail-view detail-view--loading"
+    :class="[layoutClass, wrapperClass]"
+  >
+    <span class="detail-view-loading-text">加载中...</span>
+  </div>
+  <div v-else class="detail-view" :class="[layoutClass, wrapperClass]">
     <template v-for="(schema, index) in mergedSchema" :key="index">
       <template v-if="!schema.hide && shouldShow(schema)">
         <div
@@ -183,29 +212,30 @@ defineExpose({
             class="detail-view-value"
             :class="schema.controlClass || mergedControlClass"
           >
-            <component
-              v-if="
-                schema.viewComponent ||
-                getViewComponent(
-                  transformComponentName(schema.component as string),
-                )
-              "
-              :is="getViewComponentInstance(schema)"
-              :value="resolveValue(schema.fieldName)"
-              :field-name="schema.fieldName"
-              :schema="schema"
-              :data="model"
-              v-bind="getViewComponentProps(schema)"
-            />
-            <span
-              v-else-if="
-                resolveValue(schema.fieldName) !== undefined &&
-                resolveValue(schema.fieldName) !== null
-              "
-            >
-              {{ formatValue(schema, resolveValue(schema.fieldName)) }}
-            </span>
-            <span v-else class="empty-value">--</span>
+            <!-- 单项异常边界：查看器渲染崩溃时仅该项回退为空值占位 -->
+            <ViewerItemBoundary :field-name="schema.fieldName">
+              <component
+                v-if="
+                  schema.viewComponent ||
+                  getViewComponent(
+                    transformComponentName(schema.component as string),
+                  )
+                "
+                :is="getViewComponentInstance(schema)"
+                :value="resolveValue(schema.fieldName)"
+                :field-name="schema.fieldName"
+                :schema="schema"
+                :data="model"
+                v-bind="getViewComponentProps(schema)"
+              />
+              <!-- 无查看器组件：按 format 声明自动格式化 -->
+              <span
+                v-else-if="!isEmptyValue(resolveValue(schema.fieldName))"
+              >
+                {{ formatValue(schema, resolveValue(schema.fieldName)) }}
+              </span>
+              <span v-else class="empty-value">--</span>
+            </ViewerItemBoundary>
           </div>
         </div>
       </template>
@@ -218,6 +248,17 @@ defineExpose({
   width: 100%;
   max-height: none;
   overflow: visible;
+}
+
+/* 顶层加载态 */
+.detail-view--loading {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-view-loading-text {
+  color: var(--el-text-color-placeholder, #94a3b8);
 }
 
 /* 网格布局：配合 Tailwind grid-cols-* 使用 */
