@@ -1,0 +1,16 @@
+{
+  "searcher": {
+    "placeholder": "输入租户代码或名称搜索",
+    "required": "请选择租户",
+    "loadMore": "加载更多（{loaded}/{total}）"
+  },
+  "switch": {
+    "title": "切换租户",
+    "current": "当前租户",
+    "select": "请选择要切换的目标租户",
+    "placeholder": "请选择租户",
+    "empty": "无可切换的租户",
+    "cancel": "取消",
+    "confirm": "切换"
+  }
+}

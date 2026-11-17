@@ -3,18 +3,16 @@ import { ref } from 'vue'
 // src/store/modules/site-config.ts
 import { defineStore } from 'pinia'
 
-import { ConfigService } from '#/api/system/config'
+import { getSiteInfoApi } from '#/api'
 import { setPreferences } from '#/core/preferences'
 import { buildStaticUrl } from '#/utils/url'
 import { prefetchSignedUrls } from '#/utils/url/private-storage'
 
-// 站点配置的分组与编码（与后端 config 表一致）
-const SITE_GROUP_CODE = 'default'
-const SITE_CODE = 'site_setting'
-
-// 定义站点配置接口（单份平台站点配置，剥离多租户后无租户维度）
-// 配置来源：GET /system/config/code/site_setting?group_code=default
-// 该接口已标记为匿名可访问，登录前 / 登录后均走同一个接口与同一份数据
+// 定义站点配置接口（单份平台站点配置）
+// 配置来源：GET /auth/site-info（登录前匿名可访问，两端同名）
+// SaaS 取平台分组，标准版取 default 分组的 site_setting，字段一致。
+// 注意：不能用 /system/config/code/site_setting（adminapi 端 requireToken=true，
+// 登录前匿名请求必然 401 → 触发重新认证 → 500 兜底页死锁）。
 interface SystemConfig {
   logo?: string // 站点Logo（来自后端 site_logo）
   title?: string // 站点名称（来自后端 site_name）
@@ -76,7 +74,7 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
 
   /**
    * 获取站点配置（登录前后统一入口，无需 Token）
-   * GET /system/config/code/site_setting?group_code=default
+   * GET /auth/site-info（两端同名匿名接口，登录前不会 401）
    *
    * @param force 为 true 时忽略已加载状态强制重新拉取（保存配置后刷新用）
    */
@@ -87,13 +85,9 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
     platformError.value = null
 
     try {
-      // skipGlobalErrorHandler：本方法内部已 try/catch 优雅降级（失败沿用默认品牌配置），
-      // 且启动期可能在 i18n 语言包就绪前发起，弹出错误 toast 反而造成"未登录刷新登录页报错"的观感
-      const response = (await ConfigService.getByCode(
-        SITE_CODE,
-        { group_code: SITE_GROUP_CODE },
-        { skipGlobalErrorHandler: true }
-      )) as any
+      // getSiteInfoApi 带 skipGlobalErrorHandler：本方法内部已 try/catch 优雅降级
+      // （失败沿用默认品牌配置），不弹 toast，避免"未登录刷新登录页报错"观感
+      const response = (await getSiteInfoApi()) as any
       platformConfig.value = mapSiteConfig(response as any)
       platformIsLoaded.value = true
 

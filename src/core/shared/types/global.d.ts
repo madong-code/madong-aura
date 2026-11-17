@@ -11,6 +11,8 @@ export interface VbenAdminProAppConfigRaw {
   VITE_GLOB_API_URL: string;
   VITE_GLOB_AUTH_DINGDING_CLIENT_ID: string;
   VITE_GLOB_AUTH_DINGDING_CORP_ID: string;
+  /** 租户运行模式：auto=探测后端 / standard=强制标准 / saas=强制多租户 */
+  VITE_GLOB_TENANT_MODE?: string;
 }
 
 interface AuthConfig {
@@ -23,6 +25,8 @@ interface AuthConfig {
 export interface ApplicationConfig {
   apiURL: string;
   auth: AuthConfig;
+  /** 租户运行模式：auto / standard / saas */
+  tenantMode?: 'auto' | 'saas' | 'standard';
 }
 
 declare global {

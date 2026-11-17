@@ -68,11 +68,15 @@ export const authenticateResponseInterceptor = ({
       // 402：后端约定 jwt_refresh_token_expired → HTTP 402（刷新令牌失效），
       // 刷新失败时拦截器抛出的是该 402 错误，不识别会导致路由守卫误判为
       // 服务器错误 → 落入 500 兜底页死锁（无法回到登录页）
+      // request-client 非 2xx 抛纯响应体 {code, msg}（无 response），
+      // 需同步识别 error.code，否则 401 落入通用错误提示而非重新认证。
       const isUnauthorized =
         response?.status === 401 ||
         response?.status === 402 ||
         response?.data?.code === 401 ||
-        response?.data?.code === 402;
+        response?.data?.code === 402 ||
+        error?.code === 401 ||
+        error?.code === 402;
       // 如果不是 401 错误，直接抛出异常
       if (!isUnauthorized) {
         throw error;

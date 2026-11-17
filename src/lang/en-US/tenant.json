@@ -1,0 +1,16 @@
+{
+  "searcher": {
+    "placeholder": "Search by tenant code or name",
+    "required": "Please select a tenant",
+    "loadMore": "Load more ({loaded}/{total})"
+  },
+  "switch": {
+    "title": "Switch Tenant",
+    "current": "Current tenant",
+    "select": "Select the target tenant to switch to",
+    "placeholder": "Please select a tenant",
+    "empty": "No tenant available to switch",
+    "cancel": "Cancel",
+    "confirm": "Switch"
+  }
+}

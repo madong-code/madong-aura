@@ -89,6 +89,23 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       config.headers.Authorization = formatToken(accessStore.accessToken);
       config.headers['Accept-Language'] = preferences.app.locale;
 
+      // 多租户：条件注入租户ID（与 template/admin 共用方案）
+      // 标准后端不会返回租户列表、不触发 setTenantId → tenantId 恒为 null →
+      // 条件永不成立 → header 永不发送，标准版零感知。
+      // SaaS 管理接口与平台级登录前接口跳过租户上下文：
+      // /auth/site-info 后端按 tenant.enable 决定取 platform/default 分组，
+      // 带 X-Tenant-Id 会切到租户库导致站点 Logo/名称回退默认值。
+      if (
+        accessStore.tenantId &&
+        !config.url?.startsWith('/tenant') &&
+        !config.url?.startsWith('/db-settings') &&
+        !config.url?.startsWith('/db-drivers') &&
+        !config.url?.startsWith('/subscription') &&
+        !config.url?.startsWith('/auth/site-info')
+      ) {
+        config.headers['X-Tenant-Id'] = String(accessStore.tenantId);
+      }
+
       return config;
     },
   });

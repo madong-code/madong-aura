@@ -19,11 +19,19 @@ export function useAppConfig(
     VITE_GLOB_API_URL,
     VITE_GLOB_AUTH_DINGDING_CORP_ID,
     VITE_GLOB_AUTH_DINGDING_CLIENT_ID,
+    VITE_GLOB_TENANT_MODE,
   } = config;
+
+  // 租户运行模式：auto（默认探测后端）/ standard（强制标准，不请求租户接口）
+  // / saas（强制多租户，不请求租户接口）。非法值回退 auto。
+  const mode = VITE_GLOB_TENANT_MODE as ApplicationConfig['tenantMode'];
+  const tenantMode: ApplicationConfig['tenantMode'] =
+    mode === 'standard' || mode === 'saas' || mode === 'auto' ? mode : 'auto';
 
   const applicationConfig: ApplicationConfig = {
     apiURL: VITE_GLOB_API_URL,
     auth: {},
+    tenantMode,
   };
   if (VITE_GLOB_AUTH_DINGDING_CORP_ID && VITE_GLOB_AUTH_DINGDING_CLIENT_ID) {
     applicationConfig.auth.dingding = {

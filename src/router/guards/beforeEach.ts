@@ -438,12 +438,19 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
  *   触发 routeInitFailed → 500 兜底页死锁（无法回到登录页）。
  */
 function isUnauthorizedError(error: unknown): boolean {
-  const response = (error as { response?: { status?: number; data?: { code?: number } } })
-    ?.response
+  const e = error as {
+    code?: number;
+    response?: { status?: number; data?: { code?: number } };
+  }
+  const response = e?.response
+  // request-client 在非 2xx 时抛的是纯响应体 {code, msg, data}（无 response 属性），
+  // 必须同时识别该形态，否则 401 会落入 500 兜底页死锁。
   return (
     response?.status === 401 ||
     response?.status === 402 ||
     response?.data?.code === 401 ||
-    response?.data?.code === 402
+    response?.data?.code === 402 ||
+    e?.code === 401 ||
+    e?.code === 402
   )
 }

@@ -30,6 +30,14 @@
                 </ElOption>
               </ElSelect>
             </ElFormItem>
+            <!-- 租户字段：仅多租户后端返回 enabled=true 时渲染；标准后端静默隐藏 -->
+            <ElFormItem v-if="tenantEnabled" prop="tenantCode">
+              <TenantSearcher
+                v-model="formData.tenantCode"
+                :auto-first="tenantAutoFirst"
+                :placeholder="$t('tenant.searcher.placeholder')"
+              />
+            </ElFormItem>
             <ElFormItem prop="username">
               <ElInput
                 class="custom-height"
@@ -109,15 +117,40 @@
 
 <script setup lang="ts">
   import { preferences } from '#/core/preferences'
+  import { useAppConfig } from '#/core/composables'
   import { useUserStore } from '@/store/modules/user'
   import { useI18n } from 'vue-i18n'
-  import { getAccessCodesApi, loginApi } from '@/api'
+  import { getAccessCodesApi, getTenantModeFlagApi, loginApi } from '@/api'
   import { useAccessStore } from '#/core/stores'
   import { useSiteConfigStore } from '@/store/modules/site-config'
   import { ElNotification, type FormInstance, type FormRules } from 'element-plus'
   import { useSettingStore } from '@/store/modules/setting'
+  import TenantSearcher from '@/components/tenant-searcher/index.vue'
 
   defineOptions({ name: 'Login' })
+
+  // 租户模式：标准后端无 /auth/tenant-mode → 静默失败 → 保持关闭，登录页零感知
+  const tenantEnabled = ref(false)
+  const tenantAutoFirst = ref(false)
+
+  const { tenantMode } = useAppConfig(import.meta.env, import.meta.env.PROD)
+
+  async function fetchTenantMode() {
+    // 强制模式：直接决定开关，完全不请求 /auth/tenant-mode
+    if (tenantMode === 'standard') {
+      tenantEnabled.value = false
+      return
+    }
+    if (tenantMode === 'saas') {
+      tenantEnabled.value = true
+      tenantAutoFirst.value = true
+      return
+    }
+    // auto（默认）：探测后端，标准后端 404 静默失败 → 保持关闭
+    const mode = await getTenantModeFlagApi()
+    tenantEnabled.value = mode.enabled ?? false
+    tenantAutoFirst.value = mode.auto_select_first ?? false
+  }
 
   const settingStore = useSettingStore()
   const { isDark } = storeToRefs(settingStore)
@@ -162,12 +195,16 @@
 
   const formData = reactive({
     account: '',
+    tenantCode: '',
     username: '',
     password: '',
     rememberPassword: true
   })
 
   const rules = computed<FormRules>(() => ({
+    tenantCode: tenantEnabled.value
+      ? [{ required: true, message: t('tenant.searcher.required'), trigger: 'change' }]
+      : [],
     username: [{ required: true, message: t('login.placeholder.username'), trigger: 'blur' }],
     password: [{ required: true, message: t('login.placeholder.password'), trigger: 'blur' }]
   }))
@@ -176,6 +213,7 @@
 
   onMounted(() => {
     setupAccount('admin')
+    fetchTenantMode()
   })
 
   // 设置账号
@@ -204,12 +242,18 @@
       loading.value = true
 
       // 登录请求（madong 契约：POST /adminapi/auth/login）
-      const { username, password } = formData
+      const { username, password, tenantCode } = formData
 
-      const loginResult = await loginApi({
+      const params: Record<string, any> = {
         user_name: username,
         password
-      })
+      }
+      // 非租户模式或未填写时不传租户标识，标准后端登录流程零感知
+      if (tenantEnabled.value && tenantCode) {
+        params.tenant_code = tenantCode
+      }
+
+      const loginResult = await loginApi(params)
 
       const accessToken = loginResult?.access_token
       const refreshToken = loginResult?.refresh_token
@@ -223,6 +267,13 @@
       const accessStore = useAccessStore()
       accessStore.setAccessToken(accessToken)
       accessStore.setRefreshToken(refreshToken)
+
+      // 多租户：存储登录响应中的租户ID，供请求层条件注入 X-Tenant-Id。
+      // 标准后端不返回 tenant 字段 → 保持 null → 标准版零感知。
+      const tenantId = loginResult?.tenant?.id
+      if (tenantId) {
+        accessStore.setTenantId(tenantId)
+      }
 
       // 预加载权限码，避免首屏按钮因权限码未就绪被 v-access 隐藏；失败由路由守卫补偿
       try {

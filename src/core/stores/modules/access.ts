@@ -44,6 +44,10 @@ interface AccessState {
    */
   refreshToken: AccessToken;
   /**
+   * 当前租户ID（多租户模式；标准后端恒为 null）
+   */
+  tenantId: null | number | string;
+  /**
    * 超级权限码，拥有这些权限码的用户被视为拥有所有权限
    * @default ['*']
    */
@@ -102,6 +106,9 @@ export const useAccessStore = defineStore('core-access', {
     setRefreshToken(token: AccessToken) {
       this.refreshToken = token;
     },
+    setTenantId(id: null | number | string) {
+      this.tenantId = id;
+    },
     unlockScreen() {
       this.isLockScreen = false;
       this.lockScreenPassword = undefined;
@@ -118,6 +125,7 @@ export const useAccessStore = defineStore('core-access', {
     pick: [
       'accessToken',
       'refreshToken',
+      'tenantId',
       'accessCodes',
       'isLockScreen',
       'lockScreenPassword',
@@ -133,6 +141,7 @@ export const useAccessStore = defineStore('core-access', {
     lockScreenPassword: undefined,
     loginExpired: false,
     refreshToken: null,
+    tenantId: null,
     superCodes: ['*'],
   }),
 });

@@ -152,6 +152,15 @@
           <div class="breathing-dot absolute top-2 right-2 size-1.5 !bg-success rounded-full"></div>
         </AppIconButton>
 
+        <!-- 租户切换（仅多租户模式可见） -->
+        <AppIconButton
+          v-if="showTenantSwitch"
+          icon="ri:swap-3-line"
+          :title="$t('tenant.switch.title')"
+          class="tenant-switch-button"
+          @click="openTenantSwitch"
+        />
+
         <!-- 设置按钮 -->
         <div v-if="shouldShowSettings">
           <ElPopover :visible="showSettingGuide" placement="bottom-start" :width="190" :offset="0">
@@ -192,6 +201,9 @@
 
     <!-- 命令终端弹窗（仅超级管理员挂载，避免无权限时仍发起 commands/config 请求） -->
     <TerminalDialog v-if="showTerminalButton" />
+
+    <!-- 租户切换弹窗（仅多租户模式挂载） -->
+    <TenantSwitchModal v-if="showTenantSwitch" ref="tenantSwitchRef" />
   </div>
 </template>
 
@@ -210,11 +222,12 @@
   import { useCommon } from '#/core/composables/use-common'
   import { useHeaderBar } from '#/core/composables/use-header-bar'
   import { useNotifyStore } from '@/store/modules/notify'
-  import { useUserStore as useCoreUserStore } from '#/core/stores'
+  import { useAccessStore, useUserStore as useCoreUserStore } from '#/core/stores'
   import { useTerminalStore } from '#/store'
   import MessageDrawer from '@/views/content/message/notify/components/message-drawer.vue'
   import NotepadDrawer from '@/views/content/notepad/components/notepad-drawer.vue'
   import TerminalDialog from '@/views/devtools/terminal/index.vue'
+  import TenantSwitchModal from '@/components/tenant-switch/tenant-switch-modal.vue'
   import AppUserMenu from './widget/AppUserMenu.vue'
 
   defineOptions({ name: 'AppHeaderBar' })
@@ -257,6 +270,14 @@
   const terminalStore = useTerminalStore()
   const messageDrawerRef = ref<InstanceType<typeof MessageDrawer> | null>(null)
   const notepadDrawerRef = ref<InstanceType<typeof NotepadDrawer> | null>(null)
+
+  // 多租户：tenantId 非空时才显示切换入口，标准后端恒为 null → 按钮不渲染
+  const accessStore = useAccessStore()
+  const tenantSwitchRef = ref<InstanceType<typeof TenantSwitchModal> | null>(null)
+  const showTenantSwitch = computed(() => accessStore.tenantId !== null)
+  const openTenantSwitch = (): void => {
+    tenantSwitchRef.value?.open()
+  }
 
   const openMessageDrawer = (): void => {
     messageDrawerRef.value?.open()
