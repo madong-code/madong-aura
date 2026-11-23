@@ -70,6 +70,12 @@ const formatTimestamp = (timestamp: string) => {
   return [date, `${hours}:${minutes}`];
 };
 
+const formatVersion = (version?: string) => {
+  const value = (version ?? '').trim();
+  if (!value) return '';
+  return /^v/i.test(value) ? value : `v${value}`;
+};
+
 const openDialog = async (mod?: any) => {
   currentModuleCode.value = mod?.code || props.moduleCode;
   dialogApi.open();
@@ -126,7 +132,7 @@ defineExpose({ openDialog });
                 <ElCollapseItem :name="index">
                   <template #title>
                     <span class="text-[#333] text-[14px]">
-                      v{{ item.version_no }}
+                      {{ formatVersion(item.version_no) }}
                       <ElTag
                         v-if="item.is_important"
                         type="primary"
