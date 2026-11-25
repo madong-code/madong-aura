@@ -11,6 +11,40 @@
     <link rel="icon" type="image/svg+xml" href="src/assets/images/svg/logo.svg" />
     <link rel="shortcut icon" type="image/x-icon" href="src/assets/images/favicon.ico" />
 
+    <script>
+      // 首屏品牌兜底：缓存为空也由站点配置请求覆盖写入，
+      // 标题回退 %VITE_APP_TITLE%，图标按 favicon → logo → 内置 /favicon.ico 兜底。
+      ;(function () {
+        var title = '%VITE_APP_TITLE%';
+        var icon = '/favicon.ico';
+        try {
+          var cached = localStorage.getItem('__site_config__');
+          if (cached) {
+            var config = JSON.parse(cached);
+            if (config && config.title) title = config.title;
+            if (config && (config.favicon || config.logo)) {
+              icon = config.favicon || config.logo;
+            }
+          }
+        } catch (e) {}
+        document.title = title;
+        var links = document.querySelectorAll(
+          'link[rel~="icon"], link[rel="apple-touch-icon"]'
+        );
+        if (links.length > 0) {
+          links.forEach(function (link) {
+            link.href = icon;
+            link.removeAttribute('type');
+          });
+        } else {
+          var link = document.createElement('link');
+          link.rel = 'icon';
+          link.href = icon;
+          document.head.appendChild(link);
+        }
+      })();
+    </script>
+
     <style>
       /* 防止页面刷新时白屏的初始样式 */
       html {

@@ -14,6 +14,7 @@
 <script setup lang="ts">
   import { useUserStore } from './store/modules/user'
   import { useSiteConfigStore } from '#/store/modules/site-config'
+  import { preferences } from '#/core/preferences'
   import { useAccessStore } from '#/core/stores'
   import zh from 'element-plus/es/locale/lang/zh-cn'
   import en from 'element-plus/es/locale/lang/en'
@@ -53,15 +54,13 @@
     }
   })
 
-  // 站点配置变化 → 同步标签页标题；
+  // 站点配置变化 → 同步标签页标题；配置为空时回退到已同步 env 默认值的 preferences
   // favicon 统一由 site-config.applyToPreferences 经 buildStaticUrl 解析（含私有空间签名、
   // 未配置时回落 logo），此处不再直接写原始资源 key，避免竞态覆盖与裸链请求
   watch(
     () => useSiteConfigStore().getCurrentConfig(),
     (config) => {
-      if (config?.title) {
-        document.title = config.title
-      }
+      document.title = config?.title || preferences.app.name
     },
     { immediate: true }
   )
