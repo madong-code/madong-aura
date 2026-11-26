@@ -147,10 +147,10 @@
     if (props.options.class) cls.push(props.options.class)
     return cls.join(' ')
   })
-  // 表单内容宽度：默认对半显示，可通过 options.formWidth 调整（如多列表单配 'w-full'）。
+  // 表单内容宽度：默认占满弹窗宽度（与 admin 模板一致），可通过 options.formWidth 调整。
   // 注意：该宽度只作用于表单内容层，弹窗滚动容器始终占满弹窗宽度，
   // 因此滚动条恒定贴弹窗最右缘，不随表单宽度/列数布局变化。
-  const formWidthClass = computed(() => props.options.formWidth || 'w-1/2')
+  const formWidthClass = computed(() => props.options.formWidth)
   const rowKey = computed(() => props.options.rowKey || 'id')
   const isView = computed(() => viewType.value === 'view')
 
