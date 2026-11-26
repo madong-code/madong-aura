@@ -3,10 +3,6 @@
 :root {
   // 系统主色
   --main-color: var(--el-color-primary);
-  --el-color-white: white !important;
-  --el-color-black: white !important;
-  // 输入框边框颜色
-  // --el-border-color: #E4E4E7 !important; // DCDFE6
   // 按钮粗度
   --el-font-weight-primary: 400 !important;
 
@@ -86,16 +82,6 @@ html.dark .el-card {
 }
 
 // -------------------------------- 修改 el-size=default 组件默认高度 start --------------------------------
-// 修改 el-button 高度
-.el-button--default {
-  height: var(--el-component-custom-height) !important;
-}
-
-// circle 按钮宽度优化
-.el-button--default.is-circle {
-  width: var(--el-component-custom-height) !important;
-}
-
 // ---------------- CRUD 搜索表单与表格工具栏按钮（对齐 v5.madong.tech/admin 视觉规格） ----------------
 // 搜索表单操作按钮（重置/搜索）：32px 高 / 12px 字号 / 0 8px 内边距，
 // 与搜索输入框高度协调，避免默认 36px 大按钮的臃肿感。
@@ -117,21 +103,6 @@ html.dark .el-card {
 .vxe-buttons--wrapper .el-button--default.is-circle {
   width: 32px !important;
 }
-
-// 修改 el-select 高度
-.el-select--default {
-  .el-select__wrapper {
-    min-height: var(--el-component-custom-height) !important;
-  }
-}
-
-// 修改 el-checkbox-button 高度
-.el-checkbox-button--default .el-checkbox-button__inner,
-// 修改 el-radio-button 高度
-.el-radio-button--default .el-radio-button__inner {
-  padding: 10px 15px !important;
-}
-// -------------------------------- 修改 el-size=default 组件默认高度 end --------------------------------
 
 .el-pagination.is-background .btn-next,
 .el-pagination.is-background .btn-prev,

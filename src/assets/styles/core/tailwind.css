@@ -7,6 +7,9 @@
   --app-color: #ffffff;
   --theme-color: var(--main-color);
 
+  /* Vben shadcn semantic vars (对齐 admin) */
+  --foreground: 210 6% 21%;
+
   /* Theme Colors - OKLCH Format */
   --app-primary: oklch(0.7 0.23 260);
   --app-secondary: oklch(0.72 0.19 231.6);
@@ -51,6 +54,9 @@
 .dark {
   /* Base Colors */
   --app-color: #000000;
+
+  /* Vben shadcn semantic vars (对齐 admin) */
+  --foreground: 0 0% 95%;
 
   /* Gray Scale - Dark Mode */
   --app-gray-100: #110f0f;
@@ -235,4 +241,9 @@
       }
     }
   }
+}
+
+/* ==================== Global Text Color ==================== */
+html {
+  color: hsl(var(--foreground));
 }
